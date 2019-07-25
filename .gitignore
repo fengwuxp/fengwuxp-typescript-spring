@@ -1,0 +1,26 @@
+# Created by .ignore support plugin (hsz.mobi)
+node_modules
+.idea
+.gradle
+*.iml
+lib
+.temp
+genode
+build
+*.properties
+oak/oak_taro_starter/lib/modules
+*-lock.json
+yarn.lock
+*.log
+*-debug.log
+*-error.log
+dist
+dist_web
+coverage
+*.tgz
+_src
+.spring
+.awcache
+.publish_chennh
+#scripts/publish_to_npm.ts
+#scripts/publish_to_npm.js
