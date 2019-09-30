@@ -1,0 +1,7 @@
+# Created by .ignore support plugin (hsz.mobi)
+test
+tsconfig.json
+tsconfig.test.json
+scripts
+jest.config.js
+.awcache

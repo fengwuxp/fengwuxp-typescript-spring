@@ -1,0 +1,36 @@
+{
+  "name": "fengwuxp-common-proxy",
+  "version": "1.0.0",
+  "description": "common proxy",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "index.js",
+  "author": "wuxp",
+  "license": "ISC",
+  "scripts": {
+    "yarn_i": "yarn install",
+    "npm_publish": "npm publish",
+    "rest_depencies": "rm -rf ./node_modules & npm run yarn_i"
+  },
+  "keywords": [],
+  "types": "./index.d.ts",
+  "devDependencies": {
+    "@types/node": "^12.7.5",
+    "@types/jest": "^24.0.18",
+    "jest": "^23.6.0",
+    "log4js": "^4.0.2",
+    "ts-jest": "^23.10.5",
+    "chai": "^4.2.0",
+    "typescript": "^3.6.3",
+    "tslib": "^1.10.0"
+  }
+}
