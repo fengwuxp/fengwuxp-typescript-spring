@@ -13,7 +13,7 @@ export default class CommonResolveHttpResponse implements ResolveHttpResponse<Re
             data: resp['data'],
             headers,
             ok,
-            status,
+            statusCode: status,
             statusText: resp["statusText"] || null
         }
     };

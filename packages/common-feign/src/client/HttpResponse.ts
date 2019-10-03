@@ -1,7 +1,3 @@
-
-
-
-
 /**
  * http request response
  */
@@ -10,7 +6,7 @@ export interface HttpResponse<T = any> {
     /**
      * http status code
      */
-    status: number;
+    statusCode: number;
 
     /**
      * http status text
@@ -32,7 +28,7 @@ export interface HttpResponse<T = any> {
     /**
      * http response headers
      */
-    headers?: HeadersInit | object;
+    headers?: Record<string, string>;
 
 
 }

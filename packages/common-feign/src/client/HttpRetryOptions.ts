@@ -35,7 +35,7 @@ export interface HttpRetryOptions {
      * @param request  request data
      * @param response response data
      */
-    onRetry?<E>(request: HttpRequest, response: HttpResponse): Promise<E>;
+    onRetry?(request: HttpRequest, response: HttpResponse): Promise<HttpResponse>;
 }
 
 // export interface RetryHttpRequest extends HttpRequest {

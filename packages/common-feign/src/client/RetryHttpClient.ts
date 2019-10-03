@@ -1,6 +1,6 @@
 import {HttpClient} from "./HttpClient";
 import {HttpRequest} from "./HttpRequest";
-import { HttpRetryOptions} from "./RetryHttpRequest";
+import {HttpRetryOptions} from "./HttpRetryOptions";
 import {HttpResponse} from "./HttpResponse";
 import DefaultHttpClient from "./DefaultHttpClient";
 
@@ -9,15 +9,17 @@ import DefaultHttpClient from "./DefaultHttpClient";
  * support retry http client
  * HttpClient with retry, need to be recreated each time you use this client
  */
-export default class RetryHttpClient<T extends HttpRequest> extends DefaultHttpClient<T> implements HttpClient<T> {
+export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extends DefaultHttpClient<T> implements HttpClient<T> {
 
     private httpClient: HttpClient<T>;
 
-    //重试的配置
-    protected retryOptions: HttpRetryOptions;
+    // retry options
+    private retryOptions: HttpRetryOptions;
 
-    //统计重试的请求次数
+    // number of retries
     private countRetry: number = 0;
+
+    private retryEnd = false;
 
     constructor(httpClient: HttpClient<T>, retryOptions: HttpRetryOptions) {
         super(httpClient);
@@ -39,19 +41,21 @@ export default class RetryHttpClient<T extends HttpRequest> extends DefaultHttpC
 
         const _maxTimeout = retryOptions.maxTimeout;
 
-
         return new Promise<HttpResponse>((resolve, reject) => {
 
             const retries = retryOptions.retries;
-            const p: Promise<HttpResponse> = this.send(req).catch((response) => {
+            const httpClient = this.httpClient;
+
+            const p: Promise<HttpResponse> = httpClient.send(req).catch((response) => {
                 //try retry
-                console.debug("--失败准备重试->", response);
-                return this.tryRetry(req, retryOptions, response);
+                console.log("request failure , ready to retry", response);
+                return this.tryRetry(req, response);
             });
 
-            //timeout control
+            // max timeout control
             const timerId = setTimeout(() => {
-                reject(new Error(`retry timeout，retry number${this.countRetry}次`));
+                this.retryEnd = true;
+                reject(new Error(`retry timeout，retry number${this.countRetry}`));
             }, _maxTimeout + retries * 10);
 
             p.then(resolve)
@@ -66,39 +70,35 @@ export default class RetryHttpClient<T extends HttpRequest> extends DefaultHttpC
 
 
     /**
-     * 尝试去重试
+     * try retry request
      * @param request
-     * @param options
      * @param response
      */
-    private tryRetry = (request: T, options: HttpRetryOptions, response): Promise<HttpResponse> => {
+    private tryRetry = (request: T, response): Promise<HttpResponse> => {
 
-        const _onRetry = options.onRetry || this.retryOptions.onRetry;
+        const {onRetry, delay, retries, when} = this.retryOptions;
 
-        // 以随机一个随机数
-        const _delay = Math.ceil(Math.random() * (options.delay || this.retryOptions.delay)) + 32;
-
-        const retries = options.retries || this.retryOptions.retries;
-
-        const when = options.when || this.retryOptions.when;
-
+        const _delay = Math.ceil(Math.random() * delay) + Math.random() * 31;
 
         return new Promise<HttpResponse>((resolve, reject) => {
             const errorHandle = (resp) => {
                 if (this.countRetry === retries) {
-                    console.debug("请求达到最大重试次数", retries);
+                    console.log("request to reach the maximum number of retries", retries);
                     reject(`retry end，count ${retries}`);
                     return
                 }
-                console.debug(`在${_delay}毫秒后准备开始第${this.countRetry + 1}次重试`, resp);
+                console.log(`ready to start the ${this.countRetry + 1} retry after ${_delay} milliseconds`, resp);
 
                 setTimeout(() => {
+                    if (this.retryEnd) {
+                        return;
+                    }
                     this.countRetry++;
-                    _onRetry(request, resp).then(resolve).catch((error) => {
+                    onRetry(request, resp).then(resolve).catch((error) => {
                         if (when(error)) {
                             errorHandle(error);
                         } else {
-                            console.debug("放弃重试");
+                            console.log("give up retry ");
                             reject(error);
                         }
                     });
@@ -112,11 +112,11 @@ export default class RetryHttpClient<T extends HttpRequest> extends DefaultHttpC
 
     /**
      * default retry handle
-     * @param rqq
+     * @param req
      * @param response
      */
-    private onRetry = <FetchResponse>(rqq: T, response): Promise<FetchResponse> => {
-        return this.send(rqq) as any;
+    private onRetry = (req: T, response: HttpResponse): Promise<HttpResponse> => {
+        return this.send(req);
     };
 
 
@@ -124,14 +124,14 @@ export default class RetryHttpClient<T extends HttpRequest> extends DefaultHttpC
      * whether to retry
      * @param response
      */
-    private whenRetry = (response: HttpResponse) => {
+    private whenRetry = (response: HttpResponse): boolean => {
         console.log("when retry", response);
-        if (response.status == null) {
-
+        const httpCode = response.statusCode;
+        if (httpCode == null) {
             return true;
         }
-        //响应码大于400没有重试的必要了
-        return response.status && response.status < 400;
+        // http response code gte 500
+        return httpCode >= 500;
     };
 
 }

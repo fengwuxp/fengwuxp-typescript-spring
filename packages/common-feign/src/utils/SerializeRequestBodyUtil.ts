@@ -31,7 +31,7 @@ export const serializeRequestBody = (method: string,
 
     if (mediaTypeIsEq(contentType, HttpMediaType.FORM_DATA)) {
         // form data
-        return stringify(body, filterNoneValue);
+        return queryStringify(body, filterNoneValue);
     }
     if (mediaTypeIsEq(contentType, HttpMediaType.APPLICATION_JSON_UTF8)) {
         // json data
@@ -82,11 +82,11 @@ const isNoneString = (val) => typeof val === "string" && val.trim().length === 0
  * @param eq
  * @param name
  */
-const stringify = (obj: ParsedUrlQueryInput,
-                   filterNoneValue: boolean = true,
-                   sep?: string,
-                   eq?: string,
-                   name?: string): string => {
+export const queryStringify = (obj: ParsedUrlQueryInput,
+                               filterNoneValue: boolean = true,
+                               sep?: string,
+                               eq?: string,
+                               name?: string): string => {
     sep = sep || '&';
     eq = eq || '=';
     if (obj === null) {

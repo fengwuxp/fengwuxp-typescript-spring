@@ -12,6 +12,7 @@ export interface FeignOptions {
 
     /**
      * 请求uri
+     * 默认：类名
      */
     value?: string;
 
@@ -33,6 +34,6 @@ export interface FeignOptions {
  * @param options
  * @constructor
  */
-export const Feign = (options: FeignOptions) => {
+export const FeignClient = (options: FeignOptions): any => {
 
 };

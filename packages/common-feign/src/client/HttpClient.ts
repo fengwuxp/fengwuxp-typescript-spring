@@ -5,12 +5,12 @@ import {HttpRequest} from "./HttpRequest";
 /**
  * http request body
  */
-export type HttpRequestBody = string  | Record<string, any>;
+export type HttpRequestBody = string | Record<string, any>;
 
 /**
  * http request client
  */
-export interface HttpClient<T extends HttpRequest> extends HttpAdapter<T> {
+export interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T> {
 
 
     /**
