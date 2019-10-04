@@ -21,7 +21,7 @@ export interface AutoFileUploadOptions {
  * @param options  需要自动上传
  * @constructor
  */
-export function FileUpload<T extends FeignClient>(options: AutoFileUploadOptions): Function {
+export const FileUpload=<T extends FeignClient>(options: AutoFileUploadOptions): Function=> {
 
 
     /**

@@ -1,4 +1,4 @@
-import {FeignClient} from "../src/annotations/Feign";
+import {Feign} from "../src/annotations/Feign";
 import {RequestMapping} from "../src/annotations/mapping/RequestMapping";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
 import {PostMapping} from "../src/annotations/mapping/PostMapping";
@@ -9,7 +9,7 @@ import {FeignRequestOptions} from "../src/FeignRequestOptions";
 import {DeleteMapping} from "../src/annotations/mapping/DeleteMapping";
 
 
-@FeignClient({
+@Feign({
     value: "/test"
 })
 export default class TestFeignClient {

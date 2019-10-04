@@ -17,4 +17,4 @@ export interface UriTemplateHandlerInterface {
  */
 export type UriTemplateHandlerFunction = (uriTemplate: string, uriVariables: UriVariable) => string
 
-export type UriTemplateHandler = UriTemplateHandlerFunction | UriTemplateHandlerFunction;
+export type UriTemplateHandler = UriTemplateHandlerInterface | UriTemplateHandlerFunction;

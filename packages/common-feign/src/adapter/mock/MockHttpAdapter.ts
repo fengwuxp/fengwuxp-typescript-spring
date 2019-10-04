@@ -27,6 +27,7 @@ export default class MockHttpAdapter implements HttpAdapter {
     }
 
     send = (req: HttpRequest): Promise<HttpResponse> => {
+        console.log("mock http adapter", req);
         const {url} = req;
         const key = url.split("?")[0].replace(this.baseUrl, "");
         const result: MockDataType = this.mockDataSource[key];

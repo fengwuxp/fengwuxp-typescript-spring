@@ -3,6 +3,8 @@ import {
     defaultUriTemplateFunctionHandler,
     DefaultUriTemplateHandler
 } from "../../src/template/DefaultUriTemplateHandler";
+import {invokeFunctionInterface} from "../../src/utils/InvokeFunctionInterface";
+import {UriTemplateHandler, UriTemplateHandlerFunction} from "../../src/template/UriTemplateHandler";
 
 
 const logger = log4js.getLogger();
@@ -10,7 +12,7 @@ logger.level = 'debug';
 
 describe("template test", () => {
 
-    const defaultUriTemplateHandler = new DefaultUriTemplateHandler();
+    const defaultUriTemplateHandler: UriTemplateHandler = new DefaultUriTemplateHandler();
 
     test("path variable", () => {
 
@@ -43,6 +45,18 @@ describe("template test", () => {
         const expand3 = defaultUriTemplateHandler.expand("http://a.b.com/member?name=张三", {"id": [1, 2, 3]});
         logger.debug("path variable and query string ", expand1, expand2, expand3);
     });
+
+    test("invoke function Interface ", () => {
+        const expand1 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(defaultUriTemplateHandler)("http://a.b.com/member/{id}", {
+            "id": 2,
+            name: "张三"
+        });
+        const expand2 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(defaultUriTemplateFunctionHandler)("http://a.b.com/member/{id}", {
+            "id": 2,
+            name: "张三"
+        });
+        logger.debug("invoke function Interface ", expand1,expand2);
+    })
 
 
 });

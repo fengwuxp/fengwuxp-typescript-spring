@@ -11,7 +11,7 @@ export default class CommonResolveHttpResponse implements ResolveHttpResponse<Re
 
         return {
             data: resp['data'],
-            headers,
+            headers: (headers as any),
             ok,
             statusCode: status,
             statusText: resp["statusText"] || null

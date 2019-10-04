@@ -1,6 +1,5 @@
 import {HttpResponse} from "../client/HttpResponse";
 import {HttpMethod} from "../constant/HttpMethod";
-import {RestOperationOptions} from './RestOperationOptions';
 import {ResponseExtractor} from "./ResponseExtractor";
 
 /**
@@ -18,11 +17,11 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given URI variables, if any.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForObject: <E = any>(url: string, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<E>;
+    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
 
     /**
      * Retrieve a representation by doing a GET on the URI template.
@@ -30,11 +29,11 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<HttpResponse<E>>;
+    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
 
     //HEAD
 
@@ -43,11 +42,11 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return all HTTP headers of that resource
      * @see {@link UriVariable}
      */
-    headForHeaders: (url: string, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<Record<string, string>>;
+    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<Record<string, string>>;
 
     //POST
 
@@ -61,11 +60,11 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForEntity: <E = any>(url: string, request: any, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<HttpResponse<E>>;
+    postForEntity: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template, and returns the value of
@@ -77,11 +76,11 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
-    postForLocation: (url: string, request: any, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<string>;
+    postForLocation: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template,
@@ -93,11 +92,11 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<E>;
+    postForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
 
     //PUT
 
@@ -109,10 +108,10 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be PUT (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @see {@link UriVariable}
      */
-    put: (url: string, request: any, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<void>;
+    put: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
 
     //PATCH
 
@@ -126,11 +125,11 @@ export interface RestOperations {
      * @param url the URL
      * @param request the object to be PATCHed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the converted object
      * @see {@link UriVariable}
      */
-    patchForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<E>;
+    patchForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
 
     //DELETE
 
@@ -139,10 +138,10 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given URI variables, if any.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @see {@link UriVariable}
      */
-    delete: (url: string, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<void>;
+    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
 
     //OPTIONS
 
@@ -151,11 +150,11 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return the value of the allow header
      * @see {@link UriVariable}
      */
-    optionsForAllow: (url: string, uriVariables?: UriVariable, options?: RestOperationOptions) => Promise<HttpMethod[]>;
+    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpMethod[]>;
 
     /**
      * Execute the HTTP method to the given URL, preparing the request with the，and reading the response with a {@link ResponseExtractor}.
@@ -164,7 +163,7 @@ export interface RestOperations {
      * @param uriVariables object that extracts the return value from the response
      * @param request object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
-     * @param options single request RestOperationOptions {@link RestOperationOptions} overflow global options
+     * @param headers 
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
     execute: <E = any>(url: string,
@@ -172,7 +171,7 @@ export interface RestOperations {
                        uriVariables?: UriVariable,
                        request?: any,
                        responseExtractor?: ResponseExtractor<E>,
-                       options?: RestOperationOptions) => Promise<E>;
+                       headers?: Record<string, string>) => Promise<E>;
 }
 
 /**

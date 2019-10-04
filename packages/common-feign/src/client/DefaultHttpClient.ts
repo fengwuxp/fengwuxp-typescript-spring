@@ -7,6 +7,7 @@ import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 import {InterceptingHttpAccessor} from "./InterceptingHttpAccessor";
+import {HttpMediaType} from "../constant/http/HttpMediaType";
 
 /**
  * default http client
@@ -17,10 +18,15 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
 
     private interceptors: Array<ClientHttpRequestInterceptor> = [];
 
+    private defaultProduce;
 
-    constructor(httpAdapter: HttpAdapter<T>, interceptors?: Array<ClientHttpRequestInterceptor >) {
+
+    constructor(httpAdapter: HttpAdapter<T>,
+                defaultProduce?: HttpMediaType,
+                interceptors?: Array<ClientHttpRequestInterceptor>) {
         this.httpAdapter = httpAdapter;
-        this.setInterceptors(interceptors || [])
+        this.setInterceptors(interceptors || []);
+        this.defaultProduce = defaultProduce || HttpMediaType.APPLICATION_JSON_UTF8;
     }
 
     delete = (url: string, headers?: HeadersInit, timeout?: number): Promise<HttpResponse> => {
@@ -81,7 +87,9 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
 
     send = async (req: T): Promise<HttpResponse> => {
 
-        const interceptors = this.interceptors, len = interceptors.length;
+        const {defaultProduce, interceptors} = this;
+        const len = interceptors.length;
+
         let index = 0;
         let result: HttpRequest = req;
         while (index < len) {
@@ -99,7 +107,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
             }
         }
 
-        req.body = serializeRequestBody(req.method, req.body, req.headers[contentTypeName], false);
+        req.body = serializeRequestBody(req.method, req.body, req.headers == null ? defaultProduce : req.headers[contentTypeName], false);
         return this.httpAdapter.send(req);
     };
 

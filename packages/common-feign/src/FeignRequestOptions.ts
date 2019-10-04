@@ -2,6 +2,8 @@ import {QueryParamType, UriVariable} from "./template/RestOperations";
 import {HttpResponse} from "./client/HttpResponse";
 import {HttpRequest} from "./client/HttpRequest";
 import {DataObfuscationOptions} from "./annotations/security/DataObfuscation";
+import {HttpRetryOptions} from "./client/HttpRetryOptions";
+import {ResponseExtractor} from "./template/ResponseExtractor";
 
 
 export interface FeignRequestBaseOptions {
@@ -74,12 +76,6 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, UIOptions 
     filterEmptyString?: boolean;
 
     /**
-     * 需要鉴权
-     *  默认：false
-     */
-    needAuth?: boolean;
-
-    /**
      * 进度条配置
      * 进度条控制可以在拦截器实现
      *
@@ -91,6 +87,19 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, UIOptions 
      * 数据混淆配置
      */
     dataObfuscationOptions?: DataObfuscationOptions;
+
+    /**
+     * 响应数据抓取
+     */
+    responseExtractor?: ResponseExtractor,
+}
+
+export interface FeignRetryRequestOptions {
+    /**
+     * 请求重试配置
+     */
+    retryOptions?: HttpRetryOptions;
+
 }
 
 
