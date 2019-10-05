@@ -1,11 +1,12 @@
 import {FeignConfiguration} from "../configuration/FeignConfiguration";
-import {FeignClient} from "../FeignClient";
-import {defaultApiModuleName} from "../constant/FeignConstVar";
+import {defaultApiModuleName, FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
-import {newProxyInstance} from "../../../common-proxy/src";
-import {ProxyScope} from "../../../common-proxy/src/ProxyScope";
 import {FeignProxyClient} from "../support/FeignProxyClient";
+import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {FeignClientBuilder, FeignClientBuilderFunction} from "../FeignClientBuilder";
+import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
+import "reflect-metadata";
 
 export interface FeignOptions {
 
@@ -37,19 +38,11 @@ export interface FeignOptions {
 
 
 /**
- * ignore property and method
- */
-const ignorePropertyNames: string[] = [
-    "getFeignMethodConfig",
-    "setFeignMethodConfig"
-];
-
-/**
  * 标记一个类为 feign　client
  * @param options
  * @constructor
  */
-export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: FeignOptions): any => {
+export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: FeignOptions): Function => {
 
     const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
 
@@ -72,8 +65,10 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
         const {getFeignClientBuilder} = feignConfiguration;
 
+        const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = getFeignClientBuilder ? getFeignClientBuilder<T>() : defaultFeignClientBuilder;
+
         /**
-         * 返回一个实现了FeignProxy接口的匿名类
+         * 返回一个实现了FeignProxyClient接口的匿名类
          */
         return class extends clazz implements FeignProxyClient {
 
@@ -81,19 +76,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             constructor() {
                 super();
                 //build feign client instance
-                return newProxyInstance(
-                    this, (target: T, serviceMethod: string, receiver: any) => {
-                        return (...args) => {
-                            // Different proxy service executors can be returned according to different strategies
-                            return getFeignClientBuilder().build().execute(target, serviceMethod,...args);
-                        };
-                    }, null,
-                    ProxyScope.METHOD,
-                    (object, key) => {
-                        const isIgnore = ignorePropertyNames.some((item) => item === key);
-                        return !isIgnore;
-                    }
-                );
+                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderFunction<this>>(feignClientBuilder)(this);
             }
 
             serviceName: string = feignOptions.value || clazz.name;
@@ -104,13 +87,6 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
              */
             feignOptions: FeignOptions = feignOptions;
 
-            /**
-             * 接口方法配置列表
-             * key 接口方法名称
-             * value 接口方法配置
-             */
-            protected configs: Map<string, FeignClientMethodConfig> = new Map<string, FeignClientMethodConfig>();
-
 
             /**
              * 获取获取接口方法的配置
@@ -118,16 +94,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
              */
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
 
-                return this.configs.get(serviceMethod) || {};
-            };
-
-            /**
-             * 设置服务方法的配置config
-             * @param serviceMethodName
-             * @param config
-             */
-            public setFeignMethodConfig = (serviceMethodName: string, config: FeignClientMethodConfig) => {
-                this.configs.set(serviceMethodName, config);
+                return Reflect.getMetadata(FEIGN_CLINE_META_KEY, clazz, serviceMethod);
             };
 
 

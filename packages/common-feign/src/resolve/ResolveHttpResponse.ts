@@ -1,4 +1,3 @@
-
 import {HttpResponse} from "../client/HttpResponse";
 
 

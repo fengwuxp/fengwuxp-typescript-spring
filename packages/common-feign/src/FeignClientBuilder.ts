@@ -1,12 +1,18 @@
-import {FeignClientExecutor} from "./FeignClientExecutor";
+import {FeignProxyClient} from "./support/FeignProxyClient";
 
 
 /**
  * feign client builder
  */
-export interface FeignClientBuilder {
+export interface FeignClientBuilderInterface<T extends FeignProxyClient = FeignProxyClient> {
 
 
-    build: <T extends FeignClientExecutor>() => T;
+    build: FeignClientBuilderFunction<T>;
 
 }
+
+export type FeignClientBuilderFunction<T extends FeignProxyClient = FeignProxyClient> = (client: T) => T;
+
+export type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> =
+    FeignClientBuilderFunction<T>
+    | FeignClientBuilderInterface<T>

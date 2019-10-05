@@ -1,8 +1,6 @@
-import {UriTemplateHandlerFunction, UriTemplateHandler, UriTemplateHandlerInterface} from "./UriTemplateHandler";
+import {UriTemplateHandlerFunction, UriTemplateHandlerInterface} from "./UriTemplateHandler";
 import {UriVariable} from "./RestOperations";
-import {parse} from "querystring";
 import {queryStringify} from "../utils/SerializeRequestBodyUtil";
-import any = jasmine.any;
 import {grabUrlPathVariable, matchUrlPathVariable} from "../constant/FeignConstVar";
 
 

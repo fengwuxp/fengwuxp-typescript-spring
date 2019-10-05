@@ -1,6 +1,4 @@
-
 import {FeignProxyClient} from "../../support/FeignProxyClient";
-
 
 
 /**

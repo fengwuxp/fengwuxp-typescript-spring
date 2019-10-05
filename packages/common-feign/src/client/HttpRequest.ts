@@ -1,7 +1,4 @@
 import {HttpMethod} from "../constant/HttpMethod";
-import {HttpMediaType} from "../constant/http/HttpMediaType";
-
-
 
 
 export interface HttpRequest {

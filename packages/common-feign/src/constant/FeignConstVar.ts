@@ -8,6 +8,7 @@ export const defaultApiModuleName = "default";
  */
 export const contentTypeName = 'Content-Type';
 
+export const FEIGN_CLINE_META_KEY = "FEIGN";
 
 /**
  * match shaped like example '1{xxx}2ll3' string

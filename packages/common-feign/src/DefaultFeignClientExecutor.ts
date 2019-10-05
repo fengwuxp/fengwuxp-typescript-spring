@@ -1,36 +1,59 @@
 import {FeignClientExecutor} from "./FeignClientExecutor";
 import {FeignProxyClient} from "./support/FeignProxyClient";
-import {FeignOptions} from "./annotations/Feign";
 import {RequestURLResolver} from "./resolve/url/RequestURLResolver";
 import {RequestHeaderResolver} from "./resolve/header/RequestHeaderResolver";
 import {ApiSignatureStrategy} from "./signature/ApiSignatureStrategy";
-import {FeignRequestBaseOptions, FeignRequestOptions, FeignRetryRequestOptions} from "./FeignRequestOptions";
+import {FeignRequestOptions, FeignRetryRequestOptions} from "./FeignRequestOptions";
 import RestTemplate from "./template/RestTemplate";
-import {url} from "inspector";
+import {restfulRequestURLResolver} from "./resolve/url/RestFulRequestURLResolver";
+import {simpleRequestHeaderResolver} from "./resolve/header/SimpleRequestHeaderResolver";
+import {RestOperations} from "./template/RestOperations";
+import {FeignClient} from "./FeignClient";
 
+/**
+ * default feign client executor
+ */
+export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
 
-export default class DefaultFeignClientExecutor implements FeignClientExecutor {
+    protected apiService: T;
 
     //url 解析
-    protected requestURLResolver: RequestURLResolver;
+    protected requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
 
     //请求头解析
-    protected requestHeaderResolver: RequestHeaderResolver;
+    protected requestHeaderResolver: RequestHeaderResolver = simpleRequestHeaderResolver;
 
     //签名策略
     protected apiSignatureStrategy: ApiSignatureStrategy;
 
+    protected restTemplate: RestOperations;
 
-    protected restTemplate: RestTemplate;
+
+    constructor(apiService: T) {
+        this.apiService = apiService;
+        const feignOptions = apiService.feignOptions;
+        const {
+            getRestTemplate,
+            getApiSignatureStrategy,
+            getRequestHeaderResolver,
+            getRequestURLResolver
+        } = feignOptions.configuration[0];
+        this.restTemplate = getRestTemplate();
+        if (getApiSignatureStrategy) {
+            this.apiSignatureStrategy = getApiSignatureStrategy();
+        }
+        if (getApiSignatureStrategy) {
+            this.requestURLResolver = getRequestURLResolver();
+        }
+        if (getApiSignatureStrategy) {
+            this.requestHeaderResolver = getRequestHeaderResolver();
+        }
+    }
+
+    invoke = (methodName: string, ...args): Promise<any> => {
 
 
-    execute = (apiService: FeignProxyClient, methodName: string, ...args): Promise<any> => {
-
-        // const serviceMethod: Function = apiService[methodName];
-        // if (serviceMethod) {
-        //     //execute method @see {@link ./support/GenerateAnnotationMethodConfig.ts}
-        //     serviceMethod.apply(apiService, [...args]);
-        // }
+        const {apiSignatureStrategy, restTemplate, apiService, requestURLResolver, requestHeaderResolver} = this;
 
         //原始参数
         const originalParameter = args[0] || {};
@@ -39,34 +62,34 @@ export default class DefaultFeignClientExecutor implements FeignClientExecutor {
         const options: FeignRequestOptions = args[1] || {};
 
         //解析url
-        const requestURL = this.requestURLResolver(apiService, methodName);
+        const requestURL = requestURLResolver(apiService, methodName);
         //处理请求头
-        let headers = this.requestHeaderResolver(apiService, methodName, options.headers, requestBody) || {};
+        let headers = requestHeaderResolver(apiService, methodName, options.headers, requestBody) || {};
         const queryParams = options.queryParams;
         if (queryParams) {
-            headers = this.requestHeaderResolver(apiService, methodName, options.headers, queryParams);
+            headers = requestHeaderResolver(apiService, methodName, options.headers, queryParams);
         }
 
         //请求requestMapping
-        const serviceMethodConfig = apiService.getFeignMethodConfig(methodName);
-        const {requestMapping, signature, retryOptions} = serviceMethodConfig;
+        const feignClientMethodConfig = apiService.getFeignMethodConfig(methodName);
+        const {requestMapping, signature, retryOptions} = feignClientMethodConfig;
 
         //解析参数生成 options，并提交请求
-        const fetchOptions: FeignRequestOptions = {
+        const feignRequestOptions: FeignRequestOptions = {
             ...options,
             headers,
             body: requestBody
         };
 
-        if (this.apiSignatureStrategy != null) {
+        if (apiSignatureStrategy != null) {
             //签名处理
             const signFields = signature != null ? signature.fields : null;
-            this.apiSignatureStrategy.sign(signFields, originalParameter, fetchOptions);
+            apiSignatureStrategy.sign(signFields, originalParameter, feignRequestOptions);
         }
 
         if (retryOptions) {
             //需要重试
-            (fetchOptions as FeignRetryRequestOptions).retryOptions = retryOptions;
+            (feignRequestOptions as FeignRetryRequestOptions).retryOptions = retryOptions;
         }
 
         //TODO 前置处理
@@ -74,13 +97,13 @@ export default class DefaultFeignClientExecutor implements FeignClientExecutor {
         // 2: 处理请求参数，包括无效参数过滤，文件类型参数转换
 
 
-        const httpResponse = this.restTemplate.execute(
+        const httpResponse = restTemplate.execute(
             requestURL,
             requestMapping.method,
-            fetchOptions.queryParams,
-            fetchOptions.body,
-            fetchOptions.responseExtractor,
-            fetchOptions.headers);
+            feignRequestOptions.queryParams,
+            feignRequestOptions.body,
+            feignRequestOptions.responseExtractor,
+            feignRequestOptions.headers);
 
 
         //TODO 后置处理

@@ -1,4 +1,3 @@
-
 import {RequestMappingOptions} from "../annotations/mapping/Mapping";
 import {SignatureOptions} from "../annotations/security/Signature";
 import {DataObfuscationOptions} from "../annotations/security/DataObfuscation";

@@ -1,4 +1,4 @@
-import {QueryParamType, UriVariable} from "./template/RestOperations";
+import {QueryParamType} from "./template/RestOperations";
 import {HttpResponse} from "./client/HttpResponse";
 import {HttpRequest} from "./client/HttpRequest";
 import {DataObfuscationOptions} from "./annotations/security/DataObfuscation";

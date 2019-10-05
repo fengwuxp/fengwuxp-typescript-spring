@@ -1,4 +1,4 @@
-import {ClientHttpRequestFunctionInterceptor, ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
+import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 
 
 /**

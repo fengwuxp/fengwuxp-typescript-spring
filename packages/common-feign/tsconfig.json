@@ -13,7 +13,8 @@
     "importHelpers": true,
     "types": [
       "node",
-      "jest"
+      "jest",
+      "reflect-metadata"
     ],
     "lib": [
       "dom",

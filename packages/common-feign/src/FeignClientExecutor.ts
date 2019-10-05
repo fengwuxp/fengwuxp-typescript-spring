@@ -5,10 +5,9 @@ import {FeignProxyClient} from "./support/FeignProxyClient";
 export interface FeignClientExecutor<T extends FeignClient = FeignProxyClient> {
 
     /**
-     * execute proxy service
-     * @param apiService   feign client instance
+     * execute proxy service method
      * @param methodName   method name
      * @param args        method params
      */
-    execute: (apiService: T, methodName: string, ...args) => Promise<any>;
+    invoke: (methodName: string, ...args) => Promise<any>;
 }

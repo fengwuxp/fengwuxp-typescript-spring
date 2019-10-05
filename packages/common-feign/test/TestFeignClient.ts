@@ -7,10 +7,12 @@ import {FeignRetry} from "../src/annotations/retry/FeignRetry";
 import {HttpMethod} from "../src/constant/HttpMethod";
 import {FeignRequestOptions} from "../src/FeignRequestOptions";
 import {DeleteMapping} from "../src/annotations/mapping/DeleteMapping";
+import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
 
 
 @Feign({
-    value: "/test"
+    value: "/test",
+    configuration: [new MockFeignConfiguration("http://test.ab.com/api/")]
 })
 export default class TestFeignClient {
 
