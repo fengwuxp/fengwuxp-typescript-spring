@@ -1,7 +1,7 @@
 import {RestOperations, UriVariable} from "./RestOperations";
 import {HttpResponse} from "../client/HttpResponse";
 import {HttpMethod} from "../constant/HttpMethod";
-import {ResponseExtractor, ResponseExtractorFunction} from "./ResponseExtractor";
+import {ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface} from "./ResponseExtractor";
 import {
     headResponseExtractor,
     objectResponseExtractor,
@@ -11,7 +11,11 @@ import {
 import {HttpClient} from "../client/HttpClient";
 import {UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface} from "./UriTemplateHandler";
 import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
-import {ResponseErrorHandler, ResponseErrorHandlerFunction} from "./ResponseErrorHandler";
+import {
+    ResponseErrorHandler,
+    ResponseErrorHandlerFunction,
+    ResponseErrorHandlerInterFace
+} from "./ResponseErrorHandler";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
 
@@ -88,7 +92,7 @@ export default class RestTemplate implements RestOperations {
 
         //handling path parameters in the request body, if any
         let realUrl = replacePathVariableValue(url, request);
-        realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(_uriTemplateHandler)(realUrl, uriVariables);
+        realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler).expand(realUrl, uriVariables);
 
         let httpResponse;
         try {
@@ -102,13 +106,13 @@ export default class RestTemplate implements RestOperations {
             //handle error
             console.log("http error", error);
             if (_responseErrorHandler) {
-                return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerFunction<E>>(_responseErrorHandler)(error);
+                return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(error);
             }
 
         }
 
         if (responseExtractor) {
-            return invokeFunctionInterface<ResponseExtractor, ResponseExtractorFunction>(responseExtractor)(httpResponse);
+            return invokeFunctionInterface<ResponseExtractor<E>, ResponseExtractorInterface<E>>(responseExtractor).extractData(httpResponse);
         }
 
         return httpResponse;

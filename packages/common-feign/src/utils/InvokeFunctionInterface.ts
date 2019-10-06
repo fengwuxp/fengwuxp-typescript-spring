@@ -1,12 +1,16 @@
+import {newProxyInstanceEnhance} from "fengwuxp-common-proxy/src";
+
 /**
  * invoke a single function interface
  * @param handle
  */
-export const invokeFunctionInterface = <T,F>(handle: T):F => {
+export const invokeFunctionInterface = <T, I/*interface type*/>(handle: T): I => {
     if (typeof handle == "function") {
-        return handle as any;
+        //TODO cache proxy object
+        return newProxyInstanceEnhance<I>({} as I, null, (object, propertyKey, receiver) => {
+            return handle;
+        })
     } else {
-        const name = Object.keys(handle)[0];
-        return handle[name] as F;
+        return handle as any;
     }
 };

@@ -4,7 +4,11 @@ import {
     DefaultUriTemplateHandler
 } from "../../src/template/DefaultUriTemplateHandler";
 import {invokeFunctionInterface} from "../../src/utils/InvokeFunctionInterface";
-import {UriTemplateHandler, UriTemplateHandlerFunction} from "../../src/template/UriTemplateHandler";
+import {
+    UriTemplateHandler,
+    UriTemplateHandlerFunction,
+    UriTemplateHandlerInterface
+} from "../../src/template/UriTemplateHandler";
 
 
 const logger = log4js.getLogger();
@@ -47,11 +51,11 @@ describe("template test", () => {
     });
 
     test("invoke function Interface ", () => {
-        const expand1 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(defaultUriTemplateHandler)("http://a.b.com/member/{id}", {
+        const expand1 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateHandler).expand("http://a.b.com/member/{id}", {
             "id": 2,
             name: "张三"
         });
-        const expand2 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(defaultUriTemplateFunctionHandler)("http://a.b.com/member/{id}", {
+        const expand2 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateFunctionHandler).expand("http://a.b.com/member/{id}", {
             "id": 2,
             name: "张三"
         });

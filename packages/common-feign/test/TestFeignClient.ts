@@ -40,10 +40,13 @@ export default class TestFeignClient {
     testQuery: (evt: any, options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: ["userName"]})
-    @PostMapping({value:"find_member/{name}",headers: {myHeader: "tk_{memberId}"}})
+    @PostMapping({
+        value: "find_member/{name}",
+        headers: {myHeader: "tk_{memberId}"}
+    })
     findMember: (
         request: {
-            name:string,
+            name: string,
             userName: string,
             memberId: number,
         },

@@ -4,7 +4,7 @@ import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegis
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
-import {FeignClientBuilder, FeignClientBuilderFunction} from "../FeignClientBuilder";
+import {FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface} from "../FeignClientBuilder";
 import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 import "reflect-metadata";
 
@@ -49,7 +49,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
     const feignOptions: FeignOptions = {
         apiModule: defaultApiModuleName,
         configuration: [defaultFeignConfiguration],
-        ...(options || {})
+        ...options
     };
 
     const feignConfiguration = feignOptions.configuration[0];
@@ -76,7 +76,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             constructor() {
                 super();
                 //build feign client instance
-                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderFunction<this>>(feignClientBuilder)(this);
+                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
             }
 
             serviceName: string = feignOptions.value || clazz.name;

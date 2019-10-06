@@ -20,14 +20,13 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
     }
 
     const configHeaders = apiServiceConfig.requestMapping.headers;
-    const uriVariablesIsArray = Array.isArray(data);
     const newHeaders = {
-        ...(headers || {})
+        ...headers
     };
     //marge headers
     for (const key in configHeaders) {
         const headerValue: string = configHeaders[key];
-        configHeaders[key] = replacePathVariableValue(headerValue, data);
+        newHeaders[key] = replacePathVariableValue(headerValue, data);
     }
 
     //return new headers

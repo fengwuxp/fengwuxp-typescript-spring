@@ -5,7 +5,11 @@ import {HttpAdapter} from "../adapter/HttpAdapter";
 import {HttpMethod} from "../constant/HttpMethod";
 import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
-import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction} from "./ClientHttpRequestInterceptor";
+import {
+    ClientHttpRequestInterceptor,
+    ClientHttpRequestInterceptorFunction,
+    ClientHttpRequestInterceptorInterface
+} from "./ClientHttpRequestInterceptor";
 import {InterceptingHttpAccessor} from "./InterceptingHttpAccessor";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
@@ -96,12 +100,12 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
         while (index < len) {
             const interceptor = interceptors[index];
             index++;
-            const handle = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorFunction<T>>(interceptor);
-            if (handle == null) {
+            const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
+            if (clientHttpRequestInterceptorInterface == null) {
                 continue;
             }
             try {
-                requestData = await handle(requestData);
+                requestData = await clientHttpRequestInterceptorInterface.interceptor(requestData);
             } catch (e) {
                 // error ignore
                 console.error("http request interceptor handle exception", e);
