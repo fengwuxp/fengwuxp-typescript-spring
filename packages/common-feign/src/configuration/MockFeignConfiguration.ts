@@ -6,6 +6,9 @@ import DefaultHttpClient from "../client/DefaultHttpClient";
 import RestTemplate from "../template/RestTemplate";
 import MockHttpAdapter from "../adapter/mock/MockHttpAdapter";
 import RoutingClientHttpRequestInterceptor from "../client/RoutingClientHttpRequestInterceptor";
+import {HttpRequest} from "../client/HttpRequest";
+import NetworkClientHttpRequestInterceptor from "../client/NetworkClientHttpRequestInterceptor";
+import {NetworkStatus, NetworkStatusListener, NetworkType} from "../client/NetworkStatusListener";
 
 
 export class MockFeignConfiguration implements FeignConfiguration {
@@ -22,9 +25,28 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getHttpAdapter = () => new MockHttpAdapter(this.baseUrl);
 
-    getHttpClient = () => {
+    getHttpClient = <T extends HttpRequest = HttpRequest>() => {
         const httpClient = new DefaultHttpClient(this.getHttpAdapter());
-        const interceptors = [new RoutingClientHttpRequestInterceptor(this.baseUrl)];
+        const interceptors = [
+            new NetworkClientHttpRequestInterceptor<T>(new class implements NetworkStatusListener {
+                getNetworkStatus = (): Promise<NetworkStatus> => {
+
+                    return Promise.reject({
+                        isConnected: true,
+                        networkType: NetworkType["4G"]
+                    })
+                };
+
+                onChange = (callback: (networkStatus: NetworkStatus) => void): void => {
+                    callback({
+                        isConnected: true,
+                        networkType: NetworkType["4G"]
+                    })
+                };
+
+            }),
+            new RoutingClientHttpRequestInterceptor(this.baseUrl)
+        ];
         httpClient.setInterceptors(interceptors);
         return httpClient;
     };

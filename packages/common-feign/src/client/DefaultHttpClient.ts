@@ -17,7 +17,7 @@ import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 /**
  * default http client
  */
-export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T>, InterceptingHttpAccessor {
+export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
 
     private httpAdapter: HttpAdapter<T>;
 

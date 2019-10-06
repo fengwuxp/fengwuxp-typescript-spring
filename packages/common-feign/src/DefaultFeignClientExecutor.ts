@@ -70,11 +70,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             headers = requestHeaderResolver(apiService, methodName, options.headers, queryParams);
         }
 
-        //请求requestMapping
+        //requestMapping
         const feignClientMethodConfig = apiService.getFeignMethodConfig(methodName);
         const {requestMapping, signature, retryOptions} = feignClientMethodConfig;
 
-        //解析参数生成 options，并提交请求
+        //解析参数生成 feignRequestOptions
         const feignRequestOptions: FeignRequestOptions = {
             ...options,
             headers,

@@ -9,6 +9,7 @@ import {FeignProxyClient} from "../support/FeignProxyClient";
 import {FeignClientExecutor} from "../FeignClientExecutor";
 import {FeignClient} from "../FeignClient";
 import RestTemplate from "../template/RestTemplate";
+import {HttpRequest} from "../client/HttpRequest";
 
 /**
  * feign configuration
@@ -17,9 +18,9 @@ import RestTemplate from "../template/RestTemplate";
 export interface FeignConfiguration {
 
 
-    getHttpAdapter: () => HttpAdapter;
+    getHttpAdapter: <T extends HttpRequest = HttpRequest>() => HttpAdapter;
 
-    getHttpClient: () => HttpClient;
+    getHttpClient: <T extends HttpRequest = HttpRequest> () => HttpClient;
 
     getRestTemplate: () => RestOperations;
 

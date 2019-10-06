@@ -1,14 +1,10 @@
-import {
-    ClientHttpRequestInterceptor,
-    ClientHttpRequestInterceptorInterface
-} from "../client/ClientHttpRequestInterceptor";
 import {HttpResponse} from "../client/HttpResponse";
 import {RestOperationOptions} from "../template/RestOperationOptions";
 
 /**
  * Used to intercept the HTTP method  when accessing
  */
-export interface HttpAccessorInterceptor extends ClientHttpRequestInterceptorInterface {
+export interface HttpAccessorInterceptor  {
 
     /**
      * 请求之后的处理，仅在请求成功时执行
