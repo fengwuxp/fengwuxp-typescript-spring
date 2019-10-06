@@ -19,7 +19,10 @@ export const restfulRequestURLResolver: RequestURLResolver = (apiService: FeignP
  */
 export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions: FeignOptions) => {
 
-    const apiModule = feignOptions.apiModule;
+    const {apiModule, url} = feignOptions;
+    if (url) {
+        return `${url}`
+    }
     const serviceName = apiService.serviceName;
     return `@${apiModule}${serviceName.startsWith("/") ? serviceName : "/" + serviceName}`;
 };

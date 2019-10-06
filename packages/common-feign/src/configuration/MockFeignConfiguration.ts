@@ -5,6 +5,7 @@ import BrowserHttpAdapter from "../adapter/browser/BrowserHttpAdapter";
 import DefaultHttpClient from "../client/DefaultHttpClient";
 import RestTemplate from "../template/RestTemplate";
 import MockHttpAdapter from "../adapter/mock/MockHttpAdapter";
+import RoutingClientHttpRequestInterceptor from "../client/RoutingClientHttpRequestInterceptor";
 
 
 export class MockFeignConfiguration implements FeignConfiguration {
@@ -21,7 +22,12 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getHttpAdapter = () => new MockHttpAdapter(this.baseUrl);
 
-    getHttpClient = () => new DefaultHttpClient(this.getHttpAdapter());
+    getHttpClient = () => {
+        const httpClient = new DefaultHttpClient(this.getHttpAdapter());
+        const interceptors = [new RoutingClientHttpRequestInterceptor(this.baseUrl)];
+        httpClient.setInterceptors(interceptors);
+        return httpClient;
+    };
 
     getRestTemplate = () => new RestTemplate(this.getHttpClient());
 

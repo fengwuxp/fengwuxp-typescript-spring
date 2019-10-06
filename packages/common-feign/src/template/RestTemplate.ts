@@ -13,6 +13,7 @@ import {UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterf
 import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
 import {ResponseErrorHandler, ResponseErrorHandlerFunction} from "./ResponseErrorHandler";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
 
 /**
  *  http rest template
@@ -84,7 +85,10 @@ export default class RestTemplate implements RestOperations {
 
         // handle url and query params
         const {_uriTemplateHandler, _responseErrorHandler,} = this;
-        const realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(_uriTemplateHandler)(url, uriVariables);
+
+        //handling path parameters in the request body, if any
+        let realUrl = replacePathVariableValue(url, request);
+        realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerFunction>(_uriTemplateHandler)(realUrl, uriVariables);
 
         let httpResponse;
         try {

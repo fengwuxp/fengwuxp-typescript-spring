@@ -6,7 +6,7 @@ import {HttpRequest} from "./HttpRequest";
  */
 export interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
 
-    request: ClientHttpRequestInterceptorFunction<T>;
+    interceptor: ClientHttpRequestInterceptorFunction<T>;
 }
 
 

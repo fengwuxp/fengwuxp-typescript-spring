@@ -12,6 +12,7 @@ import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguratio
 
 @Feign({
     value: "/test",
+    // url:"http://a.bc.cn/api",
     configuration: [new MockFeignConfiguration("http://test.ab.com/api/")]
 })
 export default class TestFeignClient {
@@ -39,9 +40,10 @@ export default class TestFeignClient {
     testQuery: (evt: any, options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: ["userName"]})
-    @PostMapping({headers: {myHeader: "tk_{memberId}"}})
+    @PostMapping({value:"find_member/{name}",headers: {myHeader: "tk_{memberId}"}})
     findMember: (
         request: {
+            name:string,
             userName: string,
             memberId: number,
         },

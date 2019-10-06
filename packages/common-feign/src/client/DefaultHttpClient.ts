@@ -5,9 +5,10 @@ import {HttpAdapter} from "../adapter/HttpAdapter";
 import {HttpMethod} from "../constant/HttpMethod";
 import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
-import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
+import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction} from "./ClientHttpRequestInterceptor";
 import {InterceptingHttpAccessor} from "./InterceptingHttpAccessor";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
+import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 
 /**
  * default http client
@@ -16,14 +17,14 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
 
     private httpAdapter: HttpAdapter<T>;
 
-    private interceptors: Array<ClientHttpRequestInterceptor> = [];
+    private interceptors: Array<ClientHttpRequestInterceptor<T>> = [];
 
     private defaultProduce;
 
 
     constructor(httpAdapter: HttpAdapter<T>,
                 defaultProduce?: HttpMediaType,
-                interceptors?: Array<ClientHttpRequestInterceptor>) {
+                interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
         this.httpAdapter = httpAdapter;
         this.setInterceptors(interceptors || []);
         this.defaultProduce = defaultProduce || HttpMediaType.APPLICATION_JSON_UTF8;
@@ -88,35 +89,36 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> impl
     send = async (req: T): Promise<HttpResponse> => {
 
         const {defaultProduce, interceptors} = this;
-        const len = interceptors.length;
 
+        const len = interceptors.length;
         let index = 0;
-        let result: HttpRequest = req;
+        let requestData: T = req;
         while (index < len) {
             const interceptor = interceptors[index];
             index++;
-            const handle = typeof interceptor === "function" ? interceptor : interceptor.request;
+            const handle = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorFunction<T>>(interceptor);
             if (handle == null) {
                 continue;
             }
             try {
-                result = await handle(result);
+                requestData = await handle(requestData);
             } catch (e) {
                 // error ignore
                 console.error("http request interceptor handle exception", e);
             }
         }
 
-        req.body = serializeRequestBody(req.method, req.body, req.headers == null ? defaultProduce : req.headers[contentTypeName], false);
-        return this.httpAdapter.send(req);
+        const contentType = requestData.headers == null ? defaultProduce : requestData.headers[contentTypeName] || defaultProduce;
+        requestData.body = serializeRequestBody(requestData.method, requestData.body, contentType, false);
+        return this.httpAdapter.send(requestData);
     };
 
-    getInterceptors = (): Array<ClientHttpRequestInterceptor> => {
+    getInterceptors = (): Array<ClientHttpRequestInterceptor<T>> => {
         // simple value copy
         return [...this.interceptors];
     };
 
-    setInterceptors = (interceptors: Array<ClientHttpRequestInterceptor>) => {
+    setInterceptors = (interceptors: Array<ClientHttpRequestInterceptor<T>>) => {
         this.interceptors.push(...interceptors);
 
         // filter null

@@ -2,7 +2,7 @@ import {RequestHeaderResolver} from "./RequestHeaderResolver";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
 import {UriVariable} from "../../template/RestOperations";
 import {grabUrlPathVariable, matchUrlPathVariable} from "../../constant/FeignConstVar";
-import {replaceUriVariableValue} from "../../template/DefaultUriTemplateHandler";
+import {replacePathVariableValue} from "../../helper/ReplaceUriVariableHelper";
 
 
 /**
@@ -27,10 +27,7 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
     //marge headers
     for (const key in configHeaders) {
         const headerValue: string = configHeaders[key];
-        const isExistPathVariable = matchUrlPathVariable.test(headerValue);
-        if (isExistPathVariable) {
-            newHeaders[key] = headerValue.replace(grabUrlPathVariable, replaceUriVariableValue(data, uriVariablesIsArray));
-        }
+        configHeaders[key] = replacePathVariableValue(headerValue, data);
     }
 
     //return new headers

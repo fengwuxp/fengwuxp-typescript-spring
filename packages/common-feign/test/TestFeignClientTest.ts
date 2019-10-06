@@ -15,7 +15,11 @@ describe("test feign client", () => {
 
     test("test feign client", async () => {
 
-        const result = await testFeignClient.findMember({userName: "1", memberId: 1});
+        const result = await testFeignClient.findMember({
+            name: "张三",
+            userName: "1",
+            memberId: 1
+        });
         console.log("http result", result);
     }, 10 * 1000);
 

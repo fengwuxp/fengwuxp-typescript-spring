@@ -19,10 +19,10 @@ export const serializeRequestBody = (method: string,
                                      filterNoneValue: boolean = true): string => {
 
     if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
-        return
+        return body as any
     }
     if (body == null || contentType == null) {
-        return
+        return body as any
     }
 
     if (typeof body === "string") {
