@@ -1,7 +1,5 @@
 import {HttpRequest} from "./HttpRequest";
-import {
-    ClientHttpRequestInterceptorInterface
-} from "./ClientHttpRequestInterceptor";
+import {ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener} from "./NetworkStatusListener";
 import {NoneNetworkFailBack} from "./NoneNetworkFailBack";
 import SimpleNetworkStatusListener from "./SimpleNetworkStatusListener";

@@ -17,7 +17,7 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given URI variables, if any.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
@@ -29,7 +29,7 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
@@ -42,7 +42,7 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return all HTTP headers of that resource
      * @see {@link UriVariable}
      */
@@ -60,7 +60,7 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
@@ -76,7 +76,7 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
@@ -92,7 +92,7 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
@@ -108,7 +108,7 @@ export interface RestOperations {
      * @param url the URL
      * @param request the Object to be PUT (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @see {@link UriVariable}
      */
     put: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
@@ -125,7 +125,7 @@ export interface RestOperations {
      * @param url the URL
      * @param request the object to be PATCHed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
@@ -138,7 +138,7 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given URI variables, if any.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @see {@link UriVariable}
      */
     delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
@@ -150,7 +150,7 @@ export interface RestOperations {
      * <p>URI Template variables are expanded using the given map.
      * @param url the URL
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
-     * @param headers 
+     * @param headers
      * @return the value of the allow header
      * @see {@link UriVariable}
      */
@@ -163,7 +163,7 @@ export interface RestOperations {
      * @param uriVariables object that extracts the return value from the response
      * @param request object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
-     * @param headers 
+     * @param headers
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
     execute: <E = any>(url: string,
@@ -178,12 +178,12 @@ export interface RestOperations {
  * uri path variable
  * example url: "http://a.b.com/{module}/{id}", ["member",1]  ==> "http://a.b.com/member/1"
  */
-type UriPathVariable = Array<boolean | string | number>;
+type UriPathVariable = Array<boolean | string | number | Date>;
 
 /**
  * query params type
  */
-export type QueryParamType = Record<string, boolean | number | string | UriPathVariable>;
+export type QueryParamType = Record<string, boolean | number | string | Date | UriPathVariable>;
 
 /**
  * uri variable type

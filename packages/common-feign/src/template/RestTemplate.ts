@@ -13,7 +13,6 @@ import {UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterf
 import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
 import {
     ResponseErrorHandler,
-    ResponseErrorHandlerFunction,
     ResponseErrorHandlerInterFace
 } from "./ResponseErrorHandler";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
@@ -104,9 +103,15 @@ export default class RestTemplate implements RestOperations {
             });
         } catch (error) {
             //handle error
-            console.log("http error", error);
             if (_responseErrorHandler) {
-                return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(error);
+                return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
+                    {
+                        url: realUrl,
+                        method,
+                        headers,
+                        body: request
+                    },
+                    error);
             }
 
         }
@@ -120,11 +125,11 @@ export default class RestTemplate implements RestOperations {
     };
 
 
-    set uriTemplateHandler(value: UriTemplateHandlerInterface | ((uriTemplate: string, uriVariables: UriVariable) => string)) {
+    set uriTemplateHandler(value: UriTemplateHandler) {
         this._uriTemplateHandler = value;
     }
 
-    set responseErrorHandler(value: ResponseErrorHandler | ((response: HttpResponse<any>) => (Promise | any))) {
+    set responseErrorHandler(value: ResponseErrorHandler) {
         this._responseErrorHandler = value;
     }
 }

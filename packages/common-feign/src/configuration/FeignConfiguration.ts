@@ -10,6 +10,7 @@ import {FeignClientExecutor} from "../FeignClientExecutor";
 import {FeignClient} from "../FeignClient";
 import RestTemplate from "../template/RestTemplate";
 import {HttpRequest} from "../client/HttpRequest";
+import FeignClientExecutorInterceptorExecutor from "../FeignClientExecutorInterceptorExecutor";
 
 /**
  * feign configuration
@@ -33,4 +34,6 @@ export interface FeignConfiguration {
     getRequestHeaderResolver?: () => RequestHeaderResolver;
 
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
+
+    getFeignClientExecutorInterceptorExecutor?: () => FeignClientExecutorInterceptorExecutor;
 }

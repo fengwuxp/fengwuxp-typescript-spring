@@ -1,4 +1,5 @@
 import {HttpMethod} from "../constant/HttpMethod";
+import {HttpRetryOptions} from "./HttpRetryOptions";
 
 
 export interface HttpRequest {
@@ -23,7 +24,7 @@ export interface HttpRequest {
     /**
      * request data
      */
-    headers?: HeadersInit;
+    headers?: Record<string, string>;
 
     /**
      * request time out times
@@ -31,6 +32,10 @@ export interface HttpRequest {
      */
     timeout?: number;
 
+    /**
+     * retry request options
+     */
+    // retryOptions?: HttpRetryOptions;
 
     // /**
     //  * content type

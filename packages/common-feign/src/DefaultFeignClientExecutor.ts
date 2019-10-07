@@ -9,6 +9,9 @@ import {restfulRequestURLResolver} from "./resolve/url/RestFulRequestURLResolver
 import {simpleRequestHeaderResolver} from "./resolve/header/SimpleRequestHeaderResolver";
 import {RestOperations} from "./template/RestOperations";
 import {FeignClient} from "./FeignClient";
+import RetryHttpClient from "./client/RetryHttpClient";
+import {HttpClient} from "./client/HttpClient";
+import FeignClientExecutorInterceptorExecutor from "./FeignClientExecutorInterceptorExecutor";
 
 /**
  * default feign client executor
@@ -28,6 +31,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     protected restTemplate: RestOperations;
 
+    protected feignClientExecutorInterceptorExecutor: FeignClientExecutorInterceptorExecutor;
+
 
     constructor(apiService: T) {
         this.apiService = apiService;
@@ -36,9 +41,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRestTemplate,
             getApiSignatureStrategy,
             getRequestHeaderResolver,
-            getRequestURLResolver
+            getRequestURLResolver,
+            getFeignClientExecutorInterceptorExecutor
         } = feignOptions.configuration[0];
         this.restTemplate = getRestTemplate();
+        this.feignClientExecutorInterceptorExecutor = getFeignClientExecutorInterceptorExecutor();
         if (getApiSignatureStrategy) {
             this.apiSignatureStrategy = getApiSignatureStrategy();
         }
@@ -50,10 +57,17 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
     }
 
-    invoke = (methodName: string, ...args): Promise<any> => {
+    invoke = async (methodName: string, ...args): Promise<any> => {
 
 
-        const {apiSignatureStrategy, restTemplate, apiService, requestURLResolver, requestHeaderResolver} = this;
+        const {
+            apiSignatureStrategy,
+            restTemplate,
+            apiService,
+            requestURLResolver,
+            requestHeaderResolver,
+            feignClientExecutorInterceptorExecutor
+        } = this;
 
         //原始参数
         const originalParameter = args[0] || {};
@@ -75,7 +89,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         const {requestMapping, signature, retryOptions} = feignClientMethodConfig;
 
         //解析参数生成 feignRequestOptions
-        const feignRequestOptions: FeignRequestOptions = {
+        let feignRequestOptions: FeignRequestOptions = {
             ...options,
             headers,
             body: requestBody
@@ -87,30 +101,40 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             apiSignatureStrategy.sign(signFields, originalParameter, feignRequestOptions);
         }
 
-        if (retryOptions) {
-            //需要重试
-            (feignRequestOptions as FeignRetryRequestOptions).retryOptions = retryOptions;
+        // pre handle
+        feignRequestOptions = await feignClientExecutorInterceptorExecutor.preHandle(feignRequestOptions);
+
+        let httpResponse: any;
+        try {
+            if (retryOptions) {
+                // need retry
+                httpResponse = await new RetryHttpClient({
+                    send: (req) => {
+                        return restTemplate.execute(requestURL,
+                            requestMapping.method,
+                            feignRequestOptions.queryParams,
+                            feignRequestOptions.body,
+                            feignRequestOptions.responseExtractor,
+                            feignRequestOptions.headers)
+                    }
+                }, retryOptions).send(null);
+
+            } else {
+                httpResponse = await restTemplate.execute(
+                    requestURL,
+                    requestMapping.method,
+                    feignRequestOptions.queryParams,
+                    feignRequestOptions.body,
+                    feignRequestOptions.responseExtractor,
+                    feignRequestOptions.headers);
+            }
+        } catch (e) {
+            // error
+            httpResponse = e;
         }
 
-        //TODO 前置处理
-        // 1: 处理请求进度条的控制
-        // 2: 处理请求参数，包括无效参数过滤，文件类型参数转换
-
-
-        const httpResponse = restTemplate.execute(
-            requestURL,
-            requestMapping.method,
-            feignRequestOptions.queryParams,
-            feignRequestOptions.body,
-            feignRequestOptions.responseExtractor,
-            feignRequestOptions.headers);
-
-
-        //TODO 后置处理
-        // 1：关闭请求请求进度条
-        // 2：进行统一响应处理，如错误提示等
-
-        return null;
+        //post handle
+        return await feignClientExecutorInterceptorExecutor.postHandle(feignRequestOptions, httpResponse);
 
     };
 

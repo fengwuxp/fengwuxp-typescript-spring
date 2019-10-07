@@ -1,6 +1,4 @@
-import {
-    ClientHttpRequestInterceptorInterface
-} from "./ClientHttpRequestInterceptor";
+import {ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {HttpRequest} from "./HttpRequest";
 import {defaultApiModuleName} from "../constant/FeignConstVar";
 

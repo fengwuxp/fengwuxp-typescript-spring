@@ -14,7 +14,7 @@ import {mediaTypeIsEq} from "./MediaTypeUtil";
  * @param filterNoneValue  filter none value
  */
 export const serializeRequestBody = (method: string,
-                                     body: HttpRequestBody,
+                                     body: HttpRequestBody | string,
                                      contentType: HttpMediaType,
                                      filterNoneValue: boolean = true): string => {
 

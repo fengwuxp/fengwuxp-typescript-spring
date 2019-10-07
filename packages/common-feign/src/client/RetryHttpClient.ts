@@ -3,15 +3,17 @@ import {HttpRequest} from "./HttpRequest";
 import {HttpRetryOptions} from "./HttpRetryOptions";
 import {HttpResponse} from "./HttpResponse";
 import DefaultHttpClient from "./DefaultHttpClient";
+import {HttpAdapter} from "../adapter/HttpAdapter";
+import AbstractHttpClient from "./AbstractHttpClient";
+import {HttpMediaType} from "../constant/http/HttpMediaType";
+import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 
 
 /**
  * support retry http client
  * HttpClient with retry, need to be recreated each time you use this client
  */
-export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extends DefaultHttpClient<T> implements HttpClient<T> {
-
-    private httpClient: HttpClient<T>;
+export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
 
     // retry options
     private retryOptions: HttpRetryOptions;
@@ -21,9 +23,12 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
 
     private retryEnd = false;
 
-    constructor(httpClient: HttpClient<T>, retryOptions: HttpRetryOptions) {
-        super(httpClient);
-        this.httpClient = httpClient;
+
+    constructor(httpAdapter: HttpAdapter<T>,
+                retryOptions: HttpRetryOptions,
+                defaultProduce?: HttpMediaType,
+                interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
+        super(httpAdapter, defaultProduce, interceptors);
         this.retryOptions = retryOptions;
         if (this.retryOptions.onRetry == null) {
             this.retryOptions.onRetry = this.onRetry;
@@ -44,7 +49,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
         return new Promise<HttpResponse>((resolve, reject) => {
 
             const retries = retryOptions.retries;
-            const httpClient = this.httpClient;
+            const httpClient = this.httpAdapter;
 
             const p: Promise<HttpResponse> = httpClient.send(req).catch((response) => {
                 //try retry
@@ -133,5 +138,6 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
         // http response code gte 500
         return httpCode >= 500;
     };
-
 }
+
+

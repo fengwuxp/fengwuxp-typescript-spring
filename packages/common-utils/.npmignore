@@ -1,0 +1,8 @@
+# Created by .ignore support plugin (hsz.mobi)
+tsconfig.json
+.awcache
+jest.config.js
+test
+tsconfig.test.json
+webpack.config.js
+scripts

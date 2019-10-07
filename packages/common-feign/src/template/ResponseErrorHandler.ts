@@ -6,7 +6,7 @@ import {HttpRequest} from "../client/HttpRequest";
  * Strategy interface used by the {@link RestTemplate} to determine
  * whether a particular response has an error or not.
  */
-export interface ResponseErrorHandlerInterFace<T extends HttpRequest = HttpRequest> {
+export interface ResponseErrorHandlerInterFace<T extends HttpRequest = HttpRequest,E = any> {
 
     /**
      * Indicate whether the given response has any errors.
@@ -18,7 +18,7 @@ export interface ResponseErrorHandlerInterFace<T extends HttpRequest = HttpReque
     // hasError: (response: HttpResponse) => boolean | Promise<boolean>;
 
 
-    handleError: ResponseErrorHandlerFunction<T>;
+    handleError: ResponseErrorHandlerFunction<T,E>;
 }
 
 /**
@@ -27,6 +27,8 @@ export interface ResponseErrorHandlerInterFace<T extends HttpRequest = HttpReque
  * has returned {@code true}.
  * @param response the response with the error
  */
-export type ResponseErrorHandlerFunction<T extends HttpRequest = HttpRequest> = (request:T, response: HttpResponse<any>) => Promise<HttpResponse<any>>;
+export type ResponseErrorHandlerFunction<T extends HttpRequest = HttpRequest, E = any> = (request: T, response: HttpResponse<any>) => Promise<E>;
 
-export type ResponseErrorHandler<T extends HttpRequest = HttpRequest> = ResponseErrorHandlerInterFace<T> | ResponseErrorHandlerFunction<T>;
+export type ResponseErrorHandler<T extends HttpRequest = HttpRequest, E = any> =
+    ResponseErrorHandlerInterFace<T>
+    | ResponseErrorHandlerFunction<T>;

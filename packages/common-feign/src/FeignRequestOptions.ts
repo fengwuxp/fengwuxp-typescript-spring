@@ -94,9 +94,9 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, UIOptions 
     responseExtractor?: ResponseExtractor,
 }
 
-export interface FeignRetryRequestOptions {
+export interface FeignRetryRequestOptions extends FeignRequestOptions{
     /**
-     * 请求重试配置
+     * retry request options
      */
     retryOptions?: HttpRetryOptions;
 

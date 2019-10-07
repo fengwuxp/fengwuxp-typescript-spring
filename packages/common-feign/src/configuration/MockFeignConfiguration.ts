@@ -9,6 +9,10 @@ import RoutingClientHttpRequestInterceptor from "../client/RoutingClientHttpRequ
 import {HttpRequest} from "../client/HttpRequest";
 import NetworkClientHttpRequestInterceptor from "../client/NetworkClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "../client/NetworkStatusListener";
+import FeignClientExecutorInterceptorExecutor from "../FeignClientExecutorInterceptorExecutor";
+import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
+import {ProgressBarOptions} from "../FeignRequestOptions";
+import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
 
 
 export class MockFeignConfiguration implements FeignConfiguration {
@@ -52,6 +56,21 @@ export class MockFeignConfiguration implements FeignConfiguration {
     };
 
     getRestTemplate = () => new RestTemplate(this.getHttpClient());
+
+    getFeignClientExecutorInterceptorExecutor = (): FeignClientExecutorInterceptorExecutor => {
+
+        return new FeignClientExecutorInterceptorExecutor([
+            new ProcessBarExecutorInterceptor({
+                showProgressBar: (progressBarOptions?: ProgressBarOptions) => {
+                    console.log("showProgressBar", progressBarOptions);
+                },
+                hideProgressBar: () => {
+                    console.log("hideProgressBar");
+                }
+            }),
+            new CodecFeignClientExecutorInterceptor([], [])
+        ]);
+    };
 
 
 }
