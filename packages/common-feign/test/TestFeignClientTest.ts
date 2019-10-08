@@ -23,4 +23,24 @@ describe("test feign client", () => {
         console.log("http result", result);
     }, 10 * 1000);
 
+    test("test get example", async () => {
+
+        const result = await testFeignClient.getExample({
+            id: 1,
+            date: new Date(),
+            test: "1"
+        });
+        console.log("http result", result);
+    }, 10 * 1000);
+
+    test("test retry", async () => {
+
+        const result = await testFeignClient.testQuery({
+            id: 1,
+            date: new Date(),
+            test: "1"
+        });
+        console.log("http result", result);
+    }, 25 * 1000);
+
 });

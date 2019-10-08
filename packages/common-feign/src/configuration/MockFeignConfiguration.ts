@@ -13,6 +13,7 @@ import FeignClientExecutorInterceptorExecutor from "../FeignClientExecutorInterc
 import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
 import {ProgressBarOptions} from "../FeignRequestOptions";
 import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
+import DateEncoder from "../codec/DateEncoder";
 
 
 export class MockFeignConfiguration implements FeignConfiguration {
@@ -35,17 +36,21 @@ export class MockFeignConfiguration implements FeignConfiguration {
             new NetworkClientHttpRequestInterceptor<T>(new class implements NetworkStatusListener {
                 getNetworkStatus = (): Promise<NetworkStatus> => {
 
-                    return Promise.reject({
-                        isConnected: true,
+                    return Promise.resolve({
+                        isConnected: false,
                         networkType: NetworkType["4G"]
                     })
                 };
 
                 onChange = (callback: (networkStatus: NetworkStatus) => void): void => {
-                    callback({
-                        isConnected: true,
-                        networkType: NetworkType["4G"]
-                    })
+                    setTimeout(() => {
+                        console.log("网络恢复");
+                        callback({
+                            isConnected: true,
+                            networkType: NetworkType["4G"]
+                        })
+                    }, 6 * 1000)
+
                 };
 
             }),
@@ -68,7 +73,9 @@ export class MockFeignConfiguration implements FeignConfiguration {
                     console.log("hideProgressBar");
                 }
             }),
-            new CodecFeignClientExecutorInterceptor([], [])
+            new CodecFeignClientExecutorInterceptor([
+                new DateEncoder()
+            ], [])
         ]);
     };
 

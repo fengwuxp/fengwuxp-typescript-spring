@@ -1,27 +1,38 @@
+
 import {FeignClient} from "../../FeignClient";
 import {defaultGenerateAnnotationMethodConfig} from "../../support/GenerateAnnotationMethodConfig";
 
 /**
- * 需要自动上传配置
+ * 缓存配置
  */
-export interface AutoFileUploadOptions {
+export interface CachePutOptions {
 
     /**
-     * 需要执行上传动作的字段
+     * 缓存的key
+     * 默认按照url和参数进行缓存
      */
-    fields: Array<string>;
+    key?: string;
 
     /**
-     * 上传的rul
+     * 生成缓存key的方法
+     * @param args
      */
-    url?: string;
+    generateKey?: (...args) => string;
+
+
+    /**
+     * 有效期，毫秒数
+     * 默认：5 * 60 * 1000  5分钟
+     */
+    validityPeriod?: number;
+
 }
 
 /**
- * @param options  需要自动上传
+ * @param options  缓存配置
  * @constructor
  */
-export const FileUpload=<T extends FeignClient>(options: AutoFileUploadOptions): Function=> {
+export function CachePut<T extends FeignClient>(options: CachePutOptions): Function {
 
 
     /**
@@ -32,9 +43,9 @@ export const FileUpload=<T extends FeignClient>(options: AutoFileUploadOptions):
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
         defaultGenerateAnnotationMethodConfig(target, name, {
-            fileUploadOptions: options
+            cacheOptions: options
         });
         return target;
 
     }
-};
+}

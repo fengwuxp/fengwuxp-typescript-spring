@@ -5,7 +5,7 @@ import {HttpRetryOptions} from "../../client/HttpRetryOptions";
 
 export const defaultOptions: HttpRetryOptions = {
     retries: 1,
-    maxTimeout: 25000,
+    maxTimeout: 15000,
     delay: 100
 };
 

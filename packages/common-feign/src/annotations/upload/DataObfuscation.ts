@@ -2,26 +2,31 @@ import {FeignClient} from "../../FeignClient";
 import {defaultGenerateAnnotationMethodConfig} from "../../support/GenerateAnnotationMethodConfig";
 
 /**
- * 需要自动上传配置
+ * 数据混淆配置
+ * 属性取值表达式支持如下形式：
+ * 1：对象形式： a.b.c
+ * 2: 数组中的的对象：a[_].b.c
+ * 3：数组中的的简单元素：a[_]
  */
-export interface AutoFileUploadOptions {
+export interface DataObfuscationOptions {
 
     /**
-     * 需要执行上传动作的字段
+     * 请求数据中需要混淆的数据
      */
-    fields: Array<string>;
+    requestFields?: string[];
 
     /**
-     * 上传的rul
+     * 响应数据中被混淆的数据
      */
-    url?: string;
+    responseFields?: string[]
 }
 
+
 /**
- * @param options  需要自动上传
+ * @param options 数据混淆
  * @constructor
  */
-export const FileUpload=<T extends FeignClient>(options: AutoFileUploadOptions): Function=> {
+export function DataObfuscation<T extends FeignClient>(options: DataObfuscationOptions): Function {
 
 
     /**
@@ -32,9 +37,9 @@ export const FileUpload=<T extends FeignClient>(options: AutoFileUploadOptions):
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
         defaultGenerateAnnotationMethodConfig(target, name, {
-            fileUploadOptions: options
+            dataObfuscationOptions: options
         });
         return target;
 
     }
-};
+}

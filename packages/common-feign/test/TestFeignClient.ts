@@ -25,7 +25,7 @@ export default class TestFeignClient {
         id: number,
         test: string,
         date: Date
-    }, options: FeignRequestOptions) => Promise<any>;
+    }, options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: []})
     @RequestMapping({

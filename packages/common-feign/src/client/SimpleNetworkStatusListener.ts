@@ -8,9 +8,9 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
 
     private waitQueue: Array<WaitHttpRequest<T>> = [];
 
-    private maxWaitTime = 5 * 60 * 1000;
+    private maxWaitTime;
 
-    private maxWaitLength = 16;
+    private maxWaitLength;
 
 
     /**
@@ -18,8 +18,8 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
      * @param maxWaitLength
      */
     constructor(maxWaitTime?: number, maxWaitLength?: number) {
-        this.maxWaitTime = maxWaitTime;
-        this.maxWaitLength = maxWaitLength;
+        this.maxWaitTime = maxWaitTime || 5 * 60 * 1000;
+        this.maxWaitLength = maxWaitLength || 16;
     }
 
     onNetworkActive = (): (Promise<void> | void) => {
@@ -28,7 +28,7 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
         if (waitQueue.length == 0) {
             return;
         }
-        const httpClient = FeignConfigurationRegistry.getDefaultFeignConfiguration().getHttpClient();
+        // const httpClient = FeignConfigurationRegistry.getDefaultFeignConfiguration().getHttpClient();
 
         const newQueue = [...waitQueue];
         //clear queue
@@ -36,7 +36,8 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
 
         //retry request
         newQueue.forEach(({request, resolve, reject}) => {
-            httpClient.send(request).then(resolve).catch(reject);
+            // httpClient.send(request).then(resolve).catch(reject);
+            resolve(request);
         });
 
     };
@@ -57,25 +58,43 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
             reject,
             request
         });
-        this.maxWaitLength++;
     }
 
     private tryRemoveInvalidItem = (force: boolean = false) => {
         const {waitQueue, maxWaitLength} = this;
-        const needRemove = force || waitQueue.length < maxWaitLength;
+        const oldLength = waitQueue.length;
+        if (oldLength == 0) {
+            return;
+        }
+        const needRemove = force || oldLength < maxWaitLength;
         if (needRemove) {
             return;
         }
         const currentTime = new Date().getTime();
-        const newQueue = waitQueue.filter(({expireTime}) => {
-            return currentTime - expireTime < 0;
+        const newQueue = waitQueue.filter((item) => {
+            const isEffective = currentTime - item.expireTime < 0;
+            if (!isEffective) {
+                this.rejectHttpRequest(item);
+            }
+            return isEffective;
         });
-        if (newQueue.length < maxWaitLength) {
+        const newLength = newQueue.length;
+        if (newLength < maxWaitLength || newLength == 0) {
             return;
         }
         // remove first item
-        newQueue.shift();
+        this.rejectHttpRequest(newQueue.shift());
         this.maxWaitLength--;
+    };
+
+    private rejectHttpRequest = (item: WaitHttpRequest<T>) => {
+
+        if (item == null) {
+            return;
+        }
+
+        const {reject, request} = item;
+        reject(request);
     }
 }
 

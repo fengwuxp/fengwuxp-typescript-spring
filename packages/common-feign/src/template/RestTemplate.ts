@@ -114,6 +114,8 @@ export default class RestTemplate implements RestOperations {
                     error);
             }
 
+            return Promise.reject(error);
+
         }
 
         if (responseExtractor) {

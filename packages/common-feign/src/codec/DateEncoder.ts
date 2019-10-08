@@ -2,9 +2,10 @@ import {HttpRequestDataEncoder} from "./HttpRequestDataEncoder";
 import {FeignRequestOptions} from "../FeignRequestOptions";
 import {QueryParamType} from "../template/RestOperations";
 
-export type DateFormatter = (date: Date) => number | string
+// date Converter
+export type DateConverter = (date: Date) => number | string
 
-const defaultDateFormatter: DateFormatter = (date: Date) => date.getTime();
+const defaultDateConverter: DateConverter = (date: Date) => date.getTime();
 
 
 /**
@@ -13,33 +14,30 @@ const defaultDateFormatter: DateFormatter = (date: Date) => date.getTime();
  */
 export default class DateEncoder<T extends FeignRequestOptions = FeignRequestOptions> implements HttpRequestDataEncoder<T> {
 
-    private dateFormatter: DateFormatter;
+    private dateConverter: DateConverter;
 
-    constructor(dateFormatter?: DateFormatter) {
-        this.dateFormatter = dateFormatter || defaultDateFormatter;
+    constructor(dateConverter?: DateConverter) {
+        this.dateConverter = dateConverter || defaultDateConverter;
     }
 
     encode = async (request: T): Promise<T> => {
         const {body, queryParams} = request;
-        request.queryParams = this.formatterDate(queryParams);
-        // if (isBrowserFormData(body)) {
-        //     return request;
-        // }
-        request.body = this.formatterDate(body);
+        request.queryParams = this.converterDate(queryParams);
+        request.body = this.converterDate(body);
         return request;
     };
 
-    formatterDate = (data: QueryParamType) => {
+    private converterDate = (data: QueryParamType) => {
         if (data == null) {
             return;
         }
-        const {dateFormatter} = this;
+        const {dateConverter} = this;
 
         for (const key in data) {
             const val = data[key];
             if (val != null && val.constructor === Date) {
-                //如果是时间字段转换为时间戳
-                data[key] = dateFormatter(val as Date);
+                // converter date type
+                data[key] = dateConverter(val as Date);
             }
         }
         return data;

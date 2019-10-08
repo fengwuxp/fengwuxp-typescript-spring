@@ -1,6 +1,6 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
-import {NetworkStatus, NetworkStatusListener} from "./NetworkStatusListener";
+import {NetworkStatus, NetworkStatusListener, NetworkType} from "./NetworkStatusListener";
 import {NoneNetworkFailBack} from "./NoneNetworkFailBack";
 import SimpleNetworkStatusListener from "./SimpleNetworkStatusListener";
 
@@ -24,16 +24,20 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
         this.networkStatusListener = networkStatusListener;
         this.noneNetworkHandler = noneNetworkHandler || new SimpleNetworkStatusListener();
 
-        this.networkStatusListener.getNetworkStatus().then((networkStatus) => this.networkStatus = networkStatus);
-        this.networkStatusListener.onChange((networkStatus) => {
-            if (this.networkStatus == null) {
+        this.networkStatusListener.getNetworkStatus()
+            .finally((networkStatus) => this.networkStatus = networkStatus || {
+                isConnected: false,
+                networkType: NetworkType.NONE
+            });
+        this.networkStatusListener.onChange((newNetworkStatus) => {
+            const {networkStatus} = this;
+            if (networkStatus == null) {
                 return
             }
-            if (!this.networkStatus.isConnected && this.networkStatus.isConnected) {
+            if (!networkStatus.isConnected && newNetworkStatus.isConnected) {
                 this.noneNetworkHandler.onNetworkActive()
             }
-            this.networkStatus = networkStatus;
-
+            this.networkStatus = newNetworkStatus;
         });
     }
 
@@ -44,25 +48,25 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
         if (networkStatus != null && networkStatus.isConnected) {
             return req;
         } else {
-            this.handleFailBack(req);
-            return Promise.reject();
+            return this.handleFailBack(req);
         }
     };
 
 
     //无网络时的降级处理
-    private handleFailBack = async (req: T) => {
+    private handleFailBack = async (req: T): Promise<T> => {
+
         if (NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG > 0) {
-            return
+            return Promise.reject(req);
         }
         try {
             NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG++;
             await this.noneNetworkHandler.onNetworkClose(req);
             NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG--
         } catch (e) {
-            console.log(e);
+            return Promise.reject(e);
         }
-
+        return req;
     }
 
 }
