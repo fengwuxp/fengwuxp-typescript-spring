@@ -1,0 +1,9 @@
+# Created by .ignore support plugin (hsz.mobi)
+
+node_modules
+tsconfig.json
+webpack.config.js
+*.map
+.awcache
+*.lock
+lib/src/index.d.ts

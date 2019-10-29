@@ -3,7 +3,7 @@ import {ProxyScope} from "./ProxyScope";
 import {DefaultFactory} from "./factory/DefaultFactory";
 import {CustomMatchType} from "./ProxyCreateConfig";
 
-
+export {ProxyScope} from "./ProxyScope";
 export const proxyFactory = new DefaultFactory();
 
 /**

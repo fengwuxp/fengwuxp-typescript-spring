@@ -1,0 +1,81 @@
+import * as os from 'os';
+import * as  path from "path";
+import resolve from 'rollup-plugin-node-resolve';
+import common from 'rollup-plugin-commonjs';
+import babel from 'rollup-plugin-babel';
+import {terser} from 'rollup-plugin-terser';
+import typescript from 'rollup-plugin-typescript2';
+import pkg from './package.json';
+const cpuNums = os.cpus().length;
+
+const getConfig = (isProd) => {
+    return {
+        input: './src/index.ts',
+
+        // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
+        // https://rollupjs.org/guide/en#external-e-external
+        external: [
+            "reflect-metadata",
+            "blueimp-md5",
+            "fengwuxp-common-proxy",
+            "fengwuxp-common-utils"
+        ],
+        output: [
+            {
+                file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
+                format: 'cjs',
+                // dir: path.resolve(__dirname, './lib'),
+                // banner: '/**\n' +
+                //     ' * @author fengwuxp \n' +
+                //     ' * @module common proxy\n' +
+                //     ' * @copyright CopyRight@2019\n' +
+                //     ' */',
+                compact: true,
+                extend: false,
+                sourcemap: false,
+                strictDeprecations: false
+            }
+        ],
+        plugins: [
+            typescript({
+                tsconfig: "./tsconfig.lib.json",
+                tsconfigOverride: {
+                    compilerOptions: {
+                        module: "esnext"
+                    }
+                }
+            }),
+            resolve(),
+            common({
+                // 包括
+                include: 'node_modules/**',
+                // 排除
+                exclude: [],
+                extensions: ['.js', '.ts']
+            }),
+            babel({
+                // runtimeHelpers: true,
+                extensions: ['.js', '.ts'],
+                // include: ['src/**/*'],
+                babelHelpers: "bundled"
+            }),
+            //压缩代码
+            isProd && terser({
+                output: {
+                    comments: false
+                },
+                include: [/^.+\.js$/],
+                exclude: ['node_moudles/**'],
+                numWorkers: cpuNums,
+                sourcemap: false
+            })
+        ],
+        treeshake: {
+            moduleSideEffects: true
+        },
+    }
+};
+
+
+export default [getConfig(false), getConfig(true)]
+

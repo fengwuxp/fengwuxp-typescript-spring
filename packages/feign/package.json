@@ -1,7 +1,7 @@
 {
-  "name": "fengwuxp-common-proxy",
+  "name": "fengwuxp-typescript-feign",
   "version": "1.0.0",
-  "description": "common proxy",
+  "description": "typescript feign",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },
@@ -13,7 +13,9 @@
     "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
   },
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
-  "main": "./lib/index.js",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "browser": "browser/index.js",
   "author": "wuxp",
   "license": "ISC",
   "scripts": {
@@ -22,17 +24,37 @@
     "rollup:build": "rm -rf ./lib && rollup -c",
     "publish:lib": "npm run rollup:build && npm run npm:publish"
   },
-  "keywords": [],
-  "types": "./index.d.ts",
+  "keywords": [
+    "fetch",
+    "feign",
+    "typescript"
+  ],
   "devDependencies": {
-    "@types/node": "^12.7.5",
+    "@types/node": "^12.7.7",
     "@types/jest": "^24.0.18",
+    "blueimp-md5": "^2.11.0",
     "jest": "^23.6.0",
     "log4js": "^4.0.2",
     "ts-jest": "^23.10.5",
-    "chai": "^4.2.0",
-    "typescript": "^3.6.3",
-    "tslib": "^1.10.0",
     "fengwuxp-common-rollup": "^1.0.0"
-  }
+  },
+  "dependencies": {
+    "es5-shim": "^4.5.9",
+    "es6-promise": "^4.1.1",
+    "fetch-detector": "^1.0.1",
+    "fetch-ie8": "^1.5.0",
+    "isomorphic-fetch": "^2.2.1",
+    "tslib": "^1.10.0",
+    "file-saver": "^2.0.2",
+    "typescript": "^3.6.3",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "ngPackage": {
+    "lib": {
+      "entryFile": "./src/index.ts"
+    }
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }

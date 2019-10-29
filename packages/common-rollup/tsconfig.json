@@ -9,23 +9,23 @@
     "target": "es6",
     "sourceMap": false,
     "baseUrl": "./src",
-    "declaration": false,
+    "outDir": "./lib",
+    "declaration": true,
+    "declarationDir": "./lib",
     "importHelpers": true,
     "types": [
       "node",
-      "jest"
+      "rollup"
     ],
     "lib": [
       "dom",
-      "es6",
+      "es5",
       "es2015",
-      "es2015.promise"
+      "esnext"
     ]
   },
   "include": [
-    "./src/**/*",
-    "./test/**/*",
-    "./types/**/*.d.ts"
+    "./src/**/*"
   ],
   "exclude": [
     "dist",

@@ -21,6 +21,6 @@ coverage
 _src
 .spring
 .awcache
-.publish_chennh
-#scripts/publish_to_npm.ts
-#scripts/publish_to_npm.js
+lib
+es
+browser

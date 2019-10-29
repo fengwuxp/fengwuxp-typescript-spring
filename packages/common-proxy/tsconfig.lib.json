@@ -9,7 +9,8 @@
     "target": "es6",
     "sourceMap": false,
     "baseUrl": "./src",
-    "declaration": false,
+    "outDir": "./lib",
+    "declaration": true,
     "importHelpers": true,
     "types": [
       "node",
@@ -23,9 +24,7 @@
     ]
   },
   "include": [
-    "./src/**/*",
-    "./test/**/*",
-    "./types/**/*.d.ts"
+    "./src/**/*"
   ],
   "exclude": [
     "dist",

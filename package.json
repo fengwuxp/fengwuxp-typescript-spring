@@ -31,5 +31,11 @@
   "devDependencies": {
     "@types/node": "^12.6.8",
     "lerna": "^3.6.0"
+  },
+  "dependencies": {
+    "@angular/compiler": "^8.2.12",
+    "@angular/compiler-cli": "^8.2.12",
+    "@angular/core": "^8.2.12",
+    "typescript": "^3.6.4"
   }
 }

@@ -1,0 +1,44 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": false,
+    "compileOnSave": false,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "module": "commonjs",
+    "target": "es5",
+    "sourceMap": false,
+    "sourceRoot": "",
+    "baseUrl": "./src",
+    "jsx": "preserve",
+    "outDir": "./lib",
+    "declaration": true,
+    "importHelpers": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "lib": [
+      "dom",
+      "es6",
+      "es2015",
+      "es2015.promise"
+    ]
+  },
+  "include": [
+    "./src/**/*",
+    "./types/**/*.d.ts",
+    "node_modules/common_fetch/src/**/*",
+    "node_modules/common_fetch/types/index.d.ts",
+    "node_modules/@tarojs/**/*",
+    "node_modules/@types/weixin/src/minapp/index.d.ts",
+    "node_modules/@tarojs/taro/types/**/*.d.ts"
+  ],
+  "exclude": [
+    "dist",
+    "**/*.spec.ts",
+    "node_modules/@tarojs/taro-h5/",
+    "node_modules/@tarojs/taro-rn/",
+    "node_modules/@tarojs/mobx/"
+  ]
+}

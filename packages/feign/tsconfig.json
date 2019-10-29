@@ -2,24 +2,25 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": false,
+    "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "esnext",
     "target": "es6",
     "sourceMap": false,
     "baseUrl": "./src",
-    "declaration": false,
+    "declaration": true,
     "importHelpers": true,
     "types": [
       "node",
-      "jest"
+      "jest",
+      "reflect-metadata"
     ],
     "lib": [
       "dom",
-      "es6",
-      "es2015",
-      "es2015.promise"
+      "es7",
+      "es2018",
+      "es2018.promise"
     ]
   },
   "include": [
