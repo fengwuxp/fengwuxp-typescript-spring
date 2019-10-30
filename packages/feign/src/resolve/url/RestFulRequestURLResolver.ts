@@ -3,7 +3,11 @@ import {RequestURLResolver} from "./RequestURLResolver";
 import {FeignOptions} from "../../annotations/Feign";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
 
-
+/**
+ * restful requet url resolver
+ * @param apiService
+ * @param methodName
+ */
 export const restfulRequestURLResolver: RequestURLResolver = (apiService: FeignProxyClient, methodName: string): string => {
 
     const feignOptions = apiService.feignOptions;

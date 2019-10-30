@@ -4,12 +4,12 @@ import {HttpAdapter} from "../adapter/HttpAdapter";
 import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpResponse} from "./HttpResponse";
-import {HttpMethod} from "../constant/HttpMethod";
+import {HttpMethod} from "../constant/http/HttpMethod";
 
 /**
  * abstract http client
  */
-export default abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
+export  abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
 
     protected httpAdapter: HttpAdapter<T>;
 

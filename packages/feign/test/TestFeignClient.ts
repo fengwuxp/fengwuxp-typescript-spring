@@ -4,7 +4,7 @@ import {GetMapping} from "../src/annotations/mapping/GetMapping";
 import {PostMapping} from "../src/annotations/mapping/PostMapping";
 import {Signature} from "../src/annotations/security/Signature";
 import {FeignRetry} from "../src/annotations/retry/FeignRetry";
-import {HttpMethod} from "../src/constant/HttpMethod";
+import {HttpMethod} from "../src/constant/http/HttpMethod";
 import {FeignRequestOptions} from "../src/FeignRequestOptions";
 import {DeleteMapping} from "../src/annotations/mapping/DeleteMapping";
 import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";

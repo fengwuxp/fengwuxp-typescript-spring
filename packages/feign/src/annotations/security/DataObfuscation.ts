@@ -2,7 +2,7 @@
  * 数据混淆配置
  */
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/GenerateAnnotationMethodConfig";
+import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
 
 
 export interface DataObfuscationOptions {

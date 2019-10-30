@@ -1,6 +1,6 @@
 import {RestOperations, UriVariable} from "./RestOperations";
 import {HttpResponse} from "../client/HttpResponse";
-import {HttpMethod} from "../constant/HttpMethod";
+import {HttpMethod} from "../constant/http/HttpMethod";
 import {ResponseExtractor, ResponseExtractorInterface} from "./ResponseExtractor";
 import {
     headResponseExtractor,

@@ -1,6 +1,6 @@
-import {HttpMethod} from "../../constant/HttpMethod";
+import {HttpMethod} from "../../constant/http/HttpMethod";
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/GenerateAnnotationMethodConfig";
+import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
 
 
 export interface BaseRequestMappingOptions {

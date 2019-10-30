@@ -2,7 +2,7 @@ import {HttpRequest} from "./HttpRequest";
 import {HttpRetryOptions} from "./HttpRetryOptions";
 import {HttpResponse} from "./HttpResponse";
 import {HttpAdapter} from "../adapter/HttpAdapter";
-import AbstractHttpClient from "./AbstractHttpClient";
+import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 

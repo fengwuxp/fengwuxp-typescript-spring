@@ -1,4 +1,4 @@
-import {HttpRequest} from "../../client/HttpRequest";
+import {HttpRequest} from "../../../../../packages/feign/src/client/HttpRequest";
 import {AuthOptions, CookieJar, OAuthOptions} from "request";
 
 /**

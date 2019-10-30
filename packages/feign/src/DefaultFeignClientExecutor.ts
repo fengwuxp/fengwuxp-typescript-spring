@@ -46,10 +46,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (getApiSignatureStrategy) {
             this.apiSignatureStrategy = getApiSignatureStrategy();
         }
-        if (getApiSignatureStrategy) {
+        if (getRequestURLResolver) {
             this.requestURLResolver = getRequestURLResolver();
         }
-        if (getApiSignatureStrategy) {
+        if (getRequestHeaderResolver) {
             this.requestHeaderResolver = getRequestHeaderResolver();
         }
     }

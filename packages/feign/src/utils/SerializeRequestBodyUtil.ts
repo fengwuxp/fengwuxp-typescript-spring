@@ -1,7 +1,7 @@
 import {ParsedUrlQueryInput} from "querystring";
 import {HttpRequestBody} from "../client/HttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
-import {HttpMethod} from "../constant/HttpMethod";
+import {HttpMethod} from "../constant/http/HttpMethod";
 import {mediaTypeIsEq} from "./MediaTypeUtil";
 
 

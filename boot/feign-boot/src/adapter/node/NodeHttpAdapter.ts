@@ -1,12 +1,12 @@
-import {HttpAdapter} from "../HttpAdapter";
+import {HttpAdapter} from "../../../../../packages/feign/src/adapter/HttpAdapter";
 import {NodeHttpRequest} from './NodeHttpRequest';
-import {HttpResponse} from '../../client/HttpResponse';
-import {ResolveHttpResponse} from "../../resolve/ResolveHttpResponse";
-import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
+import {HttpResponse} from '../../../../../packages/feign/src/client/HttpResponse';
+import {ResolveHttpResponse} from "../../../../../packages/feign/src/resolve/ResolveHttpResponse";
+import CommonResolveHttpResponse from "../../../../../packages/feign/src/resolve/CommonResolveHttpResponse";
 import request from "request";
-import {mediaTypeIsEq} from "../../utils/MediaTypeUtil";
-import {HttpMediaType} from "../../constant/http/HttpMediaType";
-import {contentTypeName} from "../../constant/FeignConstVar";
+import {mediaTypeIsEq} from "../../../../../packages/feign/src/utils/MediaTypeUtil";
+import {HttpMediaType} from "../../../../../packages/feign/src/constant/http/HttpMediaType";
+import {contentTypeName} from "../../../../../packages/feign/src/constant/FeignConstVar";
 
 /**
  * node js adapter

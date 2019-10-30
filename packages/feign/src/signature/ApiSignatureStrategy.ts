@@ -1,10 +1,10 @@
-/**
- * api signature strategy
- */
+
 import {FeignOptions} from "../annotations/Feign";
 import {UriVariable} from "../template/RestOperations";
 
-
+/**
+ * api signature strategy
+ */
 export interface ApiSignatureStrategy {
 
     /**

@@ -5,7 +5,7 @@ import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
-import AbstractHttpClient from "./AbstractHttpClient";
+import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 
 /**

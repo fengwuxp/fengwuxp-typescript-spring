@@ -1,18 +1,20 @@
 import {FeignConfiguration} from "./FeignConfiguration";
 
+
+/**
+ * FeignConfiguration
+ */
+let DEFAULT_CONFIGURATION: FeignConfiguration = null;
+
 const registry = {
 
-    /**
-     * FeignConfiguration
-     */
-    configuration: null,
 
     setDefaultFeignConfiguration(configuration: FeignConfiguration) {
-        this.configuration = configuration;
+        DEFAULT_CONFIGURATION = configuration;
     },
 
     getDefaultFeignConfiguration(): FeignConfiguration {
-        return this.configuration
+        return DEFAULT_CONFIGURATION;
     }
 };
 /**

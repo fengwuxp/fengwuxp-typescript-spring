@@ -1,15 +1,12 @@
-import {HttpAdapter} from "fengwuxp-typescript-feign/src/adapter/HttpAdapter";
-import {BrowserHttpRequest} from "fengwuxp-typescript-feign/src/adapter/browser/BrowserHttpRequest";
 import TaroJsHolder, {TaroInterfaceHolder} from "../TaroJsHolder";
-import {HttpResponse} from "fengwuxp-typescript-feign/src/client/HttpResponse";
-import {ResolveHttpResponse} from "../../../../packages/feign/src/resolve/ResolveHttpResponse";
-import CommonResolveHttpResponse from "../../../../packages/feign/src/resolve/CommonResolveHttpResponse";
+import {CommonResolveHttpResponse, HttpAdapter, HttpResponse, ResolveHttpResponse} from "fengwuxp-typescript-feign";
+import {TaroHttpRequest} from "./TaroHttpRequest";
 
 
 /**
  * taro http request adapter
  */
-export default class TaroHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
+export default class TaroHttpAdapter implements HttpAdapter<TaroHttpRequest> {
 
     protected taroHolder: TaroInterfaceHolder;
 
@@ -24,12 +21,12 @@ export default class TaroHttpAdapter implements HttpAdapter<BrowserHttpRequest> 
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
     }
 
-    send = (request: BrowserHttpRequest): Promise<HttpResponse> => {
+    send = (request: TaroHttpRequest): Promise<HttpResponse> => {
 
         return this.taroHolder.taro.request(this.buildRequest(request)).then(this.resolveHttpResponse.resolve);
     };
 
-    private buildRequest = (request: BrowserHttpRequest): Taro.request.Param<any> => {
+    private buildRequest = (request: TaroHttpRequest): Taro.request.Param<any> => {
 
         const {
             url,
@@ -44,17 +41,17 @@ export default class TaroHttpAdapter implements HttpAdapter<BrowserHttpRequest> 
 
 
         return {
-            //请求方法get post
+            // 请求方法
             method: method as any,
             timeout: timeout || this.timeout,
-            //请求url
+            // 请求url
             url,
-            //响应类型,
+            // 响应类型,
             dataType: "",
             cache: (cache as any),
             credentials,
             mode: (mode as any),
-            //headers HTTP 请求头
+            // headers HTTP 请求头
             header: headers,
             data: body,
         };

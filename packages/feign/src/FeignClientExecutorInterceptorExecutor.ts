@@ -9,7 +9,7 @@ export default class FeignClientExecutorInterceptorExecutor<T extends FeignReque
 
 
     constructor(interceptors: FeignClientExecutorInterceptor<T>[]) {
-        this.interceptors = interceptors;
+        this.interceptors = interceptors || [];
     }
 
     postHandle = async <E = any>(options: T, response: E): Promise<any> => {
@@ -35,8 +35,20 @@ export default class FeignClientExecutorInterceptorExecutor<T extends FeignReque
         }
 
         return result;
+    };
 
-    }
+    /**
+     * Set the request interceptors that this http client should use.
+     * @param interceptors
+     */
+    public setInterceptors = (interceptors: FeignClientExecutorInterceptor<T>[]) => {
+        this.interceptors = interceptors;
+    };
+
+    /**
+     * Get the request interceptors
+     */
+    public getInterceptors = () => this.interceptors;
 
 
 }

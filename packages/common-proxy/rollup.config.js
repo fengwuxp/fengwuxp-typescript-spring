@@ -5,7 +5,10 @@ import common from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
+import dts from "rollup-plugin-dts";
+
 import pkg from './package.json';
+
 const cpuNums = os.cpus().length;
 
 const getConfig = (isProd) => {
@@ -19,12 +22,14 @@ const getConfig = (isProd) => {
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
                 format: 'cjs',
-                // dir: path.resolve(__dirname, './lib'),
-                // banner: '/**\n' +
-                //     ' * @author fengwuxp \n' +
-                //     ' * @module common proxy\n' +
-                //     ' * @copyright CopyRight@2019\n' +
-                //     ' */',
+                compact: true,
+                extend: false,
+                sourcemap: false,
+                strictDeprecations: false
+            },
+            {
+                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
+                format: 'es',
                 compact: true,
                 extend: false,
                 sourcemap: false,
@@ -36,7 +41,8 @@ const getConfig = (isProd) => {
                 tsconfig: "./tsconfig.lib.json",
                 tsconfigOverride: {
                     compilerOptions: {
-                        module: "esnext"
+                        module: "esnext",
+                        declaration: false
                     }
                 }
             }),
@@ -72,5 +78,16 @@ const getConfig = (isProd) => {
 };
 
 
-export default [getConfig(false), getConfig(true)]
+export default [
+    getConfig(false),
+    getConfig(true),
+    {
+        input: "./types-temp/index.d.ts",
+        output: {
+            file: "./types/index.d.ts",
+            format: "es"
+        },
+        plugins: [dts()],
+    },
+]
 

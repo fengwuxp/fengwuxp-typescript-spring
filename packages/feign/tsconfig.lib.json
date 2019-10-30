@@ -1,34 +1,12 @@
 {
+  "extends": "./tsconfig",
   "compilerOptions": {
-    "moduleResolution": "node",
-    "esModuleInterop": true,
-    "allowSyntheticDefaultImports": false,
-    "emitDecoratorMetadata": true,
-    "experimentalDecorators": true,
-    "module": "esnext",
-    "target": "es6",
-    "sourceMap": false,
-    "baseUrl": "./src",
-    "outDir": "./lib",
     "declaration": true,
-    "declarationDir": "./types",
-    "importHelpers": true,
-    "types": [
-      "node",
-      "jest"
-    ],
-    "lib": [
-      "dom",
-      "es6",
-      "es2015",
-      "es2015.promise"
-    ]
+    "declarationDir": "types-temp"
   },
-  "include": [
-    "./src/**/*"
-  ],
   "exclude": [
     "dist",
+    "test",
     "node_modules",
     "**/*.spec.ts"
   ]

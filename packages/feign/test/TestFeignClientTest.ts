@@ -1,7 +1,7 @@
 import * as log4js from "log4js";
 import TestFeignClient from "./TestFeignClient";
 import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationRegistry";
-import {AbstractBrowserFeignConfiguration} from "../src/configuration/AbstractBrowserFeignConfiguration";
+import {AbstractBrowserFeignConfiguration} from "../../../boot/feign-boot/src/configuration/AbstractBrowserFeignConfiguration";
 
 class BrowserFeignConfiguration extends AbstractBrowserFeignConfiguration {
 

@@ -1,5 +1,5 @@
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/GenerateAnnotationMethodConfig";
+import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
 import {HttpRetryOptions} from "../../client/HttpRetryOptions";
 
 

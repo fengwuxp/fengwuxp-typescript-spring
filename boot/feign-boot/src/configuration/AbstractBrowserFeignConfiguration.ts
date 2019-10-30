@@ -1,8 +1,8 @@
-import DefaultFeignClientExecutor from "../DefaultFeignClientExecutor";
-import {FeignProxyClient} from "../support/FeignProxyClient";
-import BrowserHttpAdapter from "../adapter/browser/BrowserHttpAdapter";
-import DefaultHttpClient from "../client/DefaultHttpClient";
-import RestTemplate from "../template/RestTemplate";
+import DefaultFeignClientExecutor from "../../../../packages/feign/src/DefaultFeignClientExecutor";
+import {FeignProxyClient} from "../../../../packages/feign/src/support/FeignProxyClient";
+import BrowserHttpAdapter from "../../../../packages/feign/src/adapter/browser/BrowserHttpAdapter";
+import DefaultHttpClient from "../../../../packages/feign/src/client/DefaultHttpClient";
+import RestTemplate from "../../../../packages/feign/src/template/RestTemplate";
 import {AbstractFeignConfiguration} from "./AbstractFeignConfiguration";
 
 
@@ -12,7 +12,7 @@ export abstract class AbstractBrowserFeignConfiguration extends AbstractFeignCon
     private timeout: number;
 
 
-    constructor(timeout: number = 10 * 1000) {
+    constructor(timeout: number = 5 * 1000) {
         super();
         this.timeout = timeout;
     }
