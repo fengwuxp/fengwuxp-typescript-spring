@@ -74,12 +74,17 @@ export {
 }from "./template/UriTemplateHandler";
 
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
+export {RequestProgressBar} from "./ui/RequestProgressBar";
+
+export {PathMatcher} from "utils/PathMatcher";
+export {default as AntPathMatcher} from "./utils/AntPathMatcher";
 
 export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFeignClientBuilder";
 export {default as DefaultFeignClientExecutor} from "./DefaultFeignClientExecutor";
 export {FeignClient} from "./FeignClient";
 export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuilder} from "./FeignClientBuilder";
-export {FeignClientExecutorInterceptor, FeignClientExecutor} from "./FeignClientExecutor";
+export { FeignClientExecutor} from "./FeignClientExecutor";
+export { FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {default as FeignClientExecutorInterceptorExecutor} from "./FeignClientExecutorInterceptorExecutor";
 export {FeignRequestBaseOptions} from "./FeignRequestOptions";
 

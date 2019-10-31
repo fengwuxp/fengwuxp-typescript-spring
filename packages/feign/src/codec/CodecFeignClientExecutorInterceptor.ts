@@ -1,7 +1,7 @@
 import {FeignRequestOptions} from "../FeignRequestOptions";
-import {FeignClientExecutorInterceptor} from "../FeignClientExecutor";
 import {HttpRequestDataEncoder} from "./HttpRequestDataEncoder";
 import {HttpResponseDataDecoder} from "./HttpResponseDataDecoder";
+import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 
 
 /**

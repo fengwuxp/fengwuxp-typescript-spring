@@ -1,5 +1,8 @@
-import {FeignClientExecutorInterceptor} from "./FeignClientExecutor";
+import {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
+
+;
 import {FeignRequestBaseOptions} from "./FeignRequestOptions";
+import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClientExecutorInterceptor";
 
 
 export default class FeignClientExecutorInterceptorExecutor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions>
@@ -17,6 +20,11 @@ export default class FeignClientExecutorInterceptorExecutor<T extends FeignReque
         let result: any = response, len = interceptors.length, index = 0;
         while (index < len) {
             const feignClientExecutorInterceptor = interceptors[index];
+            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
+                if (!feignClientExecutorInterceptor.matches(options, response)) {
+                    continue;
+                }
+            }
             result = await feignClientExecutorInterceptor.postHandle(options, result);
             index++;
         }
@@ -30,6 +38,11 @@ export default class FeignClientExecutorInterceptorExecutor<T extends FeignReque
         let result: T = options, len = interceptors.length, index = 0;
         while (index < len) {
             const feignClientExecutorInterceptor = interceptors[index];
+            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
+                if (!feignClientExecutorInterceptor.matches(options)) {
+                    continue;
+                }
+            }
             result = await feignClientExecutorInterceptor.preHandle(result);
             index++;
         }

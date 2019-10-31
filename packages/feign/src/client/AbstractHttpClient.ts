@@ -9,11 +9,13 @@ import {HttpMethod} from "../constant/http/HttpMethod";
 /**
  * abstract http client
  */
-export  abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
+export abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
 
     protected httpAdapter: HttpAdapter<T>;
 
     protected interceptors: Array<ClientHttpRequestInterceptor<T>> = [];
+
+
 
     protected defaultProduce: HttpMediaType;
 
@@ -86,7 +88,7 @@ export  abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
      * send an http request to a remote server
      * @param req
      */
-   abstract send: (req: T) => Promise<HttpResponse>;
+    abstract send: (req: T) => Promise<HttpResponse>;
 
 
     getInterceptors = (): Array<ClientHttpRequestInterceptor<T>> => {

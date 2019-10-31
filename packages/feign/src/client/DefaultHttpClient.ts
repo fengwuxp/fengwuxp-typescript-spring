@@ -7,6 +7,7 @@ import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} fro
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
+import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
 
 /**
  * default http client
@@ -30,10 +31,12 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
         while (index < len) {
             const interceptor = interceptors[index];
             index++;
-            const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
-            if (clientHttpRequestInterceptorInterface == null) {
-                continue;
+            if (interceptor instanceof MappedClientHttpRequestInterceptor) {
+                if (!interceptor.matches(requestData)) {
+                    continue;
+                }
             }
+            const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
             try {
                 requestData = await clientHttpRequestInterceptorInterface.interceptor(requestData);
             } catch (e) {

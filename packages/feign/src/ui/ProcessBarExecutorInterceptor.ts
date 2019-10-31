@@ -1,6 +1,7 @@
 import {FeignRequestOptions, ProgressBarOptions} from "../FeignRequestOptions";
-import {FeignClientExecutorInterceptor} from "../FeignClientExecutor";
 import {HttpResponse} from "../client/HttpResponse";
+import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
+import {RequestProgressBar} from "./RequestProgressBar";
 
 /**
  * process bar executor
@@ -97,13 +98,4 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
 
 }
 
-/**
- * process bar
- */
-export interface RequestProgressBar {
 
-    showProgressBar: (progressBarOptions?: ProgressBarOptions) => void;
-
-    hideProgressBar: () => void;
-
-}

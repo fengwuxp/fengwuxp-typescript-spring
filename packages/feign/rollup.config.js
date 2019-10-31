@@ -20,6 +20,8 @@ const getConfig = (isProd) => {
         // https://rollupjs.org/guide/en#external-e-external
         external: [
             "reflect-metadata",
+            "xregexp",
+            "xregexp-quotemeta",
             "blueimp-md5",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils"
