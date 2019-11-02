@@ -1,12 +1,12 @@
 import {MappedInterceptor} from "./MappedInterceptor";
-import {FeignRequestOptions} from "../FeignRequestOptions";
+import {FeignRequestBaseOptions} from "../FeignRequestOptions";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {HttpResponse} from "../client/HttpResponse";
-import {HttpRequest} from "..";
+import {HttpRequest} from "../client/HttpRequest";
 
 
-export default class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions>
+export default class MappedFeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions>
     extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
 
     private feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>;
@@ -31,24 +31,6 @@ export default class MappedFeignClientExecutorInterceptor<T extends FeignRequest
 
     preHandle = (options: T) => {
         return this.feignClientExecutorInterceptor.preHandle(options);
-    };
-
-    /**
-     * Determine a match for the given lookup path.
-     * @param request
-     * @param options
-     * @param response
-     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
-     */
-    matches = (request: HttpRequest, options?: T, response?): boolean => {
-        if (options != null) {
-
-        }
-        if (response != null) {
-
-        }
-
-        return super.matches(request);
     };
 
 

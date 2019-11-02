@@ -1,23 +1,15 @@
 import * as log4js from "log4js";
 import TestFeignClient from "./TestFeignClient";
 import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationRegistry";
-import {AbstractBrowserFeignConfiguration} from "../../../boot/feign-boot/src/configuration/AbstractBrowserFeignConfiguration";
 import AntPathMatcher from "../src/utils/AntPathMatcher";
 
-class BrowserFeignConfiguration extends AbstractBrowserFeignConfiguration {
-
-
-    constructor() {
-        super();
-    }
-}
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
 describe("test feign client", () => {
 
-    FeignConfigurationRegistry.setDefaultFeignConfiguration(new BrowserFeignConfiguration());
+    // FeignConfigurationRegistry.setDefaultFeignConfiguration(new BrowserFeignConfiguration());
 
     const testFeignClient = new TestFeignClient();
 

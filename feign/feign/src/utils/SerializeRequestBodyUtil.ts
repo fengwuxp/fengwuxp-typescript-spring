@@ -16,7 +16,7 @@ import {mediaTypeIsEq} from "./MediaTypeUtil";
 export const serializeRequestBody = (method: string,
                                      body: HttpRequestBody | string,
                                      contentType: HttpMediaType,
-                                     filterNoneValue: boolean = true): string => {
+                                     filterNoneValue: boolean = false): string => {
 
     if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
         return body as any
@@ -41,7 +41,7 @@ export const serializeRequestBody = (method: string,
     throw new Error("");
 };
 
-const filterNoneValueAndNewObject = (body: Record<string, any>) => {
+export const filterNoneValueAndNewObject = (body: Record<string, any>) => {
     const newData = {};
     for (const key in body) {
         const value = body[key];

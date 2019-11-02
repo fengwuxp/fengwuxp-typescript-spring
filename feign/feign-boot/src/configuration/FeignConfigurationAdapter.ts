@@ -1,6 +1,10 @@
-import {FeignClientExecutorInterceptor} from "../../../../packages/feign/src/FeignClientExecutor";
-import {ClientHttpRequestInterceptor} from "../../../../packages/feign/src/client/ClientHttpRequestInterceptor";
-import {HttpAdapter, HttpRequest} from "../../../../packages/feign/src";
+import {
+    ClientHttpRequestInterceptor,
+    FeignClientExecutorInterceptor,
+    HttpAdapter,
+    HttpRequest,
+    InterceptorRegistry
+} from "fengwuxp-typescript-feign";
 
 
 export interface FeignConfigurationAdapter {
@@ -14,16 +18,16 @@ export interface FeignConfigurationAdapter {
 
     /**
      * registry client http request interceptors
-     * @param interceptors  default interceptors
+     * @param registry
      * @return  new interceptors
      */
-    registryClientHttpRequestInterceptors?: (interceptors: ClientHttpRequestInterceptor[]) => ClientHttpRequestInterceptor[]
+    registryClientHttpRequestInterceptors?: (registry: InterceptorRegistry) => void;
 
     /**
      * registry feign client executor interceptors
-     * @param interceptors  default interceptors
+     * @param registry
      * @return  new interceptors
      */
-    registryFeignClientExecutorInterceptor?: (interceptors: FeignClientExecutorInterceptor[]) => FeignClientExecutorInterceptor[];
+    registryFeignClientExecutorInterceptor?: (registry: InterceptorRegistry[]) => void;
 
 }

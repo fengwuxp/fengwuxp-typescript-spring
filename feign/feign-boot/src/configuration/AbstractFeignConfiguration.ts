@@ -1,10 +1,12 @@
-import {FeignConfiguration} from "../../../../packages/feign/src/configuration/FeignConfiguration";
-import {FeignProxyClient} from "../../../../packages/feign/src/support/FeignProxyClient";
-import DefaultFeignClientExecutor from "../../../../packages/feign/src/DefaultFeignClientExecutor";
-import DefaultHttpClient from "../../../../packages/feign/src/client/DefaultHttpClient";
-import RestTemplate from "../../../../packages/feign/src/template/RestTemplate";
-import {HttpRequest} from "../../../../packages/feign/src/client/HttpRequest";
-import {HttpAdapter} from "../../../../packages/feign/src/adapter/HttpAdapter";
+import {
+    DefaultFeignClientExecutor, DefaultHttpClient,
+    FeignConfiguration,
+    FeignProxyClient,
+    HttpAdapter,
+    HttpRequest, RestTemplate
+} from "fengwuxp-typescript-feign";
+
+
 
 
 export abstract class AbstractFeignConfiguration implements FeignConfiguration {

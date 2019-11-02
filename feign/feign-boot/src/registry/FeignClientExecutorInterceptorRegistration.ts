@@ -24,7 +24,7 @@ export default class FeignClientExecutorInterceptorRegistration extends Intercep
             this.excludeMethods,
             this.includeHeaders,
             this.excludeHeaders
-        )
+        );
     };
 
 }

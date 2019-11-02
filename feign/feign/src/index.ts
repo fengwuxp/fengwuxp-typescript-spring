@@ -1,7 +1,5 @@
-
 export {HttpAdapter} from "./adapter/HttpAdapter";
-export {default as BrowserHttpAdapter} from "./adapter/browser/BrowserHttpAdapter";
-export {BrowserHttpRequest} from "./adapter/browser/BrowserHttpRequest";
+
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
 export {PostMapping} from "./annotations/mapping/PostMapping";
@@ -44,10 +42,6 @@ export {
     defaultApiModuleName, contentTypeName, matchUrlPathVariable, FEIGN_CLINE_META_KEY, grabUrlPathVariable
 }from "./constant/FeignConstVar";
 
-export {default as InterceptorRegistry} from "./interceptor/InterceptorRegistry";
-export {InterceptorRegistration} from "./interceptor/InterceptorRegistration";
-export {default as ClientHttpInterceptorRegistration} from "./interceptor/ClientHttpInterceptorRegistration";
-export {default as FeignClientExecutorInterceptorRegistration} from "./interceptor/FeignClientExecutorInterceptorRegistration";
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";
 export {default as MappedClientHttpRequestInterceptor} from "./interceptor/MappedClientHttpRequestInterceptor";

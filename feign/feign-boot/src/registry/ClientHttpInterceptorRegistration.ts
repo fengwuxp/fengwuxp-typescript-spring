@@ -28,7 +28,7 @@ export default class ClientHttpInterceptorRegistration extends InterceptorRegist
             this.excludeMethods,
             this.includeHeaders,
             this.excludeHeaders
-        )
+        );
     };
 
 

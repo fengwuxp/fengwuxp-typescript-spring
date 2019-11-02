@@ -8,23 +8,12 @@ import {ResponseExtractor} from "./template/ResponseExtractor";
 
 export interface FeignRequestBaseOptions {
 
-
-    /**
-     * external query parameters
-     */
-    queryParams?: QueryParamType;
-
     /**
      * external request headers
      * support '{xxx}' expression，Data can be obtained from request body or query data
      *
      */
     headers?: Record<string, string>;
-
-    /**
-     * external request body
-     */
-    body?: QueryParamType;
 
     /**
      * 请求超时
@@ -36,72 +25,7 @@ export interface FeignRequestBaseOptions {
      * 默认：false
      */
     enabledGzip?: boolean;
-
-    /**
-     * 请求之前的执行的函数，在拦截器执行之前执行
-     * @param request
-     */
-    transformRequest?<T extends HttpRequest>(request: HttpRequest): T;
-
-    /**
-     * 响应之后执行的函数 在拦截器执行之后执行
-     * @param response
-     */
-    transformResponse?: (response: HttpResponse) => HttpResponse;
 }
-
-export interface FeignRequestOptions extends FeignRequestBaseOptions, UIOptions {
-    /**
-     * 是否使用统一的提示
-     * 默认：true
-     */
-    useUnifiedToast?: boolean;
-
-    /**
-     * 是否使用进度条,如果该值为false 则不会使用统一的提示
-     * 默认：true
-     */
-    useProgressBar?: boolean;
-
-    /**
-     * 使用统一响应转换
-     * 默认：true
-     */
-    useUnifiedTransformResponse?: boolean;
-
-    /**
-     * 是否过滤提交数据中的 空字符串，null的数据，数值类型的NaN
-     * 默认：true
-     */
-    filterEmptyString?: boolean;
-
-    /**
-     * 进度条配置
-     * 进度条控制可以在拦截器实现
-     *
-     * @see {@link  /src/interceptor/default/NeedProgressBarInterceptor.ts}
-     */
-    progressBarOptions?: ProgressBarOptions;
-
-    /**
-     * 数据混淆配置
-     */
-    dataObfuscationOptions?: DataObfuscationOptions;
-
-    /**
-     * 响应数据抓取
-     */
-    responseExtractor?: ResponseExtractor,
-}
-
-export interface FeignRetryRequestOptions extends FeignRequestOptions{
-    /**
-     * retry request options
-     */
-    retryOptions?: HttpRetryOptions;
-
-}
-
 
 /**
  * 请求进度条配置
@@ -189,3 +113,47 @@ export interface UIOptions {
      */
     progressBarOptions?: ProgressBarOptions;
 }
+
+export interface DataOptions {
+    /**
+     * 使用统一响应转换
+     * 默认：true
+     */
+    useUnifiedTransformResponse?: boolean;
+
+    /**
+     * 是否过滤提交数据中的 空字符串，null的数据，数值类型的NaN
+     * 默认：true
+     */
+    filterNoneValue?: boolean;
+
+    /**
+     * 数据混淆配置
+     */
+    dataObfuscationOptions?: DataObfuscationOptions;
+
+    /**
+     * 响应数据抓取
+     */
+    responseExtractor?: ResponseExtractor,
+}
+
+export interface FeignRequestContextOptions extends UIOptions, DataOptions {
+
+}
+
+
+export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
+
+
+}
+
+export interface FeignRetryRequestOptions extends FeignRequestOptions {
+    /**
+     * retry request options
+     */
+    retryOptions?: HttpRetryOptions;
+
+}
+
+

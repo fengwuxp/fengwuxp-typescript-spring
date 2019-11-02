@@ -81,103 +81,6 @@ interface HttpAdapter<T extends HttpRequest = HttpRequest> {
     send: (req: T) => Promise<HttpResponse>;
 }
 
-interface BrowserHttpRequest extends HttpRequest {
-    /**
-     * referrer
-     */
-    referrer?: string;
-    referrerPolicy?: ReferrerPolicy;
-    /**
-     * 请求的模式，主要用于跨域设置，cors, no-cors, same-origin
-     */
-    mode?: RequestMode;
-    /**
-     * 是否发送Cookie
-     */
-    credentials?: RequestCredentials;
-    /**
-     * 收到重定向请求之后的操作，follow, error, manual
-     */
-    redirect?: RequestRedirect;
-    /**
-     * 缓存模式
-     */
-    cache?: RequestCache;
-    /**
-     * 完整性校验
-     */
-    integrity?: string;
-    /**
-     * 长连接
-     */
-    keepalive?: boolean;
-    window?: any;
-}
-
-/**
- * http request response
- */
-interface HttpResponse$1<T = any> {
-    /**
-     * http status code
-     */
-    statusCode: number;
-    /**
-     * http status text
-     */
-    statusText?: string;
-    /**
-     * request is success
-     */
-    ok: boolean;
-    /**
-     * response data
-     */
-    data: T;
-    /**
-     * http response headers
-     */
-    headers?: Record<string, string>;
-}
-
-/**
- * resolve response data converter to HttpResponse
- */
-interface ResolveHttpResponse<T = any> {
-    resolve: (data: T) => HttpResponse$1;
-}
-
-/**
- *  browser http request adapter
- */
-declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
-    private timeout;
-    private resolveHttpResponse;
-    /**
-     *
-     * @param timeout  default 5000ms
-     * @param resolveHttpResponse
-     */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
-    send: (req: BrowserHttpRequest) => Promise<HttpResponse<any>>;
-    /**
-     * build http request
-     * @param {HttpRequest} request
-     * @return {Request}
-     */
-    private buildRequest;
-    /**
-     * parse response data
-     * @param response
-     * @return {any}
-     */
-    private parse;
-    private parseJSON;
-    private parseText;
-    private paresArrayBuffer;
-    private paresBlob;
-}
-
 interface BaseRequestMappingOptions {
     /**
      * 请求的uri地址
@@ -1305,54 +1208,14 @@ declare class MappedClientHttpRequestInterceptor<T extends HttpRequest = HttpReq
     interceptor: (req: T) => Promise<T>;
 }
 
-declare abstract class InterceptorRegistration {
-    protected includePatterns: string[];
-    protected excludePatterns: string[];
-    protected includeMethods: HttpMethod[];
-    protected excludeMethods: HttpMethod[];
-    protected includeHeaders: string[][];
-    protected excludeHeaders: string[][];
-    addPathPatterns: (...patterns: string[]) => this;
-    excludePathPatterns: (...patterns: string[]) => this;
-    addHttpMethods: (...methods: HttpMethod[]) => this;
-    excludeHttpMethods: (...methods: HttpMethod[]) => this;
-    /**
-     * @param headers  example: ["header name","header value"]  header value If it exists, it will be compared
-     */
-    addHeadersPatterns: (...headers: string[][]) => this;
-    excludeHeadersPatterns: (...headers: string[][]) => this;
-    abstract getInterceptor: () => any;
-}
-
-declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
-    private feignClientExecutorInterceptor;
-    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
-    postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
-    preHandle: (options: T) => T | Promise<T>;
-    /**
-     * Determine a match for the given lookup path.
-     * @param request
-     * @param options
-     * @param response
-     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
-     */
-    matches: (request: HttpRequest, options?: T, response?: any) => boolean;
-}
-
-declare class FeignClientExecutorInterceptorRegistration extends InterceptorRegistration {
-    private feignClientExecutorInterceptor;
-    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor);
-    getInterceptor: () => MappedFeignClientExecutorInterceptor<FeignRequestOptions>;
-}
-
 /**
  * resolve response data converter to HttpResponse
  */
-interface ResolveHttpResponse$1<T = any> {
+interface ResolveHttpResponse<T = any> {
     resolve: (data: T) => HttpResponse;
 }
 
-declare class CommonResolveHttpResponse implements ResolveHttpResponse$1<Response> {
+declare class CommonResolveHttpResponse implements ResolveHttpResponse<Response> {
     resolve: (resp: Response) => HttpResponse<any>;
 }
 
@@ -1600,28 +1463,19 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     private postHandle;
 }
 
-/**
- * client http interceptor registration
- */
-declare class ClientHttpInterceptorRegistration extends InterceptorRegistration {
-    private clientInterceptor;
-    constructor(clientInterceptor: ClientHttpRequestInterceptor);
-    getInterceptor: () => MappedClientHttpRequestInterceptor<HttpRequest>;
+declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
+    private feignClientExecutorInterceptor;
+    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
+    preHandle: (options: T) => T | Promise<T>;
+    /**
+     * Determine a match for the given lookup path.
+     * @param request
+     * @param options
+     * @param response
+     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
+     */
+    matches: (request: HttpRequest, options?: T, response?: any) => boolean;
 }
 
-declare class InterceptorRegistry {
-    private clientHttpInterceptorRegistrations;
-    private feignClientExecutorInterceptorRegistrations;
-    /**
-     * add client Http Request interceptor
-     * @param clientInterceptor
-     */
-    addClientInterceptor: (clientInterceptor: ClientHttpRequestInterceptor<HttpRequest>) => ClientHttpInterceptorRegistration;
-    /**
-     * add feign client executor interceptor
-     * @param feignClientExecutorInterceptor
-     */
-    addFeignClientExecutorInterceptor: (feignClientExecutorInterceptor: FeignClientExecutorInterceptor<FeignRequestBaseOptions>) => FeignClientExecutorInterceptorRegistration;
-}
-
-export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, BrowserHttpAdapter, BrowserHttpRequest, ClientHttpInterceptorRegistration, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientExecutorInterceptorRegistration, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, InterceptorRegistration, InterceptorRegistry, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse$1 as ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, voidResponseExtractor };
+export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, voidResponseExtractor };

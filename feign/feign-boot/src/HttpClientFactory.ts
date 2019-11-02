@@ -1,7 +1,11 @@
-import {HttpRequest} from "../../../packages/feign/src/client/HttpRequest";
-import {HttpAdapter} from '../../../packages/feign/src/adapter/HttpAdapter';
-import {HttpMediaType} from '../../../packages/feign/src/constant/http/HttpMediaType';
-import {HttpClient} from '../../../packages/feign/src/client/HttpClient';
+import {
+    HttpAdapter,
+    HttpRequest,
+    HttpMediaType,
+    MappedClientHttpRequestInterceptor,
+    HttpClient,
+    DefaultHttpClient
+} from "fengwuxp-typescript-feign";
 
 
 export default class HttpClientFactory {
@@ -12,9 +16,22 @@ export default class HttpClientFactory {
         defaultProduce?: HttpMediaType,
         interceptors?: Array<MappedClientHttpRequestInterceptor<T>>) => {
 
-        const client: HttpClient<T> = {
-
-
-        }
+        // const client: HttpClient<T> = {
+        //
+        //     get:(url: string, headers?: HeadersInit, timeout?: number)=>{
+        //         return
+        //     },
+        //
+        //     send: (req: T) => {
+        //         return null;
+        //     },
+        //
+        //     getInterceptors: () => {
+        //
+        //         return []
+        //     }
+        //
+        // }
+        return new DefaultHttpClient(httpAdapter, defaultProduce, interceptors);
     }
 }

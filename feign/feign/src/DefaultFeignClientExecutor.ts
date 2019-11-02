@@ -13,6 +13,7 @@ import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClien
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {HttpResponse} from "./client/HttpResponse";
+import {filterNoneValueAndNewObject} from "./utils/SerializeRequestBodyUtil";
 
 /**
  * default feign client executor
@@ -95,6 +96,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             headers,
             body: requestBody
         };
+        if (feignRequestOptions.filterNoneValue != false) {
+            // filter none value in request body
+            feignRequestOptions.body = filterNoneValueAndNewObject(feignRequestOptions.body);
+        }
 
         if (apiSignatureStrategy != null) {
             //签名处理
@@ -108,6 +113,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (feignRequestOptions.responseExtractor == null) {
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
+
 
         let httpResponse: any;
         try {
@@ -156,7 +162,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                     method: requestMapping.method,
                     headers: requestMapping.headers,
                     timeout: requestMapping.timeout
-                }, options)) {
+                })) {
                     continue;
                 }
             }
@@ -178,7 +184,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                     method: requestMapping.method,
                     headers: requestMapping.headers,
                     timeout: requestMapping.timeout
-                }, options, response)) {
+                })) {
                     continue;
                 }
             }
