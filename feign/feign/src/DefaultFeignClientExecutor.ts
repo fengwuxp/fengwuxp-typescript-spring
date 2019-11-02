@@ -12,8 +12,8 @@ import {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClientExecutorInterceptor";
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
-import {HttpResponse} from "./client/HttpResponse";
-import {filterNoneValueAndNewObject} from "./utils/SerializeRequestBodyUtil";
+import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
+import {HttpMethod} from "./constant/http/HttpMethod";
 
 /**
  * default feign client executor
@@ -89,17 +89,17 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         const requestBody = feignRequestOptions.filterNoneValue ? filterNoneValueAndNewObject(originalParameter) : {...originalParameter};
         //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
+
+        //requestMapping
+        const {requestMapping, signature, retryOptions} = apiService.getFeignMethodConfig(methodName);
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
-        const queryParams = feignRequestOptions.queryParams;
-        if (queryParams) {
+        const requestSupportRequestBody = supportRequestBody(requestMapping.method);
+        const queryParams = requestSupportRequestBody ? feignRequestOptions.queryParams : requestBody;
+        if (queryParams && requestSupportRequestBody) {
             headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, queryParams);
         }
         feignRequestOptions.headers = headers;
-
-        //requestMapping
-        const feignClientMethodConfig = apiService.getFeignMethodConfig(methodName);
-        const {requestMapping, signature, retryOptions} = feignClientMethodConfig;
 
         if (apiSignatureStrategy != null) {
             // handle api signature
@@ -109,11 +109,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         // pre handle
         feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
-
         if (feignRequestOptions.responseExtractor == null) {
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
-
 
         let httpResponse: any;
         try {
@@ -124,15 +122,15 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                         return restTemplate.execute(
                             req.url,
                             req.method,
-                            feignRequestOptions.queryParams,
+                            queryParams,
                             req.body,
                             feignRequestOptions.responseExtractor,
-                            req.headers)
+                            req.headers);
                     }
                 }, retryOptions).send({
                     url: requestURL,
                     method: requestMapping.method,
-                    body: requestBody,
+                    body: requestSupportRequestBody ? requestBody : null,
                     headers: feignRequestOptions.headers
                 });
 
@@ -140,8 +138,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 httpResponse = await restTemplate.execute(
                     requestURL,
                     requestMapping.method,
-                    feignRequestOptions.queryParams,
-                    requestBody,
+                    queryParams,
+                    requestSupportRequestBody ? requestBody : null,
                     feignRequestOptions.responseExtractor,
                     feignRequestOptions.headers);
             }
@@ -200,5 +198,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         return result;
     };
+
 
 }

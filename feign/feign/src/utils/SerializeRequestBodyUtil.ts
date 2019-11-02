@@ -5,6 +5,13 @@ import {HttpMethod} from "../constant/http/HttpMethod";
 import {mediaTypeIsEq} from "./MediaTypeUtil";
 
 
+export const supportRequestBody = (method: HttpMethod | string) => {
+    if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
+        return false;
+    }
+    return true;
+};
+
 /**
  * serialize http request body for content type
  *
@@ -18,7 +25,7 @@ export const serializeRequestBody = (method: string,
                                      contentType: HttpMediaType,
                                      filterNoneValue: boolean = false): string => {
 
-    if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
+    if (!supportRequestBody(method)) {
         return body as any
     }
     if (body == null || contentType == null) {
