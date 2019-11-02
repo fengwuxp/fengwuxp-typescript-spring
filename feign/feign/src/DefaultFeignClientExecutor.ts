@@ -22,20 +22,23 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     protected apiService: T;
 
-    // url 解析
+    // request url resolver
     protected requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
 
-    // 请求头解析
+    // request headers resolver
     protected requestHeaderResolver: RequestHeaderResolver = simpleRequestHeaderResolver;
 
-    // 签名策略
+    // api signature strategy
     protected apiSignatureStrategy: ApiSignatureStrategy;
 
-    // res template
+    // rest template
     protected restTemplate: RestOperations;
 
     // feign client executor interceptors
     protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
+
+    // default request options
+    protected defaultRequestOptions: FeignRequestOptions;
 
     constructor(apiService: T) {
         this.apiService = apiService;
@@ -45,7 +48,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getApiSignatureStrategy,
             getRequestHeaderResolver,
             getRequestURLResolver,
-            getFeignClientExecutorInterceptors
+            getFeignClientExecutorInterceptors,
+            getDefaultFeignRequestOptions
         } = feignOptions.configuration[0];
         this.restTemplate = getRestTemplate();
         this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
@@ -58,6 +62,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (getRequestHeaderResolver) {
             this.requestHeaderResolver = getRequestHeaderResolver();
         }
+        if (getDefaultFeignRequestOptions) {
+            this.defaultRequestOptions = getDefaultFeignRequestOptions();
+        }
     }
 
     invoke = async (methodName: string, ...args): Promise<any> => {
@@ -68,41 +75,34 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             restTemplate,
             apiService,
             requestURLResolver,
-            requestHeaderResolver
+            requestHeaderResolver,
+            defaultRequestOptions
         } = this;
 
         //原始参数
         const originalParameter = args[0] || {};
-        //解析参数，进行值复制（浅拷贝）
-        const requestBody = {...originalParameter};
-        const options: FeignRequestOptions = args[1] || {};
-
+        let feignRequestOptions: FeignRequestOptions = {
+            ...args[1],
+            ...defaultRequestOptions
+        };
+        // resolver request body，filter none value in request body or copy value
+        const requestBody = feignRequestOptions.filterNoneValue ? filterNoneValueAndNewObject(originalParameter) : {...originalParameter};
         //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
         //resolver headers
-        let headers = requestHeaderResolver(apiService, methodName, options.headers, requestBody) || {};
-        const queryParams = options.queryParams;
+        let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
+        const queryParams = feignRequestOptions.queryParams;
         if (queryParams) {
-            headers = requestHeaderResolver(apiService, methodName, options.headers, queryParams);
+            headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, queryParams);
         }
+        feignRequestOptions.headers = headers;
 
         //requestMapping
         const feignClientMethodConfig = apiService.getFeignMethodConfig(methodName);
         const {requestMapping, signature, retryOptions} = feignClientMethodConfig;
 
-        //解析参数生成 feignRequestOptions
-        let feignRequestOptions: FeignRequestOptions = {
-            ...options,
-            headers,
-            body: requestBody
-        };
-        if (feignRequestOptions.filterNoneValue != false) {
-            // filter none value in request body
-            feignRequestOptions.body = filterNoneValueAndNewObject(feignRequestOptions.body);
-        }
-
         if (apiSignatureStrategy != null) {
-            //签名处理
+            // handle api signature
             const signFields = signature != null ? signature.fields : null;
             apiSignatureStrategy.sign(signFields, originalParameter, feignRequestOptions);
         }
@@ -121,21 +121,27 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 // need retry
                 httpResponse = await new RetryHttpClient({
                     send: (req) => {
-                        return restTemplate.execute(requestURL,
-                            requestMapping.method,
+                        return restTemplate.execute(
+                            req.url,
+                            req.method,
                             feignRequestOptions.queryParams,
-                            feignRequestOptions.body,
+                            req.body,
                             feignRequestOptions.responseExtractor,
-                            feignRequestOptions.headers)
+                            req.headers)
                     }
-                }, retryOptions).send(null);
+                }, retryOptions).send({
+                    url: requestURL,
+                    method: requestMapping.method,
+                    body: requestBody,
+                    headers: feignRequestOptions.headers
+                });
 
             } else {
                 httpResponse = await restTemplate.execute(
                     requestURL,
                     requestMapping.method,
                     feignRequestOptions.queryParams,
-                    feignRequestOptions.body,
+                    requestBody,
                     feignRequestOptions.responseExtractor,
                     feignRequestOptions.headers);
             }

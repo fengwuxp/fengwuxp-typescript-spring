@@ -9,6 +9,7 @@ import {FeignProxyClient} from "../support/FeignProxyClient";
 import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
+import {FeignRequestOptions} from '../FeignRequestOptions';
 
 /**
  * feign configuration
@@ -39,4 +40,9 @@ export interface FeignConfiguration {
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
 
     getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
+
+    /**
+     * get default feign request options
+     */
+    getDefaultFeignRequestOptions?: () => FeignRequestOptions;
 }

@@ -167,7 +167,7 @@ export interface RestOperations {
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
     execute: <E = any>(url: string,
-                       method: HttpMethod,
+                       method: HttpMethod | string,
                        uriVariables?: UriVariable,
                        requestBody?: any,
                        responseExtractor?: ResponseExtractor<E>,

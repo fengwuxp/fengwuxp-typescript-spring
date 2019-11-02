@@ -1,12 +1,16 @@
-import {QueryParamType} from "./template/RestOperations";
-import {HttpResponse} from "./client/HttpResponse";
-import {HttpRequest} from "./client/HttpRequest";
 import {DataObfuscationOptions} from "./annotations/security/DataObfuscation";
 import {HttpRetryOptions} from "./client/HttpRetryOptions";
 import {ResponseExtractor} from "./template/ResponseExtractor";
+import {QueryParamType} from "./template/RestOperations";
 
 
 export interface FeignRequestBaseOptions {
+
+
+    /**
+     * external query parameters
+     */
+    queryParams?: QueryParamType;
 
     /**
      * external request headers
@@ -14,11 +18,6 @@ export interface FeignRequestBaseOptions {
      *
      */
     headers?: Record<string, string>;
-
-    /**
-     * 请求超时
-     */
-    timeout?: number;
 
     /**
      * 是否开启gzip压缩
@@ -109,7 +108,7 @@ export interface UIOptions {
      * 进度条配置
      * 进度条控制可以在拦截器实现
      *
-     * @see {@link  /src/interceptor/default/NeedProgressBarInterceptor.ts}
+     * @see {@link  ./ui/ProcessBarExecutorInterceptor.ts}
      */
     progressBarOptions?: ProgressBarOptions;
 }
