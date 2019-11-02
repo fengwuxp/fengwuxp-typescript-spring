@@ -16,7 +16,7 @@ export interface BaseRequestMappingOptions {
      * 1：固定值，例如 {myHeader:"1234"}
      * 2：将参数中的某些字段当做请求头，例如：{token:"{token}"}
      */
-    headers?: HeadersInit;
+    headers?: Record<string, string>;
 
     /**
      * 超时时间，

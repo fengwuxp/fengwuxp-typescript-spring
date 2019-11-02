@@ -40,7 +40,18 @@ export abstract class MappedInterceptor {
     }
 
 
+    /**
+     * Determine a match for the given lookup path.
+     * @param req
+     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
+     */
+    public matches = (req: HttpRequest): boolean => {
 
+        const sources = [req.url, req.method, req.headers];
+        return ["Url", "Method", "Headers"].some((methodName, index) => {
+            return this[`matches${methodName}`](sources[index]);
+        });
+    };
 
     /**
      * Determine a match for the given lookup path.

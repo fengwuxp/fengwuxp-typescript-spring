@@ -1,6 +1,6 @@
 {
   "packages": [
-    "boot/*",
+    "feign/*",
     "framework/*",
     "packages/*"
   ],

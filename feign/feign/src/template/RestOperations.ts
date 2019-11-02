@@ -58,13 +58,13 @@ export interface RestOperations {
      * add additional HTTP headers to the request.
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForEntity: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template, and returns the value of
@@ -74,13 +74,13 @@ export interface RestOperations {
      * add additional HTTP headers to the request
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
-    postForLocation: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template,
@@ -90,13 +90,13 @@ export interface RestOperations {
      * add additional HTTP headers to the request.
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
 
     //PUT
 
@@ -106,12 +106,12 @@ export interface RestOperations {
      * <p>The {@code request} parameter can be a {@link HttpRequest} in order to
      * add additional HTTP headers to the request.
      * @param url the URL
-     * @param request the Object to be PUT (may be {@code null})
+     * @param requestBody the Object to be PUT (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @see {@link UriVariable}
      */
-    put: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
 
     //PATCH
 
@@ -123,13 +123,13 @@ export interface RestOperations {
      * <p><b>NOTE: The standard JDK HTTP library does not support HTTP PATCH.
      * You need to use the Apache HttpComponents or OkHttp request factory.</b>
      * @param url the URL
-     * @param request the object to be PATCHed (may be {@code null})
+     * @param requestBody the object to be PATCHed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    patchForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
 
     //DELETE
 
@@ -161,7 +161,7 @@ export interface RestOperations {
      * @param url the URL
      * @param method the HTTP method (GET, POST, etc)
      * @param uriVariables object that extracts the return value from the response
-     * @param request object that prepares the request
+     * @param requestBody object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
      * @param headers
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
@@ -169,7 +169,7 @@ export interface RestOperations {
     execute: <E = any>(url: string,
                        method: HttpMethod,
                        uriVariables?: UriVariable,
-                       request?: any,
+                       requestBody?: any,
                        responseExtractor?: ResponseExtractor<E>,
                        headers?: Record<string, string>) => Promise<E>;
 }

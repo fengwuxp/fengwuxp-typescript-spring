@@ -3,6 +3,7 @@ import {FeignRequestOptions} from "../FeignRequestOptions";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {HttpResponse} from "../client/HttpResponse";
+import {HttpRequest} from "..";
 
 
 export default class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions>
@@ -34,19 +35,20 @@ export default class MappedFeignClientExecutorInterceptor<T extends FeignRequest
 
     /**
      * Determine a match for the given lookup path.
+     * @param request
      * @param options
      * @param response
      * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
      */
-    matches = (options: T, response?): boolean => {
+    matches = (request: HttpRequest, options?: T, response?): boolean => {
+        if (options != null) {
+
+        }
         if (response != null) {
 
         }
 
-        const sources = [options.headers];
-        return ["Headers"].some((methodName, index) => {
-            return this[`matches${methodName}`](sources[index]);
-        });
+        return super.matches(request);
     };
 
 

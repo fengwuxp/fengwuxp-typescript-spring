@@ -37,18 +37,7 @@ export default class MappedClientHttpRequestInterceptor<T extends HttpRequest = 
         return clientHttpRequestInterceptorInterface.interceptor(req);
     };
 
-    /**
-     * Determine a match for the given lookup path.
-     * @param req
-     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
-     */
-    public matches = (req: T): boolean => {
 
-        const sources = [req.url, req.method, req.headers];
-        return ["Url", "Method", "Headers"].some((methodName, index) => {
-            return this[`matches${methodName}`](sources[index]);
-        });
-    };
 
 
 

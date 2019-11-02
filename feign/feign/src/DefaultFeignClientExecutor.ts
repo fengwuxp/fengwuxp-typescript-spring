@@ -3,12 +3,16 @@ import {FeignProxyClient} from "./support/FeignProxyClient";
 import {RequestURLResolver} from "./resolve/url/RequestURLResolver";
 import {RequestHeaderResolver} from "./resolve/header/RequestHeaderResolver";
 import {ApiSignatureStrategy} from "./signature/ApiSignatureStrategy";
-import {FeignRequestOptions} from "./FeignRequestOptions";
+import {FeignRequestBaseOptions, FeignRequestOptions} from "./FeignRequestOptions";
 import {restfulRequestURLResolver} from "./resolve/url/RestFulRequestURLResolver";
 import {simpleRequestHeaderResolver} from "./resolve/header/SimpleRequestHeaderResolver";
 import {RestOperations} from "./template/RestOperations";
 import RetryHttpClient from "./client/RetryHttpClient";
-import FeignClientExecutorInterceptorExecutor from "./FeignClientExecutorInterceptorExecutor";
+import {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
+import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClientExecutorInterceptor";
+import {RequestMappingOptions} from "./annotations/mapping/Mapping";
+import {restResponseExtractor} from "./template/RestResponseExtractor";
+import {HttpResponse} from "./client/HttpResponse";
 
 /**
  * default feign client executor
@@ -17,19 +21,20 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     protected apiService: T;
 
-    //url 解析
+    // url 解析
     protected requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
 
-    //请求头解析
+    // 请求头解析
     protected requestHeaderResolver: RequestHeaderResolver = simpleRequestHeaderResolver;
 
-    //签名策略
+    // 签名策略
     protected apiSignatureStrategy: ApiSignatureStrategy;
 
+    // res template
     protected restTemplate: RestOperations;
 
-    protected feignClientExecutorInterceptorExecutor: FeignClientExecutorInterceptorExecutor;
-
+    // feign client executor interceptors
+    protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
 
     constructor(apiService: T) {
         this.apiService = apiService;
@@ -39,10 +44,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getApiSignatureStrategy,
             getRequestHeaderResolver,
             getRequestURLResolver,
-            getFeignClientExecutorInterceptorExecutor
+            getFeignClientExecutorInterceptors
         } = feignOptions.configuration[0];
         this.restTemplate = getRestTemplate();
-        this.feignClientExecutorInterceptorExecutor = getFeignClientExecutorInterceptorExecutor();
+        this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
         if (getApiSignatureStrategy) {
             this.apiSignatureStrategy = getApiSignatureStrategy();
         }
@@ -62,8 +67,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             restTemplate,
             apiService,
             requestURLResolver,
-            requestHeaderResolver,
-            feignClientExecutorInterceptorExecutor
+            requestHeaderResolver
         } = this;
 
         //原始参数
@@ -72,9 +76,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         const requestBody = {...originalParameter};
         const options: FeignRequestOptions = args[1] || {};
 
-        //解析url
+        //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
-        //处理请求头
+        //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, options.headers, requestBody) || {};
         const queryParams = options.queryParams;
         if (queryParams) {
@@ -99,7 +103,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // pre handle
-        feignRequestOptions = await feignClientExecutorInterceptorExecutor.preHandle(feignRequestOptions);
+        feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
+
+        if (feignRequestOptions.responseExtractor == null) {
+            feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
+        }
 
         let httpResponse: any;
         try {
@@ -126,14 +134,59 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                     feignRequestOptions.headers);
             }
         } catch (e) {
-            // error
+            // Non-2xx response
             httpResponse = e;
         }
 
         //post handle
-        return await feignClientExecutorInterceptorExecutor.postHandle(feignRequestOptions, httpResponse);
+        return await this.postHandle(requestURL, requestMapping, feignRequestOptions, httpResponse);
 
     };
 
+
+    private preHandle = async (options: FeignRequestBaseOptions, url: string, requestMapping: RequestMappingOptions) => {
+
+        const {feignClientExecutorInterceptors} = this;
+        let result: FeignRequestBaseOptions = options, len = feignClientExecutorInterceptors.length, index = 0;
+        while (index < len) {
+            const feignClientExecutorInterceptor = feignClientExecutorInterceptors[index];
+            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
+                if (!feignClientExecutorInterceptor.matches({
+                    url,
+                    method: requestMapping.method,
+                    headers: requestMapping.headers,
+                    timeout: requestMapping.timeout
+                }, options)) {
+                    continue;
+                }
+            }
+            result = await feignClientExecutorInterceptor.preHandle(result);
+            index++;
+        }
+
+        return result;
+    };
+
+    private postHandle = async <E = any>(url: string, requestMapping: RequestMappingOptions, options: FeignRequestBaseOptions, response: E): Promise<any> => {
+        const {feignClientExecutorInterceptors} = this;
+        let result: any = response, len = feignClientExecutorInterceptors.length, index = 0;
+        while (index < len) {
+            const feignClientExecutorInterceptor = feignClientExecutorInterceptors[index];
+            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
+                if (!feignClientExecutorInterceptor.matches({
+                    url,
+                    method: requestMapping.method,
+                    headers: requestMapping.headers,
+                    timeout: requestMapping.timeout
+                }, options, response)) {
+                    continue;
+                }
+            }
+            result = await feignClientExecutorInterceptor.postHandle(options, result);
+            index++;
+        }
+
+        return result;
+    };
 
 }

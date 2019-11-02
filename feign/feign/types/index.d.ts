@@ -189,7 +189,7 @@ interface BaseRequestMappingOptions {
      * 1：固定值，例如 {myHeader:"1234"}
      * 2：将参数中的某些字段当做请求头，例如：{token:"{token}"}
      */
-    headers?: HeadersInit;
+    headers?: Record<string, string>;
     /**
      * 超时时间，
      * 单位：毫秒
@@ -488,13 +488,13 @@ interface RestOperations {
      * add additional HTTP headers to the request.
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForEntity: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
     /**
      * Create a new resource by POSTing the given object to the URI template, and returns the value of
      * the {@code Location} header. This header typically indicates where the new resource is stored.
@@ -503,13 +503,13 @@ interface RestOperations {
      * add additional HTTP headers to the request
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
-    postForLocation: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
     /**
      * Create a new resource by POSTing the given object to the URI template,
      * and returns the representation found in the response.
@@ -518,25 +518,25 @@ interface RestOperations {
      * add additional HTTP headers to the request.
      * <p>The body of the entity, or {@code request} itself, can be a
      * @param url the URL
-     * @param request the Object to be POSTed (may be {@code null})
+     * @param requestBody the Object to be POSTed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
     /**
      * Create or update a resource by PUTting the given object to the URI.
      * <p>URI Template variables are expanded using the given URI variables, if any.
      * <p>The {@code request} parameter can be a {@link HttpRequest} in order to
      * add additional HTTP headers to the request.
      * @param url the URL
-     * @param request the Object to be PUT (may be {@code null})
+     * @param requestBody the Object to be PUT (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @see {@link UriVariable}
      */
-    put: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
     /**
      * Update a resource by PATCHing the given object to the URL,
      * and return the representation found in the response.
@@ -545,13 +545,13 @@ interface RestOperations {
      * <p><b>NOTE: The standard JDK HTTP library does not support HTTP PATCH.
      * You need to use the Apache HttpComponents or OkHttp request factory.</b>
      * @param url the URL
-     * @param request the object to be PATCHed (may be {@code null})
+     * @param requestBody the object to be PATCHed (may be {@code null})
      * @param uriVariables the variables to expand the template  or  uriVariables the map containing variables for the URI template
      * @param headers
      * @return the converted object
      * @see {@link UriVariable}
      */
-    patchForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
     /**
      * Delete the resources at the specified URI.
      * <p>URI Template variables are expanded using the given URI variables, if any.
@@ -576,12 +576,12 @@ interface RestOperations {
      * @param url the URL
      * @param method the HTTP method (GET, POST, etc)
      * @param uriVariables object that extracts the return value from the response
-     * @param request object that prepares the request
+     * @param requestBody object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
      * @param headers
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
-    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, request?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
+    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
 }
 /**
  * uri path variable
@@ -861,22 +861,6 @@ interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = Fei
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
 }
 
-declare class FeignClientExecutorInterceptorExecutor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> implements FeignClientExecutorInterceptor<T> {
-    protected interceptors: FeignClientExecutorInterceptor<T>[];
-    constructor(interceptors: FeignClientExecutorInterceptor<T>[]);
-    postHandle: <E = any>(options: T, response: E) => Promise<any>;
-    preHandle: (options: T) => Promise<T>;
-    /**
-     * Set the request interceptors that this http client should use.
-     * @param interceptors
-     */
-    setInterceptors: (interceptors: FeignClientExecutorInterceptor<T>[]) => void;
-    /**
-     * Get the request interceptors
-     */
-    getInterceptors: () => FeignClientExecutorInterceptor<T>[];
-}
-
 /**
  * feign configuration
  * since the method of changing the interface is called every time, it is necessary to implement memory.
@@ -896,7 +880,7 @@ interface FeignConfiguration {
     getRequestURLResolver?: () => RequestURLResolver;
     getRequestHeaderResolver?: () => RequestHeaderResolver;
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
-    getFeignClientExecutorInterceptorExecutor?: () => FeignClientExecutorInterceptorExecutor;
+    getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
 }
 
 interface FeignOptions {
@@ -1197,6 +1181,171 @@ declare const matchUrlPathVariable: RegExp;
 declare const grabUrlPathVariable: RegExp;
 
 /**
+ * @see https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/PathMatcher.java
+ */
+interface PathMatcher {
+    /**
+     * Does the given {@code path} represent a pattern that can be matched
+     * by an implementation of this interface?
+     * <p>If the return value is {@code false}, then the {@link #match}
+     * method does not have to be used because direct equality comparisons
+     * on the static path Strings will lead to the same result.
+     * @param path the path String to check
+     * @return {@code true} if the given {@code path} represents a pattern
+     */
+    isPattern: (path: string) => boolean;
+    /**
+     * Match the given {@code path} against the given {@code pattern},
+     * according to this PathMatcher's matching strategy.
+     * @param pattern the pattern to match against
+     * @param path the path String to test
+     * @return {@code true} if the supplied {@code path} matched,
+     * {@code false} if it didn't
+     */
+    match: (pattern: string, path: string) => boolean;
+    /**
+     * Match the given {@code path} against the corresponding part of the given
+     * {@code pattern}, according to this PathMatcher's matching strategy.
+     * <p>Determines whether the pattern at least matches as far as the given base
+     * path goes, assuming that a full path may then match as well.
+     * @param pattern the pattern to match against
+     * @param path the path String to test
+     * @return {@code true} if the supplied {@code path} matched,
+     * {@code false} if it didn't
+     */
+    matchStart: (pattern: string, path: string) => boolean;
+    /**
+     * Given a pattern and a full path, determine the pattern-mapped part.
+     * <p>This method is supposed to find out which part of the path is matched
+     * dynamically through an actual pattern, that is, it strips off a statically
+     * defined leading path from the given full path, returning only the actually
+     * pattern-matched part of the path.
+     * <p>For example: For "myroot/*.html" as pattern and "myroot/myfile.html"
+     * as full path, this method should return "myfile.html". The detailed
+     * determination rules are specified to this PathMatcher's matching strategy.
+     * <p>A simple implementation may return the given full path as-is in case
+     * of an actual pattern, and the empty String in case of the pattern not
+     * containing any dynamic parts (i.e. the {@code pattern} parameter being
+     * a static path that wouldn't qualify as an actual {@link #isPattern pattern}).
+     * A sophisticated implementation will differentiate between the static parts
+     * and the dynamic parts of the given path pattern.
+     * @param pattern the path pattern
+     * @param path the full path to introspect
+     * @return the pattern-mapped part of the given {@code path}
+     * (never {@code null})
+     */
+    extractPathWithinPattern: (pattern: string, path: string) => string;
+    /**
+     * Given a pattern and a full path, extract the URI template letiables. URI template
+     * letiables are expressed through curly brackets ('{' and '}').
+     * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
+     * return a map containing "hotel"->"1".
+     * @param pattern the path pattern, possibly containing URI templates
+     * @param path the full path to extract template letiables from
+     * @return a map, containing letiable names as keys; letiables values as values
+     */
+    extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
+    /**
+     * Combines two patterns into a new pattern that is returned.
+     * <p>The full algorithm used for combining the two pattern depends on the underlying implementation.
+     * @param pattern1 the first pattern
+     * @param pattern2 the second pattern
+     * @return the combination of the two patterns
+     * @throws IllegalArgumentException when the two patterns cannot be combined
+     */
+    combine: (pattern1: any, pattern2: any) => string;
+}
+
+interface HttpHeader {
+    name: string;
+    value: string;
+}
+declare abstract class MappedInterceptor {
+    protected includePatterns: string[];
+    protected excludePatterns: string[];
+    protected includeMethods: HttpMethod[];
+    protected excludeMethods: HttpMethod[];
+    protected includeHeaders: HttpHeader[];
+    protected excludeHeaders: HttpHeader[];
+    private pathMatcher;
+    constructor(includePatterns: string[], excludePatterns: string[], includeMethods: HttpMethod[], excludeMethods: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    /**
+     * Determine a match for the given lookup path.
+     * @param req
+     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
+     */
+    matches: (req: HttpRequest) => boolean;
+    /**
+     * Determine a match for the given lookup path.
+     * @param lookupPath the current request path
+     * @param pathMatcher a path matcher for path pattern matching
+     * @return {@code true} if the interceptor applies to the given request path
+     */
+    matchesUrl: (lookupPath: string, pathMatcher?: PathMatcher) => boolean;
+    /**
+     * Determine a match for the given http method
+     * @param method
+     */
+    matchesMethod: (method: HttpMethod) => boolean;
+    /**
+     * Determine a match for the given request headers
+     * @param header
+     */
+    matchesHeaders: (header: Record<string, string>) => boolean;
+    private doMatch;
+    private converterHeaders;
+}
+
+/**
+ * match interceptor
+ */
+declare class MappedClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> extends MappedInterceptor implements ClientHttpRequestInterceptorInterface<T> {
+    private clientInterceptor;
+    constructor(clientInterceptor: ClientHttpRequestInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    interceptor: (req: T) => Promise<T>;
+}
+
+declare abstract class InterceptorRegistration {
+    protected includePatterns: string[];
+    protected excludePatterns: string[];
+    protected includeMethods: HttpMethod[];
+    protected excludeMethods: HttpMethod[];
+    protected includeHeaders: string[][];
+    protected excludeHeaders: string[][];
+    addPathPatterns: (...patterns: string[]) => this;
+    excludePathPatterns: (...patterns: string[]) => this;
+    addHttpMethods: (...methods: HttpMethod[]) => this;
+    excludeHttpMethods: (...methods: HttpMethod[]) => this;
+    /**
+     * @param headers  example: ["header name","header value"]  header value If it exists, it will be compared
+     */
+    addHeadersPatterns: (...headers: string[][]) => this;
+    excludeHeadersPatterns: (...headers: string[][]) => this;
+    abstract getInterceptor: () => any;
+}
+
+declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
+    private feignClientExecutorInterceptor;
+    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
+    preHandle: (options: T) => T | Promise<T>;
+    /**
+     * Determine a match for the given lookup path.
+     * @param request
+     * @param options
+     * @param response
+     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
+     */
+    matches: (request: HttpRequest, options?: T, response?: any) => boolean;
+}
+
+declare class FeignClientExecutorInterceptorRegistration extends InterceptorRegistration {
+    private feignClientExecutorInterceptor;
+    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor);
+    getInterceptor: () => MappedFeignClientExecutorInterceptor<FeignRequestOptions>;
+}
+
+/**
  * resolve response data converter to HttpResponse
  */
 interface ResolveHttpResponse$1<T = any> {
@@ -1316,12 +1465,12 @@ declare class RestTemplate implements RestOperations {
     getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
     headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<Record<string, string>>;
     optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpMethod[]>;
-    patchForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
-    postForEntity: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
-    postForLocation: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
-    postForObject: <E = any>(url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
-    put: (url: string, request: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
-    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, request?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
     uriTemplateHandler: UriTemplateHandler;
     responseErrorHandler: ResponseErrorHandler;
 }
@@ -1365,158 +1514,9 @@ declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = Feig
 }
 
 /**
- * @see https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/PathMatcher.java
+ * @see https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/AntPathMatcher.java
  */
-interface PathMatcher {
-    /**
-     * Does the given {@code path} represent a pattern that can be matched
-     * by an implementation of this interface?
-     * <p>If the return value is {@code false}, then the {@link #match}
-     * method does not have to be used because direct equality comparisons
-     * on the static path Strings will lead to the same result.
-     * @param path the path String to check
-     * @return {@code true} if the given {@code path} represents a pattern
-     */
-    isPattern: (path: string) => boolean;
-    /**
-     * Match the given {@code path} against the given {@code pattern},
-     * according to this PathMatcher's matching strategy.
-     * @param pattern the pattern to match against
-     * @param path the path String to test
-     * @return {@code true} if the supplied {@code path} matched,
-     * {@code false} if it didn't
-     */
-    match: (pattern: string, path: string) => boolean;
-    /**
-     * Match the given {@code path} against the corresponding part of the given
-     * {@code pattern}, according to this PathMatcher's matching strategy.
-     * <p>Determines whether the pattern at least matches as far as the given base
-     * path goes, assuming that a full path may then match as well.
-     * @param pattern the pattern to match against
-     * @param path the path String to test
-     * @return {@code true} if the supplied {@code path} matched,
-     * {@code false} if it didn't
-     */
-    matchStart: (pattern: string, path: string) => boolean;
-    /**
-     * Given a pattern and a full path, determine the pattern-mapped part.
-     * <p>This method is supposed to find out which part of the path is matched
-     * dynamically through an actual pattern, that is, it strips off a statically
-     * defined leading path from the given full path, returning only the actually
-     * pattern-matched part of the path.
-     * <p>For example: For "myroot/*.html" as pattern and "myroot/myfile.html"
-     * as full path, this method should return "myfile.html". The detailed
-     * determination rules are specified to this PathMatcher's matching strategy.
-     * <p>A simple implementation may return the given full path as-is in case
-     * of an actual pattern, and the empty String in case of the pattern not
-     * containing any dynamic parts (i.e. the {@code pattern} parameter being
-     * a static path that wouldn't qualify as an actual {@link #isPattern pattern}).
-     * A sophisticated implementation will differentiate between the static parts
-     * and the dynamic parts of the given path pattern.
-     * @param pattern the path pattern
-     * @param path the full path to introspect
-     * @return the pattern-mapped part of the given {@code path}
-     * (never {@code null})
-     */
-    extractPathWithinPattern: (pattern: string, path: string) => string;
-    /**
-     * Given a pattern and a full path, extract the URI template letiables. URI template
-     * letiables are expressed through curly brackets ('{' and '}').
-     * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
-     * return a map containing "hotel"->"1".
-     * @param pattern the path pattern, possibly containing URI templates
-     * @param path the full path to extract template letiables from
-     * @return a map, containing letiable names as keys; letiables values as values
-     */
-    extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
-    /**
-     * Combines two patterns into a new pattern that is returned.
-     * <p>The full algorithm used for combining the two pattern depends on the underlying implementation.
-     * @param pattern1 the first pattern
-     * @param pattern2 the second pattern
-     * @return the combination of the two patterns
-     * @throws IllegalArgumentException when the two patterns cannot be combined
-     */
-    combine: (pattern1: any, pattern2: any) => string;
-}
-
-/**
- * @see https://github.com/spring-projects/spring-framework/blob/master/spring-core/src/main/java/org/springframework/util/PathMatcher.java
- */
-interface PathMatcher$1 {
-    /**
-     * Does the given {@code path} represent a pattern that can be matched
-     * by an implementation of this interface?
-     * <p>If the return value is {@code false}, then the {@link #match}
-     * method does not have to be used because direct equality comparisons
-     * on the static path Strings will lead to the same result.
-     * @param path the path String to check
-     * @return {@code true} if the given {@code path} represents a pattern
-     */
-    isPattern: (path: string) => boolean;
-    /**
-     * Match the given {@code path} against the given {@code pattern},
-     * according to this PathMatcher's matching strategy.
-     * @param pattern the pattern to match against
-     * @param path the path String to test
-     * @return {@code true} if the supplied {@code path} matched,
-     * {@code false} if it didn't
-     */
-    match: (pattern: string, path: string) => boolean;
-    /**
-     * Match the given {@code path} against the corresponding part of the given
-     * {@code pattern}, according to this PathMatcher's matching strategy.
-     * <p>Determines whether the pattern at least matches as far as the given base
-     * path goes, assuming that a full path may then match as well.
-     * @param pattern the pattern to match against
-     * @param path the path String to test
-     * @return {@code true} if the supplied {@code path} matched,
-     * {@code false} if it didn't
-     */
-    matchStart: (pattern: string, path: string) => boolean;
-    /**
-     * Given a pattern and a full path, determine the pattern-mapped part.
-     * <p>This method is supposed to find out which part of the path is matched
-     * dynamically through an actual pattern, that is, it strips off a statically
-     * defined leading path from the given full path, returning only the actually
-     * pattern-matched part of the path.
-     * <p>For example: For "myroot/*.html" as pattern and "myroot/myfile.html"
-     * as full path, this method should return "myfile.html". The detailed
-     * determination rules are specified to this PathMatcher's matching strategy.
-     * <p>A simple implementation may return the given full path as-is in case
-     * of an actual pattern, and the empty String in case of the pattern not
-     * containing any dynamic parts (i.e. the {@code pattern} parameter being
-     * a static path that wouldn't qualify as an actual {@link #isPattern pattern}).
-     * A sophisticated implementation will differentiate between the static parts
-     * and the dynamic parts of the given path pattern.
-     * @param pattern the path pattern
-     * @param path the full path to introspect
-     * @return the pattern-mapped part of the given {@code path}
-     * (never {@code null})
-     */
-    extractPathWithinPattern: (pattern: string, path: string) => string;
-    /**
-     * Given a pattern and a full path, extract the URI template letiables. URI template
-     * letiables are expressed through curly brackets ('{' and '}').
-     * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
-     * return a map containing "hotel"->"1".
-     * @param pattern the path pattern, possibly containing URI templates
-     * @param path the full path to extract template letiables from
-     * @return a map, containing letiable names as keys; letiables values as values
-     */
-    extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
-    /**
-     * Combines two patterns into a new pattern that is returned.
-     * <p>The full algorithm used for combining the two pattern depends on the underlying implementation.
-     * @param pattern1 the first pattern
-     * @param pattern2 the second pattern
-     * @return the combination of the two patterns
-     * @throws IllegalArgumentException when the two patterns cannot be combined
-     */
-    combine: (pattern1: any, pattern2: any) => string;
-}
-
-declare class AntPathMatcher implements PathMatcher$1 {
+declare class AntPathMatcher implements PathMatcher {
     private caseSensitive;
     private trimTokens;
     private cachePatterns;
@@ -1593,9 +1593,35 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     protected requestHeaderResolver: RequestHeaderResolver;
     protected apiSignatureStrategy: ApiSignatureStrategy;
     protected restTemplate: RestOperations;
-    protected feignClientExecutorInterceptorExecutor: FeignClientExecutorInterceptorExecutor;
+    protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
     constructor(apiService: T);
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
+    private preHandle;
+    private postHandle;
 }
 
-export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, BrowserHttpAdapter, BrowserHttpRequest, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientExecutorInterceptorExecutor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse$1 as ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, voidResponseExtractor };
+/**
+ * client http interceptor registration
+ */
+declare class ClientHttpInterceptorRegistration extends InterceptorRegistration {
+    private clientInterceptor;
+    constructor(clientInterceptor: ClientHttpRequestInterceptor);
+    getInterceptor: () => MappedClientHttpRequestInterceptor<HttpRequest>;
+}
+
+declare class InterceptorRegistry {
+    private clientHttpInterceptorRegistrations;
+    private feignClientExecutorInterceptorRegistrations;
+    /**
+     * add client Http Request interceptor
+     * @param clientInterceptor
+     */
+    addClientInterceptor: (clientInterceptor: ClientHttpRequestInterceptor<HttpRequest>) => ClientHttpInterceptorRegistration;
+    /**
+     * add feign client executor interceptor
+     * @param feignClientExecutorInterceptor
+     */
+    addFeignClientExecutorInterceptor: (feignClientExecutorInterceptor: FeignClientExecutorInterceptor<FeignRequestBaseOptions>) => FeignClientExecutorInterceptorRegistration;
+}
+
+export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, BrowserHttpAdapter, BrowserHttpRequest, ClientHttpInterceptorRegistration, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientExecutorInterceptorRegistration, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, InterceptorRegistration, InterceptorRegistry, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse$1 as ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, voidResponseExtractor };

@@ -3,16 +3,6 @@ import {HttpMethod} from "../constant/http/HttpMethod";
 import {ResponseExtractor} from "./ResponseExtractor";
 
 
-// const responseExtractorFactory = <T>(response: HttpResponse) => {
-//
-//     return function <T>() :Promise<T>{
-//         if (response.ok) {
-//             return Promise.resolve();
-//         }
-//         return Promise.reject(response);
-//     }
-// };
-
 /**
  * void response extractor
  * @param response
@@ -59,4 +49,27 @@ export const optionsMethodResponseExtractor = (response: HttpResponse): Promise<
         return Promise.resolve(methods);
     }
     return Promise.reject(response);
+};
+
+/**
+ *
+ * @param method
+ */
+export const restResponseExtractor = (method: HttpMethod) => {
+    switch (method) {
+        case HttpMethod.GET:
+            return objectResponseExtractor;
+        case HttpMethod.POST:
+            return objectResponseExtractor;
+        case HttpMethod.PATCH:
+            return objectResponseExtractor;
+        case HttpMethod.DELETE:
+            return voidResponseExtractor;
+        case HttpMethod.OPTIONS:
+            return optionsMethodResponseExtractor;
+        case HttpMethod.HEAD:
+            return headResponseExtractor;
+        case HttpMethod.PUT:
+            return objectResponseExtractor;
+    }
 };

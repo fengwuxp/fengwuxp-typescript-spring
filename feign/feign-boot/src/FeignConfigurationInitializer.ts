@@ -66,14 +66,7 @@ const feignConfigurationInitializer: FeignConfigurationInitializer = {
             getApiSignatureStrategy: invokeFunction(defaultFeignConfiguration.getApiSignatureStrategy),
             getFeignClientBuilder: invokeFunction(defaultFeignConfiguration.getFeignClientBuilder),
             getFeignClientExecutor: invokeFunction(defaultFeignConfiguration.getFeignClientExecutor),
-            getFeignClientExecutorInterceptorExecutor: () => {
-                const feignClientExecutorInterceptorExecutor = invokeFunction(defaultFeignConfiguration.getFeignClientExecutorInterceptorExecutor)();
-
-                feignClientExecutorInterceptorExecutor.setInterceptors(
-                    feignConfigurationAdapter.registryFeignClientExecutorInterceptor(feignClientExecutorInterceptorExecutor.getInterceptors() || [])
-                );
-                return feignClientExecutorInterceptorExecutor;
-            },
+            getFeignClientExecutorInterceptors:invokeFunction(defaultFeignConfiguration.getFeignClientExecutorInterceptors),
             getHttpAdapter: () => {
                 return invokeFunction(feignConfigurationAdapter.httpAdapter)(defaultFeignConfiguration.getHttpAdapter());
             },

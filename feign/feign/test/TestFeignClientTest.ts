@@ -63,6 +63,7 @@ describe("test feign client", () => {
         }
 
         match('/path/**/?z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
+        match('/path/**/*z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
         match('/foo/{id}/bar', ['/foo/1/bar', '/foo/ss/bar', '/foo/1/2/bar']);
         match('/app/*.x', ['/app/a.x', '/app/a.b']);
         match('/app/p?ttern', ['/app/pXttern', '/app/pattern', '/app/pttern']);

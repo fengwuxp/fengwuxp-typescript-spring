@@ -1,3 +1,4 @@
+
 export {HttpAdapter} from "./adapter/HttpAdapter";
 export {default as BrowserHttpAdapter} from "./adapter/browser/BrowserHttpAdapter";
 export {BrowserHttpRequest} from "./adapter/browser/BrowserHttpRequest";
@@ -43,6 +44,14 @@ export {
     defaultApiModuleName, contentTypeName, matchUrlPathVariable, FEIGN_CLINE_META_KEY, grabUrlPathVariable
 }from "./constant/FeignConstVar";
 
+export {default as InterceptorRegistry} from "./interceptor/InterceptorRegistry";
+export {InterceptorRegistration} from "./interceptor/InterceptorRegistration";
+export {default as ClientHttpInterceptorRegistration} from "./interceptor/ClientHttpInterceptorRegistration";
+export {default as FeignClientExecutorInterceptorRegistration} from "./interceptor/FeignClientExecutorInterceptorRegistration";
+export {MappedInterceptor} from "./interceptor/MappedInterceptor";
+export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";
+export {default as MappedClientHttpRequestInterceptor} from "./interceptor/MappedClientHttpRequestInterceptor";
+
 export {ResolveHttpResponse} from "./resolve/ResolveHttpResponse";
 export {default as CommonResolveHttpResponse} from "./resolve/CommonResolveHttpResponse";
 export {RequestHeaderResolver} from "./resolve/header/RequestHeaderResolver";
@@ -60,7 +69,7 @@ export {defaultGenerateAnnotationMethodConfig} from "./support/DefaultGenerateAn
 
 export {
     objectResponseExtractor, voidResponseExtractor, headResponseExtractor, optionsMethodResponseExtractor
-}from "./template/DefaultResponseExtractor";
+}from "./template/RestResponseExtractor";
 export {DefaultUriTemplateHandler, defaultUriTemplateFunctionHandler}from "./template/DefaultUriTemplateHandler";
 export {
     ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseErrorHandler
@@ -76,7 +85,7 @@ export {
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {RequestProgressBar} from "./ui/RequestProgressBar";
 
-export {PathMatcher} from "utils/PathMatcher";
+export {PathMatcher} from "./utils/PathMatcher";
 export {default as AntPathMatcher} from "./utils/AntPathMatcher";
 
 export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFeignClientBuilder";
@@ -85,6 +94,5 @@ export {FeignClient} from "./FeignClient";
 export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuilder} from "./FeignClientBuilder";
 export { FeignClientExecutor} from "./FeignClientExecutor";
 export { FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
-export {default as FeignClientExecutorInterceptorExecutor} from "./FeignClientExecutorInterceptorExecutor";
 export {FeignRequestBaseOptions} from "./FeignRequestOptions";
 

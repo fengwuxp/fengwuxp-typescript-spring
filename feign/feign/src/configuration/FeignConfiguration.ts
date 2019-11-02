@@ -8,7 +8,7 @@ import {ApiSignatureStrategy} from "../signature/ApiSignatureStrategy";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
-import FeignClientExecutorInterceptorExecutor from "../FeignClientExecutorInterceptorExecutor";
+import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 
 /**
  * feign configuration
@@ -38,5 +38,5 @@ export interface FeignConfiguration {
 
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
 
-    getFeignClientExecutorInterceptorExecutor?: () => FeignClientExecutorInterceptorExecutor;
+    getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
 }
