@@ -31,15 +31,4 @@ export interface HttpRequest {
      */
     timeout?: number;
 
-    /**
-     * retry request options
-     */
-    // retryOptions?: HttpRetryOptions;
-
-    // /**
-    //  * content type
-    //  * default："application/x-www-form-urlencoded"
-    //  * @see {@link /src/constant/http/HttpMediaType}
-    //  */
-    // contentType?: HttpMediaType | string;
 }

@@ -1,6 +1,5 @@
 import {InterceptorRegistration} from "./InterceptorRegistration";
-import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
-import MappedFeignClientExecutorInterceptor from "./MappedFeignClientExecutorInterceptor";
+import {FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor} from "fengwuxp-typescript-feign";
 
 
 export default class FeignClientExecutorInterceptorRegistration extends InterceptorRegistration {

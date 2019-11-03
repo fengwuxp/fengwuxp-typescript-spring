@@ -1,4 +1,4 @@
-import {HttpMethod} from "../constant/http/HttpMethod";
+import {HttpMethod} from "fengwuxp-typescript-feign";
 
 
 export abstract class InterceptorRegistration {

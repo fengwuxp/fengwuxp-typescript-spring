@@ -1,7 +1,7 @@
-import {ClientHttpRequestInterceptor} from "../client/ClientHttpRequestInterceptor";
 import ClientHttpInterceptorRegistration from "./ClientHttpInterceptorRegistration";
 import FeignClientExecutorInterceptorRegistration from "./FeignClientExecutorInterceptorRegistration";
-import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
+import {ClientHttpRequestInterceptor, FeignClientExecutorInterceptor} from "fengwuxp-typescript-feign";
+
 
 
 export default class InterceptorRegistry {

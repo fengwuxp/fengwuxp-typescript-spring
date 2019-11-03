@@ -24,7 +24,8 @@ const getConfig = (isProd) => {
             "xregexp-quotemeta",
             "blueimp-md5",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "fengwuxp-common-utils/lib/date/DateFormatUtils"
         ],
         output: [
             {
@@ -52,7 +53,7 @@ const getConfig = (isProd) => {
                 // 包括
                 include: 'node_modules/**',
                 // 排除
-                exclude: [],
+                exclude: [/*"node_modules/fengwuxp-common-utils/src/date/DateFormatUtils"*/],
                 extensions: ['.js', '.ts']
             }),
             babel({

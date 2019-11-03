@@ -99,6 +99,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (queryParams && requestSupportRequestBody) {
             headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, queryParams);
         }
+        feignRequestOptions.body = requestSupportRequestBody ? requestBody : null;
         feignRequestOptions.headers = headers;
 
         if (apiSignatureStrategy != null) {
@@ -107,11 +108,12 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             apiSignatureStrategy.sign(signFields, originalParameter, feignRequestOptions);
         }
 
-        // pre handle
-        feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
         if (feignRequestOptions.responseExtractor == null) {
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
+
+        // pre handle
+        feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
 
         let httpResponse: any;
         try {
@@ -130,7 +132,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 }, retryOptions).send({
                     url: requestURL,
                     method: requestMapping.method,
-                    body: requestSupportRequestBody ? requestBody : null,
+                    body: feignRequestOptions.body,
                     headers: feignRequestOptions.headers
                 });
 
@@ -139,7 +141,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                     requestURL,
                     requestMapping.method,
                     queryParams,
-                    requestSupportRequestBody ? requestBody : null,
+                    feignRequestOptions.body,
                     feignRequestOptions.responseExtractor,
                     feignRequestOptions.headers);
             }

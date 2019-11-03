@@ -10,6 +10,8 @@ import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {FeignRequestOptions} from '../FeignRequestOptions';
+import { HttpRequestDataEncoder } from '../codec/HttpRequestDataEncoder';
+import { HttpResponseDataDecoder } from '../codec/HttpResponseDataDecoder';
 
 /**
  * feign configuration

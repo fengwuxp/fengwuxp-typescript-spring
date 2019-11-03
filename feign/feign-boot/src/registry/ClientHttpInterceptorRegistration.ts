@@ -1,6 +1,6 @@
-import {ClientHttpRequestInterceptor} from "../client/ClientHttpRequestInterceptor";
-import MappedClientHttpRequestInterceptor from './MappedClientHttpRequestInterceptor';
+
 import {InterceptorRegistration} from "./InterceptorRegistration";
+import {ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor} from "fengwuxp-typescript-feign";
 
 
 /**

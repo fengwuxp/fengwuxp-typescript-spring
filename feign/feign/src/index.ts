@@ -29,7 +29,8 @@ export {default as RoutingClientHttpRequestInterceptor} from "./client/RoutingCl
 export {default as SimpleNetworkStatusListener} from "./client/SimpleNetworkStatusListener";
 
 export {default as CodecFeignClientExecutorInterceptor} from "./codec/CodecFeignClientExecutorInterceptor";
-export {default as DateEncoder, DateConverter} from "./codec/DateEncoder";
+export {default as DateEncoder} from "./codec/DateEncoder";
+export {DateConverter, stringDateConverter, timeStampDateConverter} from "./codec/converter/DateConverter";
 export {HttpRequestDataEncoder} from "./codec/HttpRequestDataEncoder";
 export {HttpResponseDataDecoder} from "./codec/HttpResponseDataDecoder";
 
@@ -86,7 +87,7 @@ export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFei
 export {default as DefaultFeignClientExecutor} from "./DefaultFeignClientExecutor";
 export {FeignClient} from "./FeignClient";
 export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuilder} from "./FeignClientBuilder";
-export { FeignClientExecutor} from "./FeignClientExecutor";
-export { FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
+export {FeignClientExecutor} from "./FeignClientExecutor";
+export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {FeignRequestBaseOptions} from "./FeignRequestOptions";
 

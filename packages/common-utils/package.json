@@ -17,11 +17,13 @@
   "author": "wuxp",
   "license": "ISC",
   "scripts": {
-    "build_ts": "rm -rf ./lib && node ./scripts/build.js",
-    "yarn_i": "yarn install",
-    "npm_publish": "npm publish"
+    "build:ts": "rm -rf ./lib && node ./scripts/build.js",
+    "yarn:install": "yarn install",
+    "npm:publish": "npm publish"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.144",
+    "lodash": "^4.17.15",
     "@types/node": "^12.7.7",
     "@types/jest": "^24.0.18",
     "jest": "^23.6.0",

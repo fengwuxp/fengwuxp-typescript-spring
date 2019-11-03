@@ -1,11 +1,7 @@
 import {HttpRequestDataEncoder} from "./HttpRequestDataEncoder";
 import {FeignRequestOptions} from "../FeignRequestOptions";
 import {QueryParamType} from "../template/RestOperations";
-
-// date Converter
-export type DateConverter = (date: Date) => number | string
-
-const defaultDateConverter: DateConverter = (date: Date) => date.getTime();
+import {DateConverter, timeStampDateConverter} from './converter/DateConverter';
 
 
 /**
@@ -17,13 +13,12 @@ export default class DateEncoder<T extends FeignRequestOptions = FeignRequestOpt
     private dateConverter: DateConverter;
 
     constructor(dateConverter?: DateConverter) {
-        this.dateConverter = dateConverter || defaultDateConverter;
+        this.dateConverter = dateConverter || timeStampDateConverter;
     }
 
-    encode = async (request: T): Promise<T> => {
-        const {body, queryParams} = request;
-        request.queryParams = this.converterDate(queryParams);
-        request.body = this.converterDate(body);
+    encode = async (request: T) => {
+        request.queryParams = this.converterDate(request.queryParams);
+        request.body = this.converterDate(request.body);
         return request;
     };
 

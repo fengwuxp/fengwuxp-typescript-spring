@@ -3,8 +3,8 @@ import {
     FeignClientExecutorInterceptor,
     HttpAdapter,
     HttpRequest,
-    InterceptorRegistry
 } from "fengwuxp-typescript-feign";
+import InterceptorRegistry from "../registry/InterceptorRegistry";
 
 
 export interface FeignConfigurationAdapter {
@@ -13,7 +13,7 @@ export interface FeignConfigurationAdapter {
     /**
      * get http adapter
      */
-    httpAdapter?: <T extends HttpRequest = HttpRequest>(htpAdapter: HttpAdapter) => HttpAdapter;
+    httpAdapter?: <T extends HttpRequest = HttpRequest>() => HttpAdapter;
 
 
     /**

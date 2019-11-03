@@ -12,6 +12,8 @@ export interface FeignRequestBaseOptions {
      */
     queryParams?: QueryParamType;
 
+    body?: any;
+
     /**
      * external request headers
      * support '{xxx}' expression，Data can be obtained from request body or query data

@@ -484,7 +484,7 @@ interface RestOperations {
      * @param headers
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
-    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
+    execute: <E = any>(url: string, method: HttpMethod | string, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
 }
 /**
  * uri path variable
@@ -607,6 +607,7 @@ interface FeignRequestBaseOptions {
      * external query parameters
      */
     queryParams?: QueryParamType;
+    body?: any;
     /**
      * external request headers
      * support '{xxx}' expression，Data can be obtained from request body or query data
@@ -614,65 +615,10 @@ interface FeignRequestBaseOptions {
      */
     headers?: Record<string, string>;
     /**
-     * external request body
-     */
-    body?: QueryParamType;
-    /**
-     * 请求超时
-     */
-    timeout?: number;
-    /**
      * 是否开启gzip压缩
      * 默认：false
      */
     enabledGzip?: boolean;
-    /**
-     * 请求之前的执行的函数，在拦截器执行之前执行
-     * @param request
-     */
-    transformRequest?<T extends HttpRequest>(request: HttpRequest): T;
-    /**
-     * 响应之后执行的函数 在拦截器执行之后执行
-     * @param response
-     */
-    transformResponse?: (response: HttpResponse) => HttpResponse;
-}
-interface FeignRequestOptions extends FeignRequestBaseOptions, UIOptions {
-    /**
-     * 是否使用统一的提示
-     * 默认：true
-     */
-    useUnifiedToast?: boolean;
-    /**
-     * 是否使用进度条,如果该值为false 则不会使用统一的提示
-     * 默认：true
-     */
-    useProgressBar?: boolean;
-    /**
-     * 使用统一响应转换
-     * 默认：true
-     */
-    useUnifiedTransformResponse?: boolean;
-    /**
-     * 是否过滤提交数据中的 空字符串，null的数据，数值类型的NaN
-     * 默认：true
-     */
-    filterEmptyString?: boolean;
-    /**
-     * 进度条配置
-     * 进度条控制可以在拦截器实现
-     *
-     * @see {@link  /src/interceptor/default/NeedProgressBarInterceptor.ts}
-     */
-    progressBarOptions?: ProgressBarOptions;
-    /**
-     * 数据混淆配置
-     */
-    dataObfuscationOptions?: DataObfuscationOptions;
-    /**
-     * 响应数据抓取
-     */
-    responseExtractor?: ResponseExtractor;
 }
 /**
  * 请求进度条配置
@@ -741,9 +687,33 @@ interface UIOptions {
      * 进度条配置
      * 进度条控制可以在拦截器实现
      *
-     * @see {@link  /src/interceptor/default/NeedProgressBarInterceptor.ts}
+     * @see {@link  ./ui/ProcessBarExecutorInterceptor.ts}
      */
     progressBarOptions?: ProgressBarOptions;
+}
+interface DataOptions {
+    /**
+     * 使用统一响应转换
+     * 默认：true
+     */
+    useUnifiedTransformResponse?: boolean;
+    /**
+     * 是否过滤提交数据中的 空字符串，null的数据，数值类型的NaN
+     * 默认：true
+     */
+    filterNoneValue?: boolean;
+    /**
+     * 数据混淆配置
+     */
+    dataObfuscationOptions?: DataObfuscationOptions;
+    /**
+     * 响应数据抓取
+     */
+    responseExtractor?: ResponseExtractor;
+}
+interface FeignRequestContextOptions extends UIOptions, DataOptions {
+}
+interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
 }
 
 /**
@@ -784,6 +754,10 @@ interface FeignConfiguration {
     getRequestHeaderResolver?: () => RequestHeaderResolver;
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
     getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
+    /**
+     * get default feign request options
+     */
+    getDefaultFeignRequestOptions?: () => FeignRequestOptions;
 }
 
 interface FeignOptions {
@@ -1045,7 +1019,12 @@ declare class CodecFeignClientExecutorInterceptor<T extends FeignRequestOptions 
     preHandle: (options: T) => Promise<T>;
 }
 
+declare type DateFormatType = "yyyy" | "MM" | "dd" | "hh" | "mm" | "ss" | "yyyy-MM" | "yyyy-MM-dd" | "hh:mm" | "hh:mm:ss" | "yyyy-MM-dd hh:mm" | "yyyy-MM-dd hh:mm:ss";
+
 declare type DateConverter = (date: Date) => number | string;
+declare const timeStampDateConverter: DateConverter;
+declare const stringDateConverter: (fmt?: DateFormatType) => DateConverter;
+
 /**
  * encode/format the Date type in the request data or query params
  * Default conversion to timestamp
@@ -1197,6 +1176,13 @@ declare abstract class MappedInterceptor {
     matchesHeaders: (header: Record<string, string>) => boolean;
     private doMatch;
     private converterHeaders;
+}
+
+declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
+    private feignClientExecutorInterceptor;
+    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
+    preHandle: (options: T) => T | Promise<T>;
 }
 
 /**
@@ -1457,25 +1443,11 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     protected apiSignatureStrategy: ApiSignatureStrategy;
     protected restTemplate: RestOperations;
     protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
+    protected defaultRequestOptions: FeignRequestOptions;
     constructor(apiService: T);
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
     private preHandle;
     private postHandle;
 }
 
-declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
-    private feignClientExecutorInterceptor;
-    constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
-    postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
-    preHandle: (options: T) => T | Promise<T>;
-    /**
-     * Determine a match for the given lookup path.
-     * @param request
-     * @param options
-     * @param response
-     * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
-     */
-    matches: (request: HttpRequest, options?: T, response?: any) => boolean;
-}
-
-export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, voidResponseExtractor };
+export { AbstractHttpClient, AntPathMatcher, ApiSignatureStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultUriTemplateHandler, DeleteMapping, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PathMatcher, PostMapping, ProcessBarExecutorInterceptor, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, grabUrlPathVariable, headResponseExtractor, matchUrlPathVariable, objectResponseExtractor, optionsMethodResponseExtractor, restfulRequestURLResolver, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, timeStampDateConverter, voidResponseExtractor };
