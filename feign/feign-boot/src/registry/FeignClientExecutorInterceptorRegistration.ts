@@ -4,19 +4,15 @@ import {FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor} fr
 
 export default class FeignClientExecutorInterceptorRegistration extends InterceptorRegistration {
 
-    private feignClientExecutorInterceptor: FeignClientExecutorInterceptor;
-
 
     constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor) {
-        super();
-        this.feignClientExecutorInterceptor = feignClientExecutorInterceptor;
+        super(feignClientExecutorInterceptor);
     }
-
 
     public getInterceptor = (): MappedFeignClientExecutorInterceptor => {
 
         return new MappedFeignClientExecutorInterceptor(
-            this.feignClientExecutorInterceptor,
+            this.interceptor,
             this.includePatterns,
             this.excludePatterns,
             this.includeMethods,

@@ -1,34 +1,13 @@
-import ClientHttpInterceptorRegistration from "./ClientHttpInterceptorRegistration";
-import FeignClientExecutorInterceptorRegistration from "./FeignClientExecutorInterceptorRegistration";
-import {ClientHttpRequestInterceptor, FeignClientExecutorInterceptor} from "fengwuxp-typescript-feign";
+import {InterceptorRegistration} from "./InterceptorRegistration";
 
 
+export interface InterceptorRegistry {
 
-export default class InterceptorRegistry {
+    addInterceptor: (interceptor) => InterceptorRegistration;
 
-    private clientHttpInterceptorRegistrations: ClientHttpInterceptorRegistration[] = [];
+    getInterceptors: () => any[];
+}
 
-    private feignClientExecutorInterceptorRegistrations: FeignClientExecutorInterceptorRegistration[] = [];
-
-
-    /**
-     * add client Http Request interceptor
-     * @param clientInterceptor
-     */
-    addClientInterceptor = (clientInterceptor: ClientHttpRequestInterceptor): ClientHttpInterceptorRegistration => {
-        const clientHttpInterceptorRegistration = new ClientHttpInterceptorRegistration(clientInterceptor);
-        this.clientHttpInterceptorRegistrations.push(clientHttpInterceptorRegistration);
-        return clientHttpInterceptorRegistration;
-    };
-
-    /**
-     * add feign client executor interceptor
-     * @param feignClientExecutorInterceptor
-     */
-    addFeignClientExecutorInterceptor = (feignClientExecutorInterceptor: FeignClientExecutorInterceptor): FeignClientExecutorInterceptorRegistration => {
-        const feignClientExecutorInterceptorRegistration = new FeignClientExecutorInterceptorRegistration(feignClientExecutorInterceptor);
-        this.feignClientExecutorInterceptorRegistrations.push(feignClientExecutorInterceptorRegistration);
-        return feignClientExecutorInterceptorRegistration;
-    }
-
+export const getInterceptors = (interceptorRegistrations: InterceptorRegistration[]) => {
+    return interceptorRegistrations.map(item => item.getInterceptor());
 }

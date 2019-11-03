@@ -15,6 +15,13 @@ export abstract class InterceptorRegistration {
 
     protected excludeHeaders: string[][] = [];
 
+    protected interceptor;
+
+
+    constructor(interceptor) {
+        this.interceptor = interceptor;
+    }
+
     addPathPatterns = (...patterns: string[]): this => {
         this.includePatterns.push(...patterns);
         return this;

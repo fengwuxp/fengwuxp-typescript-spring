@@ -1,4 +1,3 @@
-
 import {InterceptorRegistration} from "./InterceptorRegistration";
 import {ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor} from "fengwuxp-typescript-feign";
 
@@ -8,20 +7,15 @@ import {ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor} from "
  */
 export default class ClientHttpInterceptorRegistration extends InterceptorRegistration {
 
-
-    private clientInterceptor: ClientHttpRequestInterceptor;
-
-
     constructor(clientInterceptor: ClientHttpRequestInterceptor) {
-        super();
-        this.clientInterceptor = clientInterceptor;
+        super(clientInterceptor);
     }
 
 
     public getInterceptor = (): MappedClientHttpRequestInterceptor => {
 
         return new MappedClientHttpRequestInterceptor(
-            this.clientInterceptor,
+            this.interceptor,
             this.includePatterns,
             this.excludePatterns,
             this.includeMethods,
