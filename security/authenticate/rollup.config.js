@@ -51,9 +51,7 @@ const getConfig = (isProd) => {
             resolve(),
             common({
                 // 包括
-                include: [
-                    'node_modules/**'
-                ],
+                include: 'node_modules/**',
                 // 排除
                 exclude: [/*"node_modules/fengwuxp-common-utils/src/date/DateFormatUtils"*/],
                 extensions: ['.js', '.ts']

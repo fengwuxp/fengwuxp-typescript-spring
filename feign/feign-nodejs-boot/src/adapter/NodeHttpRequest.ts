@@ -1,5 +1,6 @@
-import {HttpRequest} from "../../../../../packages/feign/src/client/HttpRequest";
+
 import {AuthOptions, CookieJar, OAuthOptions} from "request";
+import {HttpRequest} from "fengwuxp-typescript-feign";
 
 /**
  *  node js http request

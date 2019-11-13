@@ -1,5 +1,5 @@
 {
-  "name": "feign-boot-stater",
+  "name": "feign-boot-nodejs-stater",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -13,10 +13,8 @@
   "author": "wuxp",
   "license": "ISC",
   "devDependencies": {
-    "@types/request": "^2.48.3",
     "@types/jest": "^24.0.18",
     "@types/node": "^12.7.7",
-    "blueimp-md5": "^2.11.0",
     "jest": "^23.6.0",
     "log4js": "^4.0.2",
     "request": "^2.88.0",
@@ -48,9 +46,11 @@
     "rollup-plugin-terser": "^5.1.1",
     "rollup-plugin-typescript": "^0.8.1",
     "rollup-plugin-typescript2": "^0.24.3",
-    "rollup-plugin-dts": "^0.15.1"
+    "rollup-plugin-dts": "^1.1.12"
   },
   "dependencies": {
+    "@types/request": "^2.48.3",
+    "request": "^2.88.0",
     "fengwuxp-typescript-feign": "^1.0.0"
   }
 }

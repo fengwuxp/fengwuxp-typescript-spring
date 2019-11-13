@@ -124,11 +124,11 @@ export default class RestTemplate implements RestOperations {
     };
 
 
-    set uriTemplateHandler(value: UriTemplateHandler) {
-        this._uriTemplateHandler = value;
+    set uriTemplateHandler(uriTemplateHandler: UriTemplateHandler) {
+        this._uriTemplateHandler = uriTemplateHandler;
     }
 
-    set responseErrorHandler(value: ResponseErrorHandler) {
-        this._responseErrorHandler = value;
+    set responseErrorHandler(responseErrorHandler: ResponseErrorHandler) {
+        this._responseErrorHandler = responseErrorHandler;
     }
 }

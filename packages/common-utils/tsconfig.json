@@ -1,14 +1,19 @@
 {
   "compilerOptions": {
     "moduleResolution": "node",
+    "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
     "module": "commonjs",
-    "target": "es5",
+    "target": "es6",
     "sourceMap": true,
     "declaration": true,
     "declarationDir": "./lib",
     "outDir": "./lib",
     "baseUrl": "./src",
+    "importHelpers": true,
+    "noEmitHelpers": true,
     "strict": false,
     "types": [
       "node",

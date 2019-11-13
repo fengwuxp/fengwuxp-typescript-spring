@@ -58,7 +58,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
             // max timeout control
             const timerId = setTimeout(() => {
                 this.retryEnd = true;
-                reject(new Error(`retry timeout，retry number${this.countRetry}`));
+                reject(new Error(`retry timeout, maxTimeout=${_maxTimeout}, retry count = ${this.countRetry}`));
             }, _maxTimeout + retries * 10);
 
             p.then(resolve)
@@ -80,7 +80,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
 
         const {onRetry, delay, retries, when} = this.retryOptions;
 
-        const _delay = Math.ceil(Math.random() * delay) + Math.random() * 31;
+        const _delay = delay + Math.random() * 31;
 
         return new Promise<HttpResponse>((resolve, reject) => {
             const errorHandle = (resp) => {

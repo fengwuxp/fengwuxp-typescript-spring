@@ -149,12 +149,12 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignReque
 
 }
 
-export interface FeignRetryRequestOptions extends FeignRequestOptions {
-    /**
-     * retry request options
-     */
-    retryOptions?: HttpRetryOptions;
-
-}
+// export interface FeignRetryRequestOptions extends FeignRequestOptions {
+//     /**
+//      * retry request options
+//      */
+//     retryOptions?: HttpRetryOptions;
+//
+// }
 
 

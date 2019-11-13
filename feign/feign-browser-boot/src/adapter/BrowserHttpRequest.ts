@@ -1,4 +1,4 @@
-import {HttpRequest} from "../../client/HttpRequest";
+import {HttpRequest} from "fengwuxp-typescript-feign";
 
 
 export interface BrowserHttpRequest extends HttpRequest{

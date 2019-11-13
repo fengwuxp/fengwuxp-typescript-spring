@@ -48,48 +48,53 @@ export interface FeignOptions {
  */
 export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: FeignOptions): Function => {
 
-    const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
-
-    const feignOptions: FeignOptions = {
-        apiModule: defaultApiModuleName,
-        configuration: [defaultFeignConfiguration],
-        ...options
-    };
-
-    const feignConfiguration = feignOptions.configuration[0];
-
     /**
      * 创建feign代理的实例
      * @param  {T} clazz
      */
     return (clazz: { new(...args: any[]): {} }): any => {
-        if (feignConfiguration == null) {
-            throw new Error("feign configuration is null");
-        }
-
-        const {getFeignClientBuilder} = feignConfiguration;
-
-        const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = getFeignClientBuilder ? getFeignClientBuilder<T>() : defaultFeignClientBuilder;
 
         /**
          * 返回一个实现了FeignProxyClient接口的匿名类
          */
         return class extends clazz implements FeignProxyClient {
 
-
-            constructor() {
-                super();
-                //build feign client instance
-                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
-            }
-
-            serviceName: string = feignOptions.value || clazz.name;
+            /**
+             * 服务名称
+             */
+            readonly serviceName: string;
 
 
             /**
              * feign代理的相关配置
              */
-            feignOptions: FeignOptions = feignOptions;
+            readonly feignOptions: FeignOptions;
+
+            constructor() {
+                super();
+                const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
+
+                const feignOptions: FeignOptions = {
+                    apiModule: defaultApiModuleName,
+                    configuration: [defaultFeignConfiguration],
+                    ...options
+                };
+
+                const feignConfiguration = feignOptions.configuration[0];
+
+                if (feignConfiguration == null) {
+                    throw new Error("feign configuration is null");
+                }
+
+                const {getFeignClientBuilder} = feignConfiguration;
+
+                const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = getFeignClientBuilder ? getFeignClientBuilder<T>() : defaultFeignClientBuilder;
+
+                this.serviceName = feignOptions.value || clazz.name;
+                this.feignOptions = feignOptions;
+                //build feign client instance
+                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
+            }
 
 
             /**

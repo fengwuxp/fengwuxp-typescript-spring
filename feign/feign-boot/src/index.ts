@@ -9,4 +9,3 @@ export {default as FeignClientInterceptorRegistry} from "./registry/FeignClientI
 
 export {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
 export {feignConfigurationInitializer} from "./FeignConfigurationInitializer";
-export {newHttpClient} from "./HttpClientFactory";

@@ -1,13 +1,12 @@
-import {HttpAdapter} from "../HttpAdapter";
-import {HttpRequest} from "../../client/HttpRequest";
-import {HttpResponse} from "../../client/HttpResponse";
-import {HttpMediaType} from "../../constant/http/HttpMediaType";
-import {mediaTypeIsEq} from "../../utils/MediaTypeUtil";
-import {contentTypeName} from "../../constant/FeignConstVar";
-import {HttpMethod} from "../../constant/http/HttpMethod";
-import {BrowserHttpRequest} from "./BrowserHttpRequest";
-import {ResolveHttpResponse} from 'resolve/ResolveHttpResponse';
-import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
+import {
+    CommonResolveHttpResponse,
+    contentTypeName,
+    HttpAdapter, HttpMediaType, HttpMethod,
+    HttpResponse,
+    ResolveHttpResponse,
+    mediaTypeIsEq
+} from "fengwuxp-typescript-feign";
+import { BrowserHttpRequest } from './BrowserHttpRequest';
 
 
 // RequestInit prop names
@@ -131,7 +130,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             return Promise.reject(response);
         }
 
-        const responseMediaType: string = response.headers[contentTypeName];
+        const responseMediaType: string = response.headers.get[contentTypeName];
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 

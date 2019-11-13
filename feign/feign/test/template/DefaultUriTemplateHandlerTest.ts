@@ -2,13 +2,13 @@ import * as log4js from "log4js";
 import {
     defaultUriTemplateFunctionHandler,
     DefaultUriTemplateHandler
-} from "../../src/template/DefaultUriTemplateHandler";
-import {invokeFunctionInterface} from "../../src/utils/InvokeFunctionInterface";
+} from "../../src";
+import {invokeFunctionInterface} from "../../src";
 import {
     UriTemplateHandler,
     UriTemplateHandlerFunction,
     UriTemplateHandlerInterface
-} from "../../src/template/UriTemplateHandler";
+} from "../../src";
 
 
 const logger = log4js.getLogger();

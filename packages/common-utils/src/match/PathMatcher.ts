@@ -55,28 +55,28 @@ export interface PathMatcher {
      * @param path the full path to introspect
      * @return the pattern-mapped part of the given {@code path}
      * (never {@code null})
-     */
-    extractPathWithinPattern: (pattern: string, path: string) => string;
-
-    /**
-     * Given a pattern and a full path, extract the URI template letiables. URI template
-     * letiables are expressed through curly brackets ('{' and '}').
-     * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
-     * return a map containing "hotel"->"1".
-     * @param pattern the path pattern, possibly containing URI templates
-     * @param path the full path to extract template letiables from
-     * @return a map, containing letiable names as keys; letiables values as values
-     */
-    extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
-
-
-    /**
-     * Combines two patterns into a new pattern that is returned.
-     * <p>The full algorithm used for combining the two pattern depends on the underlying implementation.
-     * @param pattern1 the first pattern
-     * @param pattern2 the second pattern
-     * @return the combination of the two patterns
-     * @throws IllegalArgumentException when the two patterns cannot be combined
-     */
-    combine: (pattern1, pattern2) => string;
+    //  */
+    // extractPathWithinPattern: (pattern: string, path: string) => string;
+    //
+    // /**
+    //  * Given a pattern and a full path, extract the URI template letiables. URI template
+    //  * letiables are expressed through curly brackets ('{' and '}').
+    //  * <p>For example: For pattern "/hotels/{hotel}" and path "/hotels/1", this method will
+    //  * return a map containing "hotel"->"1".
+    //  * @param pattern the path pattern, possibly containing URI templates
+    //  * @param path the full path to extract template letiables from
+    //  * @return a map, containing letiable names as keys; letiables values as values
+    //  */
+    // extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
+    //
+    //
+    // /**
+    //  * Combines two patterns into a new pattern that is returned.
+    //  * <p>The full algorithm used for combining the two pattern depends on the underlying implementation.
+    //  * @param pattern1 the first pattern
+    //  * @param pattern2 the second pattern
+    //  * @return the combination of the two patterns
+    //  * @throws IllegalArgumentException when the two patterns cannot be combined
+    //  */
+    // combine: (pattern1, pattern2) => string;
 }

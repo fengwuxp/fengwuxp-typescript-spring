@@ -1,7 +1,7 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
-import {PathMatcher} from "../utils/PathMatcher";
-import AntPathMatcher from "../utils/AntPathMatcher";
 import {HttpRequest} from "../client/HttpRequest";
+import SimplePathMatcher from "fengwuxp-common-utils/src/match/SimplePathMatcher";
+import {PathMatcher} from "fengwuxp-common-utils/src/match/PathMatcher";
 
 interface HttpHeader {
     name: string;
@@ -22,7 +22,7 @@ export abstract class MappedInterceptor {
 
     protected excludeHeaders: HttpHeader[];
 
-    private pathMatcher: PathMatcher = new AntPathMatcher();
+    protected pathMatcher: PathMatcher = new SimplePathMatcher();
 
 
     constructor(includePatterns: string[],
@@ -30,7 +30,7 @@ export abstract class MappedInterceptor {
                 includeMethods: HttpMethod[],
                 excludeMethods: HttpMethod[],
                 includeHeaders?: string[][],
-                excludeHeaders?: string[][]) {
+                excludeHeaders?: string[][],) {
         this.includePatterns = includePatterns;
         this.excludePatterns = excludePatterns;
         this.includeMethods = includeMethods;

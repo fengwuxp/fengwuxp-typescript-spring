@@ -45,6 +45,9 @@ const routing = (url: string, routeMapping: Record<string, string>) => {
 
     return normalizeUrl(url.replace(searchValue, ($1, $2) => {
         const domain = routeMapping[$2];
+        if (domain == null) {
+            return "";
+        }
         return domain.endsWith("/") ? domain : `${domain}/`;
     }));
 };

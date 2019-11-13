@@ -1,16 +1,17 @@
-import {HttpAdapter} from "../../../../../packages/feign/src/adapter/HttpAdapter";
-import {NodeHttpRequest} from './NodeHttpRequest';
-import {HttpResponse} from '../../../../../packages/feign/src/client/HttpResponse';
-import {ResolveHttpResponse} from "../../../../../packages/feign/src/resolve/ResolveHttpResponse";
-import CommonResolveHttpResponse from "../../../../../packages/feign/src/resolve/CommonResolveHttpResponse";
-import request from "request";
-import {mediaTypeIsEq} from "../../../../../packages/feign/src/utils/MediaTypeUtil";
-import {HttpMediaType} from "../../../../../packages/feign/src/constant/http/HttpMediaType";
-import {contentTypeName} from "../../../../../packages/feign/src/constant/FeignConstVar";
-
 /**
  * node js adapter
  */
+import {
+    CommonResolveHttpResponse, contentTypeName,
+    HttpAdapter, HttpMediaType,
+    HttpResponse,
+    mediaTypeIsEq,
+    ResolveHttpResponse
+} from "fengwuxp-typescript-feign";
+import {NodeHttpRequest} from "./NodeHttpRequest";
+import request from "request";
+
+
 export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
 
     private timeout: number;

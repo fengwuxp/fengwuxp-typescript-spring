@@ -15,6 +15,7 @@ describe("template test", () => {
     const defaultHttpClient = new DefaultHttpClient(
         new MockHttpAdapter("http://a.b.com/api"),
         HttpMediaType.FORM_DATA);
+
     const restTemplate = new RestTemplate(defaultHttpClient);
 
     test("get for object path variable", async () => {
@@ -36,35 +37,44 @@ describe("template test", () => {
 
     test("get for object query string", async () => {
 
-        const data = await restTemplate.getForObject(
-            "http://a.b.com/members",
-            {
-                id: 1,
-                name: "李四"
-            },
-            {}).then((data) => {
-            return data;
-        }).catch(e => {
-            return e;
-        }).finally(() => {
-            logger.debug("finally");
-        });
-        logger.debug(data)
+        try {
+            const data = await restTemplate.getForObject(
+                "http://a.b.com/members",
+                {
+                    id: 1,
+                    name: "李四"
+                },
+                {}).then((data) => {
+                return data;
+            }).catch(e => {
+                return e;
+            }).finally(() => {
+                logger.debug("finally");
+            });
+            logger.debug(data)
+        } catch (e) {
+            logger.error(e);
+        }
     }, 10 * 1000);
 
     test("post for object query string", async () => {
 
-        const httpResponse = await restTemplate.postForEntity(
-            "http://a.b.com/members",
-            {
-                id: 1,
-                name: "李四",
-                html: ""
-            },
-            {
-                age: 2
-            });
-        logger.debug("httpResponse", httpResponse);
+        try {
+            const httpResponse = await restTemplate.postForEntity(
+                "http://a.b.com/members",
+                {
+                    id: 1,
+                    name: "李四",
+                    html: ""
+                },
+                {
+                    age: 2
+                });
+            logger.debug("httpResponse", httpResponse);
+        } catch (e) {
+            logger.error(e);
+        }
+
     }, 10 * 1000);
 })
 ;

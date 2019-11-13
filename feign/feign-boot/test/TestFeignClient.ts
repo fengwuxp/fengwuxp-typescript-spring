@@ -1,19 +1,18 @@
-import {Feign} from "../src";
-import {RequestMapping} from "../src";
-import {GetMapping} from "../src/annotations/mapping/GetMapping";
-import {PostMapping} from "../src";
-import {Signature} from "../src";
-import {FeignRetry} from "../src";
-import {HttpMethod} from "../src";
-import {FeignRequestOptions} from "../src";
-import {DeleteMapping} from "../src";
-import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
+import {
+    DeleteMapping,
+    Feign,
+    FeignRetry,
+    HttpMethod,
+    PostMapping,
+    RequestMapping,
+    Signature
+} from "fengwuxp-typescript-feign";
+import {GetMapping} from "../../feign/src/annotations/mapping/GetMapping";
+import {FeignRequestOptions} from "../../feign/src";
 
 
 @Feign({
     value: "/test",
-    // url:"http://a.bc.cn/api",
-    configuration: [new MockFeignConfiguration("http://test.ab.com/api/")]
 })
 export default class TestFeignClient {
 
@@ -35,8 +34,7 @@ export default class TestFeignClient {
     })
     @FeignRetry({
         retries: 5,
-        delay: 2000,
-        maxTimeout: 9 * 1000
+        maxTimeout: 25 * 1000
     })
     testQuery: (evt: any, options?: FeignRequestOptions) => Promise<any>;
 

@@ -80,8 +80,11 @@ export {
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {RequestProgressBar} from "./ui/RequestProgressBar";
 
-export {PathMatcher} from "./utils/PathMatcher";
-export {default as AntPathMatcher} from "./utils/AntPathMatcher";
+export {mediaTypeIsEq} from "./utils/MediaTypeUtil";
+export {
+    supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
+}from "./utils/SerializeRequestBodyUtil";
+export {invokeFunctionInterface} from "./utils/InvokeFunctionInterface";
 
 export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFeignClientBuilder";
 export {default as DefaultFeignClientExecutor} from "./DefaultFeignClientExecutor";
@@ -89,5 +92,7 @@ export {FeignClient} from "./FeignClient";
 export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuilder} from "./FeignClientBuilder";
 export {FeignClientExecutor} from "./FeignClientExecutor";
 export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
-export {FeignRequestBaseOptions} from "./FeignRequestOptions";
+export {
+    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions
+}from "./FeignRequestOptions";
 
