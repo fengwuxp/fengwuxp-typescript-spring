@@ -62,6 +62,7 @@
     "rollup-plugin-dts": "^1.1.12"
   },
   "dependencies": {
-    "fengwuxp-typescript-feign": "^1.0.0"
+    "fengwuxp-typescript-feign": "^1.0.0",
+    "feign-boot-stater": "^1.0.0"
   }
 }

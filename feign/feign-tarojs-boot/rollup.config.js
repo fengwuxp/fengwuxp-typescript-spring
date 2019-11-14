@@ -20,9 +20,10 @@ const getConfig = (isProd) => {
         // https://rollupjs.org/guide/en#external-e-external
         external: [
             "reflect-metadata",
-            "blueimp-md5",
+            "@tarojs/taro",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "feign-boot-stater"
         ],
         output: [
             {

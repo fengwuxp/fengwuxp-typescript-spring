@@ -2,7 +2,20 @@
   "name": "feign-boot-nodejs-stater",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
+  "module": "es/index.js",
+  "typings": "types/index.d.ts",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
@@ -51,6 +64,6 @@
   "dependencies": {
     "@types/request": "^2.48.3",
     "request": "^2.88.0",
-    "fengwuxp-typescript-feign": "^1.0.0"
+    "feign-boot-stater": "^1.0.0"
   }
 }

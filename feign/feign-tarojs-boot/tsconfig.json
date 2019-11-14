@@ -10,9 +10,11 @@
     "sourceMap": false,
     "baseUrl": "./src",
     "importHelpers": true,
+    "jsx": "preserve",
     "types": [
       "node",
       "jest",
+      "react",
       "reflect-metadata"
     ],
     "lib": [
