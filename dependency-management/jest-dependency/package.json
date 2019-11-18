@@ -1,7 +1,7 @@
 {
-  "name": "fengwuxp-common-rollup",
+  "name": "fengwuxp-jest-dependency",
   "version": "1.0.0",
-  "description": "",
+  "description": "jest dependency management",
   "main": "index.js",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
@@ -15,16 +15,17 @@
   },
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
   "scripts": {
-    "yarn:install": "yarn install",
-    "npm:publish": "npm publish",
-    "build:tsc": "rm -rf ./lib && tsc"
+    "npm:publish": "npm publish"
   },
   "author": "wuxp",
   "license": "ISC",
   "devDependencies": {
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@types/jest": "^24.0.23",
+    "babel-jest": "^24.9.0",
+    "jest": "^24.9.0",
+    "log4js": "^4.0.2",
+    "ts-jest": "^24.1.0"
   }
 }

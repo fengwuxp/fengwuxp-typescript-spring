@@ -52,10 +52,8 @@ const getConfig = (isProd) => {
                 extensions: ['.js', '.ts']
             }),
             babel({
-                // runtimeHelpers: true,
                 extensions: ['.js', '.ts'],
-                // include: ['src/**/*'],
-                babelHelpers: "bundled"
+                babelHelpers: "runtime"
             }),
             //压缩代码
             isProd && terser({

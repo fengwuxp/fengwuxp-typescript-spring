@@ -5,6 +5,7 @@ import common from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2'
+import {DEFAULT_EXTENSIONS} from "@babel/core";
 
 const cpuNums = os.cpus().length;
 
@@ -22,10 +23,15 @@ export const generateRollupConfig = (options: RollupOptions): RollupOptions => {
         external: options.external,
         plugins: [
             typescript({
+                tsconfig: "./tsconfig.lib.json",
+                // typescript: require("typescript"),
+                rollupCommonJSResolveHack: true,
+                exclude: "**/__tests__/**",
+                clean: true,
                 tsconfigOverride: {
                     compilerOptions: {
-                        module: "exnext",
-                        declaration: true
+                        module: "esnext",
+                        declaration: false
                     }
                 }
             }),
@@ -38,8 +44,8 @@ export const generateRollupConfig = (options: RollupOptions): RollupOptions => {
                 extensions: ['.js', '.ts']
             }),
             babel({
-                runtimeHelpers: true,
-                extensions: ['.js', '.ts']
+                babelHelpers: "runtime",
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
             //压缩代码
             IS_PROD ? terser({

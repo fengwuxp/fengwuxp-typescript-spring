@@ -4,6 +4,7 @@ node_modules
 .gradle
 *.iml
 lib
+es
 .temp
 genode
 build

@@ -5,10 +5,11 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "commonjs",
-    "target": "es2015",
+    "module": "esnext",
+    "target": "esnext",
     "sourceMap": false,
     "baseUrl": "./src",
+    "allowJs": true,
     "importHelpers": true,
     "types": [
       "node",

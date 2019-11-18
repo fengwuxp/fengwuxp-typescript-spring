@@ -1,5 +1,6 @@
-export {HttpAdapter} from "./adapter/HttpAdapter";
+// import regeneratorRuntime from '@babel/runtime/regenerator';
 
+export {HttpAdapter} from "./adapter/HttpAdapter";
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
 export {PostMapping} from "./annotations/mapping/PostMapping";

@@ -33,7 +33,7 @@ export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignCo
             );
         },
         getRestTemplate() {
-            return new RestTemplate(this.getHttpClient());
+            return new RestTemplate(configuration.getHttpClient());
         }
     };
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);

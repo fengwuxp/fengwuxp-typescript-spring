@@ -1,11 +1,33 @@
-
 module.exports = {
     "presets": [
-        "@babel/env",
+        [
+            "@babel/env",
+            {
+                modules: false,
+                targets: {
+                    "browsers": [
+                        "> 1%",
+                        "last 2 versions",
+                        "not ie <= 8"
+                    ]
+                },
+                useBuiltIns: "usage",
+                corejs: 3
+            }
+        ],
         "@babel/typescript"
     ],
+
     "plugins": [
-        "@babel/proposal-class-properties",
-        "@babel/proposal-object-rest-spread"
+        [
+            "@babel/plugin-transform-runtime",
+            {
+                // "absoluteRuntime": false,
+                "corejs": 3,
+                "helpers": true,
+                "regenerator": true,
+                "useESModules": true
+            }
+        ]
     ]
 };

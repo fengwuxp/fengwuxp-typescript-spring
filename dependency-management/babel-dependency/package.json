@@ -1,0 +1,48 @@
+{
+  "name": "fengwuxp-babel-dependency",
+  "version": "1.0.0",
+  "description": "babel dependency management",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "scripts": {
+    "npm:publish": "npm publish"
+  },
+  "author": "wuxp",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "@babel/cli": "^7.7.2",
+    "@babel/core": "^7.7.2",
+    "@babel/plugin-external-helpers": "^7.7.2",
+    "@babel/plugin-proposal-async-generator-functions": "^7.7.2",
+    "@babel/plugin-proposal-class-properties": "^7.7.2",
+    "@babel/plugin-proposal-decorators": "^7.7.2",
+    "@babel/plugin-proposal-json-strings": "^7.7.2",
+    "@babel/plugin-proposal-object-rest-spread": "^7.7.2",
+    "@babel/plugin-syntax-dynamic-import": "^7.7.2",
+    "@babel/plugin-syntax-import-meta": "^7.7.2",
+    "@babel/plugin-transform-async-to-generator": "^7.7.2",
+    "@babel/plugin-transform-regenerator": "^7.7.2",
+    "@babel/plugin-transform-classes": "^7.7.2",
+    "@babel/plugin-transform-runtime": "^7.7.2",
+    "@babel/preset-env": "^7.7.2",
+    "@babel/preset-react": "^7.7.2",
+    "@babel/preset-typescript": "7.0.0",
+    "@babel/runtime": "^7.7.2",
+    "babel-loader": "^8.0.2",
+    "babel-plugin-import": "^1.12.0",
+    "@babel/runtime-corejs2": "^7.0.0",
+    "@babel/runtime-corejs3": "^7.0.0",
+    "core-js": "^3.4.1"
+  }
+}

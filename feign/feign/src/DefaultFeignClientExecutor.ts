@@ -13,7 +13,6 @@ import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClien
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
-import {HttpMethod} from "./constant/http/HttpMethod";
 
 /**
  * default feign client executor
