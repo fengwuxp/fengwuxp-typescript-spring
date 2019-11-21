@@ -37,12 +37,12 @@
     "typescript"
   ],
   "devDependencies": {
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",
-    "@babel/runtime-corejs3": "^7.0.0",
     "@babel/runtime-corejs2": "^7.0.0",
-    "core-js": "^3.4.1"
+    "@babel/runtime-corejs3": "^7.0.0",
+    "core-js": "^3.4.1",
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "es5-shim": "^4.5.9",
@@ -53,6 +53,7 @@
     "fetch-ie8": "^1.5.0",
     "file-saver": "^2.0.2",
     "isomorphic-fetch": "^2.2.1",
+    "parcel": "^1.12.4",
     "reflect-metadata": "^0.1.13"
   },
   "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"

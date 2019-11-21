@@ -26,8 +26,8 @@ const getConfig = (isProd) => {
             "core-js",
             "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
-            "reflect-metadata",
-            "fengwuxp-typescript-feign"
+            "fengwuxp-common-proxy",
+            "fengwuxp-common-utils"
         ],
         output: [
             {

@@ -7,8 +7,12 @@ import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import dts from "rollup-plugin-dts";
+import filesize from "rollup-plugin-filesize";
+import includePaths from "rollup-plugin-includepaths";
+import analyze from "rollup-plugin-analyzer";
 
 import pkg from './package.json';
+import {DEFAULT_EXTENSIONS} from "@babel/core";
 
 const cpuNums = os.cpus().length;
 
@@ -19,24 +23,32 @@ const getConfig = (isProd) => {
         // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
         // https://rollupjs.org/guide/en#external-e-external
         external: [
+            "core-js",
+            "@babel/runtime-corejs2",
+            "@babel/runtime-corejs3",
             "reflect-metadata",
-            "@tarojs/taro",
-            "fengwuxp-common-proxy",
-            "fengwuxp-common-utils",
+            "fengwuxp-typescript-feign",
             "feign-boot-stater"
         ],
         output: [
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'cjs',
+                format: 'commonjs',
                 compact: true,
                 extend: false,
-                sourcemap: false,
+                sourcemap: isProd,
+                strictDeprecations: false
+            },
+            {
+                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
+                format: 'esm',
+                compact: true,
+                extend: false,
+                sourcemap: isProd,
                 strictDeprecations: false
             }
         ],
         plugins: [
-            json(),
             typescript({
                 tsconfig: "./tsconfig.lib.json",
                 tsconfigOverride: {
@@ -46,19 +58,28 @@ const getConfig = (isProd) => {
                     }
                 }
             }),
+            json(),
             resolve(),
             common({
                 // 包括
-                include: 'node_modules/**',
+                include: [
+                    // 'node_modules/**'
+                ],
                 // 排除
                 exclude: [],
-                extensions: ['.js', '.ts']
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
             babel({
-                // runtimeHelpers: true,
-                extensions: ['.js', '.ts'],
-                // include: ['src/**/*'],
-                babelHelpers: "bundled"
+                exclude: "node_modules/**",
+                babelHelpers: "runtime",
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
+            }),
+            analyze({
+                stdout: true,
+            }),
+            filesize(),
+            includePaths({
+                paths: ["./src"]
             }),
             //压缩代码
             isProd && terser({
@@ -66,10 +87,11 @@ const getConfig = (isProd) => {
                     comments: false
                 },
                 include: [/^.+\.js$/],
-                exclude: ['node_moudles/**'],
+                exclude: ['node_modules/**'],
                 numWorkers: cpuNums,
-                sourcemap: false
-            })
+                sourcemap: true
+            }),
+
         ],
         treeshake: {
             moduleSideEffects: true

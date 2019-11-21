@@ -1,4 +1,4 @@
-// import regeneratorRuntime from '@babel/runtime/regenerator';
+// import regeneratorRuntime from '@babel/runtime-corejs3/regenerator';
 
 export {HttpAdapter} from "./adapter/HttpAdapter";
 

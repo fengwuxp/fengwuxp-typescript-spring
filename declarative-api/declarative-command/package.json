@@ -1,10 +1,7 @@
 {
-  "name": "feign-boot-stater",
+  "name": "fengwuxp-declarative-command",
   "version": "1.0.0",
-  "description": "",
-  "main": "dist/index.js",
-  "module": "es/index.js",
-  "typings": "types/index.d.ts",
+  "description": "declarative command",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },
@@ -16,23 +13,40 @@
     "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
   },
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "dist",
+    "es",
+    "types"
+  ],
+  "author": "wuxp",
+  "license": "ISC",
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
+    "test": "jest --config ./jest.config.js --verbose=true",
     "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
     "publish:lib": "npm run rollup:build && npm run npm:publish"
   },
-  "author": "wuxp",
-  "license": "ISC",
+  "keywords": [
+    "declarative",
+    "command",
+    "typescript"
+  ],
   "devDependencies": {
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
+    "@types/node": "^12.12.11",
     "@babel/runtime": "^7.0.0",
+    "@babel/runtime-corejs2": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
-    "core-js": "^3.4.1"
+    "core-js": "^3.4.1",
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
-    "fengwuxp-typescript-feign": "^1.0.0"
-  }
+
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }

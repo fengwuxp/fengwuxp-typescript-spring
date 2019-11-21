@@ -32,14 +32,18 @@ export class DefaultFactory implements ProxyFactory {
                         //保证this 对象的传递
                         return element.bind(target);
                     } else {
-                        //TODO
+                        //not exist
+                        throw new Error(`prop: ${propertyKey.toString()} not exist`);
                     }
                 } else {
                     if (match(target, propertyKey, isMethod, scope, customMatch)) {
-                        //是否匹配
-                        element = methodInterceptor(target, propertyKey, receiver);
+                        //匹配
+                        if (methodInterceptor != null) {
+                            element = methodInterceptor(target, propertyKey, receiver);
+                        }
                     } else {
-                        //TODO
+                        //not match
+                        throw new Error(`prop: ${propertyKey.toString()} not match`)
                     }
                 }
                 if (isMethod) {

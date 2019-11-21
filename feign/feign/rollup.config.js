@@ -29,7 +29,7 @@ const getConfig = (isProd) => {
             "reflect-metadata",
             "xregexp",
             "xregexp-quotemeta",
-            "blueimp-md5",
+            "querystring",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
             "fengwuxp-common-utils/lib/date/DateFormatUtils"
