@@ -65,10 +65,11 @@ export const tryConverterMethodNameCommandResolver = (name: string,
                                                       commonValues: Array<string>,
                                                       defaultCommand: string): string[] => {
 
-    const [index] = commonValues.map((val,index) => {
-        return name.startsWith(val) ? [index,val.length] :[index,-1]
+    // 找到匹配度最高的指令，如果没有 则使用默认指令
+    const [index] = commonValues.map((val, index) => {
+        return name.startsWith(val) ? [index, val.length] : [index, -1]
     }).reduce((pre, item) => {
-        return pre[1] > item[1] ? pre : item
+        return pre[1] >= item[1] ? pre : item
     });
     const command = index > 0 ? commonValues[index] : defaultCommand;
 

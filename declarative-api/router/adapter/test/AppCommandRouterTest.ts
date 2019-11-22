@@ -72,6 +72,7 @@ describe("test  app command router factory", () => {
 
     test("test mock app router", () => {
 
+        mockAppRouter.login();
         mockAppRouter.index();
 
         mockAppRouter["home"]();
