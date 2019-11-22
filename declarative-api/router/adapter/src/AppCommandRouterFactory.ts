@@ -7,7 +7,6 @@ import {
     tryConverterPathnameVariableResolver
 } from "./PathnameMethodNameCommandResolver";
 import DefaultWrapperNavigatorAdapter from "./DefaultWrapperNavigatorAdapter";
-// import {tryConverterMethodNameCommandResolver} from "../../../declarative-command/src";
 import {tryConverterMethodNameCommandResolver} from "fengwuxp-declarative-command";
 
 
