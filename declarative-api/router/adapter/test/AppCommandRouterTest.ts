@@ -41,7 +41,7 @@ describe("test  app command router factory", () => {
         // methodNameCommandResolver: () => {
         //     return (name) => name;
         // },
-        methodNameCommandResolver: ()=>toLineResolver,
+        methodNameCommandResolver: () => toLineResolver,
         navigatorAdapter: <E extends NavigatorAdapter = NavigatorAdapter>(): E => {
             return {
                 goBack: function (num?: number) {

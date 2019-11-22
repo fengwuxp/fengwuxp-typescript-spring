@@ -80,8 +80,8 @@ interface AppCommandRouter extends NavigatorAdapter {
 declare type RouteConfirmBeforeJumping = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T) => true | NavigatorJumpRouteFunction;
 interface RouterCommandConfiguration {
     methodNameCommandResolver: () => MethodNameCommandResolver;
-    navigatorAdapter: <E extends NavigatorAdapter = NavigatorAdapter>() => E;
-    confirmBeforeJumping?: RouteConfirmBeforeJumping;
+    navigatorAdapter: () => NavigatorAdapter;
+    confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
 }
 
 /**
@@ -92,4 +92,4 @@ interface RouterCommandConfiguration {
  */
 declare const appCommandRouterFactory: <T extends AppCommandRouter, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string) => T & N;
 
-export { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };
+export { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

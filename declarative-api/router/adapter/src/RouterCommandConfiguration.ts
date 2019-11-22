@@ -12,8 +12,8 @@ export interface RouterCommandConfiguration {
 
     methodNameCommandResolver: () => MethodNameCommandResolver;
 
-    navigatorAdapter: <E extends NavigatorAdapter = NavigatorAdapter> () => E;
+    navigatorAdapter: () => NavigatorAdapter;
 
-    confirmBeforeJumping?: RouteConfirmBeforeJumping;
+    confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
 
 }

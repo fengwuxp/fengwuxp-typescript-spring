@@ -2,4 +2,4 @@ export {AppCommandRouter, RouterCommandMethod, RouteUriVariable} from "./AppComm
 export {appCommandRouterFactory} from "./AppCommandRouterFactory";
 export {NavigatorAdapter, NavigatorDescriptorObject} from "./NavigatorAdapter";
 export {RouterCommand} from "./RouterCommand";
-export {RouterCommandConfiguration} from "./RouterCommandConfiguration";
+export {RouterCommandConfiguration, RouteConfirmBeforeJumping} from "./RouterCommandConfiguration";

@@ -25,8 +25,8 @@ export const appCommandRouterFactory = <T extends AppCommandRouter,
 
 
     const methodNameCommandResolver = configuration.methodNameCommandResolver();
-    const confirmBeforeJumping = typeof configuration.confirmBeforeJumping === "function" ? configuration.confirmBeforeJumping : undefined;
-    const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter<N>(), confirmBeforeJumping, pathPrefix);
+    const confirmBeforeJumping = typeof configuration.confirmBeforeJumping === "function" ? configuration.confirmBeforeJumping() : undefined;
+    const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter(), confirmBeforeJumping, pathPrefix);
 
     return newProxyInstanceEnhance<T & N>(navigator as any, null,
         (object, propertyKey: string, receiver) => {
