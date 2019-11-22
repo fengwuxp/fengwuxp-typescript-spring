@@ -27,8 +27,8 @@ const getConfig = (isProd) => {
             "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
             "reflect-metadata",
-            "fengwuxp-declarative-command",
-            "history",
+            "fengwuxp-declarative-router-adapter",
+            "react-native-router-flux",
             "querystring",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils"

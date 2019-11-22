@@ -1,0 +1,54 @@
+{
+  "name": "fengwuxp-react-native-router",
+  "version": "1.0.0",
+  "description": "declarative router adapter",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "dist",
+    "es",
+    "types"
+  ],
+  "author": "wuxp",
+  "license": "ISC",
+  "scripts": {
+    "yarn:install": "yarn install",
+    "npm:publish": "npm publish",
+    "tsc:build": "rm -rf ./types && tsc -p tsconfig.lib.json --emitDeclarationOnly",
+    "test": "jest --config jest.config.js --verbose=true",
+    "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build && npm run npm:publish"
+  },
+  "keywords": [
+    "route",
+    "adapter",
+    "typescript"
+  ],
+  "devDependencies": {
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@types/history": "^4.7.2",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-declarative-command": "1.0.0",
+    "fengwuxp-declarative-router-adapter": "^1.0.0",
+    "react-native-router-flux": "^4.0.6",
+    "querystring": "^0.2.0",
+    "reflect-metadata": "^0.1.13"
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+}

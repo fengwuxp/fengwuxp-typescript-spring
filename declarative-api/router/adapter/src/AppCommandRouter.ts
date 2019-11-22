@@ -13,7 +13,7 @@ type UriPathVariable = Array<boolean | string | number | Date>;
 type QueryParamType = Record<string, boolean | number | string | Date | UriPathVariable>;
 
 
-export type RouteUriVariable = UriPathVariable | QueryParamType;
+export type RouteUriVariable = boolean | number | string | UriPathVariable | QueryParamType;
 
 
 // export type RouterCommandMethod0 = () => Promise<void> | void;
@@ -34,7 +34,7 @@ export type RouteUriVariable = UriPathVariable | QueryParamType;
  * @param state
  * @param command
  */
-export type RouterCommandMethod = (uriVariables?: RouteUriVariable, state?: RouteUriVariable | RouterCommand, command?: RouterCommand) => Promise<void> | void;
+export type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (uriVariables?: T, state?: S | RouterCommand, command?: RouterCommand) => Promise<void> | void;
 // RouterCommandMethod0
 // | RouterCommandMethod1
 // | RouterCommandMethod2
@@ -55,6 +55,7 @@ export interface AppCommandRouter extends NavigatorAdapter {
      *    {
      *        login:()=>Promise<void>,
      *        index:()=>Promise<void>,
+     *        goodsDetailById:()=>Promise<void>,
      *    }
      *
      *  or
