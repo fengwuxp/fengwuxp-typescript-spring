@@ -1,4 +1,4 @@
-import { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping } from 'fengwuxp-declarative-router-adapter';
+import { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable } from 'fengwuxp-declarative-router-adapter';
 
 /**
  *
@@ -12,10 +12,12 @@ declare const reactNativeAppCommandRouterFactory: <T extends AppCommandRouter, N
  */
 declare class ReactNativeNavigatorAdapter implements NavigatorAdapter<NavigatorDescriptorObject> {
     goBack: (num?: number, ...args: any[]) => void;
-    popToTop: (descriptorObject: NavigatorDescriptorObject) => void;
-    push: (descriptorObject: NavigatorDescriptorObject) => void;
-    reLaunch: (descriptorObject: NavigatorDescriptorObject) => void;
-    replace: (descriptorObject: NavigatorDescriptorObject) => void;
+    popToTop: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    toView: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    push: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    private jump;
     private genRouteProps;
 }
 

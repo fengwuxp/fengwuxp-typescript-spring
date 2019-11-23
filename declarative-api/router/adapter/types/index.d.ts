@@ -13,7 +13,7 @@ declare enum RouterCommand {
     REPLACE = "replace"
 }
 
-declare type NavigatorJumpRouteFunction = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T) => Promise<any> | void;
+declare type NavigatorJumpRouteFunction = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<any> | void;
 interface NavigatorDescriptorObject extends LocationDescriptorObject {
     /**
      * uriVariables
@@ -29,6 +29,11 @@ interface NavigatorAdapter<T extends NavigatorDescriptorObject = NavigatorDescri
      * @param navigatorDescriptorObject
      */
     push: NavigatorJumpRouteFunction;
+    /**
+     * 跳转到下个页面 {@link NavigatorAdapter#push}
+     * @param navigatorDescriptorObject
+     */
+    toView: NavigatorJumpRouteFunction;
     /**
      * 返回
      * @param num

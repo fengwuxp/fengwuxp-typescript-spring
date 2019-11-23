@@ -1,4 +1,4 @@
-import {NavigatorAdapter, NavigatorDescriptorObject} from "fengwuxp-declarative-router-adapter";
+import {NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable} from "fengwuxp-declarative-router-adapter";
 import {Actions} from "react-native-router-flux"
 
 /**
@@ -13,22 +13,37 @@ export default class ReactNativeNavigatorAdapter implements NavigatorAdapter<Nav
         }
     };
 
-    popToTop = (descriptorObject: NavigatorDescriptorObject) => {
+    popToTop = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(Actions.push, descriptorObject, uriVariables, state);
 
-        return Actions.popTo(descriptorObject.pathname, this.genRouteProps(descriptorObject))
+    };
+    toView = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+
+        return this.jump(Actions.push, descriptorObject, uriVariables, state);
 
     };
 
-    push = (descriptorObject: NavigatorDescriptorObject) => {
-        return Actions.push(descriptorObject.pathname, this.genRouteProps(descriptorObject));
+    push = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(Actions.push, descriptorObject, uriVariables, state);
     };
 
-    reLaunch = (descriptorObject: NavigatorDescriptorObject) => {
-        return Actions.reset(descriptorObject.pathname, this.genRouteProps(descriptorObject));
+    reLaunch = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(Actions.reset, descriptorObject, uriVariables, state);
     };
 
-    replace = (descriptorObject: NavigatorDescriptorObject) => {
-        return Actions.replace(descriptorObject.pathname, this.genRouteProps(descriptorObject));
+    replace = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(Actions.replace, descriptorObject, uriVariables, state);
+    };
+
+    private jump = (action: (sceneKey: string, props?: any) => void, descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        if (typeof descriptorObject === "string") {
+            descriptorObject = {
+                pathname: descriptorObject,
+                uriVariables,
+                state
+            }
+        }
+        return action(descriptorObject.pathname, this.genRouteProps(descriptorObject));
     };
 
     private genRouteProps = (descriptorObject: NavigatorDescriptorObject) => {

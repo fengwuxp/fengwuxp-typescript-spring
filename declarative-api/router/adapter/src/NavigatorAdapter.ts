@@ -1,14 +1,17 @@
 import {LocationDescriptorObject} from "history";
 import {RouteUriVariable} from "./AppCommandRouter";
 
-export type NavigatorJumpRouteFunction = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T) => Promise<any> | void ;
+
+export type NavigatorJumpRouteFunction = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T | string,
+                                                                                                           uriVariables?: RouteUriVariable,
+                                                                                                           state?: RouteUriVariable) => Promise<any> | void ;
 
 export interface NavigatorDescriptorObject extends LocationDescriptorObject {
 
     /**
      * uriVariables
      */
-    uriVariables?: RouteUriVariable
+    uriVariables?: RouteUriVariable;
 }
 
 /**
@@ -23,6 +26,11 @@ export interface NavigatorAdapter<T extends NavigatorDescriptorObject = Navigato
      */
     push: NavigatorJumpRouteFunction;
 
+    /**
+     * 跳转到下个页面 {@link NavigatorAdapter#push}
+     * @param navigatorDescriptorObject
+     */
+    toView: NavigatorJumpRouteFunction;
 
     /**
      * 返回
@@ -34,19 +42,19 @@ export interface NavigatorAdapter<T extends NavigatorDescriptorObject = Navigato
      * 路由替换
      * @param navigatorDescriptorObject
      */
-    replace?: NavigatorJumpRouteFunction
+    replace?: NavigatorJumpRouteFunction;
 
     /**
      * 跳转到某个页面，并清空历史跳转记录
      * @param navigatorDescriptorObject
      */
-    reLaunch?: NavigatorJumpRouteFunction
+    reLaunch?: NavigatorJumpRouteFunction;
 
     /**
      * /导航到堆栈的顶部路径，解除所有其他路径
      * @param navigatorDescriptorObject
      */
-    popToTop?: NavigatorJumpRouteFunction
+    popToTop?: NavigatorJumpRouteFunction;
 
 
 }

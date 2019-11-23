@@ -56,6 +56,10 @@ describe("test  app command router factory", () => {
                     logger.debug(`push`, navigatorDescriptorObject)
                     return;
                 },
+                // toView: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+                //     logger.debug(`toView`, navigatorDescriptorObject)
+                //     return;
+                // },
                 reLaunch: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
                     logger.debug(`reLaunch`, navigatorDescriptorObject)
                     return;
@@ -83,11 +87,6 @@ describe("test  app command router factory", () => {
 
         mockAppRouter.goodsById(100);
 
-        mockAppRouter.push({
-            pathname: "goods_list",
-            uriVariables: {},
-            state: {}
-        });
 
         mockAppRouter.popToTopGoodsDetail({id: 100});
 
@@ -104,6 +103,14 @@ describe("test  app command router factory", () => {
         mockAppRouter.toModuleByUserId(["member", 1]);
 
         mockAppRouter.goBack();
+
+        mockAppRouter.push({
+            pathname: "goods_list",
+            uriVariables: {id: 2},
+            state: {}
+        });
+        mockAppRouter.push("goods_list", {id: 2});
+        mockAppRouter.toView("goods_list", {id: 2});
 
 
     });
