@@ -14,13 +14,13 @@ import {toLineResolver} from "fengwuxp-declarative-command";
  * @param navigatorAdapter
  */
 export const reactNativeAppCommandRouterFactory = <T extends AppCommandRouter,
-    N extends NavigatorAdapter=NavigatorAdapter>(confirmBeforeJumping: RouteConfirmBeforeJumping,
-                                                           navigatorAdapter?: NavigatorAdapter) => {
+    N extends NavigatorAdapter = NavigatorAdapter>(confirmBeforeJumping?: RouteConfirmBeforeJumping,
+                                                   navigatorAdapter?: NavigatorAdapter) => {
 
     return appCommandRouterFactory<T, N>(
         {
             confirmBeforeJumping: () => confirmBeforeJumping,
             methodNameCommandResolver: () => toLineResolver,
             navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new ReactNativeNavigatorAdapter()
-        },"");
+        }, "");
 };

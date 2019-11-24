@@ -5,7 +5,7 @@ import { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteCon
  * @param confirmBeforeJumping
  * @param navigatorAdapter
  */
-declare const reactNativeAppCommandRouterFactory: <T extends AppCommandRouter, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(confirmBeforeJumping: RouteConfirmBeforeJumping, navigatorAdapter?: NavigatorAdapter<NavigatorDescriptorObject>) => T & N;
+declare const reactNativeAppCommandRouterFactory: <T extends AppCommandRouter, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(confirmBeforeJumping?: RouteConfirmBeforeJumping, navigatorAdapter?: NavigatorAdapter<NavigatorDescriptorObject>) => T & N;
 
 /**
  * react-native navigator adapter

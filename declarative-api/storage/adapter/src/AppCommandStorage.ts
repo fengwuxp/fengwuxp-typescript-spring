@@ -2,11 +2,11 @@ import {GetStorageOptions, PersistenceStorageOptions, StorageAdapter} from "./St
 import {StorageUpdateStrategy} from "./StorageUpdateStrategy";
 
 
-export type SetStorageCommandMethod<T> = (data?: T, options?: number | PersistenceStorageOptions) => Promise<void> | void;
+export type SetStorageCommandMethod<T> = (data?: T, options?: number | PersistenceStorageOptions) => Promise<void>;
 
-export type GetStorageCommandMethod<T = any> = (options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<T> | T;
+export type GetStorageCommandMethod<T = any> = (options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<T>;
 
-export type RemoveStorageCommandMethod = () => Promise<void> | void;
+export type RemoveStorageCommandMethod = () => Promise<void>;
 
 
 /**

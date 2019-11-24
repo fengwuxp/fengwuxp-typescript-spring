@@ -36,11 +36,11 @@ const getConfig = (isProd) => {
         output: [
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'commonjs',
+                format: 'cjs',
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             },
             {
                 file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
@@ -48,7 +48,7 @@ const getConfig = (isProd) => {
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             }
         ],
         plugins: [

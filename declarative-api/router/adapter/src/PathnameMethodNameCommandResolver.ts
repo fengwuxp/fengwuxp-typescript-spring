@@ -1,6 +1,5 @@
 import {MethodNameCommandResolver, toLineResolver} from "fengwuxp-declarative-command";
 import {RouteUriVariable} from "./AppCommandRouter";
-import {RouterCommand} from "./RouterCommand";
 
 /**
  *  尝试对 xxxByxx 或 xx_by_xx的方法名称做处理

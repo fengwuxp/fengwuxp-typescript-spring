@@ -27,7 +27,7 @@ export interface StorageSyncAdapter {
      * @param key
      * @return  string[] | void
      */
-    removeStorageSync: (key: string | string[]) => string[] | void;
+    removeStorageSync: (key: string | string[]) => string | string[] | void;
 }
 
 
@@ -61,12 +61,12 @@ export interface StorageAdapter {
      * @param key
      * @return Promise<string[]> return removed keys
      */
-    removeStorage: (key: string | string[]) => Promise<string[]> | string[] | void;
+    removeStorage: (key: string | string[]) => Promise<string | string[]> | void;
 
     /**
      * get all keys
      */
-    getKeys?: () => Promise<string[]> | string[] | void;
+    getKeys?: () => Promise<string[]>;
 
     /**
      * clear all keys

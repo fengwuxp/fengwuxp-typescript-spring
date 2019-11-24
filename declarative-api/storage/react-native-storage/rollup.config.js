@@ -29,6 +29,7 @@ const getConfig = (isProd) => {
             "reflect-metadata",
             "fengwuxp-declarative-command",
             "fengwuxp-declarative-storage-adapter",
+            "@react-native-community/async-storage",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils"
         ],

@@ -3,7 +3,11 @@ import {AppCommandStorage} from "./AppCommandStorage";
 import {StorageCommandConfiguration} from "./StorageCommandConfiguration";
 import {newProxyInstanceEnhance} from "fengwuxp-common-proxy";
 import DefaultWrapperStorageAdapter from "./DefaultWrapperStorageAdapter";
-import {tryConverterMethodNameCommandResolver} from "fengwuxp-declarative-command";
+import {
+    reduceRightCommandResolvers, toLineResolver,
+    toUpperCaseResolver,
+    tryConverterMethodNameCommandResolver
+} from "fengwuxp-declarative-command";
 import {StorageCommand} from "./StorageCommand";
 
 
@@ -21,7 +25,7 @@ export const appCommandStorageFactory = <T extends AppCommandStorage,
     N extends StorageAdapter = StorageAdapter>(configuration: StorageCommandConfiguration, pathPrefix?: string): T & N => {
 
 
-    const methodNameCommandResolver = configuration.methodNameCommandResolver();
+    const methodNameCommandResolver = typeof configuration.methodNameCommandResolver == "function" ? configuration.methodNameCommandResolver() : reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver);
     const storageAdapter = new DefaultWrapperStorageAdapter(configuration.storageAdapter(),
         pathPrefix,
         typeof configuration.storageUpdateStrategy !== "function" ? undefined : configuration.storageUpdateStrategy());

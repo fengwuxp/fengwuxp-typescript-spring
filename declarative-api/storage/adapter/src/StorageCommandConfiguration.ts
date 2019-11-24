@@ -5,9 +5,9 @@ import {StorageUpdateStrategy} from "./StorageUpdateStrategy";
 
 export interface StorageCommandConfiguration {
 
-    methodNameCommandResolver: () => MethodNameCommandResolver;
-
     storageAdapter: () => StorageAdapter;
+
+    methodNameCommandResolver?: () => MethodNameCommandResolver;
 
     storageUpdateStrategy?: () => StorageUpdateStrategy;
 

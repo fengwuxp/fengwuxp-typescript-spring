@@ -65,7 +65,7 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
             }
         };
 
-        return this.storageAdapter.setStorage(this.genKey(key), object);
+        return this.storageAdapter.setStorage(this.genKey(key), JSON.stringify(object));
     };
 
     getStorage = <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => {
@@ -97,11 +97,10 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
     removeStorage = (key: (string | string[])) => {
 
         if (Array.isArray(key)) {
-
+            return Promise.all(key.map(this.removeStorage));
         } else {
             return this.storageAdapter.removeStorage(this.genKey(key));
         }
-
     };
 
 
