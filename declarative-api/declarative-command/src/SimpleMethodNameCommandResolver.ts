@@ -71,7 +71,7 @@ export const tryConverterMethodNameCommandResolver = (name: string,
     }).reduce((pre, item) => {
         return pre[1] >= item[1] ? pre : item
     });
-    const command = index > 0 ? commonValues[index] : defaultCommand;
+    const command = index >= 0 ? commonValues[index] : defaultCommand;
 
     return [command, name.replace(command, "")];
 };

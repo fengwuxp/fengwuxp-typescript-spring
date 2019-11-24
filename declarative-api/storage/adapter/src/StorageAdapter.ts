@@ -1,4 +1,37 @@
 /**
+ * sync local storage adapter
+ */
+import {StorageUpdateStrategy} from "./StorageUpdateStrategy";
+
+export interface StorageSyncAdapter {
+    /**
+     * in storage get data
+     * @param key
+     * @return T
+     */
+    getStorageSync: <T = any>(key: string) => T;
+
+
+    /**
+     * set data to storage
+     * @param key
+     * @param data
+     * @param options
+     * @return void
+     */
+    setStorageSync: (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => void;
+
+
+    /**
+     * remove key by local storage
+     * @param key
+     * @return  string[] | void
+     */
+    removeStorageSync: (key: string | string[]) => string[] | void;
+}
+
+
+/**
  * local storage adapter
  */
 export interface StorageAdapter {
@@ -7,18 +40,20 @@ export interface StorageAdapter {
     /**
      * in storage get data
      * @param key
+     * @param options
      * @return Promise<T>
      */
-    getStorage: <T>(key: string) => Promise<T>;
+    getStorage: <T = any>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<T>;
+
 
     /**
      * set data to storage
      * @param key
      * @param data
-     * @param options
+     * @param options      if it is a number, it means that you need to set the effective time of saving.
      * @return Promise<void>
      */
-    setStorage: <T>(key: string, data: T, options?: StorageOptions) => Promise<void> | void;
+    setStorage: (key: string, data: object | string | boolean | number, options?: number | PersistenceStorageOptions) => Promise<void> | void;
 
 
     /**
@@ -41,10 +76,25 @@ export interface StorageAdapter {
 
 }
 
-export interface StorageOptions {
+
+export interface PersistenceStorageOptions {
 
     /**
      * storage effective times，
      */
     effectiveTime: number;
+}
+
+
+export interface GetStorageOptions {
+
+    /**
+     * 当数据无效的时候刷新
+     */
+    onInvalidRefresh?: boolean;
+
+    /**
+     * 当获取数据失败的时候刷新
+     */
+    onRejectRefresh?: boolean;
 }

@@ -1,4 +1,6 @@
 /**
- * Update strategy when data in storage fails
+ * update policy when data in the store is invalid or does not exist
  */
-export type StorageUpdateStrategy=(key:string)=>Promise<any>
+export type StorageUpdateStrategy = <T=any>(key: string) => Promise<T>
+
+
