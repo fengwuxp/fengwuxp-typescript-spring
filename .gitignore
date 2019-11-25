@@ -25,3 +25,4 @@ _src
 lib
 es
 browser
+types/index.d.ts

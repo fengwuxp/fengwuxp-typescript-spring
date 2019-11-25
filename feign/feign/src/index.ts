@@ -96,4 +96,4 @@ export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {
     FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions
 }from "./FeignRequestOptions";
-
+export {Enum} from "./EnumInterface";
