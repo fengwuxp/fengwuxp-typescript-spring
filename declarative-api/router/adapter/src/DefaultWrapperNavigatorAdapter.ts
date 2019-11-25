@@ -23,13 +23,20 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
 
     private pathPrefix: string;
 
+    /**
+     * 自动拼接查询参数
+     */
+    private autoJoinQueryString: boolean;
+
 
     constructor(navigatorAdapter: NavigatorAdapter<T>,
                 confirmBeforeJumping: RouteConfirmBeforeJumping = () => true,
-                pathPrefix: string = "/") {
+                pathPrefix: string = "/",
+                autoJoinQueryString?: boolean) {
         this.navigatorAdapter = navigatorAdapter;
         this.confirmBeforeJumping = confirmBeforeJumping;
         this.pathPrefix = pathPrefix;
+        this.autoJoinQueryString = autoJoinQueryString || true;
     }
 
     goBack = (num?: number, ...args) => {
@@ -100,6 +107,9 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         if (Object.keys(uriVariables).length === 0) {
             return navigatorObject;
         } else {
+            if (!this.autoJoinQueryString) {
+                return navigatorObject
+            }
             return {
                 ...navigatorObject,
                 pathname: `${pathname}?${stringify(uriVariables)}`

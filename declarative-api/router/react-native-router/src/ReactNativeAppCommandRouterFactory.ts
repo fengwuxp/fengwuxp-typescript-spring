@@ -22,5 +22,5 @@ export const reactNativeAppCommandRouterFactory = <T extends AppCommandRouter,
             confirmBeforeJumping: () => confirmBeforeJumping,
             methodNameCommandResolver: () => toLineResolver,
             navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new ReactNativeNavigatorAdapter()
-        }, "");
+        }, "", false);
 };

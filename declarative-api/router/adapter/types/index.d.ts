@@ -94,7 +94,8 @@ interface RouterCommandConfiguration {
  *
  * @param configuration
  * @param pathPrefix   automatically supplemented prefix
+ * @param autoJoinQueryString
  */
-declare const appCommandRouterFactory: <T extends AppCommandRouter, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string) => T & N;
+declare const appCommandRouterFactory: <T extends AppCommandRouter, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T & N;
 
 export { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

@@ -16,6 +16,8 @@ interface MockAppRouter extends NavigatorAdapter, AppCommandRouter {
 
     index: RouterCommandMethod;
 
+    webview: RouterCommandMethod;
+
     my: RouterCommandMethod;
 
     goodsById: RouterCommandMethod<number>;
@@ -77,6 +79,7 @@ describe("test  app command router factory", () => {
     test("test mock app router", () => {
 
         mockAppRouter.login();
+        mockAppRouter.webview({url:1});
         mockAppRouter.index();
 
         mockAppRouter["home"]();

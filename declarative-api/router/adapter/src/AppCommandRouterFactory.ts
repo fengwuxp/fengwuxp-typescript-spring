@@ -19,14 +19,17 @@ const ROUTE_COMMAND_VALUES = Object.keys(RouterCommand).map((key) => {
  *
  * @param configuration
  * @param pathPrefix   automatically supplemented prefix
+ * @param autoJoinQueryString
  */
 export const appCommandRouterFactory = <T extends AppCommandRouter,
-    N extends NavigatorAdapter = NavigatorAdapter>(configuration: RouterCommandConfiguration, pathPrefix?: string): T & N => {
+    N extends NavigatorAdapter = NavigatorAdapter>(configuration: RouterCommandConfiguration,
+                                                   pathPrefix?: string,
+                                                   autoJoinQueryString?: boolean): T & N => {
 
 
     const methodNameCommandResolver = configuration.methodNameCommandResolver();
     const confirmBeforeJumping = typeof configuration.confirmBeforeJumping === "function" ? configuration.confirmBeforeJumping() : undefined;
-    const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter(), confirmBeforeJumping, pathPrefix);
+    const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter(), confirmBeforeJumping, pathPrefix, autoJoinQueryString);
 
     return newProxyInstanceEnhance<T & N>(navigator as any, null,
         (object, propertyKey: string, receiver) => {
