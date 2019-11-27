@@ -51,10 +51,15 @@ export interface NavigatorAdapter<T extends NavigatorDescriptorObject = Navigato
     reLaunch?: NavigatorJumpRouteFunction;
 
     /**
-     * /导航到堆栈的顶部路径，解除所有其他路径
+     * 导航到堆栈的顶部路径，解除所有其他路径
      * @param navigatorDescriptorObject
      */
     popToTop?: NavigatorJumpRouteFunction;
+
+    /**
+     * 移除当前页面，并跳转新页面
+     */
+    popAndPush?: NavigatorJumpRouteFunction;
 
 
 }

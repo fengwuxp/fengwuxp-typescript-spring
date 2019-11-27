@@ -55,7 +55,7 @@ export default class ReactNativeNavigatorAdapter implements NavigatorAdapter<Nav
 
         const {state, uriVariables} = descriptorObject;
         if (state == null && uriVariables == null && !StringUtils.hasText(queryString)) {
-            return
+            return {}
         }
         return {
             ...(uriVariables as any),

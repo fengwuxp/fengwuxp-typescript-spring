@@ -1,5 +1,6 @@
 import {RouterCommand} from "./RouterCommand";
-import {NavigatorAdapter} from "./NavigatorAdapter";
+import {NavigatorAdapter, NavigatorDescriptorObject} from "./NavigatorAdapter";
+import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
 
 
 /**
@@ -45,7 +46,7 @@ export type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (u
 /**
  * app command router
  */
-export interface AppCommandRouter extends NavigatorAdapter {
+export interface AppCommandRouter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> extends NavigatorAdapter<T>, NavigatorContextAdapter<T> {
 
     /**
      *  key   ==> {@code pathname} route 路径

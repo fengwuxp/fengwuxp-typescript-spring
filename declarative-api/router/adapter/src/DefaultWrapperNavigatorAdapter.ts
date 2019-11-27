@@ -1,23 +1,23 @@
-import {
-    NavigatorAdapter,
-    NavigatorDescriptorObject,
-    NavigatorJumpRouteFunction,
-} from "./NavigatorAdapter";
+import {NavigatorAdapter, NavigatorDescriptorObject,} from "./NavigatorAdapter";
 import {replaceUriVariableValue} from "./PathnameMethodNameCommandResolver";
-import {stringify, parse} from "querystring";
+import {parse, stringify} from "querystring";
 import {RouteConfirmBeforeJumping} from "./RouterCommandConfiguration";
 import {RouterCommand} from "./RouterCommand";
 import {RouteUriVariable} from "./AppCommandRouter";
+import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
 
 const grabUrlPathVariableRegExp = /\{(.+?)\}/g;
 
 /**
  * wrapper navigator
  */
-export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> implements NavigatorAdapter<T> {
+export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject>
+    implements NavigatorAdapter<T>, NavigatorContextAdapter<T> {
 
 
     private navigatorAdapter: NavigatorAdapter<T>;
+
+    private navigatorContextAdapter: NavigatorContextAdapter<T>;
 
     private confirmBeforeJumping: RouteConfirmBeforeJumping;
 
@@ -30,48 +30,92 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
 
 
     constructor(navigatorAdapter: NavigatorAdapter<T>,
+                navigatorContextAdapter: NavigatorContextAdapter<T>,
                 confirmBeforeJumping: RouteConfirmBeforeJumping = () => true,
                 pathPrefix: string = "/",
                 autoJoinQueryString?: boolean) {
         this.navigatorAdapter = navigatorAdapter;
+        this.navigatorContextAdapter = navigatorContextAdapter;
         this.confirmBeforeJumping = confirmBeforeJumping;
         this.pathPrefix = pathPrefix;
         this.autoJoinQueryString = autoJoinQueryString || true;
     }
 
     goBack = (num?: number, ...args) => {
+        this.operateBrowseHistory(RouterCommand.POP);
         return this.navigatorAdapter.goBack(num, ...args);
     };
 
     popToTop = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.jump(RouterCommand.POP_TO_TOP, this.resolveUriVariables(object, uriVariables, state));
+        return this.jump(RouterCommand.POP_TO_TOP, object, uriVariables, state);
     };
 
     push = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.jump(RouterCommand.PUSH, this.resolveUriVariables(object, uriVariables, state));
+        return this.jump(RouterCommand.PUSH, object, uriVariables, state);
     };
 
     toView = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.jump(RouterCommand.PUSH, this.resolveUriVariables(object, uriVariables, state));
+        return this.jump(RouterCommand.PUSH, object, uriVariables, state);
+    };
+
+    popAndPush = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(RouterCommand.POP_TO_TOP, object, uriVariables, state);
     };
 
     reLaunch = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.jump(RouterCommand.RESET, this.resolveUriVariables(object, uriVariables, state));
+        return this.jump(RouterCommand.RESET, object, uriVariables, state);
     };
 
     replace = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.jump(RouterCommand.REPLACE, this.resolveUriVariables(object, uriVariables, state));
+        return this.jump(RouterCommand.REPLACE, object, uriVariables, state);
     };
 
-    private jump = (fnName: keyof NavigatorAdapter, navigatorDescriptorObject: NavigatorDescriptorObject) => {
+    getBrowseHistory = () => this.navigatorContextAdapter.getBrowseHistory();
 
+    getCurrentObject = () => this.navigatorContextAdapter.getCurrentObject();
+
+    getCurrentPathname = () => this.navigatorContextAdapter.getCurrentPathname();
+
+    getCurrentState = <S = RouteUriVariable>() => this.navigatorContextAdapter.getCurrentState<S>();
+
+    getCurrentUriVariables = <S = RouteUriVariable>() => this.navigatorContextAdapter.getCurrentUriVariables<S>();
+
+    isStackTop = () => this.navigatorContextAdapter.isStackTop();
+
+    isView = (pathname: string) => this.navigatorContextAdapter.isView(pathname);
+
+    operateBrowseHistory = (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => this.navigatorContextAdapter.operateBrowseHistory(routerCommand, navigatorDescriptorObject);
+
+
+    /**
+     * 页面跳转
+     * @param routerCommand
+     * @param object
+     * @param uriVariables
+     * @param state
+     */
+    private jump = (routerCommand: RouterCommand, object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+
+        if (typeof object === "string") {
+            object = {
+                pathname: object,
+                uriVariables,
+                state
+            };
+        }
+
+        const navigatorDescriptorObject = this.resolveUriVariables(object, uriVariables, state);
+        this.operateBrowseHistory(routerCommand, {
+            ...navigatorDescriptorObject
+        } as T);
         const pathname = navigatorDescriptorObject.pathname;
         if (!pathname.startsWith(this.pathPrefix)) {
             navigatorDescriptorObject.pathname = `${this.pathPrefix}${pathname}`
         }
+
         const confirmResult = this.confirmBeforeJumping(navigatorDescriptorObject);
         if (confirmResult === true) {
-            return (this.navigatorAdapter[fnName] as any)(navigatorDescriptorObject);
+            return (this.navigatorAdapter[routerCommand] as any)(navigatorDescriptorObject);
         } else if (typeof confirmResult === "function") {
             return confirmResult(navigatorDescriptorObject);
         } else {
@@ -81,17 +125,16 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
     };
 
 
-    private resolveUriVariables = (navigatorDescriptorObject: NavigatorDescriptorObject | string,
+    /**
+     * 解析uri 路径参数
+     * @param navigatorDescriptorObject
+     * @param _uriVariables
+     * @param _state
+     */
+    private resolveUriVariables = (navigatorDescriptorObject: NavigatorDescriptorObject,
                                    _uriVariables: RouteUriVariable,
                                    _state: RouteUriVariable) => {
 
-        if (typeof navigatorDescriptorObject === "string") {
-            navigatorDescriptorObject = {
-                pathname: navigatorDescriptorObject,
-                uriVariables: _uriVariables,
-                state: _state
-            };
-        }
 
         const navigatorObject = this.tryHandlePathArguments(navigatorDescriptorObject);
         let {pathname, uriVariables} = navigatorObject;
@@ -135,4 +178,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         }
         return navigatorDescriptorObject;
     }
+
+
 }
