@@ -50,5 +50,10 @@ export interface NavigatorContextAdapter<T extends NavigatorDescriptorObject = N
      * @param navigatorDescriptorObject
      */
     operateBrowseHistory: (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => void;
+
+    /**
+     *  example  isLoginView ==>this.isView("login")
+     */
+    //isXxxView:()=>boolean;
 }
 

@@ -70,4 +70,5 @@ export interface AppCommandRouter<T extends NavigatorDescriptorObject = Navigato
      */
     // [pathname: string]: RouterCommandMethod | any;
 
+
 }

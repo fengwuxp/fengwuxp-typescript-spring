@@ -14,6 +14,8 @@ interface MockAppRouter extends NavigatorAdapter, AppCommandRouter {
 
     login: RouterCommandMethod;
 
+    isLoginView: () => boolean;
+
     index: RouterCommandMethod;
 
     webview: RouterCommandMethod;
@@ -27,6 +29,8 @@ interface MockAppRouter extends NavigatorAdapter, AppCommandRouter {
     pushOrderDetail: RouterCommandMethod<{ id: string }>;
 
     toOrderDetail: RouterCommandMethod<{ id: string }>;
+
+    isOrderDetailView: () => boolean;
 
     pushOrderDetailById: RouterCommandMethod<string>;
 
@@ -79,9 +83,10 @@ describe("test  app command router factory", () => {
     test("test mock app router", () => {
 
         mockAppRouter.login();
-        logger.debug("--->",mockAppRouter.getCurrentPathname());
-        logger.debug("--->",mockAppRouter.isStackTop());
-        mockAppRouter.webview({url:1});
+        logger.debug("--->", mockAppRouter.isLoginView());
+        logger.debug("--->", mockAppRouter.getCurrentPathname());
+        logger.debug("--->", mockAppRouter.isStackTop());
+        mockAppRouter.webview({url: 1});
         mockAppRouter.index();
 
         mockAppRouter["home"]();
@@ -100,10 +105,11 @@ describe("test  app command router factory", () => {
         mockAppRouter.pushOrderDetailById("100");
 
         mockAppRouter.toOrderDetail({id: "1"});
+        logger.debug(" mockAppRouter.isOrderDetailView()", mockAppRouter.isOrderDetailView());
 
         mockAppRouter.reLaunchOrderDetailById("1");
-        logger.debug("--->",mockAppRouter.getCurrentPathname());
-        logger.debug("--->",mockAppRouter.isStackTop());
+        logger.debug("--->", mockAppRouter.getCurrentPathname());
+        logger.debug("--->", mockAppRouter.isStackTop());
         mockAppRouter.replaceOrderDetailById("1");
 
         mockAppRouter.toModuleByUserId(["member", 1]);
@@ -118,10 +124,10 @@ describe("test  app command router factory", () => {
         mockAppRouter.push("goods_list", {id: 2});
         mockAppRouter.toView("goods_list", {id: 2});
 
-        logger.debug("--->",mockAppRouter.getCurrentPathname());
-        logger.debug("--->",mockAppRouter.isStackTop());
-        logger.debug("--->",mockAppRouter.getCurrentUriVariables());
-        logger.debug("--->",mockAppRouter.getCurrentState());
+        logger.debug("--->", mockAppRouter.getCurrentPathname());
+        logger.debug("--->", mockAppRouter.isStackTop());
+        logger.debug("--->", mockAppRouter.getCurrentUriVariables());
+        logger.debug("--->", mockAppRouter.getCurrentState());
     });
 
     test("test try converter pathname variable resolver", () => {

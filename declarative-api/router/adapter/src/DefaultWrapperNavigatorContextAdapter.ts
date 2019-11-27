@@ -34,7 +34,8 @@ export default class DefaultWrapperNavigatorContextAdapter<T extends NavigatorDe
 
     isStackTop = () => this.browseHistory.length === 1;
 
-    isView = (pathname: string) => this.getCurrentObject().pathname === pathname;
+    isView = (pathname: string) => this.getCurrentPathname() === pathname;
+
 
     operateBrowseHistory = (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => {
         if ([RouterCommand.PUSH, RouterCommand.TO].indexOf(routerCommand) >= 0) {

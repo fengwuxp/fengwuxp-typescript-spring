@@ -82,7 +82,10 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
 
     isStackTop = () => this.navigatorContextAdapter.isStackTop();
 
-    isView = (pathname: string) => this.navigatorContextAdapter.isView(pathname);
+    isView = (pathname: string) => {
+        const _pathname = pathname.startsWith(this.pathPrefix) ? pathname : `${this.pathPrefix}${pathname}`;
+        return this.navigatorContextAdapter.isView(_pathname);
+    };
 
     operateBrowseHistory = (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => this.navigatorContextAdapter.operateBrowseHistory(routerCommand, navigatorDescriptorObject);
 
@@ -105,13 +108,13 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         }
 
         const navigatorDescriptorObject = this.resolveUriVariables(object, uriVariables, state);
-        this.operateBrowseHistory(routerCommand, {
-            ...navigatorDescriptorObject
-        } as T);
         const pathname = navigatorDescriptorObject.pathname;
         if (!pathname.startsWith(this.pathPrefix)) {
             navigatorDescriptorObject.pathname = `${this.pathPrefix}${pathname}`
         }
+        this.operateBrowseHistory(routerCommand, {
+            ...navigatorDescriptorObject
+        } as T);
 
         const confirmResult = this.confirmBeforeJumping(navigatorDescriptorObject);
         if (confirmResult === true) {
