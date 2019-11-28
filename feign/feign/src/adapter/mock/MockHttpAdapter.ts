@@ -3,7 +3,7 @@ import {HttpRequest} from "../../client/HttpRequest";
 import {HttpResponse} from "../../client/HttpResponse";
 import {ResolveHttpResponse} from "../../resolve/ResolveHttpResponse";
 import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
-import {contentTypeName} from "../..";
+import {contentTypeName, HttpMediaType, mediaTypeIsEq} from "../..";
 
 
 export type MockDataType = (options: HttpRequest) => Promise<any> | any;
@@ -28,8 +28,14 @@ export default class MockHttpAdapter implements HttpAdapter {
     }
 
     send = (req: HttpRequest): Promise<HttpResponse> => {
-        console.log("mock http adapter", req.headers[contentTypeName]);
-        const {url} = req;
+        console.log("mock http adapter", req);
+        const {url,headers} = req;
+        if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+            // remove content-type
+            // @see {@link https://segmentfault.com/a/1190000010205162}
+            delete headers[contentTypeName];
+        }
+
         const key = url.split("?")[0].replace(this.baseUrl, "");
         const result: MockDataType = this.mockDataSource[key];
         if (result == null) {

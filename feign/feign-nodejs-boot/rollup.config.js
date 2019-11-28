@@ -9,6 +9,7 @@ import json from 'rollup-plugin-json';
 import dts from "rollup-plugin-dts";
 
 import pkg from './package.json';
+import {DEFAULT_EXTENSIONS} from "@babel/core";
 
 const cpuNums = os.cpus().length;
 
@@ -50,16 +51,17 @@ const getConfig = (isProd) => {
             resolve(),
             common({
                 // 包括
-                include: 'node_modules/**',
+                include: [
+                    // 'node_modules/**'
+                ],
                 // 排除
                 exclude: [],
-                extensions: ['.js', '.ts']
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
             babel({
-                // runtimeHelpers: true,
-                extensions: ['.js', '.ts'],
-                // include: ['src/**/*'],
-                babelHelpers: "bundled"
+                exclude: "node_modules/**",
+                babelHelpers: "runtime",
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
             }),
             //压缩代码
             isProd && terser({

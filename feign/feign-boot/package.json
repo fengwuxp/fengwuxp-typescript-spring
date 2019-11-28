@@ -2,9 +2,14 @@
   "name": "feign-boot-stater",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
+  "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
+  "files": [
+    "lib",
+    "es",
+    "types"
+  ],
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },

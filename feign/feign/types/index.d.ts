@@ -852,11 +852,13 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
 
 /**
  * default http client
+ *
+ * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
     constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
     send: (req: T) => Promise<HttpResponse<any>>;
-    private getContentType;
+    private resolveContentType;
 }
 
 /**

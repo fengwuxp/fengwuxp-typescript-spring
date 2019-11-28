@@ -11,6 +11,8 @@ import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpR
 
 /**
  * default http client
+ *
+ * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
 
@@ -18,7 +20,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
     constructor(httpAdapter: HttpAdapter<T>,
                 defaultProduce?: HttpMediaType,
                 interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
-        super(httpAdapter, defaultProduce, interceptors);
+        super(httpAdapter, defaultProduce || HttpMediaType.FORM_DATA, interceptors);
     }
 
     send = async (req: T): Promise<HttpResponse> => {
@@ -45,16 +47,23 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
             }
         }
 
-        const contentType = this.getContentType(requestData.headers);
+        const contentType = this.resolveContentType(requestData);
         requestData.body = serializeRequestBody(requestData.method, requestData.body, contentType as HttpMediaType, false);
         return this.httpAdapter.send(requestData);
     };
 
-    private getContentType = (headers) => {
+    private resolveContentType = (requestData: T) => {
+
+        let headers = requestData.headers;
+        let contentType = this.defaultProduce;
         if (headers == null) {
-            return this.defaultProduce;
+            headers = {};
+        } else {
+            contentType = headers[contentTypeName] as HttpMediaType || contentType;
         }
-        return headers[contentTypeName] || this.defaultProduce;
+        headers[contentTypeName] = contentType;
+        requestData.headers = headers;
+        return contentType;
     }
 
 }

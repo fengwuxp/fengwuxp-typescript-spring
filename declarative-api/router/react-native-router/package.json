@@ -37,7 +37,7 @@
     "typescript"
   ],
   "devDependencies": {
-    "@types/react": "^16.9.11",
+    "@types/react": "^16.9.13",
     "@types/react-native": "^0.60.22",
     "fengwuxp-library-starter": "^1.0.0",
     "react": "16.9.0",
