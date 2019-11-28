@@ -1,9 +1,10 @@
 import {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
 import {
-    DefaultFeignClientExecutor, DefaultHttpClient, FeignConfiguration,
+    DefaultFeignClientExecutor,
+    DefaultHttpClient,
+    FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
-    HttpMediaType,
     RestTemplate
 } from "fengwuxp-typescript-feign";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
@@ -15,19 +16,21 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
     class A implements FeignConfiguration {
         getApiSignatureStrategy = feignConfigurationAdapter.apiSignatureStrategy;
 
-        getFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient>(client) {
+        getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client) => {
             return new DefaultFeignClientExecutor<T>(client);
         };
 
-        getFeignClientExecutorInterceptors() {
+        getFeignClientExecutorInterceptors = () => {
             const feignClientInterceptorRegistry = new FeignClientInterceptorRegistry();
             feignConfigurationAdapter.registryFeignClientExecutorInterceptors(feignClientInterceptorRegistry);
             return feignClientInterceptorRegistry.getInterceptors();
         };
 
-        getHttpAdapter = feignConfigurationAdapter.httpAdapter;
+        getHttpAdapter = () => {
+            return feignConfigurationAdapter.httpAdapter();
+        };
 
-        getHttpClient() {
+        getHttpClient = () => {
             const clientHttpInterceptorRegistry = new ClientHttpInterceptorRegistry();
             feignConfigurationAdapter.registryClientHttpRequestInterceptors(clientHttpInterceptorRegistry);
             return new DefaultHttpClient(
@@ -37,7 +40,7 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
             );
         };
 
-        getRestTemplate() {
+        getRestTemplate = () => {
             return new RestTemplate(this.getHttpClient());
         }
     }

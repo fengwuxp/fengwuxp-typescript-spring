@@ -49,8 +49,9 @@ describe("test proxy factory", () => {
 
                 return propertyKey === "a2";
             });
-        proxy.a1("张三");
-        proxy.a2("张三", "李四");
+        // proxy.a1("张三");
+        // proxy.a2("张三", "李四");
+        logger.debug(typeof proxy["1jjj3"])
 
     });
 
