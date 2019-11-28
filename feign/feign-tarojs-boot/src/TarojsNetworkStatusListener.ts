@@ -1,11 +1,12 @@
-import {NetworkStatus, NetworkStatusListener,NetworkType} from "fengwuxp-typescript-feign";
-import TaroJsHolder from "../TaroJsHolder";
+import {NetworkStatus, NetworkStatusListener, NetworkType} from "fengwuxp-typescript-feign";
 
-
-export default class TaroNetworkStatusListener implements NetworkStatusListener {
+/**
+ * tarojs network status listener
+ */
+export default class TarojsNetworkStatusListener implements NetworkStatusListener {
 
     getNetworkStatus = (): Promise<NetworkStatus> => {
-        return TaroJsHolder.getTaroHolder().taro.getNetworkType().then(({networkType}) => {
+        return Taro.getNetworkType().then(({networkType}) => {
             if (networkType == null || networkType === NetworkType.NONE) {
                 return Promise.reject(null)
             } else {
@@ -18,7 +19,7 @@ export default class TaroNetworkStatusListener implements NetworkStatusListener 
     };
 
     onChange = (callback: (networkStatus: NetworkStatus) => void) => {
-        TaroJsHolder.getTaroHolder().taro.onNetworkStatusChange(({isConnected, networkType}) => {
+        Taro.onNetworkStatusChange(({isConnected, networkType}) => {
             callback({
                 networkType,
                 isConnected

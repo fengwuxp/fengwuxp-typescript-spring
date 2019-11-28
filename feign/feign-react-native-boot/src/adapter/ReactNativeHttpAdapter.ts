@@ -6,7 +6,7 @@ import {
     ResolveHttpResponse,
     mediaTypeIsEq
 } from "fengwuxp-typescript-feign";
-import {BrowserHttpRequest} from './BrowserHttpRequest';
+import {ReactNativeHttpRequest} from './ReactNativeHttpRequest';
 
 
 // RequestInit prop names
@@ -17,14 +17,14 @@ const RequestInitAttrNames: string[] = [
     "redirect",
     "cache",
     "integrity",
-    "keepalive",
-    "window"
+    "keepalive"
+    // "window"
 ];
 
 /**
- *  browser http request adapter
+ *  react-native http request adapter
  */
-export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
+export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpRequest> {
 
     private timeout: number;
 
@@ -40,7 +40,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
     }
 
-    send = (req: BrowserHttpRequest): Promise<HttpResponse> => {
+    send = (req: ReactNativeHttpRequest): Promise<HttpResponse> => {
         return new Promise((resolve, reject) => {
 
             const p = fetch(this.buildRequest(req)).then((response: Response) => {
@@ -83,7 +83,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      * @param {HttpRequest} request
      * @return {Request}
      */
-    private buildRequest(request: BrowserHttpRequest): RequestInfo {
+    private buildRequest(request: ReactNativeHttpRequest): RequestInfo {
         let {
             url,
             method,
@@ -130,7 +130,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             return Promise.reject(response);
         }
 
-        const responseMediaType: string = response.headers.get[contentTypeName];
+        const responseMediaType: string = response.headers.get["content-type"];
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 

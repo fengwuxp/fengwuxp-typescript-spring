@@ -64,7 +64,7 @@ describe("test feign client", () => {
             });
             console.log("http result", result);
         } catch (e) {
-            logger.error(e)
+            logger.error("-------->",e)
         }
     }, 25 * 1000);
 

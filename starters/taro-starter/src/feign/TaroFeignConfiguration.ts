@@ -7,9 +7,7 @@ import {
     ClientHttpRequestInterceptor,
     NetworkClientHttpRequestInterceptor
 } from "fengwuxp-typescript-feign";
-import TaroHttpAdapter from "./TaroHttpAdapter";
-import {TaroHttpRequest} from "./TaroHttpRequest";
-import TaroNetworkStatusListener from "./TaroNetworkStatusListener";
+
 
 
 
@@ -25,12 +23,12 @@ export abstract class TaroFeignConfiguration extends AbstractFeignConfiguration 
         this.timeout = timeout;
     }
 
-    getHttpAdapter = (): HttpAdapter => new TaroHttpAdapter(this.timeout);
-
-
-    getHttpClient = <T extends HttpRequest = HttpRequest>() => {
-        const httpClient = new DefaultHttpClient(this.getHttpAdapter());
-        httpClient.setInterceptors(this.interceptors);
-        return httpClient;
-    };
+    // getHttpAdapter = (): HttpAdapter => new TaroHttpAdapter(this.timeout);
+    //
+    //
+    // getHttpClient = <T extends HttpRequest = HttpRequest>() => {
+    //     const httpClient = new DefaultHttpClient(this.getHttpAdapter());
+    //     httpClient.setInterceptors(this.interceptors);
+    //     return httpClient;
+    // };
 }

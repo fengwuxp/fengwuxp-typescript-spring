@@ -1,6 +1,4 @@
-/**
- * node js adapter
- */
+
 import {
     CommonResolveHttpResponse, contentTypeName,
     HttpAdapter, HttpMediaType,
@@ -11,7 +9,9 @@ import {
 import {NodeHttpRequest} from "./NodeHttpRequest";
 import request from "request";
 
-
+/**
+ * node js adapter
+ */
 export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
 
     private timeout: number;

@@ -20,5 +20,6 @@ export interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOption
      */
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
 
+
 }
 

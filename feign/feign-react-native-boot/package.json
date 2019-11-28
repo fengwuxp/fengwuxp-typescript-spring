@@ -1,7 +1,7 @@
 {
-  "name": "feign-boot-browser-stater",
+  "name": "feign-boot-react-native-stater",
   "version": "1.0.0",
-  "description": "",
+  "description": "feign react-native starter",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",
@@ -31,6 +31,7 @@
   "author": "wuxp",
   "license": "ISC",
   "keywords": [
+    "react-native",
     "feign",
     "fetch"
   ],
@@ -42,6 +43,7 @@
     "core-js": "^3.4.1"
   },
   "dependencies": {
+    "@react-native-community/netinfo": "^4.6.1",
     "fengwuxp-typescript-feign": "^1.0.0",
     "feign-boot-stater": "^1.0.0"
   }

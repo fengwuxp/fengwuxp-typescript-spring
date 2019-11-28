@@ -147,7 +147,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             }
         } catch (e) {
             // Non-2xx response
-            httpResponse = e;
+            const result = await this.postHandle(requestURL, requestMapping, feignRequestOptions, e);
+            return Promise.reject(result);
         }
 
         //post handle
