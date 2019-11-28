@@ -3,6 +3,7 @@ import {
     Feign,
     FeignRetry,
     HttpMethod,
+    HttpMediaType,
     PostMapping,
     RequestMapping,
     Signature

@@ -3,6 +3,7 @@
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
+export {GetMapping} from "./annotations/mapping/GetMapping";
 export {PostMapping} from "./annotations/mapping/PostMapping";
 export {PatchMapping} from "./annotations/mapping/PatchMapping";
 export {PutMapping} from "./annotations/mapping/PutMapping";
