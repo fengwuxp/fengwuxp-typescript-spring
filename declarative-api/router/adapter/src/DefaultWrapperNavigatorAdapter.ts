@@ -42,7 +42,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
     }
 
     goBack = (num?: number, ...args) => {
-        this.operateBrowseHistory(RouterCommand.POP);
         return this.navigatorAdapter.goBack(num, ...args);
     };
 
@@ -87,8 +86,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         return this.navigatorContextAdapter.isView(_pathname);
     };
 
-    operateBrowseHistory = (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => this.navigatorContextAdapter.operateBrowseHistory(routerCommand, navigatorDescriptorObject);
-
 
     /**
      * 页面跳转
@@ -112,9 +109,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         if (!pathname.startsWith(this.pathPrefix)) {
             navigatorDescriptorObject.pathname = `${this.pathPrefix}${pathname}`
         }
-        this.operateBrowseHistory(routerCommand, {
-            ...navigatorDescriptorObject
-        } as T);
 
         const confirmResult = this.confirmBeforeJumping(navigatorDescriptorObject);
         if (confirmResult === true) {

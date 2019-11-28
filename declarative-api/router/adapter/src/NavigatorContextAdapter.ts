@@ -1,6 +1,5 @@
 import {NavigatorDescriptorObject} from "./NavigatorAdapter";
 import {RouteUriVariable} from "./AppCommandRouter";
-import {RouterCommand} from "./RouterCommand";
 
 /**
  * 导航的上下文信息适配
@@ -44,12 +43,6 @@ export interface NavigatorContextAdapter<T extends NavigatorDescriptorObject = N
      */
     isView: (pathname: string) => boolean;
 
-    /**
-     *  操作 历史记录
-     * @param routerCommand
-     * @param navigatorDescriptorObject
-     */
-    operateBrowseHistory: (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => void;
 
     /**
      *  example  isLoginView ==>this.isView("login")

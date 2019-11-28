@@ -15,7 +15,7 @@ export interface RouterCommandConfiguration {
 
     navigatorAdapter: () => NavigatorAdapter;
 
-    navigatorContextAdapter?: () => NavigatorContextAdapter;
+    navigatorContextAdapter: () => NavigatorContextAdapter;
 
     confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
 

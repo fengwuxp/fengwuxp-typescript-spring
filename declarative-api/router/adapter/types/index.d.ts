@@ -95,12 +95,6 @@ interface NavigatorContextAdapter<T extends NavigatorDescriptorObject = Navigato
      * 是否为预期的页面
      */
     isView: (pathname: string) => boolean;
-    /**
-     *  操作 历史记录
-     * @param routerCommand
-     * @param navigatorDescriptorObject
-     */
-    operateBrowseHistory: (routerCommand: RouterCommand, navigatorDescriptorObject?: T) => void;
 }
 
 /**
@@ -133,7 +127,7 @@ declare type RouteConfirmBeforeJumping = <T extends NavigatorDescriptorObject = 
 interface RouterCommandConfiguration {
     methodNameCommandResolver: () => MethodNameCommandResolver;
     navigatorAdapter: () => NavigatorAdapter;
-    navigatorContextAdapter?: () => NavigatorContextAdapter;
+    navigatorContextAdapter: () => NavigatorContextAdapter;
     confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
 }
 
@@ -144,6 +138,6 @@ interface RouterCommandConfiguration {
  * @param pathPrefix   automatically supplemented prefix
  * @param autoJoinQueryString
  */
-declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T & N & NavigatorContextAdapter<NavigatorDescriptorObject>;
+declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T;
 
-export { AppCommandRouter, NavigatorAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };
+export { AppCommandRouter, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

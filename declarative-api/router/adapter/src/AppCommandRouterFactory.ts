@@ -9,7 +9,6 @@ import {
 import DefaultWrapperNavigatorAdapter from "./DefaultWrapperNavigatorAdapter";
 import {tryConverterMethodNameCommandResolver} from "fengwuxp-declarative-command";
 import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
-import DefaultWrapperNavigatorContextAdapter from "./DefaultWrapperNavigatorContextAdapter";
 
 
 const ROUTE_COMMAND_VALUES = Object.keys(RouterCommand).map((key) => {
@@ -27,17 +26,16 @@ const initialLowercase = (str: string) => {
  * @param pathPrefix   automatically supplemented prefix
  * @param autoJoinQueryString
  */
-export const appCommandRouterFactory = <T extends AppCommandRouter,
-    N extends NavigatorAdapter = NavigatorAdapter>(configuration: RouterCommandConfiguration,
-                                                   pathPrefix?: string,
-                                                   autoJoinQueryString?: boolean): T & N & NavigatorContextAdapter => {
+export const appCommandRouterFactory = <T extends AppCommandRouter>(configuration: RouterCommandConfiguration,
+                                                                    pathPrefix?: string,
+                                                                    autoJoinQueryString?: boolean): T => {
 
     const methodNameCommandResolver = configuration.methodNameCommandResolver();
     const confirmBeforeJumping = typeof configuration.confirmBeforeJumping === "function" ? configuration.confirmBeforeJumping() : undefined;
-    const navigatorContextAdapter = typeof configuration.navigatorContextAdapter === "function" ? configuration.navigatorContextAdapter() : new DefaultWrapperNavigatorContextAdapter()
+    const navigatorContextAdapter = configuration.navigatorContextAdapter();
     const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter(), navigatorContextAdapter, confirmBeforeJumping, pathPrefix, autoJoinQueryString);
 
-    return newProxyInstanceEnhance<T & N & NavigatorContextAdapter>(navigator as any, null,
+    return newProxyInstanceEnhance<T>(navigator as any, null,
         (object, propertyKey: string, receiver) => {
 
             // isXX 方法
