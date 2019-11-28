@@ -23,7 +23,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
 
     send = async (req: T): Promise<HttpResponse> => {
 
-        const {defaultProduce, interceptors} = this;
+        const {interceptors} = this;
 
         const len = interceptors.length;
         let index = 0;
@@ -45,9 +45,16 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
             }
         }
 
-        const contentType = requestData.headers == null ? defaultProduce : requestData.headers[contentTypeName] || defaultProduce;
+        const contentType = this.getContentType(requestData.headers);
         requestData.body = serializeRequestBody(requestData.method, requestData.body, contentType as HttpMediaType, false);
         return this.httpAdapter.send(requestData);
     };
+
+    private getContentType = (headers) => {
+        if (headers == null) {
+            return this.defaultProduce;
+        }
+        return headers[contentTypeName] || this.defaultProduce;
+    }
 
 }

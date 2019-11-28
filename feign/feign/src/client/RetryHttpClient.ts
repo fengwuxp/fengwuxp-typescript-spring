@@ -21,7 +21,6 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
 
     private retryEnd = false;
 
-
     constructor(httpAdapter: HttpAdapter<T>,
                 retryOptions: HttpRetryOptions,
                 defaultProduce?: HttpMediaType,

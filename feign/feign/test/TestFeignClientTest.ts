@@ -56,5 +56,17 @@ describe("test feign client", () => {
         }
     }, 25 * 1000);
 
+    test("test delete member", async () => {
+
+        try {
+            const result = await testFeignClient.deleteMember({
+              memberId:1
+            });
+            console.log("http result", result);
+        } catch (e) {
+            logger.error(e)
+        }
+    }, 25 * 1000);
+
 });
 

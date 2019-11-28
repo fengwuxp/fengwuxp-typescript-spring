@@ -13,6 +13,7 @@ import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClien
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
+import {FeignConfiguration} from "./configuration/FeignConfiguration";
 
 /**
  * default feign client executor
@@ -49,7 +50,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRequestURLResolver,
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestOptions
-        } = feignOptions.configuration[0];
+        } = feignOptions.configuration as FeignConfiguration;
         this.restTemplate = getRestTemplate();
         this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
         if (getApiSignatureStrategy) {

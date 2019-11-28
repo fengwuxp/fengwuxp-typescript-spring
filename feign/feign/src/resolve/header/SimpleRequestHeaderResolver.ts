@@ -15,7 +15,7 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
 
     const apiServiceConfig = apiService.getFeignMethodConfig(methodName);
     if (apiServiceConfig.requestMapping == null || apiServiceConfig.requestMapping.headers == null) {
-        return headers;
+        return headers || {};
     }
 
     const configHeaders = apiServiceConfig.requestMapping.headers;

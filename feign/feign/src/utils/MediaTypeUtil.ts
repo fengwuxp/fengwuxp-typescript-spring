@@ -10,6 +10,10 @@ const UTF_8 = ";charset=UTF-8";
  */
 export const mediaTypeIsEq = (type1: HttpMediaType | string, type2: HttpMediaType | string) => {
 
+    if (type1 == null || type2 == null) {
+        return false;
+    }
+
     if (type1 === type2) {
         return true;
     }

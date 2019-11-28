@@ -3,6 +3,7 @@ import {HttpRequest} from "../../client/HttpRequest";
 import {HttpResponse} from "../../client/HttpResponse";
 import {ResolveHttpResponse} from "../../resolve/ResolveHttpResponse";
 import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
+import {contentTypeName} from "../..";
 
 
 export type MockDataType = (options: HttpRequest) => Promise<any> | any;
@@ -27,7 +28,7 @@ export default class MockHttpAdapter implements HttpAdapter {
     }
 
     send = (req: HttpRequest): Promise<HttpResponse> => {
-        console.log("mock http adapter", req);
+        console.log("mock http adapter", req.headers[contentTypeName]);
         const {url} = req;
         const key = url.split("?")[0].replace(this.baseUrl, "");
         const result: MockDataType = this.mockDataSource[key];

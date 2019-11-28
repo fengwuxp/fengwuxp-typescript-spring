@@ -36,7 +36,7 @@ export interface FeignOptions {
     /**
      * feign configuration
      */
-    configuration?: FeignConfiguration[];
+    configuration?: FeignConfiguration[] | FeignConfiguration;
 
 }
 
@@ -72,20 +72,16 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
             constructor() {
                 super();
-                const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
 
                 const feignOptions: FeignOptions = {
                     apiModule: defaultApiModuleName,
-                    configuration: [defaultFeignConfiguration],
                     ...options
                 };
-
-                const feignConfiguration = feignOptions.configuration[0];
-
+                const feignConfiguration: FeignConfiguration = getFeignConfiguration(feignOptions.configuration);
                 if (feignConfiguration == null) {
-                    throw new Error("feign configuration is null");
+                    throw new Error("feign configuration is null or not register");
                 }
-
+                feignOptions.configuration = feignConfiguration;
                 const {getFeignClientBuilder} = feignConfiguration;
 
                 const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = getFeignClientBuilder ? getFeignClientBuilder<T>() : defaultFeignClientBuilder;
@@ -109,4 +105,25 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
         }
     }
+};
+
+const getFeignConfiguration = (configuration?: FeignConfiguration[] | FeignConfiguration): FeignConfiguration => {
+    const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
+    if (configuration == null) {
+        return defaultFeignConfiguration;
+    }
+    if (Array.isArray(configuration)) {
+        const isEmpty = configuration.filter(item => item != null).length === 0;
+        if (isEmpty) {
+            return defaultFeignConfiguration;
+        }
+        return configuration.reduce(((previousValue, currentValue) => {
+            return {
+                ...previousValue,
+                ...currentValue
+            };
+        }), {}) as FeignConfiguration;
+    }
+
+    return configuration;
 };

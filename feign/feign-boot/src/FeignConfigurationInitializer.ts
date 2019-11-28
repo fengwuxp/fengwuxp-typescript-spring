@@ -1,6 +1,6 @@
 import {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
 import {
-    DefaultFeignClientExecutor, DefaultHttpClient,
+    DefaultFeignClientExecutor, DefaultHttpClient, FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
     HttpMediaType,
@@ -10,31 +10,43 @@ import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorReg
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 
 
-export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
+const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
 
-    const configuration = {
-        getApiSignatureStrategy: feignConfigurationAdapter.apiSignatureStrategy,
+    class A implements FeignConfiguration {
+        getApiSignatureStrategy = feignConfigurationAdapter.apiSignatureStrategy;
+
         getFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient>(client) {
             return new DefaultFeignClientExecutor<T>(client);
-        },
+        };
+
         getFeignClientExecutorInterceptors() {
             const feignClientInterceptorRegistry = new FeignClientInterceptorRegistry();
             feignConfigurationAdapter.registryFeignClientExecutorInterceptors(feignClientInterceptorRegistry);
             return feignClientInterceptorRegistry.getInterceptors();
-        },
-        getHttpAdapter: feignConfigurationAdapter.httpAdapter,
+        };
+
+        getHttpAdapter = feignConfigurationAdapter.httpAdapter;
+
         getHttpClient() {
             const clientHttpInterceptorRegistry = new ClientHttpInterceptorRegistry();
             feignConfigurationAdapter.registryClientHttpRequestInterceptors(clientHttpInterceptorRegistry);
             return new DefaultHttpClient(
                 this.getHttpAdapter(),
-                typeof feignConfigurationAdapter.defaultProduce === "function" ? feignConfigurationAdapter.defaultProduce() : HttpMediaType.FORM_DATA,
+                typeof feignConfigurationAdapter.defaultProduce === "function" ? feignConfigurationAdapter.defaultProduce() : undefined,
                 clientHttpInterceptorRegistry.getInterceptors()
             );
-        },
+        };
+
         getRestTemplate() {
-            return new RestTemplate(configuration.getHttpClient());
+            return new RestTemplate(this.getHttpClient());
         }
-    };
+    }
+
+    return new A()
+};
+
+export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
+
+    const configuration = genConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
 };

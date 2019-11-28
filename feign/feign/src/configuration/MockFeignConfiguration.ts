@@ -26,6 +26,8 @@ export class MockFeignConfiguration implements FeignConfiguration {
         this.baseUrl = baseUrl;
     }
 
+
+
     getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client: T) => {
         return new DefaultFeignClientExecutor<T>(client);
     };

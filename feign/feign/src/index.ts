@@ -1,4 +1,3 @@
-// import regeneratorRuntime from '@babel/runtime-corejs3/regenerator';
 
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
@@ -95,6 +94,6 @@ export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuil
 export {FeignClientExecutor} from "./FeignClientExecutor";
 export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {
-    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions
+    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions,ProgressBarOptions
 }from "./FeignRequestOptions";
 export {Enum} from "./EnumInterface";

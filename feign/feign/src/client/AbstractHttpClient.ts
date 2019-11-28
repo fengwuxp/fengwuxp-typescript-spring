@@ -15,16 +15,14 @@ export abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> im
 
     protected interceptors: Array<ClientHttpRequestInterceptor<T>> = [];
 
-
-
     protected defaultProduce: HttpMediaType;
 
     protected constructor(httpAdapter: HttpAdapter<T>,
                           defaultProduce?: HttpMediaType,
                           interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
         this.httpAdapter = httpAdapter;
+        this.defaultProduce = defaultProduce || HttpMediaType.FORM_DATA;
         this.setInterceptors(interceptors || []);
-        this.defaultProduce = defaultProduce || HttpMediaType.APPLICATION_JSON_UTF8;
     }
 
     delete = (url: string, headers?: HeadersInit, timeout?: number): Promise<HttpResponse> => {
