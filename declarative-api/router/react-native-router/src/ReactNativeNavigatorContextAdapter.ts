@@ -17,16 +17,6 @@ export default class ReactNativeNavigatorContextAdapter<T extends NavigatorDescr
     constructor() {
 
 
-        Actions.onStateChange((preState, currentState) => {
-            if (this.isStackTop()) {
-                this.browseHistory = [];
-            } else {
-                this.browseHistory.pop();
-            }
-            this.browseHistory.push(this.getCurrentObject());
-        });
-
-
     }
 
     getBrowseHistory = () => this.browseHistory;
@@ -48,6 +38,14 @@ export default class ReactNativeNavigatorContextAdapter<T extends NavigatorDescr
 
     isView = (pathname: string) => this.getCurrentPathname() === pathname;
 
+    onStateChange = (preState, currentState) => {
+        if (this.isStackTop()) {
+            this.browseHistory = [];
+        } else {
+            this.browseHistory.pop();
+        }
+        this.browseHistory.push(this.getCurrentObject());
+    }
 
 }
 

@@ -22,4 +22,20 @@ declare class ReactNativeNavigatorAdapter implements NavigatorAdapter<NavigatorD
     private genRouteProps;
 }
 
-export { ReactNativeNavigatorAdapter, reactNativeAppCommandRouterFactory };
+/**
+ * react native navigator context adapter
+ */
+declare class ReactNativeNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> implements NavigatorContextAdapter<T> {
+    private browseHistory;
+    constructor();
+    getBrowseHistory: () => T[];
+    getCurrentObject: () => T;
+    getCurrentPathname: () => any;
+    getCurrentState: <S = RouteUriVariable>() => any;
+    getCurrentUriVariables: <S = RouteUriVariable>() => any;
+    isStackTop: () => boolean;
+    isView: (pathname: string) => boolean;
+    onStateChange: (preState: any, currentState: any) => void;
+}
+
+export { ReactNativeNavigatorAdapter, ReactNativeNavigatorContextAdapter, reactNativeAppCommandRouterFactory };

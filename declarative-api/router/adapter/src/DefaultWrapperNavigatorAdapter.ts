@@ -176,5 +176,8 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         return navigatorDescriptorObject;
     }
 
+    getNavigatorAdapter = () => this.navigatorAdapter;
+
+    getNavigatorContextAdapter = () => this.navigatorContextAdapter;
 
 }

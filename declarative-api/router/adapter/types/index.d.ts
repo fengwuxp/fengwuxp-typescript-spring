@@ -116,6 +116,8 @@ declare type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (
  * app command router
  */
 interface AppCommandRouter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> extends NavigatorAdapter<T>, NavigatorContextAdapter<T> {
+    getNavigatorAdapter: () => NavigatorAdapter;
+    getNavigatorContextAdapter: () => NavigatorContextAdapter;
 }
 
 /**

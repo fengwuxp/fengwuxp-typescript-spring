@@ -48,6 +48,12 @@ export type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (u
  */
 export interface AppCommandRouter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> extends NavigatorAdapter<T>, NavigatorContextAdapter<T> {
 
+
+    getNavigatorAdapter: () => NavigatorAdapter;
+
+    getNavigatorContextAdapter: () => NavigatorContextAdapter;
+
+
     /**
      *  key   ==> {@code pathname} route 路径
      *  value ==> command method
