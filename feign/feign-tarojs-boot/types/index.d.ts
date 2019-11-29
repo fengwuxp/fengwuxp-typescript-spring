@@ -1,4 +1,4 @@
-import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse } from 'fengwuxp-typescript-feign';
+import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
 
 interface TarojsHttpRequest extends HttpRequest {
     /**
@@ -64,4 +64,12 @@ declare class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest> {
     private buildRequest;
 }
 
-export { TarojsHttpAdaptor, TarojsHttpRequest };
+/**
+ * tarojs network status listener
+ */
+declare class TarojsNetworkStatusListener implements NetworkStatusListener {
+    getNetworkStatus: () => Promise<NetworkStatus>;
+    onChange: (callback: (networkStatus: NetworkStatus) => void) => void;
+}
+
+export { TarojsHttpAdaptor, TarojsHttpRequest, TarojsNetworkStatusListener };

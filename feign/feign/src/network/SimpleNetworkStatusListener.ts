@@ -1,5 +1,5 @@
-import {NoneNetworkFailBack} from "./NoneNetworkFailBack";
-import {HttpRequest} from "./HttpRequest";
+import {MOCK_NETWORK_FAILURE_RESPONSE, NoneNetworkFailBack} from "./NoneNetworkFailBack";
+import {HttpRequest} from "../client/HttpRequest";
 
 /**
  * simple network status listener
@@ -110,8 +110,8 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
             return;
         }
 
-        const {reject, request} = item;
-        reject(request);
+        const {reject} = item;
+        reject(MOCK_NETWORK_FAILURE_RESPONSE);
     }
 }
 

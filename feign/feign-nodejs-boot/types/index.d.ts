@@ -13,6 +13,9 @@ interface NodeHttpRequest extends HttpRequest {
     oauth?: OAuthOptions;
 }
 
+/**
+ * node js adapter
+ */
 declare class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
     private timeout;
     private resolveHttpResponse;

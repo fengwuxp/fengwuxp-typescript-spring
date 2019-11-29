@@ -24,7 +24,6 @@ const getConfig = (isProd) => {
         // https://rollupjs.org/guide/en#external-e-external
         external: [
             "core-js",
-            "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
             "reflect-metadata",
             "xregexp",

@@ -39,7 +39,6 @@
   "devDependencies": {
     "@types/node": "^12.12.11",
     "@babel/runtime": "^7.0.0",
-    "@babel/runtime-corejs2": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
