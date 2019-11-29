@@ -12,7 +12,6 @@ import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpR
 /**
  * default http client
  *
- * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
 
@@ -20,7 +19,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
     constructor(httpAdapter: HttpAdapter<T>,
                 defaultProduce?: HttpMediaType,
                 interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
-        super(httpAdapter, defaultProduce || HttpMediaType.FORM_DATA, interceptors);
+        super(httpAdapter, defaultProduce , interceptors);
     }
 
     send = async (req: T): Promise<HttpResponse> => {

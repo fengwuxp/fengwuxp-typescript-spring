@@ -126,11 +126,11 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
      */
     private parse = (response: Response): Promise<any> => {
 
-        if (!response.ok) {
-            return Promise.reject(response);
-        }
+        // if (!response.ok) {
+        //     return Promise.reject(response);
+        // }
 
-        const responseMediaType: string = response.headers.get["content-type"];
+        const responseMediaType: string = response.headers["map"]["content-type"];
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 
@@ -170,6 +170,20 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
     // private paresFormData(response: Response): Promise<FormData> {
     //     return response.formData();
     // }
+
+    private resolveResponseHeaders = (headers) => {
+        if (headers == null) {
+            return null;
+        }
+        const headerMaps = headers.map;
+        if (headerMaps == null) {
+            return null;
+        }
+        return Object.keys(headerMaps).reduce((pre, key) => {
+            pre[key] = headerMaps[key];
+            return pre;
+        }, {})
+    }
 
 
 }

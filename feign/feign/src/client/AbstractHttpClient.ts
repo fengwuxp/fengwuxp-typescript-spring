@@ -8,6 +8,7 @@ import {HttpMethod} from "../constant/http/HttpMethod";
 
 /**
  * abstract http client
+ * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 export abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
 

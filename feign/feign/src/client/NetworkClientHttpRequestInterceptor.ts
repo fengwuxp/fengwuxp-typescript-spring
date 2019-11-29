@@ -33,11 +33,18 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
                 }
             });
         this.networkStatusListener.onChange((newNetworkStatus) => {
+            if (newNetworkStatus == null) {
+                newNetworkStatus = {
+                    networkType: NetworkType.NONE,
+                    isConnected: false
+                }
+            }
             const {networkStatus} = this;
             if (networkStatus == null) {
                 return
             }
             if (!networkStatus.isConnected && newNetworkStatus.isConnected) {
+                // 网络被激活
                 this.noneNetworkHandler.onNetworkActive()
             }
             this.networkStatus = newNetworkStatus;
@@ -48,10 +55,10 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
     interceptor = async (req: T) => {
         const {networkStatus} = this;
 
-        if (networkStatus != null && networkStatus.isConnected) {
-            return req;
-        } else {
+        if (networkStatus == null || !networkStatus.isConnected) {
             return this.handleFailBack(req);
+        } else {
+            return req;
         }
     };
 
@@ -59,16 +66,20 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
     //无网络时的降级处理
     private handleFailBack = async (req: T): Promise<T> => {
 
-        if (NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG > 0) {
-            return Promise.reject(req);
-        }
-        try {
-            NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG++;
-            await this.noneNetworkHandler.onNetworkClose(req);
-            NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG--
-        } catch (e) {
-            return Promise.reject(e);
-        }
+        // if (NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG > 0) {
+        //     return Promise.reject(req);
+        // }
+        // try {
+        //     NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG++;
+        //     await this.noneNetworkHandler.onNetworkClose(req);
+        //     NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG--;
+        // } catch (e) {
+        //     NetworkClientHttpRequestInterceptor.HANDLE_FAIL_BACK_FLAG--;
+        //     return Promise.reject(e);
+        // }
+
+        await this.noneNetworkHandler.onNetworkClose(req);
+
         return req;
     }
 

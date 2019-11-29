@@ -11,10 +11,19 @@ import {HttpRequest} from "./HttpRequest";
 export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
 
 
+    /**
+     * 等待队列
+     */
     private waitQueue: Array<WaitHttpRequest<T>> = [];
 
+    /**
+     * 最大的等待时长
+     */
     private maxWaitTime;
 
+    /**
+     * 最大的等待队列大小
+     */
     private maxWaitLength;
 
 
@@ -28,23 +37,23 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
     }
 
     onNetworkActive = (): (Promise<void> | void) => {
-        this.tryRemoveInvalidItem(true);
+        this.tryRemoveInvalidItem();
         const {waitQueue} = this;
-        if (waitQueue.length == 0) {
+        const length = waitQueue.length;
+        if (length == 0) {
             return;
         }
-        // const httpClient = FeignConfigurationRegistry.getDefaultFeignConfiguration().getHttpClient();
-
-        const newQueue = [...waitQueue];
+        console.log("等待队列的长度", length);
+        let newQueue = [...waitQueue];
         //clear queue
         this.waitQueue = [];
 
         //retry request
-        newQueue.forEach(({request, resolve, reject}) => {
-            // httpClient.send(request).then(resolve).catch(reject);
+        newQueue.forEach(({request, resolve}) => {
             resolve(request);
         });
-
+        console.log("处理等待队列中的个数", newQueue.length);
+        newQueue = null;
     };
 
 
@@ -56,7 +65,11 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
     };
 
     private addWaitItem(resolve, reject, request: T) {
-        const {waitQueue, maxWaitTime} = this;
+        const {waitQueue, maxWaitTime, maxWaitLength} = this;
+        if (waitQueue.length === maxWaitLength) {
+            // 队列已满，强制移除掉第一个元素
+            this.rejectHttpRequest(waitQueue.shift());
+        }
         waitQueue.push({
             expireTime: new Date().getTime() + maxWaitTime,
             resolve,
@@ -65,18 +78,18 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
         });
     }
 
-    private tryRemoveInvalidItem = (force: boolean = false) => {
+    /**
+     * 尝试移除无效的项
+     */
+    private tryRemoveInvalidItem = () => {
         const {waitQueue, maxWaitLength} = this;
         const oldLength = waitQueue.length;
         if (oldLength == 0) {
             return;
         }
-        const needRemove = force || oldLength < maxWaitLength;
-        if (needRemove) {
-            return;
-        }
         const currentTime = new Date().getTime();
         const newQueue = waitQueue.filter((item) => {
+            // 是否还在有效期内
             const isEffective = currentTime - item.expireTime < 0;
             if (!isEffective) {
                 this.rejectHttpRequest(item);
@@ -89,7 +102,6 @@ export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpReq
         }
         // remove first item
         this.rejectHttpRequest(newQueue.shift());
-        this.maxWaitLength--;
     };
 
     private rejectHttpRequest = (item: WaitHttpRequest<T>) => {

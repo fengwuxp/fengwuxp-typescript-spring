@@ -126,9 +126,9 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      */
     private parse = (response: Response): Promise<any> => {
 
-        if (!response.ok) {
-            return Promise.reject(response);
-        }
+        // if (!response.ok) {
+        //     return Promise.reject(response);
+        // }
 
         const responseMediaType: string = response.headers.get[contentTypeName];
 

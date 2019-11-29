@@ -6,6 +6,7 @@ import { NetworkStatusListener, NetworkStatus, HttpRequest, HttpAdapter, Resolve
 declare class ReactNativeNetworkStatusListener implements NetworkStatusListener {
     getNetworkStatus: () => Promise<NetworkStatus>;
     onChange: (callback: (networkStatus: NetworkStatus) => void) => void;
+    private processNetworkStats;
     private converterStateType;
 }
 
@@ -71,6 +72,7 @@ declare class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpReque
     private parseText;
     private paresArrayBuffer;
     private paresBlob;
+    private resolveResponseHeaders;
 }
 
 export { ReactNativeHttpAdapter, ReactNativeHttpRequest, ReactNativeNetworkStatusListener };

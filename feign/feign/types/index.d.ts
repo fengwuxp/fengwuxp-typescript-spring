@@ -829,6 +829,7 @@ declare enum HttpMediaType {
 
 /**
  * abstract http client
+ * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
     protected httpAdapter: HttpAdapter<T>;
@@ -853,7 +854,6 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
 /**
  * default http client
  *
- * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
  */
 declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
     constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
@@ -979,8 +979,17 @@ declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
  * {@field maxWaitLength}
  */
 declare class SimpleNetworkStatusListener<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
+    /**
+     * 等待队列
+     */
     private waitQueue;
+    /**
+     * 最大的等待时长
+     */
     private maxWaitTime;
+    /**
+     * 最大的等待队列大小
+     */
     private maxWaitLength;
     /**
      * @param maxWaitTime
@@ -990,6 +999,9 @@ declare class SimpleNetworkStatusListener<T extends HttpRequest = HttpRequest> i
     onNetworkActive: () => void | Promise<void>;
     onNetworkClose: (request: T) => any;
     private addWaitItem;
+    /**
+     * 尝试移除无效的项
+     */
     private tryRemoveInvalidItem;
     private rejectHttpRequest;
 }

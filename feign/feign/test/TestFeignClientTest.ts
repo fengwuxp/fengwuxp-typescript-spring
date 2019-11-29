@@ -13,6 +13,12 @@ describe("test feign client", () => {
 
     const testFeignClient = new TestFeignClient();
 
+    const sleep = (times) => {
+        return new Promise((resolve) => {
+            setTimeout(resolve, times)
+        })
+    };
+
 
     test("test feign client", async () => {
 
@@ -56,17 +62,41 @@ describe("test feign client", () => {
         }
     }, 25 * 1000);
 
-    test("test delete member", async () => {
+
+    const sendRequestEvent = async (num) => {
+        const queue = [];
+        for (let i = 0; i <= num; i++) {
+            // if (Math.random() * i * 99188320 % 2 === 0) {
+            //
+            // }
+            await sleep(Math.random() * 1000);
+            (function (index) {
+                logger.debug(`开始发出第${index}个请求`);
+                testFeignClient.deleteMember({
+                    memberId: 1
+                }).then((data) => {
+                    logger.debug("----s---->", data)
+                }).catch((e) => {
+                    logger.debug("----e---->", e)
+                }).finally(() => {
+                    logger.debug(`收到了第${index}个请求的响应`);
+                    queue.push(index);
+                })
+            })(i);
+        }
+        return queue;
+    };
+
+    test("test network status change", async () => {
 
         try {
-            const result = await testFeignClient.deleteMember({
-              memberId:1
-            });
-            console.log("http result", result);
+            const queue = await sendRequestEvent(100);
+            console.log("-------->", queue.length);
         } catch (e) {
-            logger.error("-------->",e)
+            logger.error("error", e)
         }
-    }, 25 * 1000);
+
+    }, 60 * 1000);
 
 });
 
