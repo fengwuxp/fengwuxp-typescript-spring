@@ -862,6 +862,48 @@ declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends Abs
 }
 
 /**
+ * support retry http client
+ * HttpClient with retry, need to be recreated each time you use this client
+ */
+declare class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+    private retryOptions;
+    private countRetry;
+    private retryEnd;
+    constructor(httpAdapter: HttpAdapter<T>, retryOptions: HttpRetryOptions, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
+    send: (req: T) => Promise<HttpResponse<any>>;
+    /**
+     * try retry request
+     * @param request
+     * @param response
+     */
+    private tryRetry;
+    /**
+     * default retry handle
+     * @param req
+     * @param response
+     */
+    private onRetry;
+    /**
+     * whether to retry
+     * @param response
+     */
+    private whenRetry;
+}
+
+/**
+ * If the url starts with @xxx, replace 'xxx' with the value of name='xxx' in the routeMapping
+ * example url='@memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
+ */
+declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
+    /**
+     * mapping between api module and url
+     */
+    protected routeMapping: Record<string, string>;
+    constructor(routeMapping: Record<string, string> | string);
+    interceptor: (req: T) => Promise<T>;
+}
+
+/**
  * Network status listener
  */
 interface NetworkStatusListener {
@@ -954,48 +996,6 @@ declare class DefaultNetworkStatusListener<T extends HttpRequest = HttpRequest> 
     constructor(toast?: RequestToast);
     onNetworkActive: () => void;
     onNetworkClose: <T_1>(request: T_1) => Promise<never>;
-}
-
-/**
- * support retry http client
- * HttpClient with retry, need to be recreated each time you use this client
- */
-declare class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
-    private retryOptions;
-    private countRetry;
-    private retryEnd;
-    constructor(httpAdapter: HttpAdapter<T>, retryOptions: HttpRetryOptions, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
-    send: (req: T) => Promise<HttpResponse<any>>;
-    /**
-     * try retry request
-     * @param request
-     * @param response
-     */
-    private tryRetry;
-    /**
-     * default retry handle
-     * @param req
-     * @param response
-     */
-    private onRetry;
-    /**
-     * whether to retry
-     * @param response
-     */
-    private whenRetry;
-}
-
-/**
- * If the url starts with @xxx, replace 'xxx' with the value of name='xxx' in the routeMapping
- * example url='@memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
- */
-declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
-    /**
-     * mapping between api module and url
-     */
-    protected routeMapping: Record<string, string>;
-    constructor(routeMapping: Record<string, string> | string);
-    interceptor: (req: T) => Promise<T>;
 }
 
 /**
