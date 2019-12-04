@@ -1,7 +1,7 @@
 import {DataObfuscationOptions} from "./annotations/security/DataObfuscation";
-import {HttpRetryOptions} from "./client/HttpRetryOptions";
 import {ResponseExtractor} from "./template/ResponseExtractor";
 import {QueryParamType} from "./template/RestOperations";
+import {HttpMediaType} from "./constant/http/HttpMediaType";
 
 
 export interface FeignRequestBaseOptions {
@@ -12,6 +12,9 @@ export interface FeignRequestBaseOptions {
      */
     queryParams?: QueryParamType;
 
+    /**
+     * request body
+     */
     body?: any;
 
     /**
@@ -146,6 +149,10 @@ export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 
 export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
 
+    /**
+     * 接收的数据
+     */
+    consumes?: HttpMediaType[];
 
 }
 

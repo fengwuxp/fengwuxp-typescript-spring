@@ -130,7 +130,11 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         //     return Promise.reject(response);
         // }
 
-        const responseMediaType: string = response.headers.get[contentTypeName];
+        const headers = response.headers;
+        if ("Content-Length") {
+            return Promise.resolve();
+        }
+        const responseMediaType: string = headers.get[contentTypeName];
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 

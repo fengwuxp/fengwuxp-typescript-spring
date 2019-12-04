@@ -1,4 +1,4 @@
-import {Feign} from "../src";
+import {Feign, HttpMediaType} from "../src";
 import {RequestMapping} from "../src";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
 import {PostMapping} from "../src";
@@ -43,7 +43,8 @@ export default class TestFeignClient {
     @Signature({fields: ["userName"]})
     @PostMapping({
         value: "find_member/{name}",
-        headers: {myHeader: "tk_{memberId}"}
+        headers: {myHeader: "tk_{memberId}"},
+        produces: [HttpMediaType.APPLICATION_JSON_UTF8]
     })
     findMember: (
         request: {
@@ -54,7 +55,7 @@ export default class TestFeignClient {
         options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: ["memberId"]})
-    @DeleteMapping({value: "delete_member/{memberId}"})
+    @DeleteMapping({value: "delete_member/{memberId}", produces: [HttpMediaType.APPLICATION_JSON_UTF8]})
     deleteMember: (
         request: {
             memberId: number,

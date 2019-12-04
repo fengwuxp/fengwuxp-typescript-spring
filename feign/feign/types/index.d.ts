@@ -608,11 +608,42 @@ interface FeignClientExecutor<T extends FeignClient = FeignProxyClient> {
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
 }
 
+/**
+ * http media type
+ */
+declare enum HttpMediaType {
+    /**
+     * 表单
+     */
+    FORM_DATA = "application/x-www-form-urlencoded",
+    /**
+     * 文件上传
+     */
+    MULTIPART_FORM_DATA = "multipart/form-data",
+    /**
+     * json
+     */
+    APPLICATION_JSON = "application/json",
+    /**
+     * JSON_UTF_8
+     */
+    APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8",
+    TEXT = "text/plain",
+    HTML = "text/html",
+    /**
+     * 流
+     */
+    APPLICATION_STREAM = "application/octet-stream"
+}
+
 interface FeignRequestBaseOptions {
     /**
      * external query parameters
      */
     queryParams?: QueryParamType;
+    /**
+     * request body
+     */
     body?: any;
     /**
      * external request headers
@@ -720,6 +751,10 @@ interface DataOptions {
 interface FeignRequestContextOptions extends UIOptions, DataOptions {
 }
 interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
+    /**
+     * 接收的数据
+     */
+    consumes?: HttpMediaType[];
 }
 
 /**
@@ -798,34 +833,6 @@ interface FeignOptions {
  * @constructor
  */
 declare const Feign: <T extends FeignProxyClient = FeignProxyClient>(options: FeignOptions) => Function;
-
-/**
- * http media type
- */
-declare enum HttpMediaType {
-    /**
-     * 表单
-     */
-    FORM_DATA = "application/x-www-form-urlencoded",
-    /**
-     * 文件上传
-     */
-    MULTIPART_FORM_DATA = "multipart/form-data",
-    /**
-     * json
-     */
-    APPLICATION_JSON = "application/json",
-    /**
-     * JSON_UTF_8
-     */
-    APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8",
-    TEXT = "text/plain",
-    HTML = "text/html",
-    /**
-     * 流
-     */
-    APPLICATION_STREAM = "application/octet-stream"
-}
 
 /**
  * abstract http client

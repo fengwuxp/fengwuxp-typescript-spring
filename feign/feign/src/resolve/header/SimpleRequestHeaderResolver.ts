@@ -1,5 +1,6 @@
 import {RequestHeaderResolver} from "./RequestHeaderResolver";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
+import {contentTypeName} from "../../constant/FeignConstVar";
 import {UriVariable} from "../../template/RestOperations";
 import {replacePathVariableValue} from "../../helper/ReplaceUriVariableHelper";
 
@@ -14,18 +15,24 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
                                                                    data: UriVariable): Record<string, string> => {
 
     const apiServiceConfig = apiService.getFeignMethodConfig(methodName);
-    if (apiServiceConfig.requestMapping == null || apiServiceConfig.requestMapping.headers == null) {
-        return headers || {};
-    }
+    const requestMapping = apiServiceConfig.requestMapping;
 
-    const configHeaders = apiServiceConfig.requestMapping.headers;
-    const newHeaders = {
+    if (requestMapping == null) {
+        return headers;
+    }
+    let newHeaders = {
         ...headers
     };
+    const configHeaders = requestMapping.headers;
+    const produces = requestMapping.produces;
+
     //marge headers
     for (const key in configHeaders) {
         const headerValue: string = configHeaders[key];
         newHeaders[key] = replacePathVariableValue(headerValue, data);
+    }
+    if (produces != null) {
+        newHeaders[contentTypeName] = produces[0];
     }
 
     //return new headers
