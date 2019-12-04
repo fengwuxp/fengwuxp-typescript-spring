@@ -9,9 +9,7 @@ import {FeignProxyClient} from "../support/FeignProxyClient";
 import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
-import {FeignRequestOptions} from '../FeignRequestOptions';
-import { HttpRequestDataEncoder } from '../codec/HttpRequestDataEncoder';
-import { HttpResponseDataDecoder } from '../codec/HttpResponseDataDecoder';
+import {FeignRequestContextOptions, FeignRequestOptions} from '../FeignRequestOptions';
 
 /**
  * feign configuration
@@ -44,7 +42,7 @@ export interface FeignConfiguration {
     getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
 
     /**
-     * get default feign request options
+     * get default feign request context options
      */
-    getDefaultFeignRequestOptions?: () => FeignRequestOptions;
+    getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
 }

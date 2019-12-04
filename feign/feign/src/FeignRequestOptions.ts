@@ -24,11 +24,7 @@ export interface FeignRequestBaseOptions {
      */
     headers?: Record<string, string>;
 
-    /**
-     * 是否开启gzip压缩
-     * 默认：false
-     */
-    enabledGzip?: boolean;
+
 }
 
 /**
@@ -148,6 +144,12 @@ export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 
 
 export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
+
+    /**
+     * enable gzip
+     * default：false
+     */
+    enabledGzip?: boolean;
 
     /**
      * 接收的数据

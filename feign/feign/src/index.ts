@@ -81,6 +81,7 @@ export {
 } from "./template/UriTemplateHandler";
 
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
+export {default as UnifiedTransformDataExecutorInterceptor} from "./ui/UnifiedTransformDataExecutorInterceptor";
 export {RequestProgressBar} from "./ui/RequestProgressBar";
 export {NotNetworkToast, UnifiedFailureToast} from "./ui/FeignUIToast";
 

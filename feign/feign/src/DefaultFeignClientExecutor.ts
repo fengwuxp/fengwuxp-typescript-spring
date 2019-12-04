@@ -3,7 +3,7 @@ import {FeignProxyClient} from "./support/FeignProxyClient";
 import {RequestURLResolver} from "./resolve/url/RequestURLResolver";
 import {RequestHeaderResolver} from "./resolve/header/RequestHeaderResolver";
 import {ApiSignatureStrategy} from "./signature/ApiSignatureStrategy";
-import {FeignRequestBaseOptions, FeignRequestOptions} from "./FeignRequestOptions";
+import {FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions} from "./FeignRequestOptions";
 import {restfulRequestURLResolver} from "./resolve/url/RestFulRequestURLResolver";
 import {simpleRequestHeaderResolver} from "./resolve/header/SimpleRequestHeaderResolver";
 import {RestOperations} from "./template/RestOperations";
@@ -37,8 +37,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
     // feign client executor interceptors
     protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
 
-    // default request options
-    protected defaultRequestOptions: FeignRequestOptions;
+    // default request context options
+    protected defaultRequestContextOptions: FeignRequestContextOptions;
 
     constructor(apiService: T) {
         this.apiService = apiService;
@@ -49,7 +49,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRequestHeaderResolver,
             getRequestURLResolver,
             getFeignClientExecutorInterceptors,
-            getDefaultFeignRequestOptions
+            getDefaultFeignRequestContextOptions
         } = feignOptions.configuration as FeignConfiguration;
         this.restTemplate = getRestTemplate();
         this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
@@ -62,8 +62,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (getRequestHeaderResolver) {
             this.requestHeaderResolver = getRequestHeaderResolver();
         }
-        if (getDefaultFeignRequestOptions) {
-            this.defaultRequestOptions = getDefaultFeignRequestOptions();
+        if (getDefaultFeignRequestContextOptions) {
+            this.defaultRequestContextOptions = getDefaultFeignRequestContextOptions();
         }
     }
 
@@ -76,14 +76,14 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             apiService,
             requestURLResolver,
             requestHeaderResolver,
-            defaultRequestOptions
+            defaultRequestContextOptions
         } = this;
 
-        //原始参数
+        //original parameter
         const originalParameter = args[0] || {};
         let feignRequestOptions: FeignRequestOptions = {
             ...args[1],
-            ...defaultRequestOptions
+            ...defaultRequestContextOptions
         };
         // resolver request body，filter none value in request body or copy value
         const requestBody = feignRequestOptions.filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
