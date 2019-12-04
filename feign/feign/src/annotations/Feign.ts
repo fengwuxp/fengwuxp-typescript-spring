@@ -89,24 +89,25 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
             readonly feignConfiguration = () => {
                 const feignOptions = this._feignOptions;
-                const configuration = feignOptions.configuration;
+                const configuration = feignOptions.configuration || FeignConfigurationRegistry.getDefaultFeignConfiguration();
                 if (configuration == null) {
                     throw new Error("feign configuration is null or not register");
                 }
-                if (Array.isArray(configuration)) {
-                    const isEmpty = configuration.filter(item => item != null).length === 0;
-                    if (isEmpty) {
-                        throw new Error("feign configuration is empty array");
-                    }
-                    return configuration.reduce(((previousValue, currentValue) => {
-                        return {
-                            ...previousValue,
-                            ...currentValue
-                        };
-                    }), {}) as FeignConfiguration;
-                } else {
+                if (!Array.isArray(configuration)) {
+
                     return configuration;
                 }
+                const isEmpty = configuration.filter(item => item != null).length === 0;
+                if (isEmpty) {
+                    throw new Error("feign configuration is empty array");
+                }
+                return configuration.reduce(((previousValue, currentValue) => {
+                    return {
+                        ...previousValue,
+                        ...currentValue
+                    };
+                }), {} as FeignConfiguration);
+
             };
 
 

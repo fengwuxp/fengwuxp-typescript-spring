@@ -74,7 +74,8 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         // 尝试使用更新策略，自动更新数据
         return this.storageAdapter.getStorage<T>(key).then((data) => {
             if (data == null) {
-                return Promise.resolve(null);
+                // data is null or undefined
+                return Promise.reject();
             }
             let object: StorageItem;
             if (typeof data === "string") {

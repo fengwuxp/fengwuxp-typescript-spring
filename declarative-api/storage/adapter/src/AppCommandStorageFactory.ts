@@ -4,7 +4,8 @@ import {StorageCommandConfiguration} from "./StorageCommandConfiguration";
 import {newProxyInstanceEnhance} from "fengwuxp-common-proxy";
 import DefaultWrapperStorageAdapter from "./DefaultWrapperStorageAdapter";
 import {
-    reduceRightCommandResolvers, toLineResolver,
+    reduceRightCommandResolvers,
+    toLineResolver,
     toUpperCaseResolver,
     tryConverterMethodNameCommandResolver
 } from "fengwuxp-declarative-command";
