@@ -14,9 +14,9 @@ export default class CodecFeignClientExecutorInterceptor<T extends FeignRequestO
     protected decoders: HttpResponseDataDecoder[];
 
 
-    constructor(encoders: HttpRequestDataEncoder<T>[], decoders: HttpResponseDataDecoder[]) {
+    constructor(encoders?: HttpRequestDataEncoder<T>[], decoders?: HttpResponseDataDecoder[]) {
         this.encoders = encoders;
-        this.decoders = decoders;
+        this.decoders = decoders || [];
     }
 
     postHandle = async <E = any>(options: T, response: E) => {

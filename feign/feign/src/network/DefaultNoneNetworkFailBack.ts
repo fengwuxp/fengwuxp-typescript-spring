@@ -1,19 +1,19 @@
 import {HttpRequest, NoneNetworkFailBack} from "..";
-import {RequestToast} from "../ui/RequestToast";
+import {NotNetworkToast} from "../ui/FeignUIToast";
 import {MOCK_NETWORK_FAILURE_RESPONSE} from "./NoneNetworkFailBack";
 
 /**
- * default network status listener
+ * default network fail back
  *
  * Prompt only when the network is unavailable and return a simulated request failure result
  */
-export default class DefaultNetworkStatusListener<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
+export default class DefaultNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
 
 
-    private toast: RequestToast;
+    private toast: NotNetworkToast;
 
 
-    constructor(toast?: RequestToast) {
+    constructor(toast?: NotNetworkToast) {
         this.toast = toast;
     }
 

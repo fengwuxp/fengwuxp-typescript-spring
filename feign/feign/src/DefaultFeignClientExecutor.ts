@@ -86,7 +86,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             ...defaultRequestOptions
         };
         // resolver request body，filter none value in request body or copy value
-        const requestBody = feignRequestOptions.filterNoneValue ? filterNoneValueAndNewObject(originalParameter) : {...originalParameter};
+        const requestBody = feignRequestOptions.filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
         //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
 

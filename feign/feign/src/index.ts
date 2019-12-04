@@ -1,4 +1,3 @@
-
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
@@ -16,7 +15,7 @@ export {Feign} from "./annotations/Feign";
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
 export {
     ClientHttpRequestInterceptorInterface, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptor
-}from "./client/ClientHttpRequestInterceptor";
+} from "./client/ClientHttpRequestInterceptor";
 export {default as DefaultHttpClient} from "./client/DefaultHttpClient";
 export {HttpClient, HttpRequestBody} from "./client/HttpClient";
 export {HttpRequest} from "./client/HttpRequest";
@@ -26,7 +25,7 @@ export {default as RetryHttpClient} from "./client/RetryHttpClient";
 export {default as RoutingClientHttpRequestInterceptor} from "./client/RoutingClientHttpRequestInterceptor";
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
-export {default as DefaultNetworkStatusListener} from "./network/DefaultNetworkStatusListener";
+export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";
 export {NetworkStatusListener, NetworkStatus, NetworkType} from "./network/NetworkStatusListener";
 export {NoneNetworkFailBack} from "./network/NoneNetworkFailBack";
 export {default as SimpleNetworkStatusListener} from "./network/SimpleNetworkStatusListener";
@@ -45,7 +44,7 @@ export {HttpMethod} from "./constant/http/HttpMethod";
 export {HttpMediaType} from "./constant/http/HttpMediaType";
 export {
     defaultApiModuleName, contentTypeName, matchUrlPathVariable, FEIGN_CLINE_META_KEY, grabUrlPathVariable
-}from "./constant/FeignConstVar";
+} from "./constant/FeignConstVar";
 
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";
@@ -68,27 +67,27 @@ export {defaultGenerateAnnotationMethodConfig} from "./support/DefaultGenerateAn
 
 export {
     objectResponseExtractor, voidResponseExtractor, headResponseExtractor, optionsMethodResponseExtractor
-}from "./template/RestResponseExtractor";
-export {DefaultUriTemplateHandler, defaultUriTemplateFunctionHandler}from "./template/DefaultUriTemplateHandler";
+} from "./template/RestResponseExtractor";
+export {DefaultUriTemplateHandler, defaultUriTemplateFunctionHandler} from "./template/DefaultUriTemplateHandler";
 export {
     ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseErrorHandler
-}from "./template/ResponseErrorHandler";
+} from "./template/ResponseErrorHandler";
 export {ResponseExtractor, ResponseExtractorInterface, ResponseExtractorFunction} from "./template/ResponseExtractor";
 export {RestOperations} from "./template/RestOperations";
 export {default as RestTemplate} from "./template/RestTemplate";
 
 export {
     UriTemplateHandler, UriTemplateHandlerInterface, UriTemplateHandlerFunction
-}from "./template/UriTemplateHandler";
+} from "./template/UriTemplateHandler";
 
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {RequestProgressBar} from "./ui/RequestProgressBar";
-export {RequestToast} from "./ui/RequestToast";
+export {NotNetworkToast, UnifiedFailureToast} from "./ui/FeignUIToast";
 
 export {mediaTypeIsEq} from "./utils/MediaTypeUtil";
 export {
     supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
-}from "./utils/SerializeRequestBodyUtil";
+} from "./utils/SerializeRequestBodyUtil";
 export {invokeFunctionInterface} from "./utils/InvokeFunctionInterface";
 
 export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFeignClientBuilder";
@@ -98,6 +97,6 @@ export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuil
 export {FeignClientExecutor} from "./FeignClientExecutor";
 export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {
-    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions,ProgressBarOptions
-}from "./FeignRequestOptions";
+    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions, ProgressBarOptions
+} from "./FeignRequestOptions";
 export {Enum} from "./EnumInterface";
