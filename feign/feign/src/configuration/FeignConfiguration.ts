@@ -31,8 +31,6 @@ export interface FeignConfiguration {
 
     getFeignClientExecutor: <T extends FeignProxyClient = FeignProxyClient>(client: T) => FeignClientExecutor;
 
-    getFeignClientBuilder?: <T extends FeignProxyClient = FeignProxyClient>() => FeignClientBuilder<T>;
-
     getRequestURLResolver?: () => RequestURLResolver;
 
     getRequestHeaderResolver?: () => RequestHeaderResolver;

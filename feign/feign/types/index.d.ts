@@ -544,26 +544,21 @@ interface FeignProxyClient extends FeignClient {
     /**
      * 服务方法的名称或者是访问路径
      */
-    readonly serviceName: string;
+    readonly serviceName: () => string;
     /**
      * feign的代理配置
      */
-    readonly feignOptions: FeignOptions;
+    readonly feignOptions: () => FeignOptions;
+    /**
+     * feign configuration
+     */
+    readonly feignConfiguration: () => FeignConfiguration;
     /**
      * 获取获取接口方法的配置
      * @param serviceMethod  服务方法名称
      */
     getFeignMethodConfig: (serviceMethod: string) => FeignClientMethodConfig;
 }
-
-/**
- * feign client builder
- */
-interface FeignClientBuilderInterface<T extends FeignProxyClient = FeignProxyClient> {
-    build: FeignClientBuilderFunction<T>;
-}
-declare type FeignClientBuilderFunction<T extends FeignProxyClient = FeignProxyClient> = (client: T) => T;
-declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> = FeignClientBuilderFunction<T> | FeignClientBuilderInterface<T>;
 
 /**
  * 解析url
@@ -790,7 +785,6 @@ interface FeignConfiguration {
     getHttpClient: <T extends HttpRequest = HttpRequest>() => HttpClient;
     getRestTemplate: () => RestOperations;
     getFeignClientExecutor: <T extends FeignProxyClient = FeignProxyClient>(client: T) => FeignClientExecutor;
-    getFeignClientBuilder?: <T extends FeignProxyClient = FeignProxyClient>() => FeignClientBuilder<T>;
     getRequestURLResolver?: () => RequestURLResolver;
     getRequestHeaderResolver?: () => RequestHeaderResolver;
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
@@ -1105,9 +1099,20 @@ declare class DateEncoder<T extends FeignRequestOptions = FeignRequestOptions> i
     private converterDate;
 }
 
+/**
+ * feign client builder
+ */
+interface FeignClientBuilderInterface<T extends FeignProxyClient = FeignProxyClient> {
+    build: FeignClientBuilderFunction<T>;
+}
+declare type FeignClientBuilderFunction<T extends FeignProxyClient = FeignProxyClient> = (client: T) => T;
+declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> = FeignClientBuilderFunction<T> | FeignClientBuilderInterface<T>;
+
 declare const registry: {
     setDefaultFeignConfiguration(configuration: FeignConfiguration): void;
     getDefaultFeignConfiguration(): FeignConfiguration;
+    setFeignClientBuilder(feignClientBuilder: FeignClientBuilder<FeignProxyClient>): void;
+    getFeignClientBuilder(): FeignClientBuilder<FeignProxyClient>;
 };
 
 /**

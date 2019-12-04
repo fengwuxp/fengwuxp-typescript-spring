@@ -10,7 +10,7 @@ import {FeignProxyClient} from "../../support/FeignProxyClient";
  */
 export const restfulRequestURLResolver: RequestURLResolver = (apiService: FeignProxyClient, methodName: string): string => {
 
-    const feignOptions = apiService.feignOptions;
+    const feignOptions = apiService.feignOptions();
 
     //生成 例如 @member/member/queryMember 或 @default/member/{memberId}
     return `${getApiUriByApiService(apiService, feignOptions)}${getApiUriByApiServiceMethod(apiService, methodName)}`;
@@ -27,7 +27,7 @@ export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions
     if (url) {
         return `${url}`
     }
-    const serviceName = apiService.serviceName;
+    const serviceName = apiService.serviceName();
     return `@${apiModule}${serviceName.startsWith("/") ? serviceName : "/" + serviceName}`;
 };
 

@@ -59,16 +59,9 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
          */
         return class extends clazz implements FeignProxyClient {
 
-            /**
-             * 服务名称
-             */
-            readonly serviceName: string;
+            private _serviceName: string;
+            private _feignOptions: FeignOptions;
 
-
-            /**
-             * feign代理的相关配置
-             */
-            readonly feignOptions: FeignOptions;
 
             constructor() {
                 super();
@@ -77,20 +70,53 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                     apiModule: defaultApiModuleName,
                     ...options
                 };
-                const feignConfiguration: FeignConfiguration = getFeignConfiguration(feignOptions.configuration);
-                if (feignConfiguration == null) {
-                    throw new Error("feign configuration is null or not register");
-                }
-                feignOptions.configuration = feignConfiguration;
-                const {getFeignClientBuilder} = feignConfiguration;
 
-                const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = getFeignClientBuilder ? getFeignClientBuilder<T>() : defaultFeignClientBuilder;
-
-                this.serviceName = feignOptions.value || clazz.name;
-                this.feignOptions = feignOptions;
+                this._serviceName = feignOptions.value || clazz.name;
+                this._feignOptions = feignOptions;
                 //build feign client instance
+                const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = FeignConfigurationRegistry.getFeignClientBuilder();
                 return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
             }
+
+            /**
+             * 服务名称
+             */
+            readonly serviceName = () => {
+                return this._serviceName
+            };
+
+
+            /**
+             * feign代理的相关配置
+             */
+            readonly feignOptions = () => {
+                return this._feignOptions;
+            };
+
+            readonly feignConfiguration = () => {
+                const feignOptions = this._feignOptions;
+                if (feignOptions == null) {
+                    return null;
+                }
+                const configuration = feignOptions.configuration;
+                if (configuration == null) {
+                    throw new Error("feign configuration is null or not register");
+                }
+                if (Array.isArray(configuration)) {
+                    const isEmpty = configuration.filter(item => item != null).length === 0;
+                    if (isEmpty) {
+                        throw new Error("feign configuration is empty array");
+                    }
+                    return configuration.reduce(((previousValue, currentValue) => {
+                        return {
+                            ...previousValue,
+                            ...currentValue
+                        };
+                    }), {}) as FeignConfiguration;
+                } else {
+                    return configuration;
+                }
+            };
 
 
             /**
@@ -107,23 +133,3 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
     }
 };
 
-const getFeignConfiguration = (configuration?: FeignConfiguration[] | FeignConfiguration): FeignConfiguration => {
-    const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
-    if (configuration == null) {
-        return defaultFeignConfiguration;
-    }
-    if (Array.isArray(configuration)) {
-        const isEmpty = configuration.filter(item => item != null).length === 0;
-        if (isEmpty) {
-            return defaultFeignConfiguration;
-        }
-        return configuration.reduce(((previousValue, currentValue) => {
-            return {
-                ...previousValue,
-                ...currentValue
-            };
-        }), {}) as FeignConfiguration;
-    }
-
-    return configuration;
-};

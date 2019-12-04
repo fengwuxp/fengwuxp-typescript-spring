@@ -42,7 +42,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     constructor(apiService: T) {
         this.apiService = apiService;
-        const feignOptions = apiService.feignOptions;
+        const configuration = apiService.feignConfiguration();
         const {
             getRestTemplate,
             getApiSignatureStrategy,
@@ -50,7 +50,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRequestURLResolver,
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestContextOptions
-        } = feignOptions.configuration as FeignConfiguration;
+        } = configuration;
+
         this.restTemplate = getRestTemplate();
         this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
         if (getApiSignatureStrategy) {

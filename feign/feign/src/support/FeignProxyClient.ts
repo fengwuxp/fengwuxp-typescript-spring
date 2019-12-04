@@ -1,6 +1,7 @@
 import {FeignClient} from "../FeignClient";
 import {FeignOptions} from "../annotations/Feign";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
+import {FeignConfiguration} from "..";
 
 /**
  * feign proxy client
@@ -11,12 +12,17 @@ export interface FeignProxyClient extends FeignClient {
     /**
      * 服务方法的名称或者是访问路径
      */
-    readonly  serviceName: string;
+    readonly serviceName: () => string;
 
     /**
      * feign的代理配置
      */
-    readonly  feignOptions: FeignOptions;
+    readonly feignOptions: () => FeignOptions;
+
+    /**
+     * feign configuration
+     */
+    readonly feignConfiguration: () => FeignConfiguration;
 
     /**
      * 获取获取接口方法的配置
