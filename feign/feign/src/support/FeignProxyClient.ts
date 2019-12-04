@@ -10,17 +10,17 @@ export interface FeignProxyClient extends FeignClient {
 
 
     /**
-     * 服务方法的名称或者是访问路径
+     * service name or access path
      */
     readonly serviceName: () => string;
 
     /**
-     * feign的代理配置
+     * feign proxy options
      */
     readonly feignOptions: () => FeignOptions;
 
     /**
-     * feign configuration
+     * get feign configuration
      */
     readonly feignConfiguration: () => FeignConfiguration;
 

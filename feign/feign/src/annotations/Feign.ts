@@ -78,26 +78,17 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                 return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
             }
 
-            /**
-             * 服务名称
-             */
+
             readonly serviceName = () => {
                 return this._serviceName
             };
 
-
-            /**
-             * feign代理的相关配置
-             */
             readonly feignOptions = () => {
                 return this._feignOptions;
             };
 
             readonly feignConfiguration = () => {
                 const feignOptions = this._feignOptions;
-                if (feignOptions == null) {
-                    return null;
-                }
                 const configuration = feignOptions.configuration;
                 if (configuration == null) {
                     throw new Error("feign configuration is null or not register");
