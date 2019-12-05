@@ -151,13 +151,15 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         } else if (typeof options === "function") {
             storageUpdateStrategy = options;
             refresh = true;
-        } else {
+        } else if (typeof options === "function") {
             const {onInvalidRefresh, onRejectRefresh} = options;
             if (onInvalidRefresh) {
                 refresh = error === StorageStatus.INVALID;
             } else if (onRejectRefresh) {
                 refresh = true;
             }
+        } else {
+
         }
         if (!refresh) {
             return Promise.reject(error);

@@ -1,9 +1,18 @@
 import {RuleItem} from 'async-validator';
 
 
-export type ValidatorDescriptor<T> = {
+type ValidatorDescriptorAll<T> = {
 
     [key in keyof T]: RuleItem;
+}
+export type ValidatorDescriptor<T> = Partial<ValidatorDescriptorAll<T>>;
+
+export interface ValidateInvokeOptions {
+
+    /**
+     * default true
+     */
+    useToast?: boolean;
 }
 
 /**
@@ -12,5 +21,11 @@ export type ValidatorDescriptor<T> = {
 export interface ClientRequestDataValidator {
 
 
-    validate: <T>(requestData: T, descriptor: ValidatorDescriptor<T>) => Promise<T>;
+    /**
+     *
+     * @param requestData  validate data source
+     * @param descriptor   validate rule desc
+     * @param options      invoke options
+     */
+    validate: <T>(requestData: T, descriptor: ValidatorDescriptor<T>, options?: ValidateInvokeOptions | false) => Promise<T>;
 }

@@ -42,4 +42,9 @@ export interface FeignConfiguration {
      * get default feign request context options
      */
     getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
+
+    // /**
+    //  *get feign UI toast
+    //  */
+    // getFeignUIToast?: () => FeignUIToast;
 }

@@ -15,7 +15,7 @@ import DateEncoder from "../codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 
 import * as log4js from "log4js";
-import UnifiedTransformDataExecutorInterceptor from "../ui/UnifiedTransformDataExecutorInterceptor";
+import UnifiedFailureToastExecutorInterceptor from "../ui/UnifiedFailureToastExecutorInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -104,11 +104,17 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 new DateEncoder()
             ], []),
 
-            new UnifiedTransformDataExecutorInterceptor((response) => {
+            new UnifiedFailureToastExecutorInterceptor((response) => {
                 console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
             })
         ]
     };
+
+    getFeignUIToast = () => {
+        return (message: string) => {
+            logger.info("--ui toast--->", message);
+        }
+    }
 
 
 }

@@ -2,6 +2,7 @@ import {DataObfuscationOptions} from "./annotations/security/DataObfuscation";
 import {ResponseExtractor} from "./template/ResponseExtractor";
 import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
+import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
 
 
 export interface FeignRequestBaseOptions {
@@ -131,6 +132,11 @@ export interface DataOptions {
      * 数据混淆配置
      */
     dataObfuscationOptions?: DataObfuscationOptions;
+
+    /**
+     * 数据验证调用时的配置
+     */
+    validateInvokeOptions?: ValidateInvokeOptions | false
 
     /**
      * 响应数据抓取

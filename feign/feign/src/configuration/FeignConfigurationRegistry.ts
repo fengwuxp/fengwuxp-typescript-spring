@@ -17,7 +17,7 @@ const registry = {
 
 
     setDefaultFeignConfiguration(configuration: FeignConfiguration) {
-        console.log("set default configuration", configuration);
+        // console.log("set default configuration", configuration);
         DEFAULT_CONFIGURATION = configuration;
     },
 

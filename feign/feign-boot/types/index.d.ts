@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, HttpRequest, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, FeignRequestBaseOptions, HttpAdapter, HttpMediaType, ApiSignatureStrategy } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, HttpRequest, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, FeignRequestBaseOptions, HttpAdapter, HttpMediaType, ApiSignatureStrategy, FeignUIToast } from 'fengwuxp-typescript-feign';
 
 declare abstract class InterceptorRegistration {
     protected includePatterns: string[];
@@ -77,6 +77,10 @@ interface FeignConfigurationAdapter {
      * api signature
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
+    /**
+     * feign ui toast
+     */
+    feignUIToast?: () => FeignUIToast;
 }
 
 declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => void;

@@ -1,6 +1,6 @@
 import {HttpRequest, NoneNetworkFailBack} from "..";
-import {NotNetworkToast} from "../ui/FeignUIToast";
 import {MOCK_NETWORK_FAILURE_RESPONSE} from "./NoneNetworkFailBack";
+import FeignUIToastHolder from "../ui/FeignUIToast";
 
 /**
  * default network fail back
@@ -9,12 +9,10 @@ import {MOCK_NETWORK_FAILURE_RESPONSE} from "./NoneNetworkFailBack";
  */
 export default class DefaultNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
 
+    private onNetworkCloseMessage: string;
 
-    private toast: NotNetworkToast;
-
-
-    constructor(toast?: NotNetworkToast) {
-        this.toast = toast;
+    constructor(onNetworkCloseMessage?: string) {
+        this.onNetworkCloseMessage = onNetworkCloseMessage || "网络不可用";
     }
 
     onNetworkActive = () => {
@@ -22,7 +20,7 @@ export default class DefaultNoneNetworkFailBack<T extends HttpRequest = HttpRequ
     };
 
     onNetworkClose = <T>(request: T) => {
-        this.toast && this.toast();
+        FeignUIToastHolder.getFeignUIToast().toast(this.onNetworkCloseMessage);
         return Promise.reject(MOCK_NETWORK_FAILURE_RESPONSE);
     };
 

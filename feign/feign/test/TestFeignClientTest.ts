@@ -2,6 +2,7 @@ import * as log4js from "log4js";
 import TestFeignClient from "./TestFeignClient";
 import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationRegistry";
 import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
+import ClientRequestDataValidatorHolder from "../src/validator/ClientRequestDataValidatorHolder";
 
 
 const logger = log4js.getLogger();
@@ -23,11 +24,28 @@ describe("test feign client", () => {
     test("test feign client", async () => {
 
         try {
-            const result = await testFeignClient.findMember({
+
+            // const result = await testFeignClient.findMember({
+            //     name: "张三",
+            //     userName: "1",
+            //     memberId: 0
+            // });
+            const result = await ClientRequestDataValidatorHolder.validate({
                 name: "张三",
                 userName: "1",
                 memberId: 1
-            });
+            }, {
+                name: {
+                    required: true
+                },
+                memberId: {
+                    message: "用户不能为空",
+                    min: 1,
+                    required: true
+                }
+            }, false).catch(e => {
+                return Promise.reject(e);
+            }).then(testFeignClient.findMember);
             console.log("http result", result);
         } catch (e) {
             logger.error(e)

@@ -5,7 +5,8 @@ import {
     FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
-    RestTemplate
+    RestTemplate,
+    FeignUIToastHolder
 } from "fengwuxp-typescript-feign";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
@@ -52,4 +53,9 @@ export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignCo
 
     const configuration = genConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
+
+    if (feignConfigurationAdapter.feignUIToast) {
+        // set feignUIToast
+        FeignUIToastHolder.setFeignUIToast(feignConfigurationAdapter.feignUIToast())
+    }
 };

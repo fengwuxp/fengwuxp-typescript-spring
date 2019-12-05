@@ -26,6 +26,7 @@ const getConfig = (isProd) => {
             "core-js",
             "@babel/runtime-corejs3",
             "reflect-metadata",
+            "async-validator",
             "xregexp",
             "xregexp-quotemeta",
             "querystring",

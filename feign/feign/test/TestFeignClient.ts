@@ -8,7 +8,14 @@ import {HttpMethod} from "../src";
 import {FeignRequestOptions} from "../src";
 import {DeleteMapping} from "../src";
 import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
+import {ValidateSchema} from '../src/annotations/validator/VailidatorSchema';
 
+
+type FindMemberRequest = {
+    name: string,
+    userName: string,
+    memberId: number,
+};
 
 @Feign({
     value: "/test",
@@ -46,12 +53,14 @@ export default class TestFeignClient {
         headers: {myHeader: "tk_{memberId}"},
         produces: [HttpMediaType.APPLICATION_JSON_UTF8]
     })
+    @ValidateSchema<FindMemberRequest>({
+        memberId: {
+            required: true,
+            min: 1
+        }
+    })
     findMember: (
-        request: {
-            name: string,
-            userName: string,
-            memberId: number,
-        },
+        request: FindMemberRequest,
         options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: ["memberId"]})

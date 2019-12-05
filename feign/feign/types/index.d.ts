@@ -1,4 +1,6 @@
 /// <reference types="node" />
+/// <reference types="async-validator" />
+import { RuleItem } from 'async-validator';
 import { DateFormatType } from 'fengwuxp-common-utils/lib/date/DateFormatUtils';
 import { PathMatcher } from 'fengwuxp-common-utils/src/match/PathMatcher';
 import { ParsedUrlQueryInput } from 'querystring';
@@ -507,6 +509,34 @@ declare type QueryParamType = Record<string, boolean | number | string | Date | 
  */
 declare type UriVariable = UriPathVariable | QueryParamType;
 
+declare type ValidatorDescriptorAll<T> = {
+    [key in keyof T]: RuleItem;
+};
+declare type ValidatorDescriptor<T> = Partial<ValidatorDescriptorAll<T>>;
+interface ValidateInvokeOptions {
+    /**
+     * default true
+     */
+    useToast?: boolean;
+}
+/**
+ * request data validator
+ */
+interface ClientRequestDataValidator {
+    /**
+     *
+     * @param requestData  validate data source
+     * @param descriptor   validate rule desc
+     * @param options      invoke options
+     */
+    validate: <T>(requestData: T, descriptor: ValidatorDescriptor<T>, options?: ValidateInvokeOptions | false) => Promise<T>;
+}
+
+/**
+ * 需要自动上传配置
+ */
+declare type ValidateSchemaOptions<T> = ValidatorDescriptor<T>;
+
 /**
  * feign的代理相关配置
  */
@@ -535,6 +565,10 @@ interface FeignClientMethodConfig {
      * 数据混淆配置
      */
     dataObfuscationOptions?: DataObfuscationOptions;
+    /**
+     * 数据验证配置
+     */
+    validateSchemaOptions?: ValidateSchemaOptions<any>;
 }
 
 /**
@@ -734,6 +768,10 @@ interface DataOptions {
      */
     dataObfuscationOptions?: DataObfuscationOptions;
     /**
+     * 数据验证调用时的配置
+     */
+    validateInvokeOptions?: ValidateInvokeOptions | false;
+    /**
      * 响应数据抓取
      */
     responseExtractor?: ResponseExtractor;
@@ -761,13 +799,19 @@ interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = Fei
      * @param options feign request options
      * @return new options
      */
-    preHandle: (options: T) => T | Promise<T>;
+    preHandle?: (options: T) => T | Promise<T>;
     /**
      * in request after invoke
      * @param options
      * @param response
      */
-    postHandle: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
+    postHandle?: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
+    /**
+     * in request failure invoke
+     * @param options
+     * @param response
+     */
+    postError?: (options: T, response: HttpResponse<any>) => Promise<any> | any;
 }
 
 /**
@@ -983,23 +1027,13 @@ declare class NetworkClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
 }
 
 /**
- * handle network failure toast
- */
-declare type NotNetworkToast = () => void;
-/**
- * unified failure toast
- * @param response
- */
-declare type UnifiedFailureToast = (response: HttpResponse) => void | Promise<void>;
-
-/**
  * default network fail back
  *
  * Prompt only when the network is unavailable and return a simulated request failure result
  */
 declare class DefaultNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
-    private toast;
-    constructor(toast?: NotNetworkToast);
+    private onNetworkCloseMessage;
+    constructor(onNetworkCloseMessage?: string);
     onNetworkActive: () => void;
     onNetworkClose: <T_1>(request: T_1) => Promise<never>;
 }
@@ -1179,8 +1213,10 @@ declare abstract class MappedInterceptor {
 declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> extends MappedInterceptor implements FeignClientExecutorInterceptor<T> {
     private feignClientExecutorInterceptor;
     constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
+    preHandle: (options: T) => any;
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => any;
-    preHandle: (options: T) => T | Promise<T>;
+    postError: (options: T, response: HttpResponse<any>) => any;
+    private invokeHandle;
 }
 
 /**
@@ -1358,16 +1394,32 @@ declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = Feig
     constructor(progressBar: RequestProgressBar, progressBarOptions?: ProgressBarOptions);
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => E;
     preHandle: (options: T) => Promise<T>;
+    postError: (options: T, response: HttpResponse<any>) => Promise<HttpResponse<any>>;
 }
 
 /**
- * unified transform data
+ * unified failure toast
+ * @param response
  */
-declare class UnifiedTransformDataExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
+declare type UnifiedFailureToast = (response: HttpResponse) => void | Promise<void>;
+declare type FeignUIToastFunction = (message: string) => Promise<void> | void;
+interface FeignUIToastInterface {
+    toast: FeignUIToastFunction;
+}
+declare type FeignUIToast = FeignUIToastFunction | FeignUIToastInterface;
+declare class FeignUIToastHolder {
+    static feignUIToast: FeignUIToast;
+    static getFeignUIToast: () => FeignUIToastInterface;
+    static setFeignUIToast: (feignUIToast: FeignUIToast) => FeignUIToast;
+}
+
+/**
+ * unified transform failure toast
+ */
+declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
     protected unifiedFailureToast: UnifiedFailureToast;
     constructor(unifiedFailureToast?: UnifiedFailureToast);
-    postHandle: <E = HttpResponse<any>>(options: T, response: any) => any;
-    preHandle: <T_1>(options: T_1) => T_1;
+    postError: (options: T, response: HttpResponse<any>) => HttpResponse<any> | Promise<never>;
     protected tryToast: (options: T, response: HttpResponse<any>) => void;
 }
 
@@ -1404,7 +1456,17 @@ declare const queryStringify: (obj: ParsedUrlQueryInput, filterNoneValue?: boole
  * invoke a single function interface
  * @param handle
  */
-declare const invokeFunctionInterface: <T, I>(handle: T) => I;
+declare const invokeFunctionInterface: <T, I>(handle: T | I) => I;
+
+declare class AsyncClientRequestDataValidator implements ClientRequestDataValidator {
+    validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: false | ValidateInvokeOptions) => Promise<T>;
+}
+
+declare class ClientRequestDataValidatorHolder {
+    private static clientRequestDataValidator;
+    static setClientRequestDataValidator: (clientRequestDataValidator: ClientRequestDataValidator) => void;
+    static validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: false | ValidateInvokeOptions) => Promise<T>;
+}
 
 declare class DefaultFeignClientBuilder implements FeignClientBuilderInterface {
     build: FeignClientBuilderFunction<FeignProxyClient>;
@@ -1426,6 +1488,8 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
     private preHandle;
     private postHandle;
+    private postHandleError;
+    private getInterceptorHandle;
 }
 
 /**
@@ -1450,4 +1514,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractHttpClient, ApiSignatureStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FileUpload, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, NotNetworkToast, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UIOptions, UnifiedFailureToast, UnifiedTransformDataExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchUrlPathVariable, mediaTypeIsEq, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractHttpClient, ApiSignatureStrategy, AsyncClientRequestDataValidator, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNetworkStatusListener, UIOptions, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, ValidateInvokeOptions, ValidatorDescriptor, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchUrlPathVariable, mediaTypeIsEq, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };

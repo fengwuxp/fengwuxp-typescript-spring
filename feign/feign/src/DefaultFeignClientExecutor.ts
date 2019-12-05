@@ -14,6 +14,7 @@ import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
+import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 
 /**
  * default feign client executor
@@ -82,6 +83,18 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         //original parameter
         const originalParameter = args[0] || {};
+
+        //requestMapping
+        const {requestMapping, signature, retryOptions, validateSchemaOptions} = apiService.getFeignMethodConfig(methodName);
+        if (validateSchemaOptions != null) {
+            try { // request data validate
+                await ClientRequestDataValidatorHolder.validate(originalParameter, validateSchemaOptions);
+            } catch (e) {
+                // validate error
+                return Promise.reject(e);
+            }
+        }
+
         let feignRequestOptions: FeignRequestOptions = {
             ...args[1],
             ...defaultRequestContextOptions
@@ -91,8 +104,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
 
-        //requestMapping
-        const {requestMapping, signature, retryOptions} = apiService.getFeignMethodConfig(methodName);
+
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
         const requestSupportRequestBody = supportRequestBody(requestMapping.method);

@@ -3,6 +3,7 @@ import {SignatureOptions} from "../annotations/security/Signature";
 import {DataObfuscationOptions} from "../annotations/security/DataObfuscation";
 import {HttpRetryOptions} from "../client/HttpRetryOptions";
 import {AutoFileUploadOptions} from "../annotations/upload/FileUpload";
+import {ValidateSchemaOptions} from "../annotations/validator/VailidatorSchema";
 
 /**
  * feign的代理相关配置
@@ -39,4 +40,9 @@ export interface FeignClientMethodConfig {
      * 数据混淆配置
      */
     dataObfuscationOptions?: DataObfuscationOptions;
+
+    /**
+     * 数据验证配置
+     */
+    validateSchemaOptions?: ValidateSchemaOptions<any>;
 }

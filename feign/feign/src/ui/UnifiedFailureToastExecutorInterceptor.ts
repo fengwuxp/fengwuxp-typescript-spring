@@ -4,9 +4,9 @@ import {HttpResponse} from "../client/HttpResponse";
 import {UnifiedFailureToast} from "./FeignUIToast";
 
 /**
- * unified transform data
+ * unified transform failure toast
  */
-export default class UnifiedTransformDataExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions>
+export default class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions>
     implements FeignClientExecutorInterceptor<T> {
 
     protected unifiedFailureToast: UnifiedFailureToast;
