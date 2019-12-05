@@ -8,6 +8,7 @@ import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
+import {MOCK_NETWORK_FAILURE_TEXT} from "../network/NoneNetworkFailBack";
 
 /**
  * default http client
@@ -19,7 +20,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
     constructor(httpAdapter: HttpAdapter<T>,
                 defaultProduce?: HttpMediaType,
                 interceptors?: Array<ClientHttpRequestInterceptor<T>>) {
-        super(httpAdapter, defaultProduce , interceptors);
+        super(httpAdapter, defaultProduce, interceptors);
     }
 
     send = async (req: T): Promise<HttpResponse> => {
@@ -43,6 +44,17 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
             } catch (e) {
                 // error ignore
                 console.error("http request interceptor handle exception", e);
+                // Interrupt request
+                if (e != null && e.statusCode != null && e.ok !== null) {
+                    return Promise.reject(e);
+                }
+                //  mock error response
+                return Promise.reject({
+                    ok: false,
+                    statusCode: 500,
+                    statusText: null,
+                    data: e
+                });
             }
         }
 

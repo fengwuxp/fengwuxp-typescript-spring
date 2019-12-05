@@ -1,6 +1,5 @@
 import {ClientRequestDataValidator, ValidateInvokeOptions, ValidatorDescriptor} from "./ClientRequestDataValidator";
 import AsyncClientRequestDataValidator from "./AsyncClientRequestDataValidator";
-import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import FeignUIToastHolder, {FeignUIToast, FeignUIToastFunction, FeignUIToastInterface} from "../ui/FeignUIToast";
 import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";

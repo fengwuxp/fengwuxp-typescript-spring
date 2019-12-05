@@ -9,21 +9,30 @@ import {HttpRequest} from "../client/HttpRequest";
 import NetworkClientHttpRequestInterceptor from "../network/NetworkClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "../network/NetworkStatusListener";
 import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
-import {ProgressBarOptions} from "../FeignRequestOptions";
+import {ProgressBarOptions, FeignRequestContextOptions} from "../FeignRequestOptions";
 import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
 import DateEncoder from "../codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 
 import * as log4js from "log4js";
 import UnifiedFailureToastExecutorInterceptor from "../ui/UnifiedFailureToastExecutorInterceptor";
+import AuthenticationClientHttpRequestInterceptor, {AuthenticationToken} from "../client/AuthenticationClientHttpRequestInterceptor";
+import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
+import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
+import {RequestURLResolver} from '../resolve/url/RequestURLResolver';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
+let refreshTokenCount = 0;
 
 /**
  * mock feign configuration
  */
 export class MockFeignConfiguration implements FeignConfiguration {
+    getApiSignatureStrategy: () => ApiSignatureStrategy;
+    getDefaultFeignRequestContextOptions: () => FeignRequestContextOptions;
+    getRequestHeaderResolver: () => RequestHeaderResolver;
+    getRequestURLResolver: () => RequestURLResolver;
 
     private baseUrl: string;
 
@@ -40,6 +49,11 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getHttpClient = <T extends HttpRequest = HttpRequest>() => {
         const httpClient = new DefaultHttpClient(this.getHttpAdapter());
+        const authenticationToken = {
+            authorization: "123",
+            expireDate: new Date().getTime() + 2 * 60 * 1000
+        };
+
         const interceptors = [
             new NetworkClientHttpRequestInterceptor<T>(new class implements NetworkStatusListener {
 
@@ -82,7 +96,32 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 }
 
             }),
-            new RoutingClientHttpRequestInterceptor(this.baseUrl)
+            new RoutingClientHttpRequestInterceptor(this.baseUrl),
+            new AuthenticationClientHttpRequestInterceptor({
+                getAuthorization: (req): AuthenticationToken => {
+
+                    return authenticationToken
+                },
+                refreshAuthorization: (authorization, req) => {
+                    ++refreshTokenCount;
+                    console.log("--refresh token->", refreshTokenCount, authenticationToken);
+                    const _newAuthenticationToken = {
+                        ...authenticationToken
+                    };
+                    _newAuthenticationToken.authorization = "refresh-token";
+                    _newAuthenticationToken.expireDate = new Date().getTime() + 60 * 60 * 1000;
+                    authorization = _newAuthenticationToken;
+                    return new Promise((resolve, reject) => {
+                        setTimeout(() => {
+                            resolve(_newAuthenticationToken)
+                        }, 10 * 1000);
+                    });
+                },
+                appendAuthorizationHeader: (authorization, header) => {
+                    header["Authorization"] = authorization.authorization;
+                    return header;
+                }
+            })
         ];
         httpClient.setInterceptors(interceptors);
         return httpClient;

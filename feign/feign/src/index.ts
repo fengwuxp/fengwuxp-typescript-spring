@@ -23,6 +23,9 @@ export {HttpResponse} from "./client/HttpResponse";
 export {HttpRetryOptions} from "./client/HttpRetryOptions";
 export {default as RetryHttpClient} from "./client/RetryHttpClient";
 export {default as RoutingClientHttpRequestInterceptor} from "./client/RoutingClientHttpRequestInterceptor";
+export {
+    default as AuthenticationClientHttpRequestInterceptor, AuthenticationToken, AuthenticationStrategy
+} from "./client/AuthenticationClientHttpRequestInterceptor";
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
 export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";
