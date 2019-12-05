@@ -52,7 +52,7 @@ describe("test path match", () => {
         match('/path/**', ['http://abc.d/path/x/y/z/xyz', '/paths/x/y/z/xyy']);
         match('/**/path', ['http://abc.d/abc/path', '/abc/path1','/abc/path/2']);
         match('/**/path/**', ['http://abc.d/abc/path/test', '/abc/path1/hhh','/abc/path']);
-        match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
+        match('/api/**/user/refreshToken', ['http://abc.d/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
     })
 });
 

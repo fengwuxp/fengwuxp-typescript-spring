@@ -2,7 +2,7 @@
 /// <reference types="async-validator" />
 import { RuleItem } from 'async-validator';
 import { DateFormatType } from 'fengwuxp-common-utils/lib/date/DateFormatUtils';
-import { PathMatcher } from 'fengwuxp-common-utils/src/match/PathMatcher';
+import { PathMatcher } from 'fengwuxp-common-utils/lib/match/PathMatcher';
 import { ParsedUrlQueryInput } from 'querystring';
 
 /**
@@ -955,7 +955,15 @@ interface AuthenticationToken {
     authorization: string;
     expireDate: number;
 }
+/**
+ * authentication strategy
+ */
 interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
+    /**
+     * get authorization header names
+     * default :['Authorization']
+     */
+    getAuthorizationHeaderNames?: () => Array<string>;
     getAuthorization: (req: Readonly<HttpRequest>) => Promise<T> | T;
     refreshAuthorization: (authorization: T, req: Readonly<HttpRequest>) => Promise<T> | T;
     appendAuthorizationHeader: (authorization: T, headers: Record<string, string>) => Record<string, string>;
@@ -980,6 +988,17 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
     private blockingRefreshAuthorization;
     constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean);
     interceptor: (req: T) => Promise<T>;
+    /**
+     * append authorization header
+     * @param authorization
+     * @param headers
+     */
+    private appendAuthorizationHeader;
+    /**
+     * need append authorization header
+     * @param headers
+     */
+    private needAppendAuthorizationHeader;
 }
 
 /**

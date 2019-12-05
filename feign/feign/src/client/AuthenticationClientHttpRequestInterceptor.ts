@@ -11,8 +11,16 @@ export interface AuthenticationToken {
 
 }
 
-
+/**
+ * authentication strategy
+ */
 export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
+
+    /**
+     * get authorization header names
+     * default :['Authorization']
+     */
+    getAuthorizationHeaderNames?: () => Array<string>;
 
     getAuthorization: (req: Readonly<HttpRequest>) => Promise<T> | T;
 
@@ -58,6 +66,11 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
+        if (!this.needAppendAuthorizationHeader(req.headers)) {
+            // Prevent recursion on refresh
+            return req;
+        }
+
         const {aheadOfTimes, blockingRefreshAuthorization, authenticationStrategy} = this;
         let authorization: AuthenticationToken;
         try {
@@ -71,7 +84,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         const needRefreshAuthorization = authorization.expireDate < new Date().getTime() + aheadOfTimes;
         if (!needRefreshAuthorization) {
-            req.headers = authenticationStrategy.appendAuthorizationHeader(authorization, req.headers);
+            req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;
         }
 
@@ -114,17 +127,41 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                     if (error) {
                         reject(error);
                     } else {
-                        request.headers = authenticationStrategy.appendAuthorizationHeader(authorization, request.headers);
+                        request.headers = this.appendAuthorizationHeader(authorization, request.headers);
                         resolve(request);
                     }
                 });
             }
         }
 
-        req.headers = authenticationStrategy.appendAuthorizationHeader(authorization, req.headers);
+        req.headers = this.appendAuthorizationHeader(authorization, req.headers);
         return req;
 
     };
 
+    /**
+     * append authorization header
+     * @param authorization
+     * @param headers
+     */
+    private appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
+
+        return this.authenticationStrategy.appendAuthorizationHeader(authorization, headers);
+    };
+
+    /**
+     * need append authorization header
+     * @param headers
+     */
+    private needAppendAuthorizationHeader = (headers: Record<string, string>) => {
+        const authorizationHeaderNames = this.authenticationStrategy.getAuthorizationHeaderNames;
+        const headerNames = authorizationHeaderNames ? authorizationHeaderNames() : ["Authorization"];
+        const count = headerNames.map((headerName) => {
+            return headers[headerName] != null ? 1 : 0;
+        }).reduce((prev, current) => {
+            return prev + current;
+        }, 0);
+        return count !== headerNames.length;
+    }
 
 }

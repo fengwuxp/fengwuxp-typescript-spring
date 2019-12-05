@@ -120,6 +120,9 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 appendAuthorizationHeader: (authorization, header) => {
                     header["Authorization"] = authorization.authorization;
                     return header;
+                },
+                getAuthorizationHeaderNames: () => {
+                    return ["Authorization"]
                 }
             })
         ];

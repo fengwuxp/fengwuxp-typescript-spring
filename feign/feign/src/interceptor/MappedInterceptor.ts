@@ -1,7 +1,7 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {HttpRequest} from "../client/HttpRequest";
-import SimplePathMatcher from "fengwuxp-common-utils/src/match/SimplePathMatcher";
-import {PathMatcher} from "fengwuxp-common-utils/src/match/PathMatcher";
+import SimplePathMatcher from "fengwuxp-common-utils/lib/match/SimplePathMatcher";
+import {PathMatcher} from "fengwuxp-common-utils/lib/match/PathMatcher";
 
 interface HttpHeader {
     name: string;
