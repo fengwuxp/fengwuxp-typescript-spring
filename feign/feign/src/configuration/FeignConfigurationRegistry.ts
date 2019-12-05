@@ -22,7 +22,7 @@ const registry = {
     },
 
     getDefaultFeignConfiguration(): FeignConfiguration {
-        console.log("get default configuration", DEFAULT_CONFIGURATION);
+        // console.log("get default configuration", DEFAULT_CONFIGURATION);
         return DEFAULT_CONFIGURATION;
     },
 
