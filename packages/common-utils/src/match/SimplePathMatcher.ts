@@ -36,18 +36,19 @@ export default class SimplePathMatcher implements PathMatcher {
         let regExpString = strings
             .map((str, index) => {
                 if (str === "**") {
-                    return "\\w*";
+                    // 匹配任意字符
+                    return "(.*?)";
                 }
-                if (endWithSeparator || index < strings.length - 1) {
-                    return `${DEFAULT_PATH_SEPARATOR}${str}${DEFAULT_PATH_SEPARATOR}`;
+                if (!endWithSeparator && index === strings.length - 1) {
+                    return `${DEFAULT_PATH_SEPARATOR}${str}`;
                 }
-                return `${DEFAULT_PATH_SEPARATOR}${str}`;
+                return `${DEFAULT_PATH_SEPARATOR}${str}${DEFAULT_PATH_SEPARATOR}`;
             }).join("");
+        regExpString = regExpString.replace(new RegExp(`${DEFAULT_PATH_SEPARATOR}${DEFAULT_PATH_SEPARATOR}`, 'g'), DEFAULT_PATH_SEPARATOR);
         if (!endWithWildcard) {
             regExpString = `${regExpString}$`;
         }
         const regExp = new RegExp(regExpString, fullMatch ? "gi" : "i");
-        // console.log("regExpString", regExpString, regExp, path);
         return regExp.test(path);
     }
 

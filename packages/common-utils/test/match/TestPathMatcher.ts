@@ -21,20 +21,21 @@ describe("test path match", () => {
             }));
         }
 
-        match('/path/**/?z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
-        match('/path/**/*z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
-        match('/foo/{id}/bar', ['/foo/1/bar', '/foo/ss/bar', '/foo/1/2/bar']);
-        match('/app/*.x', ['/app/a.x', '/app/a.b']);
-        match('/app/p?ttern', ['/app/pXttern', '/app/pattern', '/app/pttern']);
-        match('/**/example', ['/app/example', '/app/foo/example', '/example', '/app/foo/example1']);
-        match('/app/**/dir/file.', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
-        match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
-        match('/app/**', ['/app/dir/file', '/app/foo/dir/file.html']);
-
-        match('/foo/{id}/bar', ['/foo/1/bar']);
-        match('/**/example', ['/app/foo/example1']);
-        match('/app/**/example', ["/app/foo/example", "/cpp/foo/example", '/app/foo/example1']);
-        match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
+        // match('/path/**/?z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
+        // match('/path/**/*z', ['/path/x/y/z/xyz', '/path/x/y/z/xyy']);
+        // match('/foo/{id}/bar', ['/foo/1/bar', '/foo/ss/bar', '/foo/1/2/bar']);
+        // match('/app/*.x', ['/app/a.x', '/app/a.b']);
+        // match('/app/p?ttern', ['/app/pXttern', '/app/pattern', '/app/pttern']);
+        // match('/**/example', ['/app/example', '/app/foo/example', '/example', '/app/foo/example1']);
+        // match('/app/**/dir/file.', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
+        // match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
+        // match('/app/**', ['/app/dir/file', '/app/foo/dir/file.html']);
+        //
+        // match('/foo/{id}/bar', ['/foo/1/bar']);
+        // match('/**/example', ['/app/foo/example1']);
+        // match('/app/**/example', ["/app/foo/example", "/cpp/foo/example", '/app/foo/example1']);
+        // match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
+        match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
 
     });
 
@@ -51,6 +52,7 @@ describe("test path match", () => {
         match('/path/**', ['http://abc.d/path/x/y/z/xyz', '/paths/x/y/z/xyy']);
         match('/**/path', ['http://abc.d/abc/path', '/abc/path1','/abc/path/2']);
         match('/**/path/**', ['http://abc.d/abc/path/test', '/abc/path1/hhh','/abc/path']);
+        match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
     })
 });
 
