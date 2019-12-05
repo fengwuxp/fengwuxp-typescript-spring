@@ -261,6 +261,9 @@ interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequ
  *  Intercept the given request, and return a response
  */
 declare type ClientHttpRequestInterceptorFunction<T extends HttpRequest = HttpRequest> = (req: T) => Promise<T>;
+/**
+ * Throw an exception or Promise.reject will interrupt the request
+ */
 declare type ClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> = ClientHttpRequestInterceptorFunction<T> | ClientHttpRequestInterceptorInterface<T>;
 
 /**
