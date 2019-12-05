@@ -29,7 +29,7 @@ export default class MockHttpAdapter implements HttpAdapter {
 
     send = (req: HttpRequest): Promise<HttpResponse> => {
         console.log("mock http adapter", req);
-        const {url,headers} = req;
+        const {url, headers} = req;
         if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type
             // @see {@link https://segmentfault.com/a/1190000010205162}
@@ -38,7 +38,9 @@ export default class MockHttpAdapter implements HttpAdapter {
 
         const key = url.split("?")[0].replace(this.baseUrl, "");
         const result: MockDataType = this.mockDataSource[key];
-        if (result == null) {
+        // const isFailure = new Date().getDate() % 2 == 0
+        const isFailure = result == null;
+        if (isFailure) {
             const response: Response = {
                 status: 404,
                 statusText: "Not Found",
@@ -48,13 +50,23 @@ export default class MockHttpAdapter implements HttpAdapter {
                 headers: null
             } as any;
             return Promise.reject(this.resolveHttpResponse.resolve(response));
+        } else {
+            return Promise.resolve(this.resolveHttpResponse.resolve({
+                status: 200,
+                statusText: null,
+                data: req,
+                ok: true,
+                url,
+                redirected: null,
+                headers: null
+            }));
         }
 
-        if (typeof result === "function") {
-            return result(req);
-        }
-
-        return Promise.resolve(result);
+        // if (typeof result === "function") {
+        //     return result(req);
+        // }
+        //
+        // return Promise.resolve(result);
     };
 
 

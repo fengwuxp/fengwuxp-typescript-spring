@@ -5,7 +5,6 @@ import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {FeignClientBuilder, FeignClientBuilderInterface} from "../FeignClientBuilder";
-import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 import "reflect-metadata";
 
 export interface FeignOptions {
@@ -94,19 +93,20 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                     throw new Error("feign configuration is null or not register");
                 }
                 if (!Array.isArray(configuration)) {
-
                     return configuration;
                 }
                 const isEmpty = configuration.filter(item => item != null).length === 0;
                 if (isEmpty) {
                     throw new Error("feign configuration is empty array");
                 }
-                return configuration.reduce(((previousValue, currentValue) => {
+                const feignConfiguration = configuration.reduce(((previousValue, currentValue) => {
                     return {
                         ...previousValue,
                         ...currentValue
                     };
                 }), {} as FeignConfiguration);
+                this._feignOptions.configuration = feignConfiguration;
+                return feignConfiguration;
 
             };
 

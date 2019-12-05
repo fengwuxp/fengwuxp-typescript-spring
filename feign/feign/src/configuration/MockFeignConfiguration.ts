@@ -15,6 +15,7 @@ import DateEncoder from "../codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 
 import * as log4js from "log4js";
+import UnifiedTransformDataExecutorInterceptor from "../ui/UnifiedTransformDataExecutorInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -101,7 +102,11 @@ export class MockFeignConfiguration implements FeignConfiguration {
             }),
             new CodecFeignClientExecutorInterceptor([
                 new DateEncoder()
-            ], [])
+            ], []),
+
+            new UnifiedTransformDataExecutorInterceptor((response) => {
+                console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
+            })
         ]
     };
 

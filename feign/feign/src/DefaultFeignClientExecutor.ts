@@ -13,7 +13,7 @@ import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClien
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
-import {FeignConfiguration} from "./configuration/FeignConfiguration";
+import {HttpResponse} from 'client/HttpResponse';
 
 /**
  * default feign client executor
@@ -110,6 +110,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         if (feignRequestOptions.responseExtractor == null) {
+            // get response extractor
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
 
@@ -148,7 +149,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             }
         } catch (e) {
             // Non-2xx response
-            const result = await this.postHandle(requestURL, requestMapping, feignRequestOptions, e);
+            const result = await this.postHandleError(requestURL, requestMapping, feignRequestOptions, e as any);
             return Promise.reject(result);
         }
 
@@ -164,17 +165,13 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         let result: FeignRequestBaseOptions = options, len = feignClientExecutorInterceptors.length, index = 0;
         while (index < len) {
             const feignClientExecutorInterceptor = feignClientExecutorInterceptors[index];
-            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
-                if (!feignClientExecutorInterceptor.matches({
-                    url,
-                    method: requestMapping.method,
-                    headers: requestMapping.headers,
-                    timeout: requestMapping.timeout
-                })) {
-                    continue;
-                }
-            }
-            result = await feignClientExecutorInterceptor.preHandle(result);
+            const handle = this.getInterceptorHandle(
+                feignClientExecutorInterceptor,
+                feignClientExecutorInterceptor.preHandle,
+                () => options,
+                url,
+                requestMapping);
+            result = await handle(result);
             index++;
         }
 
@@ -186,22 +183,66 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         let result: any = response, len = feignClientExecutorInterceptors.length, index = 0;
         while (index < len) {
             const feignClientExecutorInterceptor = feignClientExecutorInterceptors[index];
-            if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
-                if (!feignClientExecutorInterceptor.matches({
-                    url,
-                    method: requestMapping.method,
-                    headers: requestMapping.headers,
-                    timeout: requestMapping.timeout
-                })) {
-                    continue;
-                }
-            }
-            result = await feignClientExecutorInterceptor.postHandle(options, result);
+            const handle = this.getInterceptorHandle(
+                feignClientExecutorInterceptor,
+                feignClientExecutorInterceptor.postHandle,
+                () => result,
+                url,
+                requestMapping);
+            result = await handle(options, result);
             index++;
         }
 
         return result;
     };
+
+
+    private postHandleError = async (url: string, requestMapping: RequestMappingOptions, options: FeignRequestBaseOptions, response: HttpResponse<any>) => {
+        const {feignClientExecutorInterceptors} = this;
+        let result: any = response, len = feignClientExecutorInterceptors.length, index = 0;
+        while (index < len) {
+            const feignClientExecutorInterceptor = feignClientExecutorInterceptors[index];
+            const handle = this.getInterceptorHandle(
+                feignClientExecutorInterceptor,
+                feignClientExecutorInterceptor.postError,
+                () => result,
+                url,
+                requestMapping);
+            try {
+                result = await handle(options, result);
+            } catch (e) {
+                result = e;
+            }
+            index++;
+        }
+
+        return Promise.reject(result);
+    };
+
+
+    private getInterceptorHandle = (feignClientExecutorInterceptor,
+                                    handle: Function,
+                                    isNotHandle: Function,
+                                    url: string,
+                                    requestMapping: RequestMappingOptions): Function => {
+        if (typeof handle != "function") {
+            return isNotHandle;
+        }
+
+        if (feignClientExecutorInterceptor instanceof MappedFeignClientExecutorInterceptor) {
+            let isMatch = feignClientExecutorInterceptor.matches({
+                url,
+                method: requestMapping.method,
+                headers: requestMapping.headers,
+                timeout: requestMapping.timeout
+            });
+            if (!isMatch) {
+                return isNotHandle;
+            }
+            return handle;
+        }
+        return handle;
+    }
 
 
 }

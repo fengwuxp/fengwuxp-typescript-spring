@@ -3,7 +3,6 @@ import {FeignRequestBaseOptions} from "../FeignRequestOptions";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {HttpResponse} from "../client/HttpResponse";
-import {HttpRequest} from "../client/HttpRequest";
 
 
 export default class MappedFeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions>
@@ -24,14 +23,26 @@ export default class MappedFeignClientExecutorInterceptor<T extends FeignRequest
 
     }
 
+    preHandle = (options: T) => {
+        return this.invokeHandle(this.feignClientExecutorInterceptor.preHandle, () => options, options);
+    };
+
     postHandle = <E = HttpResponse<any>>(options: T, response: E) => {
 
-        return this.feignClientExecutorInterceptor.postHandle(options, response);
+        return this.invokeHandle(this.feignClientExecutorInterceptor.postHandle, () => response, options, response);
     };
 
-    preHandle = (options: T) => {
-        return this.feignClientExecutorInterceptor.preHandle(options);
+
+    postError = (options: T, response: HttpResponse<any>) => {
+        return this.invokeHandle(this.feignClientExecutorInterceptor.postError, () => response, options, response);
     };
 
+    private invokeHandle = (handle: Function, isNotHandle: Function, ...args) => {
+        if (typeof handle == "function") {
+            return handle(...args);
+        }
+
+        return isNotHandle();
+    }
 
 }

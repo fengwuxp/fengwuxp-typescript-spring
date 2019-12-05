@@ -1,4 +1,3 @@
-
 import {FeignOptions} from "../annotations/Feign";
 import {UriVariable} from "../template/RestOperations";
 

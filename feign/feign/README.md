@@ -16,7 +16,10 @@
       
 #### 支持数据混淆
 - 请求数据混淆
-- 响应数据混淆      
+- 响应数据混淆     
+
+#### 提交前验证
+- [async-validator](https://github.com/yiminghe/async-validator) 
 
 #### 目前的环境变量
       浏览器 

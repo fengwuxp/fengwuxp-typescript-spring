@@ -41,10 +41,11 @@
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
-    "parcel": "^1.12.4"
+    "parcel": "^1.12.4",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
+    "async-validator": "^3.2.2",
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
     "fengwuxp-common-proxy": "^1.0.0",

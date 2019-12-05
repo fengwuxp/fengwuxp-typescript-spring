@@ -1,7 +1,6 @@
 import {FeignClientBuilderFunction, FeignClientBuilderInterface} from "./FeignClientBuilder";
 import {newProxyInstance, ProxyScope} from "fengwuxp-common-proxy";
 import {FeignProxyClient} from "./support/FeignProxyClient";
-import FeignConfigurationRegistry from "./configuration/FeignConfigurationRegistry";
 
 
 export class DefaultFeignClientBuilder implements FeignClientBuilderInterface {

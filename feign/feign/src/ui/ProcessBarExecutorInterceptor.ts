@@ -93,6 +93,10 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         //计数器加一
         ProcessBarExecutorInterceptor.count++;
         return options;
+    };
+
+    postError = async (options: T, response: HttpResponse<any>) => {
+        return this.postHandle(options, response);
     }
 
 

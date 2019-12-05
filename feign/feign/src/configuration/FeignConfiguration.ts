@@ -1,7 +1,6 @@
 import {HttpAdapter} from "../adapter/HttpAdapter";
 import {HttpClient} from "../client/HttpClient";
 import {RestOperations} from "../template/RestOperations";
-import {FeignClientBuilder} from "../FeignClientBuilder";
 import {RequestURLResolver} from "../resolve/url/RequestURLResolver";
 import {RequestHeaderResolver} from "../resolve/header/RequestHeaderResolver";
 import {ApiSignatureStrategy} from "../signature/ApiSignatureStrategy";
@@ -9,7 +8,7 @@ import {FeignProxyClient} from "../support/FeignProxyClient";
 import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
-import {FeignRequestContextOptions, FeignRequestOptions} from '../FeignRequestOptions';
+import {FeignRequestContextOptions} from '../FeignRequestOptions';
 
 /**
  * feign configuration

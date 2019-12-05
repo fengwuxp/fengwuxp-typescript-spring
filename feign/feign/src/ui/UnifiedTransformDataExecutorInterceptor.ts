@@ -16,23 +16,16 @@ export default class UnifiedTransformDataExecutorInterceptor<T extends FeignRequ
         this.unifiedFailureToast = unifiedFailureToast;
     }
 
-    postHandle = <E = HttpResponse>(options: T, response: any) => {
 
+    postError = (options: T, response: HttpResponse<any>) => {
         if (options.useUnifiedTransformResponse === false) {
             return response;
         }
 
-        if (response.ok) {
-            return response.data;
-        }
         this.tryToast(options, response);
-
         return Promise.reject(response);
     };
 
-    preHandle = <T>(options: T) => {
-        return options;
-    };
 
     protected tryToast = (options: T, response: HttpResponse) => {
         if (this.unifiedFailureToast == null) {

@@ -11,15 +11,22 @@ export interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOption
      * @param options feign request options
      * @return new options
      */
-    preHandle: (options: T) => T | Promise<T>;
+    preHandle?: (options: T) => T | Promise<T>;
 
     /**
      * in request after invoke
      * @param options
      * @param response
      */
-    postHandle: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
+    postHandle?: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
 
+
+    /**
+     * in request failure invoke
+     * @param options
+     * @param response
+     */
+    postError?: (options: T, response: HttpResponse<any>) => Promise<any> | any;
 
 }
 

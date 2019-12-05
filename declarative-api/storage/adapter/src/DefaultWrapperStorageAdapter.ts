@@ -137,6 +137,9 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
                                      effectiveTime: number,
                                      lastUpdateTime: number
                                  }) => {
+        if (options == null) {
+            return Promise.reject(error);
+        }
         if (error === StorageStatus.ERROR) {
             return Promise.reject(`error`);
         }
