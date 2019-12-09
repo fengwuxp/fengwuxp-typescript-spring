@@ -48,8 +48,8 @@
     "@types/history": "^4.7.2",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "fengwuxp-declarative-command": "1.0.0",
-    "fengwuxp-declarative-router-adapter": "1.0.0",
+    "fengwuxp-declarative-command": "^1.0.0",
+    "fengwuxp-declarative-router-adapter": "^1.0.0",
     "querystring": "^0.2.0",
     "react-native-router-flux": "^4.0.6",
     "reflect-metadata": "^0.1.13"

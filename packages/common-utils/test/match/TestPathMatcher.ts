@@ -49,10 +49,12 @@ describe("test path match", () => {
             }));
         }
 
-        match('/path/**', ['http://abc.d/path/x/y/z/xyz', '/paths/x/y/z/xyy']);
-        match('/**/path', ['http://abc.d/abc/path', '/abc/path1','/abc/path/2']);
-        match('/**/path/**', ['http://abc.d/abc/path/test', '/abc/path1/hhh','/abc/path']);
-        match('/api/**/user/refreshToken', ['http://abc.d/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
+        // match('/path/**', ['http://abc.d/path/x/y/z/xyz', '/paths/x/y/z/xyy']);
+        // match('/**/path', ['http://abc.d/abc/path', '/abc/path1','/abc/path/2']);
+        // match('/**/path/**', ['http://abc.d/abc/path/test', '/abc/path1/hhh','/abc/path']);
+        // match('/api/**/user/refreshToken', ['http://abc.d/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
+        //http://117.50.43.50:52001/app/v1.0/user/login /app/**/user/login
+        match('/app/**/user/login', ['http://117.50.43.50:52001/app/v1.0/user/login','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
     })
 });
 

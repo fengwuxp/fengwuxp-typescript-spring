@@ -1,0 +1,13 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "declaration": true,
+    "declarationDir": "types-temp"
+  },
+  "exclude": [
+    "dist",
+    "test",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

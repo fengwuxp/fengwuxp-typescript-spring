@@ -46,11 +46,12 @@ export abstract class MappedInterceptor {
      * @return {@code true} if the interceptor applies to the given request path or http methods or http headers
      */
     public matches = (req: HttpRequest): boolean => {
-
         const sources = [req.url, req.method, req.headers];
-        return ["Url", "Method", "Headers"].some((methodName, index) => {
-            return this[`matches${methodName}`](sources[index]);
+        // find first not match ,if not found, default return true
+        const isMatch = ["Url", "Method", "Headers"].some(function (methodName, index) {
+            return this[`matches${methodName}`](sources[index]) === false;
         });
+        return !isMatch;
     };
 
     /**

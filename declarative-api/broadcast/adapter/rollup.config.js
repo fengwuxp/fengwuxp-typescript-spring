@@ -24,26 +24,23 @@ const getConfig = (isProd) => {
         // https://rollupjs.org/guide/en#external-e-external
         external: [
             "core-js",
+            "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
             "reflect-metadata",
-            "async-validator",
-            "xregexp",
-            "xregexp-quotemeta",
+            "fengwuxp-declarative-command",
+            "history",
             "querystring",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils",
-            "fengwuxp-common-utils/lib/date/DateFormatUtils",
-            "fengwuxp-common-utils/lib/match/SimplePathMatcher",
-            "fengwuxp-common-utils/lib/string/StringUtils"
+            "fengwuxp-common-utils"
         ],
         output: [
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'commonjs',
+                format: 'cjs',
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             },
             {
                 file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
@@ -51,7 +48,7 @@ const getConfig = (isProd) => {
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             }
         ],
         plugins: [

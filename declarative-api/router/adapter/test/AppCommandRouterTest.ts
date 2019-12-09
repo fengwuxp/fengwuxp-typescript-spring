@@ -44,9 +44,26 @@ interface MockAppRouter extends NavigatorAdapter, AppCommandRouter {
 describe("test  app command router factory", () => {
 
     const mockAppRouter: MockAppRouter = appCommandRouterFactory<MockAppRouter>({
-        // methodNameCommandResolver: () => {
-        //     return (name) => name;
-        // },
+        navigatorContextAdapter: () => {
+            return {
+                getBrowseHistory: function () {
+                    return undefined;
+                }, getCurrentObject: function () {
+                    return undefined;
+                }, getCurrentPathname: function () {
+                    return "";
+                }, getCurrentState: function () {
+                    return undefined;
+                }, getCurrentUriVariables: function () {
+                    return undefined;
+                }, isStackTop: function () {
+                    return false;
+                }, isView: function (p1: string) {
+                    return false;
+                }
+
+            };
+        },
         methodNameCommandResolver: () => toLineResolver,
         navigatorAdapter: <E extends NavigatorAdapter = NavigatorAdapter>(): E => {
             return {
@@ -75,7 +92,8 @@ describe("test  app command router factory", () => {
                     return;
                 }
 
-            } as E;
+            } as any
+
         }
 
     });
