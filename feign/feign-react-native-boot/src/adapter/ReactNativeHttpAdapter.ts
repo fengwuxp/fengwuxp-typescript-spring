@@ -130,14 +130,17 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
         //     return Promise.reject(response);
         // }
 
-        const headers = response.headers;
+        // if (response.headers==null){
+        //     TODO throw error
+        // }
 
+        const headers = response.headers["map"];
         if (headers["content-length"] == 0) {
             //没有响应的内容
             return Promise.resolve();
         }
 
-        const responseMediaType: string = headers["map"]["content-type"];
+        const responseMediaType: string = headers["content-type"];
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 
