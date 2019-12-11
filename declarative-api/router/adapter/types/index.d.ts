@@ -142,4 +142,4 @@ interface RouterCommandConfiguration {
  */
 declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T;
 
-export { AppCommandRouter, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };
+export { AppCommandRouter, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

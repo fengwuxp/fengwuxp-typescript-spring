@@ -3,13 +3,10 @@ import {
     NavigatorDescriptorObject,
     RouteUriVariable
 } from "fengwuxp-declarative-router-adapter";
-import {Actions} from "react-native-router-flux";
+import {parse} from "querystring";
 
 
-/**
- * react native navigator context adapter
- */
-export default class ReactNativeNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject>
+export default class BrowserNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject>
     implements NavigatorContextAdapter<T> {
 
     private browseHistory: T[] = [];
@@ -22,17 +19,18 @@ export default class ReactNativeNavigatorContextAdapter<T extends NavigatorDescr
     getCurrentObject = (): T => {
         return {
             pathname: this.getCurrentPathname(),
-            state: this.getCurrentState()
-        } as T;
+            state: this.getCurrentState(),
+            uriVariables: this.getCurrentUriVariables()
+        } as any;
     };
 
-    getCurrentPathname = () => Actions.currentScene;
+    getCurrentPathname = () => location.hostname;
 
-    getCurrentState = <S = RouteUriVariable>() => Actions.currentParams as any;
+    getCurrentState = <S = RouteUriVariable>() => this.browseHistory[history.length - 1].state;
 
-    getCurrentUriVariables = <S = RouteUriVariable>() => this.getCurrentState();
+    getCurrentUriVariables = <S = RouteUriVariable>() => parse(location.search.substring(1)) as any;
 
-    isStackTop = () => Actions.state["index"] === 0;
+    isStackTop = () => history.length === 1;
 
     isView = (pathname: string) => this.getCurrentPathname() === pathname;
 
@@ -44,6 +42,4 @@ export default class ReactNativeNavigatorContextAdapter<T extends NavigatorDescr
         }
         this.browseHistory.push(this.getCurrentObject());
     }
-
 }
-
