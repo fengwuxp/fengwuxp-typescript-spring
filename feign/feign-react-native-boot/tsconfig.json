@@ -16,6 +16,7 @@
       "reflect-metadata"
     ],
     "lib": [
+      "es5",
       "dom",
       "es7",
       "es2018",

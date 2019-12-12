@@ -1,4 +1,4 @@
-import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse } from 'fengwuxp-typescript-feign';
+import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
 
 interface BrowserHttpRequest extends HttpRequest {
     /**
@@ -64,4 +64,15 @@ declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
     private paresBlob;
 }
 
-export { BrowserHttpAdapter, BrowserHttpRequest };
+/**
+ * browser network status listener
+ */
+declare class BrowserNetworkStatusListener implements NetworkStatusListener {
+    getNetworkStatus: () => Promise<NetworkStatus>;
+    onChange: (callback: (networkStatus: NetworkStatus) => void) => void;
+    private processNetworkStats;
+    private converterStateType;
+    private getBrowserNetworkStatus;
+}
+
+export { BrowserHttpAdapter, BrowserHttpRequest, BrowserNetworkStatusListener };

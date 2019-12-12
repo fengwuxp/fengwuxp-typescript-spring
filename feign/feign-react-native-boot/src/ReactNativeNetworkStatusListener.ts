@@ -2,7 +2,7 @@ import NetInfo, {NetInfoStateType} from "@react-native-community/netinfo";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "fengwuxp-typescript-feign";
 
 /**
- * react-native nework status listener
+ * react-native network status listener
  */
 export default class ReactNativeNetworkStatusListener implements NetworkStatusListener {
 
