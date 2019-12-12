@@ -1,4 +1,4 @@
-#### 通用的fetch请求工具，支持浏览器，weex 微信小程序
+#### 通用的fetch请求工具，支持浏览器，weex 微信小程序 ,react-native
 
 #### 思路
           1：请求统一由client发出
@@ -21,13 +21,6 @@
 #### 提交前验证
 - [async-validator](https://github.com/yiminghe/async-validator) 
 
-#### 目前的环境变量
-      浏览器 
-      WEEX
-      微信小程序
-      
-
-##### 使用时需要设置 环境变量 process.env.RUN_ENV
 ##### 使用方式
 
           1: http adpater
