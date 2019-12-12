@@ -48,7 +48,7 @@ export abstract class MappedInterceptor {
     public matches = (req: HttpRequest): boolean => {
         const sources = [req.url, req.method, req.headers];
         // find first not match ,if not found, default return true
-        const isMatch = ["Url", "Method", "Headers"].some(function (methodName, index) {
+        const isMatch = ["Url", "Method", "Headers"].some((methodName, index) => {
             return this[`matches${methodName}`](sources[index]) === false;
         });
         return !isMatch;
