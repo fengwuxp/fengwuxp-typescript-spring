@@ -9,11 +9,14 @@
     "target": "esnext",
     "sourceMap": false,
     "importHelpers": true,
+    "jsx": "preserve",
     "types": [
       "node",
-      "jest"
+      "jest",
+      "react"
     ],
     "lib": [
+      "dom",
       "es2015",
       "es7",
       "es2018",

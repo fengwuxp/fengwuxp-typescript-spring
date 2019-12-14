@@ -148,6 +148,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
             return navigatorObject;
         } else {
             if (!this.autoJoinQueryString) {
+                navigatorObject.uriVariables = uriVariables;
                 return navigatorObject
             }
             return {

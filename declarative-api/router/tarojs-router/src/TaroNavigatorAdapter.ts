@@ -3,22 +3,15 @@ import {
     NavigatorDescriptorObject,
     RouteUriVariable
 } from "fengwuxp-declarative-router-adapter";
-import {History} from "history";
+import * as Taro from "@tarojs/taro";
+import {setNextViewState} from './PageStatTransferHelper';
 
 
-export default class BrowserNavigatorAdapter implements NavigatorAdapter {
+export default class TaroNavigatorAdapter implements NavigatorAdapter {
 
-    private history: History;
-
-    constructor(history: History) {
-        this.history = history;
-    }
 
     goBack = (num?: number, ...args: any[]) => {
-        if (num == null) {
-            return this.history.goBack()
-        }
-        return this.history.go(num);
+        return Taro.navigateBack();
     };
 
     popAndPush = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
@@ -26,7 +19,10 @@ export default class BrowserNavigatorAdapter implements NavigatorAdapter {
     };
 
     push = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.history.push(descriptorObject as NavigatorDescriptorObject)
+        setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
+        return Taro.navigateTo({
+            url: (descriptorObject as NavigatorDescriptorObject).pathname
+        })
     };
 
     toView = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
@@ -40,14 +36,16 @@ export default class BrowserNavigatorAdapter implements NavigatorAdapter {
 
 
     reLaunch = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        const length = this.history.length;
-        this.history.go(0 - length);
-        return this.replace(descriptorObject);
+        setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
+        return Taro.reLaunch({
+            url: (descriptorObject as NavigatorDescriptorObject).pathname
+        })
     };
 
 
     replace = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
-        return this.history.replace(descriptorObject as NavigatorDescriptorObject)
+        setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
+        return Taro.redirectTo({url: (descriptorObject as NavigatorDescriptorObject).pathname})
     };
 
 

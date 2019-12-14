@@ -34,7 +34,7 @@ export interface StorageSyncAdapter {
 /**
  * local storage adapter
  */
-export interface StorageAdapter {
+export interface StorageAdapter extends Partial<StorageSyncAdapter> {
 
 
     /**

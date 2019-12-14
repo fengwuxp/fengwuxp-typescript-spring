@@ -47,19 +47,18 @@ export default class ReactNativeNavigatorAdapter implements NavigatorAdapter<Nav
             }
         }
 
-        const [pathname, queryString] = descriptorObject.pathname.split("?");
-        return action(pathname, this.genRouteProps(descriptorObject, queryString));
+        // const [pathname, queryString] = descriptorObject.pathname.split("?");
+        return action(descriptorObject.pathname, this.genRouteProps(descriptorObject));
     };
 
-    private genRouteProps = (descriptorObject: NavigatorDescriptorObject, queryString: string) => {
+    private genRouteProps = (descriptorObject: NavigatorDescriptorObject) => {
 
         const {state, uriVariables} = descriptorObject;
-        if (state == null && uriVariables == null && !StringUtils.hasText(queryString)) {
-            return {}
+        if (state == null && uriVariables == null) {
+            return null;
         }
         return {
             ...(uriVariables as any),
-            ...parse(queryString),
             ...state
         }
     }

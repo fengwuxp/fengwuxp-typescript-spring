@@ -5,10 +5,32 @@ import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
  */
 declare type StorageUpdateStrategy = <T = any>(key: string) => Promise<T>;
 
+interface StorageSyncAdapter {
+    /**
+     * in storage get data
+     * @param key
+     * @return T
+     */
+    getStorageSync: <T = any>(key: string) => T;
+    /**
+     * set data to storage
+     * @param key
+     * @param data
+     * @param options
+     * @return void
+     */
+    setStorageSync: (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => void;
+    /**
+     * remove key by local storage
+     * @param key
+     * @return  string[] | void
+     */
+    removeStorageSync: (key: string | string[]) => string | string[] | void;
+}
 /**
  * local storage adapter
  */
-interface StorageAdapter {
+interface StorageAdapter extends Partial<StorageSyncAdapter> {
     /**
      * in storage get data
      * @param key
@@ -78,20 +100,28 @@ interface StorageCommandConfiguration {
  */
 declare const appCommandStorageFactory: <T extends AppCommandStorage, N extends StorageAdapter = StorageAdapter>(configuration: StorageCommandConfiguration, pathPrefix?: string) => T & N;
 
+interface StorageItem {
+    data: any;
+    __localStorageOptions__: {
+        effectiveTime: number;
+        lastUpdateTime: number;
+    };
+}
 /**
  * default wrapper storage adapter
  */
 declare class DefaultWrapperStorageAdapter implements StorageAdapter {
-    private storageAdapter;
-    private prefix;
-    private storageUpdateStrategy;
+    protected storageAdapter: StorageAdapter;
+    protected prefix: string;
+    protected storageUpdateStrategy: StorageUpdateStrategy;
     constructor(storageAdapter: StorageAdapter, prefix?: string, storageUpdateStrategy?: StorageUpdateStrategy);
     clearAll: () => void | Promise<void>;
     getKeys: () => Promise<string[]>;
     setStorage: (key: string, data: string | number | boolean | object, options?: PersistenceStorageOptions) => void | Promise<void>;
     getStorage: <T>(key: string, options?: true | GetStorageOptions | StorageUpdateStrategy) => Promise<any>;
     removeStorage: (key: string | string[]) => any;
-    private genKey;
+    protected genKey: (key: string) => string;
+    protected getSaveItem(data: object | string | boolean | number, options: PersistenceStorageOptions): StorageItem;
     /**
      * 数据是否有效
      * @param expireDate
@@ -107,7 +137,10 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
      * @param options
      * @param localStorageOptions
      */
-    private updateStorageItem;
+    protected updateStorageItem: (error: any, key: string, options: true | GetStorageOptions | StorageUpdateStrategy, localStorageOptions: {
+        effectiveTime: number;
+        lastUpdateTime: number;
+    }) => Promise<any>;
 }
 
 /**
@@ -120,4 +153,4 @@ declare enum StorageCommand {
     CLEAR = "clear"
 }
 
-export { AppCommandStorage, DefaultWrapperStorageAdapter, GetStorageCommandMethod, GetStorageOptions, PersistenceStorageOptions, RemoveStorageCommandMethod, SetStorageCommandMethod, StorageAdapter, StorageCommand, StorageUpdateStrategy, appCommandStorageFactory };
+export { AppCommandStorage, DefaultWrapperStorageAdapter, GetStorageCommandMethod, GetStorageOptions, PersistenceStorageOptions, RemoveStorageCommandMethod, SetStorageCommandMethod, StorageAdapter, StorageCommand, StorageSyncAdapter, StorageUpdateStrategy, appCommandStorageFactory };

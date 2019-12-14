@@ -1,7 +1,7 @@
 {
-  "name": "fengwuxp-react-native-broadcast",
+  "name": "fengwuxp-tarojs-broadcast",
   "version": "1.0.0",
-  "description": "declarative react native broadcast",
+  "description": "declarative tarojs broadcast",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },
@@ -37,11 +37,9 @@
     "typescript"
   ],
   "devDependencies": {
-    "@types/react": "^16.9.13",
-    "@types/react-native": "^0.60.22",
+    "@tarojs/taro": "^1.3.21",
+    "@types/react": "^16.9.16",
     "fengwuxp-library-starter": "^1.0.0",
-    "react": "16.9.0",
-    "react-native": "0.61.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {

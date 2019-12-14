@@ -30,11 +30,11 @@ const NEVER_EXPIRE = -1;
 export default class DefaultWrapperStorageAdapter implements StorageAdapter {
 
 
-    private storageAdapter: StorageAdapter;
+    protected storageAdapter: StorageAdapter;
 
-    private prefix: string;
+    protected prefix: string;
 
-    private storageUpdateStrategy: StorageUpdateStrategy;
+    protected storageUpdateStrategy: StorageUpdateStrategy;
 
     constructor(storageAdapter: StorageAdapter,
                 prefix?: string,
@@ -55,18 +55,12 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
     };
 
     setStorage = (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => {
-
-        //保存配置项
-        const object: StorageItem = {
-            data,
-            __localStorageOptions__: {
-                effectiveTime: options == null ? NEVER_EXPIRE : options.effectiveTime || NEVER_EXPIRE,
-                lastUpdateTime: new Date().getTime()
-            }
-        };
+        const object = this.getSaveItem(data, options);
 
         return this.storageAdapter.setStorage(this.genKey(key), JSON.stringify(object));
     };
+
+
 
     getStorage = <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => {
 
@@ -104,13 +98,24 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         }
     };
 
-
-    private genKey = (key: string) => {
+    protected genKey = (key: string) => {
         if (key.startsWith(this.prefix)) {
             return key;
         }
         return `${this.prefix}${key}`
     };
+
+    protected getSaveItem(data: object | string | boolean | number, options: PersistenceStorageOptions) {
+        // 保存配置项
+        const object: StorageItem = {
+            data,
+            __localStorageOptions__: {
+                effectiveTime: options == null ? NEVER_EXPIRE : options.effectiveTime || NEVER_EXPIRE,
+                lastUpdateTime: new Date().getTime()
+            }
+        };
+        return object;
+    }
 
     /**
      * 数据是否有效
@@ -130,13 +135,13 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
      * @param options
      * @param localStorageOptions
      */
-    private updateStorageItem = (error,
-                                 key: string,
-                                 options: GetStorageOptions | true | StorageUpdateStrategy,
-                                 localStorageOptions: {
-                                     effectiveTime: number,
-                                     lastUpdateTime: number
-                                 }) => {
+    protected updateStorageItem = (error,
+                                   key: string,
+                                   options: GetStorageOptions | true | StorageUpdateStrategy,
+                                   localStorageOptions: {
+                                       effectiveTime: number,
+                                       lastUpdateTime: number
+                                   }) => {
         if (options == null) {
             return Promise.reject(error);
         }

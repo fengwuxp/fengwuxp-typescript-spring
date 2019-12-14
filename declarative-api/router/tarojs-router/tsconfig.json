@@ -11,9 +11,11 @@
     "importHelpers": true,
     "types": [
       "node",
-      "jest"
+      "jest",
+      "history"
     ],
     "lib": [
+      "dom",
       "es2015",
       "es7",
       "es2018",

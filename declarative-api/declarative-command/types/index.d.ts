@@ -24,6 +24,28 @@ declare const toUpperCaseResolver: MethodNameCommandResolver;
  */
 declare const toLocaleUpperCaseResolver: MethodNameCommandResolver;
 /**
+ * 将第一个大写字母转换成 "/" 其他的保存不变
+ * example : 'memberIndexView' ==>  member/IndexView'
+ * @param methodName
+ */
+declare const firstUpperCaseToLeftIncline: (methodName: string) => string;
+/**
+ * 首字母转为小写
+ * @param str
+ */
+declare const initialLowercase: (str: string) => string;
+/**
+ * 首字母转为大写
+ * @param str
+ */
+declare const initialUpperCase: (str: string) => string;
+/**
+ * 重复第一个单词，加上"/" 并且将第-个单词的第一个字母大写
+ * example : 'memberIndexView' ==>  member/MemberIndexView'
+ * @param methodName
+ */
+declare const repeatTheFirstWord: (methodName: string) => string;
+/**
  * 从右向左合并处理
  * @param resolvers
  */
@@ -40,4 +62,4 @@ declare const reduceRightCommandResolvers: (...resolvers: MethodNameCommandResol
  */
 declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: string[], defaultCommand: string) => string[];
 
-export { MethodNameCommandResolver, reduceRightCommandResolvers, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };
+export { MethodNameCommandResolver, firstUpperCaseToLeftIncline, initialLowercase, initialUpperCase, reduceRightCommandResolvers, repeatTheFirstWord, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };
