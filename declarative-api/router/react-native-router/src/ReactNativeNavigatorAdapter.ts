@@ -1,7 +1,5 @@
 import {NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable} from "fengwuxp-declarative-router-adapter";
 import {Actions} from "react-native-router-flux"
-import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
-import {parse} from "querystring";
 
 /**
  * react-native navigator adapter
@@ -55,7 +53,7 @@ export default class ReactNativeNavigatorAdapter implements NavigatorAdapter<Nav
 
         const {state, uriVariables} = descriptorObject;
         if (state == null && uriVariables == null) {
-            return null;
+            return {};
         }
         return {
             ...(uriVariables as any),

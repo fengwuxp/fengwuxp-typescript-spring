@@ -33,12 +33,12 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
                 navigatorContextAdapter: NavigatorContextAdapter<T>,
                 confirmBeforeJumping: RouteConfirmBeforeJumping = () => true,
                 pathPrefix: string = "/",
-                autoJoinQueryString?: boolean) {
+                autoJoinQueryString: boolean = true) {
         this.navigatorAdapter = navigatorAdapter;
         this.navigatorContextAdapter = navigatorContextAdapter;
         this.confirmBeforeJumping = confirmBeforeJumping;
         this.pathPrefix = pathPrefix;
-        this.autoJoinQueryString = autoJoinQueryString || true;
+        this.autoJoinQueryString = autoJoinQueryString;
     }
 
     goBack = (num?: number, ...args) => {
