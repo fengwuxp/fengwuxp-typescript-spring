@@ -9,7 +9,7 @@ import {HttpRequest} from "../client/HttpRequest";
 import NetworkClientHttpRequestInterceptor from "../network/NetworkClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "../network/NetworkStatusListener";
 import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
-import {ProgressBarOptions, FeignRequestContextOptions} from "../FeignRequestOptions";
+import {FeignRequestContextOptions, ProgressBarOptions} from "../FeignRequestOptions";
 import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
 import DateEncoder from "../codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
@@ -23,7 +23,9 @@ import {RequestURLResolver} from '../resolve/url/RequestURLResolver';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
+
 let refreshTokenCount = 0;
+
 
 /**
  * mock feign configuration
@@ -34,10 +36,10 @@ export class MockFeignConfiguration implements FeignConfiguration {
     getRequestHeaderResolver: () => RequestHeaderResolver;
     getRequestURLResolver: () => RequestURLResolver;
 
-    private baseUrl: string;
+    private baseUrl: string = "http://test.ab.com/api/";
 
-    constructor(baseUrl: string) {
-        this.baseUrl = baseUrl;
+    constructor() {
+        // this.baseUrl = baseUrl;
     }
 
 
@@ -79,7 +81,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 };
 
                 private mockNetworkState = () => {
-                    const b = new Date().getTime() % 3 === 0;
+                    const b = true;//new Date().getTime() % 3 === 0;
                     logger.debug("----网络状态--->", b ? "可用" : "不可用");
                     if (b) {
                         return {
@@ -133,6 +135,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
     getRestTemplate = () => new RestTemplate(this.getHttpClient());
 
     getFeignClientExecutorInterceptors = (): FeignClientExecutorInterceptor[] => {
+
         return [
             new ProcessBarExecutorInterceptor({
                 showProgressBar: (progressBarOptions?: ProgressBarOptions) => {

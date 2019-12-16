@@ -1,3 +1,4 @@
+/// <reference types="lodash" />
 /// <reference types="node" />
 /// <reference types="async-validator" />
 import { RuleItem } from 'async-validator';
@@ -585,7 +586,7 @@ interface FeignProxyClient extends FeignClient {
     /**
      * feign proxy options
      */
-    readonly feignOptions: () => FeignOptions;
+    readonly feignOptions: () => FeignMemberOptions;
     /**
      * get feign configuration
      */
@@ -841,6 +842,9 @@ interface FeignConfiguration {
      */
     getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
 }
+declare type FeignConfigurationConstructor = {
+    new (...args: any[]): FeignConfiguration;
+};
 
 interface FeignOptions {
     /**
@@ -866,7 +870,13 @@ interface FeignOptions {
     /**
      * feign configuration
      */
-    configuration?: FeignConfiguration[] | FeignConfiguration;
+    configuration?: FeignConfigurationConstructor;
+}
+interface FeignMemberOptions extends Pick<FeignOptions, Exclude<keyof FeignOptions, "configuration">> {
+    /**
+     * feign configuration
+     */
+    configuration?: FeignConfiguration;
 }
 /**
  * Mark a class as feign　client
@@ -1427,7 +1437,7 @@ declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = Feig
      * 进度条计数器，用于在同时发起多个请求时，
      * 统一控制加载进度条
      */
-    private static count;
+    private count;
     /**
      * 进度条
      */
@@ -1448,6 +1458,7 @@ declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = Feig
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => E;
     preHandle: (options: T) => Promise<T>;
     postError: (options: T, response: HttpResponse<any>) => Promise<HttpResponse<any>>;
+    protected needShowProcessBar: (options: T) => boolean;
 }
 
 /**

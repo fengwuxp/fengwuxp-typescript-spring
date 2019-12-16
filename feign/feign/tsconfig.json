@@ -13,7 +13,8 @@
     "types": [
       "node",
       "jest",
-      "reflect-metadata"
+      "reflect-metadata",
+      "lodash"
     ],
     "lib": [
       "dom",

@@ -8,7 +8,6 @@ import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
-import {MOCK_NETWORK_FAILURE_TEXT} from "../network/NoneNetworkFailBack";
 
 /**
  * default http client

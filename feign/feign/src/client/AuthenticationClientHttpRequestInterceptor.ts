@@ -1,7 +1,5 @@
 import {HttpRequest} from "./HttpRequest";
-import {
-    ClientHttpRequestInterceptorInterface,
-} from "./ClientHttpRequestInterceptor";
+import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 
 export interface AuthenticationToken {
 

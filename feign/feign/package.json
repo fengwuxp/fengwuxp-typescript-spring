@@ -41,10 +41,10 @@
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
-    "parcel": "^1.12.4",
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.149",
     "async-validator": "^3.2.2",
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
@@ -54,6 +54,7 @@
     "fetch-ie8": "^1.5.0",
     "file-saver": "^2.0.2",
     "isomorphic-fetch": "^2.2.1",
+    "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13"
   },
   "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"

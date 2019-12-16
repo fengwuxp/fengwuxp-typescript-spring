@@ -9,6 +9,7 @@
 
 
 #### 配置
+- 配置将会被缓存，以保证实现了FeignConfiguration接口的类中的方法只会被调用一次，同一个FeignConfiguration的子类只会被实例化一次
 
 #### 扩展自定义环境下的适配器
       

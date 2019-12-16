@@ -20,7 +20,7 @@ type FindMemberRequest = {
 @Feign({
     value: "/test",
     // url:"http://a.bc.cn/api",
-    configuration: [new MockFeignConfiguration("http://test.ab.com/api/")]
+    configuration: MockFeignConfiguration
 })
 export default class TestFeignClient {
 

@@ -30,6 +30,7 @@ const getConfig = (isProd) => {
             "xregexp",
             "xregexp-quotemeta",
             "querystring",
+            "lodash/memoize",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
             "fengwuxp-common-utils/lib/date/DateFormatUtils",

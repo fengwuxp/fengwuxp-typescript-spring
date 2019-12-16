@@ -1,5 +1,5 @@
 import {FeignClient} from "../FeignClient";
-import {FeignOptions} from "../annotations/Feign";
+import {FeignMemberOptions} from "../annotations/Feign";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
 import {FeignConfiguration} from "..";
 
@@ -17,7 +17,7 @@ export interface FeignProxyClient extends FeignClient {
     /**
      * feign proxy options
      */
-    readonly feignOptions: () => FeignOptions;
+    readonly feignOptions: () => FeignMemberOptions;
 
     /**
      * get feign configuration

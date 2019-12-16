@@ -13,7 +13,7 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
      * 进度条计数器，用于在同时发起多个请求时，
      * 统一控制加载进度条
      */
-    private static count: number = 0;
+    private count: number = 0;
 
     /**
      * 进度条
@@ -49,16 +49,15 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
 
     postHandle = <E = HttpResponse<any>>(options: T, response: E) => {
 
-        if (options.useProgressBar == false) {
+        if (!this.needShowProcessBar(options)) {
             //不使用进度条
             return response;
         }
 
         const {timerId, progressBar} = this;
         //计数器减一
-        ProcessBarExecutorInterceptor.count--;
-        if (ProcessBarExecutorInterceptor.count <= 0) {
-            ProcessBarExecutorInterceptor.count = 0;
+        this.count--;
+        if (this.count === 0) {
             //清除定时器
             clearTimeout(timerId);
             //隐藏加载进度条
@@ -69,14 +68,13 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
     };
 
     preHandle = async (options: T) => {
-        const {useProgressBar} = options;
 
-        if (useProgressBar == false) {
+        if (!this.needShowProcessBar(options)) {
             //不使用进度条
             return options;
         }
         const {progressBar, progressBarOptions} = this;
-        if (ProcessBarExecutorInterceptor.count === 0) {
+        if (this.count === 0) {
             const _progressBarOptions = {
                 ...progressBarOptions,
                 ...(options.progressBarOptions || {})
@@ -92,12 +90,20 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         }
 
         //计数器加一
-        ProcessBarExecutorInterceptor.count++;
+        this.count++;
         return options;
     };
 
     postError = async (options: T, response: HttpResponse<any>) => {
         return this.postHandle(options, response);
+    };
+
+    protected needShowProcessBar = (options: T) => {
+        if (options.useProgressBar == false) {
+            //不使用进度条
+            return false;
+        }
+        return true;
     }
 
 

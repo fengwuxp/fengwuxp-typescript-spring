@@ -8,6 +8,12 @@ import {contentTypeName, HttpMediaType, mediaTypeIsEq} from "../..";
 
 export type MockDataType = (options: HttpRequest) => Promise<any> | any;
 
+const sleep = (times) => {
+    return new Promise((resolve) => {
+        setTimeout(resolve, times)
+    })
+};
+
 /**
  * mock http adapter
  */
@@ -27,7 +33,7 @@ export default class MockHttpAdapter implements HttpAdapter {
         this.mockDataSource = mockDataSource || {};
     }
 
-    send = (req: HttpRequest): Promise<HttpResponse> => {
+    send = async (req: HttpRequest): Promise<HttpResponse> => {
         console.log("mock http adapter", req);
         const {url, headers} = req;
         if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
@@ -40,6 +46,10 @@ export default class MockHttpAdapter implements HttpAdapter {
         const result: MockDataType = this.mockDataSource[key];
         // const isFailure = new Date().getDate() % 2 == 0
         const isFailure = result == null;
+
+        // const times = Math.random() * 1000;
+        // await sleep(times);
+
         if (isFailure) {
             const response: Response = {
                 status: 404,

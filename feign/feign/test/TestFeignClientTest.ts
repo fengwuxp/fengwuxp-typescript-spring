@@ -10,7 +10,7 @@ logger.level = 'debug';
 
 describe("test feign client", () => {
 
-    FeignConfigurationRegistry.setDefaultFeignConfiguration(new MockFeignConfiguration("http://test.ac.com/api/"));
+    FeignConfigurationRegistry.setDefaultFeignConfiguration(new MockFeignConfiguration());
 
     const testFeignClient = new TestFeignClient();
 
@@ -87,11 +87,14 @@ describe("test feign client", () => {
             // if (Math.random() * i * 99188320 % 2 === 0) {
             //
             // }
-            await sleep(Math.random() * 1000);
+            const times = Math.random() * 1000;
+            await sleep(times);
             (function (index) {
                 logger.debug(`开始发出第${index}个请求`);
                 testFeignClient.deleteMember({
                     memberId: 1
+                }, {
+                    // useProgressBar: times % 2 == 0
                 }).then((data) => {
                     logger.debug("----s---->", data)
                 }).catch((e) => {
@@ -114,7 +117,7 @@ describe("test feign client", () => {
             logger.error("error", e)
         }
 
-    }, 60 * 1000);
+    }, 160 * 1000);
 
 });
 

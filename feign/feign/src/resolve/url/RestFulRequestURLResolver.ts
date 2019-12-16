@@ -1,6 +1,6 @@
 import {RequestURLResolver} from "./RequestURLResolver";
 
-import {FeignOptions} from "../../annotations/Feign";
+import {FeignMemberOptions} from "../../annotations/Feign";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
 
 /**
@@ -21,11 +21,11 @@ export const restfulRequestURLResolver: RequestURLResolver = (apiService: FeignP
  * @param apiService
  * @param feignOptions
  */
-export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions: FeignOptions) => {
+export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions: FeignMemberOptions) => {
 
     const {apiModule, url} = feignOptions;
     if (url) {
-        return `${url}`
+        return `${url}`;
     }
     const serviceName = apiService.serviceName();
     return `@${apiModule}${serviceName.startsWith("/") ? serviceName : "/" + serviceName}`;

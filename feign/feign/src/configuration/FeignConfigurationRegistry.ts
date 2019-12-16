@@ -1,7 +1,7 @@
-import {FeignConfiguration} from "./FeignConfiguration";
+import {FeignConfiguration, FeignConfigurationConstructor} from "./FeignConfiguration";
 import {FeignClientBuilder} from "../FeignClientBuilder";
 import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
-
+import memoize from "lodash/memoize";
 
 /**
  * FeignConfiguration
@@ -13,12 +13,42 @@ let DEFAULT_CONFIGURATION: FeignConfiguration = null;
  */
 let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
 
+
+memoize.Cache = WeakMap;
+
+const memorizationConfiguration = (configuration: FeignConfiguration): FeignConfiguration => {
+    if (configuration == null) {
+        return;
+    }
+    const newConfiguration: any = {};
+    for (const key in configuration) {
+        const configurationElement = configuration[key];
+        if (typeof configurationElement === "function") {
+            newConfiguration[key] = memoize(configurationElement, () => configurationElement)
+        }
+    }
+    return newConfiguration
+};
+
+const factory = (feignConfigurationConstructor: FeignConfigurationConstructor) => {
+    return memorizationConfiguration(new feignConfigurationConstructor());
+};
+
+export const configurationFactory = memoize(factory, (feignConfigurationConstructor: FeignConfigurationConstructor) => {
+    if (feignConfigurationConstructor == null) {
+        return 0;
+    }
+    // const description = feignConfigurationConstructor.name;
+    // return description
+    return feignConfigurationConstructor;
+});
+
 const registry = {
 
 
     setDefaultFeignConfiguration(configuration: FeignConfiguration) {
-        // console.log("set default configuration", configuration);
-        DEFAULT_CONFIGURATION = configuration;
+
+        DEFAULT_CONFIGURATION = memorizationConfiguration(configuration);
     },
 
     getDefaultFeignConfiguration(): FeignConfiguration {

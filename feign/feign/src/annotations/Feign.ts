@@ -1,11 +1,12 @@
-import {FeignConfiguration} from "../configuration/FeignConfiguration";
+import {FeignConfiguration, FeignConfigurationConstructor} from "../configuration/FeignConfiguration";
 import {defaultApiModuleName, FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
-import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
+import FeignConfigurationRegistry, {configurationFactory} from "../configuration/FeignConfigurationRegistry";
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {FeignClientBuilder, FeignClientBuilderInterface} from "../FeignClientBuilder";
 import "reflect-metadata";
+
 
 export interface FeignOptions {
 
@@ -35,8 +36,16 @@ export interface FeignOptions {
     /**
      * feign configuration
      */
-    configuration?: FeignConfiguration[] | FeignConfiguration;
+    configuration?: FeignConfigurationConstructor;
 
+}
+
+export interface FeignMemberOptions extends Pick<FeignOptions, Exclude<keyof FeignOptions, "configuration">> {
+
+    /**
+     * feign configuration
+     */
+    configuration?: FeignConfiguration;
 }
 
 
@@ -59,15 +68,17 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
         return class extends clazz implements FeignProxyClient {
 
             private _serviceName: string;
-            private _feignOptions: FeignOptions;
-
+            private _feignOptions: FeignMemberOptions;
 
             constructor() {
                 super();
 
-                const feignOptions: FeignOptions = {
+                const feignConfigurationConstructor = options.configuration;
+                const feignOptions: FeignMemberOptions = {
                     apiModule: defaultApiModuleName,
-                    ...options
+                    value: options.value,
+                    url: options.url,
+                    configuration: feignConfigurationConstructor == null ? null :configurationFactory(feignConfigurationConstructor)
                 };
 
                 this._serviceName = feignOptions.value || clazz.name;
@@ -88,23 +99,11 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
             readonly feignConfiguration = () => {
                 const feignOptions = this._feignOptions;
-                const configuration = feignOptions.configuration || FeignConfigurationRegistry.getDefaultFeignConfiguration();
-                if (configuration == null) {
+                const configuration = feignOptions.configuration;
+                const feignConfiguration: FeignConfiguration = configuration || FeignConfigurationRegistry.getDefaultFeignConfiguration();
+                if (feignConfiguration == null) {
                     throw new Error("feign configuration is null or not register");
                 }
-                if (!Array.isArray(configuration)) {
-                    return configuration;
-                }
-                const isEmpty = configuration.filter(item => item != null).length === 0;
-                if (isEmpty) {
-                    throw new Error("feign configuration is empty array");
-                }
-                const feignConfiguration = configuration.reduce(((previousValue, currentValue) => {
-                    return {
-                        ...previousValue,
-                        ...currentValue
-                    };
-                }), {} as FeignConfiguration);
                 this._feignOptions.configuration = feignConfiguration;
                 return feignConfiguration;
 

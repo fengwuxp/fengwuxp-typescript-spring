@@ -48,3 +48,6 @@ export interface FeignConfiguration {
     //  */
     // getFeignUIToast?: () => FeignUIToast;
 }
+
+
+export type FeignConfigurationConstructor = { new(...args: any[]): FeignConfiguration }
