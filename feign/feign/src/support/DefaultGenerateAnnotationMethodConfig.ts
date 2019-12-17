@@ -27,4 +27,5 @@ export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConf
         ...feignClientMethodConfig,
         ...options
     }, target, methodName);
+
 };

@@ -30,5 +30,7 @@ export interface FeignProxyClient extends FeignClient {
      */
     getFeignMethodConfig: (serviceMethod: string) => FeignClientMethodConfig;
 
+    // setFeignMethodConfig: (serviceMethod: string, config: FeignClientMethodConfig) => FeignClientMethodConfig;
+
 
 }

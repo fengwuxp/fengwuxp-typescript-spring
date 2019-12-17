@@ -16,6 +16,9 @@ let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
 
 memoize.Cache = WeakMap;
 
+// ignore memorization method names
+const ignoreMethodNames = ["getFeignClientExecutor"];
+
 const memorizationConfiguration = (configuration: FeignConfiguration): FeignConfiguration => {
     if (configuration == null) {
         return;
@@ -23,11 +26,14 @@ const memorizationConfiguration = (configuration: FeignConfiguration): FeignConf
     const newConfiguration: any = {};
     for (const key in configuration) {
         const configurationElement = configuration[key];
-        if (typeof configurationElement === "function") {
-            newConfiguration[key] = memoize(configurationElement, () => configurationElement)
+        const needMemoize = ignoreMethodNames.indexOf(key) < 0 && typeof configurationElement === "function";
+        if (needMemoize) {
+            newConfiguration[key] = memoize(configurationElement, () => configurationElement);
+        } else {
+            newConfiguration[key] = configurationElement;
         }
     }
-    return newConfiguration
+    return newConfiguration;
 };
 
 const factory = (feignConfigurationConstructor: FeignConfigurationConstructor) => {

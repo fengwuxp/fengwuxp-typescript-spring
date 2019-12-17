@@ -3,6 +3,7 @@ import TestFeignClient from "./TestFeignClient";
 import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationRegistry";
 import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
 import ClientRequestDataValidatorHolder from "../src/validator/ClientRequestDataValidatorHolder";
+import ExampleFeignClient from "./ExampleFeignClient";
 
 
 const logger = log4js.getLogger();
@@ -13,6 +14,7 @@ describe("test feign client", () => {
     FeignConfigurationRegistry.setDefaultFeignConfiguration(new MockFeignConfiguration());
 
     const testFeignClient = new TestFeignClient();
+    const exampleFeignClient = new ExampleFeignClient();
 
     const sleep = (times) => {
         return new Promise((resolve) => {
@@ -25,7 +27,7 @@ describe("test feign client", () => {
 
         try {
 
-            const result = await testFeignClient.findMember({
+            const result = await exampleFeignClient.findMember({
                 name: "张三",
                 userName: "1",
                 memberId: 12
@@ -64,7 +66,7 @@ describe("test feign client", () => {
         } catch (e) {
             logger.error(e)
         }
-    }, 10 * 1000);
+    }, 20 * 1000);
 
     test("test retry", async () => {
 

@@ -62,6 +62,8 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
      */
     return (clazz: { new(...args: any[]): {} }): any => {
 
+        const feignConfigurationConstructor = options.configuration;
+
         /**
          * 返回一个实现了FeignProxyClient接口的匿名类
          */
@@ -73,12 +75,11 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             constructor() {
                 super();
 
-                const feignConfigurationConstructor = options.configuration;
                 const feignOptions: FeignMemberOptions = {
                     apiModule: defaultApiModuleName,
                     value: options.value,
                     url: options.url,
-                    configuration: feignConfigurationConstructor == null ? null :configurationFactory(feignConfigurationConstructor)
+                    configuration: null
                 };
 
                 this._serviceName = feignOptions.value || clazz.name;
@@ -98,9 +99,8 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             };
 
             readonly feignConfiguration = () => {
-                const feignOptions = this._feignOptions;
-                const configuration = feignOptions.configuration;
-                const feignConfiguration: FeignConfiguration = configuration || FeignConfigurationRegistry.getDefaultFeignConfiguration();
+                const feignConfiguration: FeignConfiguration = feignConfigurationConstructor != null ?
+                    new feignConfigurationConstructor() : FeignConfigurationRegistry.getDefaultFeignConfiguration();
                 if (feignConfiguration == null) {
                     throw new Error("feign configuration is null or not register");
                 }
@@ -116,6 +116,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
              */
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
 
+                console.log("clazz", clazz, serviceMethod);
                 return Reflect.getMetadata(FEIGN_CLINE_META_KEY, clazz, serviceMethod);
             };
 
