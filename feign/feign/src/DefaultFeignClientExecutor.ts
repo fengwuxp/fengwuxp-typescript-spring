@@ -71,7 +71,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     invoke = async (methodName: string, ...args): Promise<any> => {
 
-
         const {
             apiSignatureStrategy,
             restTemplate,
@@ -84,7 +83,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //original parameter
         const originalParameter = args[0] || {};
 
-        console.log("apiService", apiService, methodName);
         //requestMapping
         const {requestMapping, signature, retryOptions, validateSchemaOptions} = apiService.getFeignMethodConfig(methodName);
         if (validateSchemaOptions != null) {

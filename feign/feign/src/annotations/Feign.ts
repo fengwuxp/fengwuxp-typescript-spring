@@ -115,8 +115,6 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
              * @param serviceMethod  服务方法名称
              */
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
-
-                console.log("clazz", clazz, serviceMethod);
                 return Reflect.getMetadata(FEIGN_CLINE_META_KEY, clazz, serviceMethod);
             };
 
