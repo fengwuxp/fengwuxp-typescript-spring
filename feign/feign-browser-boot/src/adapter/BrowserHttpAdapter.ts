@@ -1,11 +1,13 @@
 import {
     CommonResolveHttpResponse,
-    contentTypeName,
     contentLengthName,
-    HttpAdapter, HttpMediaType, HttpMethod,
+    contentTypeName,
+    HttpAdapter,
+    HttpMediaType,
+    HttpMethod,
     HttpResponse,
-    ResolveHttpResponse,
-    mediaTypeIsEq
+    mediaTypeIsEq,
+    ResolveHttpResponse
 } from "fengwuxp-typescript-feign";
 import {BrowserHttpRequest} from './BrowserHttpRequest';
 
@@ -29,16 +31,20 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
 
     private timeout: number;
 
+    private consumes: HttpMediaType;
+
     private resolveHttpResponse: ResolveHttpResponse;
 
     /**
      *
      * @param timeout  default 5000ms
      * @param resolveHttpResponse
+     * @param consumes  default 'application/json;charset=UTF-8'
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>) {
+    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType) {
         this.timeout = timeout || 5 * 1000;
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
+        this.consumes = consumes || HttpMediaType.APPLICATION_JSON_UTF8;
     }
 
     send = (req: BrowserHttpRequest): Promise<HttpResponse> => {
@@ -127,12 +133,13 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      */
     private parse = (response: Response): Promise<any> => {
 
+        const {consumes, getHeaderByName} = this;
 
         const headers = response.headers;
-        if (parseInt(this.getHeaderByName(headers, contentLengthName)) === 0) {
+        if (parseInt(getHeaderByName(headers, contentLengthName)) === 0) {
             return Promise.resolve();
         }
-        const responseMediaType: string = this.getHeaderByName(headers, contentTypeName) || HttpMediaType.APPLICATION_JSON_UTF8;
+        const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 
