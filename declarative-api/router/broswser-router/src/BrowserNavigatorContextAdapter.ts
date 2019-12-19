@@ -11,6 +11,8 @@ export default class BrowserNavigatorContextAdapter<T extends NavigatorDescripto
 
     private browseHistory: T[] = [];
 
+    // private initLength = window.history.length;
+
     constructor() {
     }
 

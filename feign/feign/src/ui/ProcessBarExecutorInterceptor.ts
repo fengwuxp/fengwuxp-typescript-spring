@@ -99,7 +99,7 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
     };
 
     protected needShowProcessBar = (options: T) => {
-        if (options.useProgressBar == false) {
+        if (options.useProgressBar === false) {
             //不使用进度条
             return false;
         }
