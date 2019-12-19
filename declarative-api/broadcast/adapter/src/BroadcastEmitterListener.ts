@@ -11,6 +11,19 @@ export interface BroadcastEmitterListener {
      *   listener
      */
     addListener(eventType: string, listener: (...args: any[]) => any, context?: any): BroadcastSubscription;
+
+    /**
+     * Similar to addListener, except that the listener is removed after it is
+     * invoked once.
+     *
+     * @param eventType - Name of the event to listen to
+     * @param listener - Function to invoke only once when the
+     *   specified event is emitted
+     * @param context - Optional context object to use when invoking the
+     *   listener
+     */
+    once(eventType: string, listener: (...args: any[]) => any, context: any): BroadcastSubscription;
+
 }
 
 /**

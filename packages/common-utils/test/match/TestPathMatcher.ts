@@ -35,7 +35,8 @@ describe("test path match", () => {
         // match('/**/example', ['/app/foo/example1']);
         // match('/app/**/example', ["/app/foo/example", "/cpp/foo/example", '/app/foo/example1']);
         // match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
-        match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
+        // match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
+        match('/api/**/user/authCode', ['/api/1.0.0/user/authCode', '/abc/path1/hhh','/abc/path']);
 
     });
 
@@ -54,7 +55,8 @@ describe("test path match", () => {
         // match('/**/path/**', ['http://abc.d/abc/path/test', '/abc/path1/hhh','/abc/path']);
         // match('/api/**/user/refreshToken', ['http://abc.d/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
         //http://117.50.43.50:52001/app/v1.0/user/login /app/**/user/login
-        match('/app/**/user/login', ['http://117.50.43.50:52001/app/v1.0/user/login','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
+        // match('/app/**/user/login', ['http://117.50.43.50:52001/app/v1.0/user/login','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
+        match('/app/**/user/authCode', ['http://117.50.43.50:52001/app/v1.0/user/authCode','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
     })
 });
 

@@ -18,6 +18,10 @@ export default class DefaultEventBroadcastAdapterWrapper implements EventBroadca
         return this.eventBroadcastAdapter.addListener(this.getEventType(eventType), listener, context);
     }
 
+    once(eventType: string, listener: (...args: any[]) => any, context: any): BroadcastSubscription {
+        return this.eventBroadcastAdapter.once(this.getEventType(eventType), listener, context);
+    }
+
     emit(eventType: string, ...params: any[]): void {
         return this.eventBroadcastAdapter.emit(this.getEventType(eventType), ...params);
     }

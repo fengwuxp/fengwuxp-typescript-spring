@@ -1,6 +1,7 @@
 import {
     CommonResolveHttpResponse,
     contentTypeName,
+    contentLengthName,
     HttpAdapter, HttpMediaType, HttpMethod,
     HttpResponse,
     ResolveHttpResponse,
@@ -126,15 +127,12 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      */
     private parse = (response: Response): Promise<any> => {
 
-        // if (!response.ok) {
-        //     return Promise.reject(response);
-        // }
 
         const headers = response.headers;
-        if ("Content-Length") {
+        if (parseInt(this.getHeaderByName(headers, contentLengthName)) === 0) {
             return Promise.resolve();
         }
-        const responseMediaType: string = headers.get[contentTypeName];
+        const responseMediaType: string = this.getHeaderByName(headers, contentTypeName) || HttpMediaType.APPLICATION_JSON_UTF8;
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
 
@@ -176,4 +174,8 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     // }
 
 
+    private getHeaderByName = (headers: Headers, name: string) => {
+
+        return headers.get(name) || headers.get(name.toLowerCase());
+    }
 }

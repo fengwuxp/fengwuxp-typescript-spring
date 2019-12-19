@@ -46,7 +46,12 @@ export {default as FeignConfigurationRegistry} from "./configuration/FeignConfig
 export {HttpMethod} from "./constant/http/HttpMethod";
 export {HttpMediaType} from "./constant/http/HttpMediaType";
 export {
-    defaultApiModuleName, contentTypeName, matchUrlPathVariable, FEIGN_CLINE_META_KEY, grabUrlPathVariable
+    defaultApiModuleName,
+    contentTypeName,
+    contentLengthName,
+    matchUrlPathVariable,
+    FEIGN_CLINE_META_KEY,
+    grabUrlPathVariable
 } from "./constant/FeignConstVar";
 
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";

@@ -1,7 +1,7 @@
 import { NetworkStatusListener, NetworkStatus, HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse } from 'fengwuxp-typescript-feign';
 
 /**
- * react-native nework status listener
+ * react-native network status listener
  */
 declare class ReactNativeNetworkStatusListener implements NetworkStatusListener {
     getNetworkStatus: () => Promise<NetworkStatus>;

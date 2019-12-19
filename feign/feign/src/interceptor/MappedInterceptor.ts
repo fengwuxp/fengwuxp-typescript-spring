@@ -63,7 +63,7 @@ export abstract class MappedInterceptor {
     public matchesUrl = (lookupPath: string, pathMatcher?: PathMatcher): boolean => {
         const pathMatcherToUse = pathMatcher || this.pathMatcher;
         const {excludePatterns, includePatterns} = this;
-        return this.doMatch(lookupPath, includePatterns, excludePatterns, (pattern: string, path: string) => {
+        return this.doMatch(lookupPath.split("?")[0], includePatterns, excludePatterns, (pattern: string, path: string) => {
             return pathMatcherToUse.match(pattern, path);
         })
     };

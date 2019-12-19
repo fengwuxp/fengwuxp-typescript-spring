@@ -35,14 +35,14 @@
     "fetch"
   ],
   "devDependencies": {
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
-    "core-js": "^3.4.1"
+    "core-js": "^3.4.1",
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
-    "fengwuxp-typescript-feign": "^1.0.0",
-    "feign-boot-stater": "^1.0.0"
+    "feign-boot-stater": "^1.0.0",
+    "fengwuxp-typescript-feign": "^1.0.0"
   }
 }

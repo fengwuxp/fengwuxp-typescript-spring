@@ -1,3 +1,3 @@
-import {tarojsAppCommandStorageFactory} from "./TarojsAppCommandStorageFactory";
-import {default as TarojsStorageAdapter} from "./TarojsStorageAdapter";
+export {tarojsAppCommandStorageFactory} from "./TarojsAppCommandStorageFactory";
+export {default as TarojsStorageAdapter} from "./TarojsStorageAdapter";
 

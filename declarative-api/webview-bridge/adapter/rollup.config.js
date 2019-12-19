@@ -7,6 +7,9 @@ import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
 import dts from "rollup-plugin-dts";
+import filesize from "rollup-plugin-filesize";
+import includePaths from "rollup-plugin-includepaths";
+import analyze from "rollup-plugin-analyzer";
 
 import pkg from './package.json';
 import {DEFAULT_EXTENSIONS} from "@babel/core";
@@ -20,21 +23,24 @@ const getConfig = (isProd) => {
         // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
         // https://rollupjs.org/guide/en#external-e-external
         external: [
+            "core-js",
+            "@babel/runtime-corejs2",
+            "@babel/runtime-corejs3",
             "reflect-metadata",
+            "fengwuxp-declarative-command",
+            "history",
+            "querystring",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils",
-            "fengwuxp-typescript-feign",
-            "feign-boot-stater",
-            "@react-native-community/netinfo"
+            "fengwuxp-common-utils"
         ],
         output: [
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'commonjs',
+                format: 'cjs',
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             },
             {
                 file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
@@ -42,11 +48,10 @@ const getConfig = (isProd) => {
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: false
+                strictDeprecations: true
             }
         ],
         plugins: [
-            json(),
             typescript({
                 tsconfig: "./tsconfig.lib.json",
                 tsconfigOverride: {
@@ -56,6 +61,7 @@ const getConfig = (isProd) => {
                     }
                 }
             }),
+            json(),
             resolve(),
             common({
                 // 包括
@@ -71,16 +77,24 @@ const getConfig = (isProd) => {
                 babelHelpers: "runtime",
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
             }),
+            analyze({
+                stdout: true,
+            }),
+            filesize(),
+            includePaths({
+                paths: ["./src"]
+            }),
             //压缩代码
             isProd && terser({
                 output: {
                     comments: false
                 },
                 include: [/^.+\.js$/],
-                exclude: ['node_moudles/**'],
+                exclude: ['node_modules/**'],
                 numWorkers: cpuNums,
-                sourcemap: false
-            })
+                sourcemap: true
+            }),
+
         ],
         treeshake: {
             moduleSideEffects: true
