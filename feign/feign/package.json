@@ -50,10 +50,6 @@
     "es6-promise": "^4.1.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "fetch-detector": "^1.0.1",
-    "fetch-ie8": "^1.5.0",
-    "file-saver": "^2.0.2",
-    "isomorphic-fetch": "^2.2.1",
     "lodash": "^4.17.15",
     "reflect-metadata": "^0.1.13"
   },

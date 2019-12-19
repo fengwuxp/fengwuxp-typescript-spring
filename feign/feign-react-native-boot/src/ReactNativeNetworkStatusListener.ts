@@ -47,7 +47,7 @@ export default class ReactNativeNetworkStatusListener implements NetworkStatusLi
 
         return {
             networkType,
-            isConnected
+            isConnected: networkType !== NetworkType.NONE
         }
     };
 
@@ -64,13 +64,13 @@ export default class ReactNativeNetworkStatusListener implements NetworkStatusLi
             case NetInfoStateType.wimax:
                 return NetworkType.UN_KNOWN;
             case NetInfoStateType.cellular:
-                return  NetworkType["4G"];
+                return NetworkType["4G"];
             case NetInfoStateType.wifi:
                 return NetworkType.WIFI;
 
             default:
-                throw new Error(`not support network type: ${type}`)
-
+                // throw new Error(`not support network type: ${type}`)
+                return null;
         }
     }
 

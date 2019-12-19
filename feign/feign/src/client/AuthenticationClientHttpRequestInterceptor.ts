@@ -51,15 +51,20 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     private authenticationStrategy: AuthenticationStrategy;
 
-    /**
-     * blocking 'authorization' refresh
-     */
+    // blocking 'authorization' refresh
     private blockingRefreshAuthorization: boolean;
 
-    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean) {
+    // In the loose mode, it only tries to obtain the authentication information. If it does not obtain it, it does nothing.
+    private looseMode: boolean = true;
+
+    constructor(authenticationStrategy: AuthenticationStrategy,
+                aheadOfTimes?: number,
+                looseMode: boolean = true,
+                blockingRefreshAuthorization: boolean = true) {
         this.authenticationStrategy = authenticationStrategy;
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
-        this.blockingRefreshAuthorization = blockingRefreshAuthorization || true;
+        this.blockingRefreshAuthorization = blockingRefreshAuthorization;
+        this.looseMode = looseMode
     }
 
     interceptor = async (req: T) => {
@@ -69,11 +74,14 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return req;
         }
 
-        const {aheadOfTimes, blockingRefreshAuthorization, authenticationStrategy} = this;
+        const {aheadOfTimes, looseMode, blockingRefreshAuthorization, authenticationStrategy} = this;
         let authorization: AuthenticationToken;
         try {
             authorization = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
+            if (looseMode) {
+                return req;
+            }
             return Promise.reject(e);
         }
         if (authorization == null) {
@@ -91,6 +99,9 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             try {
                 authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
             } catch (e) {
+                if (looseMode) {
+                    return req;
+                }
                 // refresh authorization error
                 return Promise.reject(e);
             }

@@ -68,8 +68,8 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
 
     interceptor = async (req: T) => {
         const {networkStatus} = this;
-
-        if (networkStatus == null || !networkStatus.isConnected) {
+        const noneNetwork = networkStatus == null || !networkStatus.isConnected;
+        if (noneNetwork) {
             return this.trySpinWait(req).catch(this.handleFailBack);
         } else {
             return req;

@@ -1,4 +1,4 @@
-import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
+import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpMediaType, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
 
 interface BrowserHttpRequest extends HttpRequest {
     /**
@@ -38,13 +38,15 @@ interface BrowserHttpRequest extends HttpRequest {
  */
 declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
     private timeout;
+    private consumes;
     private resolveHttpResponse;
     /**
      *
      * @param timeout  default 5000ms
      * @param resolveHttpResponse
+     * @param consumes  default 'application/json;charset=UTF-8'
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
+    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType);
     send: (req: BrowserHttpRequest) => Promise<HttpResponse<any>>;
     /**
      * build http request

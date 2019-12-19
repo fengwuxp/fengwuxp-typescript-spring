@@ -992,11 +992,9 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
     }>;
     private aheadOfTimes;
     private authenticationStrategy;
-    /**
-     * blocking 'authorization' refresh
-     */
     private blockingRefreshAuthorization;
-    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean);
+    private looseMode;
+    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, looseMode?: boolean, blockingRefreshAuthorization?: boolean);
     interceptor: (req: T) => Promise<T>;
     /**
      * append authorization header
