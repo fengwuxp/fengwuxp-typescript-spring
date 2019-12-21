@@ -17,7 +17,14 @@ export interface ReactNativeWebviewBridgeMessageProcessor {
 
 export const reactNativeWebviewBridgeFactory = (webview): WebviewBridgeMessageProcessor<string> & WebviewBridgeMessageSender<InvokeResultMessage> => {
 
-    const webviewBridgeMessageProcessor = new NativeWebviewBridgeMessageProcessor(webview);
+    const postMessage = function (event: any) {
+        console.log("postMessage", event);
+        webview.postMessage(JSON.stringify(event));
+    };
+    const webviewBridgeMessageProcessor = new NativeWebviewBridgeMessageProcessor({
+        postMessage
+    });
+
 
     return {
         onMessage: function (event: WebViewMessageEvent) {
@@ -27,10 +34,7 @@ export const reactNativeWebviewBridgeFactory = (webview): WebviewBridgeMessagePr
             }
             webviewBridgeMessageProcessor.onMessage(data as any);
         },
-
-        postMessage: function (event: any) {
-            webview.postMessage(JSON.stringify(event));
-        }
+        postMessage
 
     }
 };

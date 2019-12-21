@@ -26,7 +26,7 @@ export const browserReactNativeModuleProviderFactory = (): ProxyBrowserNativeMod
             getModule: (moduleName: string) => {
                 newProxyInstanceEnhance({}, null, () => {
                     return function (...args) {
-                        console.log("not react-native webview",args)
+                        console.log("not react-native webview", args)
                     }
                 });
             }
@@ -36,7 +36,8 @@ export const browserReactNativeModuleProviderFactory = (): ProxyBrowserNativeMod
     return browserNativeModuleProviderFactory({
         onMessage: function (listener: (message: InvokeResultMessage) => void) {
             const type = "message";
-            const wrapperListener = (message: string) => {
+            const wrapperListener = (event) => {
+                const message = event.data;
                 if (!StringUtils.isJSONString(message)) {
                     return;
                 }
