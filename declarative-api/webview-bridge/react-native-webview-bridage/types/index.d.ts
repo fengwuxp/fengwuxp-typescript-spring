@@ -1,5 +1,5 @@
 import { WebViewMessageEvent } from 'react-native-webview/lib/WebViewTypes';
-import { WebviewBridgeMessageProcessor, WebviewBridgeMessageSender, InvokeResultMessage } from 'fengwuxp-declarative-webview-bridge-adapter';
+import { WebviewBridgeMessageProcessor, WebviewBridgeMessageSender, InvokeResultMessage } from 'fengwuxp-declarative-webview-bridge-adapter/types';
 
 interface ReactNativeWebviewBridgeMessageProcessor {
     onMessage: (event: WebViewMessageEvent) => void;

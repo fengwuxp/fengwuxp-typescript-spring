@@ -32,7 +32,7 @@ const getConfig = (isProd) => {
             "querystring",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
-            "fengwuxp-declarative-webview-bridge-adapter",
+            "fengwuxp-declarative-webview-bridge-adapter/lib",
             "fengwuxp-common-utils/lib/string/StringUtils"
         ],
         output: [
