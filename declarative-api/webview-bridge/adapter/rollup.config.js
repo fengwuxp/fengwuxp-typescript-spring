@@ -28,10 +28,9 @@ const getConfig = (isProd) => {
             "@babel/runtime-corejs3",
             "reflect-metadata",
             "fengwuxp-declarative-command",
-            "history",
-            "querystring",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "fengwuxp-common-utils/lib/string/StringUtils"
         ],
         output: [
             {

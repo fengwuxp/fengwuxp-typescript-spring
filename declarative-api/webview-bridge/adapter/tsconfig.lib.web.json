@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "baseUrl": "./web",
+    "declaration": true,
+    "declarationDir": "types-temp"
+  },
+  "include": [
+    "./web/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "test",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

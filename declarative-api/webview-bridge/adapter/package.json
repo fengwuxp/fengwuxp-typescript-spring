@@ -15,10 +15,12 @@
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "browser": "browser/index.js",
   "typings": "types/index.d.ts",
   "files": [
-    "dist",
     "es",
+    "lib",
+    "browser",
     "types"
   ],
   "author": "wuxp",
@@ -29,7 +31,8 @@
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
     "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
-    "publish:lib": "npm run rollup:build && npm run npm:publish"
+    "rollup:build:web": "rm -rf ./types-temp && tsc -p ./tsconfig.lib.web.json --emitDeclarationOnly && rollup -c ./rollup.web.config.js && rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build && npm run rollup:build:web && npm run npm:publish"
   },
   "keywords": [
     "route",

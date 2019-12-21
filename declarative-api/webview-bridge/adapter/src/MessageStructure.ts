@@ -7,7 +7,7 @@ export interface InvokeModuleMessage {
 
     moduleName: string;
 
-    functionName: string;
+    memberName: string;
 
     args?: any[];
 }
@@ -17,9 +17,9 @@ export interface InvokeModuleMessage {
  */
 export interface InvokeResultMessage {
 
-    id: string;
+    id: number;
 
-    result: any;
+    result?: any;
 
     // only promise reject
     error?: any

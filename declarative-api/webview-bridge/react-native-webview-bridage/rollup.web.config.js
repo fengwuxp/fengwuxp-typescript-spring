@@ -18,7 +18,7 @@ const cpuNums = os.cpus().length;
 
 const getConfig = (isProd) => {
     return {
-        input: './src/index.ts',
+        input: './web/index.ts',
 
         // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
         // https://rollupjs.org/guide/en#external-e-external
@@ -28,25 +28,16 @@ const getConfig = (isProd) => {
             "@babel/runtime-corejs3",
             "reflect-metadata",
             "fengwuxp-declarative-command",
-            "history",
-            "querystring",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
-            "fengwuxp-declarative-webview-bridge-adapter",
+            "react-native-webview",
+            "fengwuxp-declarative-webview-bridge-adapter/browser",
             "fengwuxp-common-utils/lib/string/StringUtils"
         ],
         output: [
             {
-                file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'cjs',
-                compact: true,
-                extend: false,
-                sourcemap: isProd,
-                strictDeprecations: true
-            },
-            {
-                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
-                format: 'esm',
+                file: isProd ? pkg.browser.replace(".js", ".min.js") : pkg.browser,
+                format: 'commonjs',
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
@@ -55,7 +46,7 @@ const getConfig = (isProd) => {
         ],
         plugins: [
             typescript({
-                tsconfig: "./tsconfig.lib.json",
+                tsconfig: "./tsconfig.lib.web.json",
                 tsconfigOverride: {
                     compilerOptions: {
                         module: "esnext",
@@ -111,7 +102,7 @@ export default [
     {
         input: "./types-temp/index.d.ts",
         output: {
-            file: "./types/index.d.ts",
+            file: "./browser/index.d.ts",
             format: "es"
         },
         plugins: [dts()],

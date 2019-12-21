@@ -12,11 +12,8 @@
     "types": [
       "node",
       "jest",
-      "reflect-metadata",
-      "history"
     ],
     "lib": [
-      "dom",
       "es2015",
       "es7",
       "es2018",
