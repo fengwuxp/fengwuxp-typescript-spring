@@ -1496,6 +1496,10 @@ declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptio
  */
 declare const mediaTypeIsEq: (type1: string, type2: string) => boolean;
 
+/**
+ * request method is support request body
+ * @param method
+ */
 declare const supportRequestBody: (method: string) => boolean;
 /**
  * serialize http request body for content type

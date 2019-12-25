@@ -4,7 +4,10 @@ import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {mediaTypeIsEq} from "./MediaTypeUtil";
 
-
+/**
+ * request method is support request body
+ * @param method
+ */
 export const supportRequestBody = (method: HttpMethod | string) => {
     if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
         return false;
