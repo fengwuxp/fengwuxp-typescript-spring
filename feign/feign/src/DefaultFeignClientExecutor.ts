@@ -111,6 +111,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (queryParams && requestSupportRequestBody) {
             headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, queryParams);
         }
+        feignRequestOptions.queryParams = queryParams;
         feignRequestOptions.body = requestSupportRequestBody ? requestBody : null;
         feignRequestOptions.headers = headers;
 

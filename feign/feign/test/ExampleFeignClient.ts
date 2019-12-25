@@ -15,6 +15,7 @@ type FindMemberRequest = {
     name: string,
     userName: string,
     memberId: number,
+    time: Date
 };
 
 @Feign({

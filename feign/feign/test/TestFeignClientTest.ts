@@ -30,7 +30,8 @@ describe("test feign client", () => {
             const result = await exampleFeignClient.findMember({
                 name: "张三",
                 userName: "1",
-                memberId: 12
+                memberId: 12,
+                time: new Date()
             });
             // const result = await ClientRequestDataValidatorHolder.validate({
             //     name: "张三",
@@ -52,7 +53,7 @@ describe("test feign client", () => {
         } catch (e) {
             logger.error(e)
         }
-    }, 10 * 1000);
+    }, 30 * 1000);
 
     test("test get example", async () => {
 
@@ -120,6 +121,30 @@ describe("test feign client", () => {
         }
 
     }, 160 * 1000);
+
+
+    test("promise race", async () => {
+
+        const k = await Promise.race([
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("1");
+                    resolve(1)
+                }, 1000)
+            }),
+            new Promise((resolve, reject) => {
+                setTimeout(() => {
+                    console.log("2");
+                    resolve(2)
+                }, 2000)
+            })
+        ])
+
+        await sleep(3000);
+
+        logger.log("k", k)
+
+    }, 10 * 1000)
 
 });
 
