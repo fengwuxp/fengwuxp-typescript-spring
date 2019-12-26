@@ -42,7 +42,7 @@ export const toLocaleUpperCaseResolver: MethodNameCommandResolver = (methodName:
  * example : 'memberIndexView' ==>  member/IndexView'
  * @param methodName
  */
-export const firstUpperCaseToLeftIncline = (methodName: string) => {
+export const firstUpperCaseToLeftIncline: MethodNameCommandResolver = (methodName: string) => {
 
     return methodName.replace(/([A-Z])/, "/$1");
 };
@@ -68,7 +68,7 @@ export const initialUpperCase = (str: string) => {
  * example : 'memberIndexView' ==>  member/MemberIndexView'
  * @param methodName
  */
-export const repeatTheFirstWord = (methodName: string) => {
+export const repeatTheFirstWord: MethodNameCommandResolver = (methodName: string) => {
 
     const strings = methodName.split(/([A-Z])/);
     return `${strings[0]}/${initialUpperCase(strings[0])}${strings.splice(1, strings.length).join("")}`

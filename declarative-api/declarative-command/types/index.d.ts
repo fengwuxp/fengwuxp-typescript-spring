@@ -28,7 +28,7 @@ declare const toLocaleUpperCaseResolver: MethodNameCommandResolver;
  * example : 'memberIndexView' ==>  member/IndexView'
  * @param methodName
  */
-declare const firstUpperCaseToLeftIncline: (methodName: string) => string;
+declare const firstUpperCaseToLeftIncline: MethodNameCommandResolver;
 /**
  * 首字母转为小写
  * @param str
@@ -44,7 +44,7 @@ declare const initialUpperCase: (str: string) => string;
  * example : 'memberIndexView' ==>  member/MemberIndexView'
  * @param methodName
  */
-declare const repeatTheFirstWord: (methodName: string) => string;
+declare const repeatTheFirstWord: MethodNameCommandResolver;
 /**
  * 从右向左合并处理
  * @param resolvers
