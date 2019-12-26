@@ -4,6 +4,10 @@
 
 - 路径转换
 ```
+  toLineResolver 模式
+  /pages/member/index_iew ==>memberIndexView
+  /pages/goods/list_view ==>goodsListView
+
   firstUpperCaseToLeftIncline 模式 
  
   /pages/member/IndexView ==>memberIndexView

@@ -1,5 +1,3 @@
-import {firstUpperCaseToLeftIncline} from "./SimpleMethodNameCommandResolver";
-
 export {MethodNameCommandResolver} from "./MethodNameCommandResolver";
 export {
     toHumpResolver, toLineResolver,
