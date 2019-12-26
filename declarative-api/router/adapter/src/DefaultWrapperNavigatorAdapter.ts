@@ -153,7 +153,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
             }
             return {
                 ...navigatorObject,
-                pathname: `${pathname}?${stringify(uriVariables)}`
+                pathname: `${pathname}?${stringify(uriVariables as any)}`
             }
         }
 

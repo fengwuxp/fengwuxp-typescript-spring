@@ -1,11 +1,12 @@
 import {
     AppCommandRouter,
     appCommandRouterFactory,
-    NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject,
+    NavigatorAdapter,
+    NavigatorContextAdapter,
     RouteConfirmBeforeJumping
 } from "fengwuxp-declarative-router-adapter";
 import TarojsNavigatorContextAdapter from "./TarojsNavigatorContextAdapter";
-import {MethodNameCommandResolver, toLineResolver} from "fengwuxp-declarative-command";
+import {MethodNameCommandResolver, repeatTheFirstWord} from "fengwuxp-declarative-command";
 import TaroNavigatorAdapter from "./TaroNavigatorAdapter";
 
 
@@ -27,7 +28,7 @@ export const tarojsAppCommandRouterFactory = <T extends AppCommandRouter,
     return appCommandRouterFactory<T>(
         {
             confirmBeforeJumping: () => confirmBeforeJumping,
-            methodNameCommandResolver: () => methodNameCommandResolver || toLineResolver,
+            methodNameCommandResolver: () => methodNameCommandResolver || repeatTheFirstWord,
             navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new TaroNavigatorAdapter(),
             navigatorContextAdapter: (): NavigatorContextAdapter => navigatorContextAdapter || new TarojsNavigatorContextAdapter()
         }, pathPrefix, true);
