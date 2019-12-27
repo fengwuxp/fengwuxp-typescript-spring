@@ -36,6 +36,9 @@ describe("test spel", () => {
         const spelExpression = spelExpressionParser.parseExpression("${a['c']['d']}+${c.b}> ${k}");
         const value = spelExpression.getValue(context);
         logger.debug("value", value);
+        const spelExpression2 = spelExpressionParser.parseExpression("${a!=null}");
+        const value2 = spelExpression2.getValue(context);
+        logger.debug("value", value2);
 
     });
 
@@ -58,5 +61,22 @@ describe("test spel", () => {
         logger.debug("value", value);
 
     })
+
+    test("function node expression 3", () => {
+
+        const context = [1, 3, 4, 6, 6];
+
+        const spelExpression = spelExpressionParser.parseExpression("${args!=null}");
+        const value = spelExpression.getValue(context);
+        logger.debug("value 1", value);
+
+        const spelExpression2 = spelExpressionParser.parseExpression("${$0+1+$2}+'23'");
+        const value2 = spelExpression2.getValue(context);
+        logger.debug("value2", value2);
+
+        const spelExpression3 = spelExpressionParser.parseExpression("${args.length}");
+        const value3 = spelExpression3.getValue(context);
+        logger.debug("value 3", value3);
+    });
 
 });

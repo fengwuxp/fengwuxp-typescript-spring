@@ -1,7 +1,7 @@
 import {Expression} from "../Expression";
 import {EvaluationContext} from "../EvaluationContext";
 import {ParserContext, TEMPLATE_EXPRESSION} from "../ParserContext";
-import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
+import {newProxyInstance, newProxyInstanceEnhance} from "fengwuxp-common-proxy";
 
 const OPERATORS = [
     '+',
@@ -40,7 +40,7 @@ export default class FunctionNodeExpression implements Expression {
         this.invokeFunction = function (context?: EvaluationContext, rootObject?: object) {
 
             const code = expressionString.replace(regExp, (val) => {
-                return this.converterFunctionNode(val, parserContext)(context);
+                return this.converterFunctionNode(val, parserContext, context)(context);
             });
 
             return new Function(`return ${code}`)();
@@ -61,18 +61,28 @@ export default class FunctionNodeExpression implements Expression {
 
     setValue = (context: EvaluationContext, rootObject: object, value: any) => undefined;
 
-
-    private converterFunctionNode = (expression: string, context: ParserContext) => {
-        const valueExpression = expression.replace(context.getExpressionPrefix(), "").replace(context.getExpressionSuffix(), "")
-        const variableName = "context";
+    private converterFunctionNode = (expression: string, parserContext: ParserContext, evaluationContext: EvaluationContext) => {
+        const valueExpression = expression.replace(parserContext.getExpressionPrefix(), "").replace(parserContext.getExpressionSuffix(), "");
+        let keys = Object.keys(evaluationContext);
+        let isArray = Array.isArray(evaluationContext);
+        if (isArray) {
+            keys = keys.map(key => `$${key}`);
+        }
         const code = `  
              if(arguments.length===0){
                return;
+             }              
+             const args=arguments[0]
+             if(${isArray}){
+               const [${keys.join(",")}] = args;  
+               return ${valueExpression}       
              }
-             var ${variableName}=arguments[0]
-             return ${variableName}.${valueExpression}            
+                  
+             const {${keys.join(",")}} = args;  
+             return ${valueExpression}            
          `;
-        return new Function(code);
+        return new Function(code)
     }
+
 
 }
