@@ -4,6 +4,7 @@ import {HttpResponse} from "../../client/HttpResponse";
 import {ResolveHttpResponse} from "../../resolve/ResolveHttpResponse";
 import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
 import {contentTypeName, HttpMediaType, mediaTypeIsEq} from "../..";
+import {HttpStatus} from "../../constant/http/HttpStatus";
 
 
 export type MockDataType = (options: HttpRequest) => Promise<any> | any;
@@ -52,7 +53,7 @@ export default class MockHttpAdapter implements HttpAdapter {
 
         if (isFailure) {
             const response: Response = {
-                status: 404,
+                status: HttpStatus.NOT_FOUND,
                 statusText: "Not Found",
                 ok: false,
                 url,
@@ -62,7 +63,7 @@ export default class MockHttpAdapter implements HttpAdapter {
             return Promise.reject(this.resolveHttpResponse.resolve(response));
         } else {
             return Promise.resolve(this.resolveHttpResponse.resolve({
-                status: 200,
+                status: HttpStatus.OK,
                 statusText: null,
                 data: req,
                 ok: true,

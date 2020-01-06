@@ -5,6 +5,8 @@ import {AppCommandRouter, RouterCommandMethod} from "../src/AppCommandRouter";
 import {RouterCommand} from "../src/RouterCommand";
 import {tryConverterPathnameVariableResolver} from "../src/PathnameMethodNameCommandResolver";
 import {toLineResolver} from "fengwuxp-declarative-command";
+import {AppRouterMapping} from '../src/annotations/AppRouterMapping';
+import {RouterMapping} from '../src/annotations/RouteMapping';
 
 
 const logger = log4js.getLogger();
@@ -41,61 +43,85 @@ interface MockAppRouter extends NavigatorAdapter, AppCommandRouter {
     replaceOrderDetailById: RouterCommandMethod<string>;
 }
 
+const mockNavigatorContextAdapter = {
+    getBrowseHistory: function () {
+        return undefined;
+    },
+    getCurrentObject: function () {
+        return undefined;
+    },
+    getCurrentPathname: function () {
+        return "";
+    },
+    getCurrentState: function () {
+        return undefined;
+    },
+    getCurrentUriVariables: function () {
+        return undefined;
+    },
+    isStackTop: function () {
+        return false;
+    },
+    isView: function (p1: string) {
+        return false;
+    }
+
+};
+const mockNavigatorAdapter = {
+    goBack: function (num?: number) {
+        logger.debug(`goBack`, num || 1);
+        return;
+    },
+    popToTop: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+        logger.debug(`popToTop`, navigatorDescriptorObject);
+        return;
+    },
+    push: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+        logger.debug(`push`, navigatorDescriptorObject)
+        return;
+    },
+    // toView: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+    //     logger.debug(`toView`, navigatorDescriptorObject)
+    //     return;
+    // },
+    reLaunch: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+        logger.debug(`reLaunch`, navigatorDescriptorObject)
+        return;
+    },
+    replace: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
+        logger.debug(`replace`, navigatorDescriptorObject)
+        return;
+    }
+
+} as any;
+
+@AppRouterMapping({
+    navigatorAdapter: () => mockNavigatorAdapter,
+    navigatorContextAdapter: () => mockNavigatorContextAdapter
+})
+class MockAppCommandRouter {
+
+    @RouterMapping("login_view")
+    login: RouterCommandMethod;
+}
+
+const mock = new MockAppCommandRouter();
+
+
 describe("test  app command router factory", () => {
 
     const mockAppRouter: MockAppRouter = appCommandRouterFactory<MockAppRouter>({
         navigatorContextAdapter: () => {
-            return {
-                getBrowseHistory: function () {
-                    return undefined;
-                }, getCurrentObject: function () {
-                    return undefined;
-                }, getCurrentPathname: function () {
-                    return "";
-                }, getCurrentState: function () {
-                    return undefined;
-                }, getCurrentUriVariables: function () {
-                    return undefined;
-                }, isStackTop: function () {
-                    return false;
-                }, isView: function (p1: string) {
-                    return false;
-                }
-
-            };
+            return mockNavigatorContextAdapter;
         },
         methodNameCommandResolver: () => toLineResolver,
         navigatorAdapter: <E extends NavigatorAdapter = NavigatorAdapter>(): E => {
-            return {
-                goBack: function (num?: number) {
-                    logger.debug(`goBack`, num || 1);
-                    return;
-                },
-                popToTop: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-                    logger.debug(`popToTop`, navigatorDescriptorObject);
-                    return;
-                },
-                push: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-                    logger.debug(`push`, navigatorDescriptorObject)
-                    return;
-                },
-                // toView: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-                //     logger.debug(`toView`, navigatorDescriptorObject)
-                //     return;
-                // },
-                reLaunch: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-                    logger.debug(`reLaunch`, navigatorDescriptorObject)
-                    return;
-                },
-                replace: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-                    logger.debug(`replace`, navigatorDescriptorObject)
-                    return;
-                }
-
-            } as any
-
+            return mockNavigatorAdapter
         }
+    });
 
+    test("test mock annotation", () => {
+        mock.login();
     });
 
     test("test mock app router", () => {

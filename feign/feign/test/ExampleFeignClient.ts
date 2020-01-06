@@ -71,3 +71,4 @@ export default class ExampleFeignClient {
         },
         options?: FeignRequestOptions) => Promise<number>;
 }
+

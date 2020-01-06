@@ -1483,8 +1483,10 @@ declare class FeignUIToastHolder {
  * unified transform failure toast
  */
 declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
+    private static IS_TO_AUTHENTICATION_VIEW;
     protected unifiedFailureToast: UnifiedFailureToast;
-    constructor(unifiedFailureToast?: UnifiedFailureToast);
+    protected toAuthenticationViewHandle: Function;
+    constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle?: Function);
     postError: (options: T, response: HttpResponse<any>) => HttpResponse<any> | Promise<never>;
     protected tryToast: (options: T, response: HttpResponse<any>) => void;
 }
