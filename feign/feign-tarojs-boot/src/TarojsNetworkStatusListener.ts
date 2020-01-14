@@ -1,4 +1,5 @@
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "fengwuxp-typescript-feign";
+import * as Taro from "@tarojs/taro";
 
 /**
  * tarojs network status listener

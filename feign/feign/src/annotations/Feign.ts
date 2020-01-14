@@ -5,7 +5,7 @@ import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {FeignClientBuilder, FeignClientBuilderInterface} from "../FeignClientBuilder";
-import "reflect-metadata";
+import Reflect from "../ReflectMetadata";
 
 
 export interface FeignOptions {

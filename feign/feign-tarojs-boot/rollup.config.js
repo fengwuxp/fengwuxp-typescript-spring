@@ -27,7 +27,8 @@ const getConfig = (isProd) => {
             "@babel/runtime-corejs3",
             "reflect-metadata",
             "fengwuxp-typescript-feign",
-            "feign-boot-stater"
+            "feign-boot-stater",
+            "@tarojs/taro"
         ],
         output: [
             {

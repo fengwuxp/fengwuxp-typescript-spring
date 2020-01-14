@@ -79,4 +79,18 @@ describe("test spel", () => {
         logger.debug("value 3", value3);
     });
 
+    test("function node expression 4", () => {
+
+
+        const context = {
+            hasRole: function (text) {
+                logger.debug("hasRole", text);
+                return text == 'ADMIN';
+            }
+        };
+        const spelExpression = spelExpressionParser.parseExpression("${hasRole('text')}");
+        const value = spelExpression.getValue<boolean>(context);
+        logger.debug("value 1", value);
+    });
+
 });

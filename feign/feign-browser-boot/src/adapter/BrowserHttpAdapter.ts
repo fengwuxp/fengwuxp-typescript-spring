@@ -165,6 +165,9 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         const {consumes, getHeaderByName} = this;
 
         const headers = response.headers;
+        // response.addHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length");
+        // response.addHeader("Access-Control-Expose-Headers","Content-Type,Content-Length");
+
         if (parseInt(getHeaderByName(headers, contentLengthName)) === 0) {
             return Promise.resolve();
         }

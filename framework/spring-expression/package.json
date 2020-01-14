@@ -38,7 +38,8 @@
   ],
   "devDependencies": {
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2"
+    "typescript": "^3.7.2",
+    "spel2js": "^0.2.7"
   },
   "dependencies": {
     "fengwuxp-common-proxy": "^1.0.0",

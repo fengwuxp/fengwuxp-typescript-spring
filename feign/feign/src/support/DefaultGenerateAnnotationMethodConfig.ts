@@ -3,7 +3,7 @@ import {FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import {GenerateAnnotationMethodConfig} from "./GenerateAnnotationMethodConfig";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
 import {FeignClient} from "../FeignClient";
-import "reflect-metadata";
+import Reflect from "../ReflectMetadata";
 
 /**
  * 默认的代理服务方法配置生成

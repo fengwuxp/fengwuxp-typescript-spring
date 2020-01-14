@@ -62,7 +62,8 @@ export default class FunctionNodeExpression implements Expression {
     setValue = (context: EvaluationContext, rootObject: object, value: any) => undefined;
 
     private converterFunctionNode = (expression: string, parserContext: ParserContext, evaluationContext: EvaluationContext) => {
-        const valueExpression = expression.replace(parserContext.getExpressionPrefix(), "").replace(parserContext.getExpressionSuffix(), "");
+        const valueExpression = expression.replace(parserContext.getExpressionPrefix(), "")
+            .replace(parserContext.getExpressionSuffix(), "");
         let keys = Object.keys(evaluationContext);
         let isArray = Array.isArray(evaluationContext);
         if (isArray) {

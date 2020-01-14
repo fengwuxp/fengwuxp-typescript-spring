@@ -57,6 +57,13 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     // In the loose mode, it only tries to obtain the authentication information. If it does not obtain it, it does nothing.
     private looseMode: boolean = true;
 
+    /**
+     *
+     * @param authenticationStrategy
+     * @param aheadOfTimes                default: 5 * 60 * 1000
+     * @param looseMode                   default: true
+     * @param blockingRefreshAuthorization
+     */
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
                 looseMode: boolean = true,
