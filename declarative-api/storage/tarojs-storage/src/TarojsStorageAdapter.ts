@@ -5,7 +5,7 @@ import {
     StorageSyncAdapter,
     StorageUpdateStrategy
 } from "fengwuxp-declarative-storage-adapter";
-import * as Taro from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 
 
 /**

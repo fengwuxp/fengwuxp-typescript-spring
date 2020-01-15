@@ -1,7 +1,7 @@
 import {CommonResolveHttpResponse, HttpAdapter, HttpResponse, ResolveHttpResponse} from "fengwuxp-typescript-feign";
 import {TarojsHttpRequest} from "./TarojsHttpRequest";
-import * as Taro from "@tarojs/taro";
-import {request} from "@tarojs/taro";
+import Taro, {request} from "@tarojs/taro";
+
 
 /**
  * tarojs http adaptor
