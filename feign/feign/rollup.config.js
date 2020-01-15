@@ -25,7 +25,7 @@ const getConfig = (isProd) => {
         external: [
             "core-js",
             "@babel/runtime-corejs3",
-            "reflect-metadata",
+            "@abraham/reflection",
             "async-validator",
             "xregexp",
             "xregexp-quotemeta",

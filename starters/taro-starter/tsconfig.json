@@ -3,7 +3,6 @@
     "moduleResolution": "node",
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": false,
-    "compileOnSave": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
     "module": "commonjs",
@@ -16,7 +15,10 @@
     "declaration": true,
     "importHelpers": true,
     "typeRoots": [
-      "node_modules/@types"
+      "node",
+      "jest",
+      "react",
+      "reflect-metadata"
     ],
     "lib": [
       "dom",

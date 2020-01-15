@@ -24,5 +24,6 @@ _src
 .awcache
 lib
 es
+esnext
 browser
 types/index.d.ts

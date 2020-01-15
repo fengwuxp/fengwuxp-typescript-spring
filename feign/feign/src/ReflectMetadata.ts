@@ -1,9 +1,5 @@
-/**
- * 为了兼容小程序无法从global 对象上读取属性
- */
+// https://github.com/abraham/reflection
+import {Reflection as Reflect} from '@abraham/reflection';
 
-import "reflect-metadata";
-
-const Reflect = global["Reflect"];
 
 export default Reflect;

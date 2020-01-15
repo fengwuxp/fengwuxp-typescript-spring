@@ -22,7 +22,8 @@ const getConfig = (isProd) => {
             "reflect-metadata",
             "blueimp-md5",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "@tarojs/taro"
         ],
         output: [
             {

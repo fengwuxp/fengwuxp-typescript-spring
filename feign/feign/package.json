@@ -15,10 +15,12 @@
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "esnext": "esnext/index.js",
   "typings": "types/index.d.ts",
   "files": [
     "lib",
     "es",
+    "esnext",
     "types"
   ],
   "author": "wuxp",
@@ -26,10 +28,11 @@
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
-    "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
+    "tsc:build": "rm -rf ./types & tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
-    "publish:lib": "npm run rollup:build && npm run npm:publish"
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
   },
   "keywords": [
     "fetch",
@@ -44,14 +47,14 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
+    "@abraham/reflection": "^0.7.0",
     "@types/lodash": "^4.14.149",
     "async-validator": "^3.2.2",
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "lodash": "^4.17.15",
-    "reflect-metadata": "^0.1.13"
+    "lodash": "^4.17.15"
   },
   "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }
