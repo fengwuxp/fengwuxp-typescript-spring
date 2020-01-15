@@ -26,7 +26,7 @@ const getConfig = (isProd) => {
             "core-js",
             "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
-            "reflect-metadata",
+            "@abraham/reflection",
             "fengwuxp-declarative-router-adapter",
             "fengwuxp-declarative-command",
             "@tarojs/taro",
@@ -35,16 +35,16 @@ const getConfig = (isProd) => {
             "fengwuxp-common-utils"
         ],
         output: [
+            // {
+            //     file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
+            //     format: 'commonjs',
+            //     compact: true,
+            //     extend: false,
+            //     sourcemap: isProd,
+            //     strictDeprecations: false
+            // },
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'commonjs',
-                compact: true,
-                extend: false,
-                sourcemap: isProd,
-                strictDeprecations: false
-            },
-            {
-                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
                 format: 'esm',
                 compact: true,
                 extend: false,
@@ -73,11 +73,11 @@ const getConfig = (isProd) => {
                 exclude: [],
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
-            babel({
-                exclude: "node_modules/**",
-                babelHelpers: "runtime",
-                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
-            }),
+            // babel({
+            //     exclude: "node_modules/**",
+            //     babelHelpers: "runtime",
+            //     extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
+            // }),
             analyze({
                 stdout: true,
             }),
