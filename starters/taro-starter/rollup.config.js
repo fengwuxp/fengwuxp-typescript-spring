@@ -28,7 +28,7 @@ const getConfig = (isProd) => {
         output: [
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'cjs',
+                format: 'esm',
                 compact: true,
                 extend: false,
                 sourcemap: false,
@@ -53,12 +53,6 @@ const getConfig = (isProd) => {
                 // 排除
                 exclude: [],
                 extensions: ['.js', '.ts']
-            }),
-            babel({
-                // runtimeHelpers: true,
-                extensions: ['.js', '.ts'],
-                // include: ['src/**/*'],
-                babelHelpers: "bundled"
             }),
             //压缩代码
             isProd && terser({

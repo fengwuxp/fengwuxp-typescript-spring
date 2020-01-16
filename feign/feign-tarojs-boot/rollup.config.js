@@ -31,16 +31,16 @@ const getConfig = (isProd) => {
             "@tarojs/taro"
         ],
         output: [
+            // {
+            //     file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
+            //     format: 'commonjs',
+            //     compact: true,
+            //     extend: false,
+            //     sourcemap: isProd,
+            //     strictDeprecations: false
+            // },
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'commonjs',
-                compact: true,
-                extend: false,
-                sourcemap: isProd,
-                strictDeprecations: false
-            },
-            {
-                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
                 format: 'esm',
                 compact: true,
                 extend: false,
@@ -69,11 +69,11 @@ const getConfig = (isProd) => {
                 exclude: [],
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
-            babel({
-                exclude: "node_modules/**",
-                babelHelpers: "runtime",
-                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
-            }),
+            // babel({
+            //     exclude: "node_modules/**",
+            //     babelHelpers: "runtime",
+            //     extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
+            // }),
             analyze({
                 stdout: true,
             }),

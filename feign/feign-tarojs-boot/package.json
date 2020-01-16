@@ -2,11 +2,9 @@
   "name": "feign-boot-tarojs-stater",
   "version": "1.0.0",
   "description": "",
-  "main": "lib/index.js",
-  "module": "es/index.js",
+  "main": "es/index.js",
   "typings": "types/index.d.ts",
   "files": [
-    "lib",
     "es",
     "types"
   ],
