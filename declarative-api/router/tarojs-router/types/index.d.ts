@@ -1,4 +1,4 @@
-import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, AppCommandRouter, RouteConfirmBeforeJumping, NavigatorContextAdapter } from 'fengwuxp-declarative-router-adapter';
+import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouteConfirmBeforeJumping, NavigatorContextAdapter, RouterCommandConfiguration, AppCommandRouter } from 'fengwuxp-declarative-router-adapter';
 import { General } from '@tarojs/taro';
 import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
 
@@ -38,6 +38,14 @@ declare function transferViewState(): Promise<any>;
 declare function setNextViewState(viewState: any): Promise<void>;
 
 /**
+ * 获取路由配置
+ * @param methodNameCommandResolver
+ * @param confirmBeforeJumping
+ * @param navigatorAdapter
+ * @param navigatorContextAdapter
+ */
+declare const getRouterCommandConfiguration: (confirmBeforeJumping?: RouteConfirmBeforeJumping, methodNameCommandResolver?: MethodNameCommandResolver, navigatorAdapter?: NavigatorAdapter<NavigatorDescriptorObject>, navigatorContextAdapter?: NavigatorContextAdapter<NavigatorDescriptorObject>) => RouterCommandConfiguration;
+/**
  *
  * @param pathPrefix              路径前缀，如果有分包可以设置为 /分包目录名称/pages/  ==>  /shop/pages/
  * @param methodNameCommandResolver
@@ -45,6 +53,6 @@ declare function setNextViewState(viewState: any): Promise<void>;
  * @param navigatorAdapter
  * @param navigatorContextAdapter
  */
-declare const tarojsAppCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(pathPrefix?: string, methodNameCommandResolver?: MethodNameCommandResolver, confirmBeforeJumping?: RouteConfirmBeforeJumping, navigatorAdapter?: NavigatorAdapter<NavigatorDescriptorObject>, navigatorContextAdapter?: NavigatorContextAdapter<NavigatorDescriptorObject>) => T;
+declare const tarojsAppCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(pathPrefix?: string, confirmBeforeJumping?: RouteConfirmBeforeJumping, methodNameCommandResolver?: MethodNameCommandResolver, navigatorAdapter?: NavigatorAdapter<NavigatorDescriptorObject>, navigatorContextAdapter?: NavigatorContextAdapter<NavigatorDescriptorObject>) => T;
 
-export { TaroNavigatorAdapter, ViewRouteState, initViewState, setNextViewState, tarojsAppCommandRouterFactory, transferViewState };
+export { TaroNavigatorAdapter, ViewRouteState, getRouterCommandConfiguration, initViewState, setNextViewState, tarojsAppCommandRouterFactory, transferViewState };

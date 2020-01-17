@@ -3,7 +3,7 @@
  * @param pathname
  * @constructor
  */
-export const RouterMapping = (pathname?: string) => {
+export const RouteMapping = (pathname?: string) => {
 
     return function (target, prop) {
         target[prop] = function () {};

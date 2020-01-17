@@ -15,6 +15,7 @@
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
   "main": "lib/index.js",
   "module": "es/index.js",
+  "esnext": "esnext/index.js",
   "typings": "types/index.d.ts",
   "files": [
     "dist",
@@ -28,8 +29,9 @@
     "npm:publish": "npm publish",
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
-    "publish:lib": "npm run rollup:build && npm run npm:publish"
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
   },
   "keywords": [
     "route",

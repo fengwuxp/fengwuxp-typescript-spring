@@ -3,12 +3,32 @@ import {
     appCommandRouterFactory,
     NavigatorAdapter,
     NavigatorContextAdapter,
-    RouteConfirmBeforeJumping
+    RouteConfirmBeforeJumping, RouterCommandConfiguration
 } from "fengwuxp-declarative-router-adapter";
 import TarojsNavigatorContextAdapter from "./TarojsNavigatorContextAdapter";
 import {MethodNameCommandResolver, repeatTheFirstWord} from "fengwuxp-declarative-command";
 import TaroNavigatorAdapter from "./TaroNavigatorAdapter";
 
+
+/**
+ * 获取路由配置
+ * @param methodNameCommandResolver
+ * @param confirmBeforeJumping
+ * @param navigatorAdapter
+ * @param navigatorContextAdapter
+ */
+export const getRouterCommandConfiguration = (confirmBeforeJumping?: RouteConfirmBeforeJumping,
+                                              methodNameCommandResolver?: MethodNameCommandResolver,
+                                              navigatorAdapter?: NavigatorAdapter,
+                                              navigatorContextAdapter?: NavigatorContextAdapter): RouterCommandConfiguration => {
+
+    return {
+        confirmBeforeJumping: () => confirmBeforeJumping,
+        methodNameCommandResolver: () => methodNameCommandResolver || repeatTheFirstWord,
+        navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new TaroNavigatorAdapter(),
+        navigatorContextAdapter: (): NavigatorContextAdapter => navigatorContextAdapter || new TarojsNavigatorContextAdapter()
+    }
+};
 
 /**
  *
@@ -20,16 +40,13 @@ import TaroNavigatorAdapter from "./TaroNavigatorAdapter";
  */
 export const tarojsAppCommandRouterFactory = <T extends AppCommandRouter,
     N extends NavigatorAdapter = NavigatorAdapter>(pathPrefix: string = "/pages/",
-                                                   methodNameCommandResolver?: MethodNameCommandResolver,
                                                    confirmBeforeJumping?: RouteConfirmBeforeJumping,
+                                                   methodNameCommandResolver?: MethodNameCommandResolver,
                                                    navigatorAdapter?: NavigatorAdapter,
                                                    navigatorContextAdapter?: NavigatorContextAdapter) => {
 
     return appCommandRouterFactory<T>(
-        {
-            confirmBeforeJumping: () => confirmBeforeJumping,
-            methodNameCommandResolver: () => methodNameCommandResolver || repeatTheFirstWord,
-            navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new TaroNavigatorAdapter(),
-            navigatorContextAdapter: (): NavigatorContextAdapter => navigatorContextAdapter || new TarojsNavigatorContextAdapter()
-        }, pathPrefix, true);
+        getRouterCommandConfiguration(confirmBeforeJumping, methodNameCommandResolver, navigatorAdapter, navigatorContextAdapter),
+        pathPrefix,
+        true);
 };

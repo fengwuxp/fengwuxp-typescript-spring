@@ -142,4 +142,22 @@ interface RouterCommandConfiguration {
  */
 declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T;
 
-export { AppCommandRouter, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction, RouteConfirmBeforeJumping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };
+interface AppRouterMappingConfiguration extends Partial<RouterCommandConfiguration> {
+    pathPrefix?: string;
+    autoJoinQueryString?: boolean;
+}
+/**
+ *
+ * @param configuration
+ * @constructor
+ */
+declare const AppRouterMapping: <T>(configuration?: AppRouterMappingConfiguration) => Function;
+
+/**
+ *
+ * @param pathname
+ * @constructor
+ */
+declare const RouteMapping: (pathname?: string) => (target: any, prop: any) => any;
+
+export { AppCommandRouter, AppRouterMapping, AppRouterMappingConfiguration, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction, RouteConfirmBeforeJumping, RouteMapping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

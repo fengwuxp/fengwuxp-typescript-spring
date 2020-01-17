@@ -6,7 +6,7 @@ import {RouterCommand} from "../src/RouterCommand";
 import {tryConverterPathnameVariableResolver} from "../src/PathnameMethodNameCommandResolver";
 import {toLineResolver} from "fengwuxp-declarative-command";
 import {AppRouterMapping} from '../src/annotations/AppRouterMapping';
-import {RouterMapping} from '../src/annotations/RouteMapping';
+import {RouteMapping} from '../src/annotations/RouteMapping';
 
 
 const logger = log4js.getLogger();
@@ -101,11 +101,11 @@ const mockNavigatorAdapter = {
 })
 class MockAppCommandRouter {
 
-    @RouterMapping("login_view")
+    @RouteMapping("login_view")
     login: RouterCommandMethod;
 }
 
-const mock = new MockAppCommandRouter();
+const mockAppCommandRouter = new MockAppCommandRouter();
 
 
 describe("test  app command router factory", () => {
@@ -121,7 +121,7 @@ describe("test  app command router factory", () => {
     });
 
     test("test mock annotation", () => {
-        mock.login();
+        mockAppCommandRouter.login();
     });
 
     test("test mock app router", () => {

@@ -1,12 +1,9 @@
 import * as os from 'os';
-import * as  path from "path";
 import resolve from 'rollup-plugin-node-resolve';
 import common from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
-import dts from "rollup-plugin-dts";
 import filesize from "rollup-plugin-filesize";
 import includePaths from "rollup-plugin-includepaths";
 import analyze from "rollup-plugin-analyzer";
@@ -35,20 +32,12 @@ const getConfig = (isProd) => {
         ],
         output: [
             {
-                file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-                format: 'cjs',
-                compact: true,
-                extend: false,
-                sourcemap: isProd,
-                strictDeprecations: true
-            },
-            {
-                file: isProd ? pkg.module.replace(".js", ".min.js") : pkg.module,
+                file: isProd ? pkg.esnext.replace(".js", ".min.js") : pkg.esnext,
                 format: 'esm',
                 compact: true,
                 extend: false,
                 sourcemap: isProd,
-                strictDeprecations: true
+                strictDeprecations: false
             }
         ],
         plugins: [
@@ -71,11 +60,6 @@ const getConfig = (isProd) => {
                 // 排除
                 exclude: [],
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
-            }),
-            babel({
-                exclude: "node_modules/**",
-                babelHelpers: "runtime",
-                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
             }),
             analyze({
                 stdout: true,
@@ -106,13 +90,5 @@ const getConfig = (isProd) => {
 export default [
     getConfig(false),
     getConfig(true),
-    {
-        input: "./types-temp/index.d.ts",
-        output: {
-            file: "./types/index.d.ts",
-            format: "es"
-        },
-        plugins: [dts()],
-    },
 ]
 
