@@ -1,22 +1,17 @@
 import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouteConfirmBeforeJumping, NavigatorContextAdapter, RouterCommandConfiguration, AppCommandRouter } from 'fengwuxp-declarative-router-adapter';
-import { General } from '@tarojs/taro';
+import Taro from '@tarojs/taro';
 import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
 
 declare class TaroNavigatorAdapter implements NavigatorAdapter {
-    goBack: (num?: number, ...args: any[]) => Promise<General.CallbackResult>;
-    popAndPush: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
-    push: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
-    toView: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
-    popToTop: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
-    reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
-    replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<General.CallbackResult>;
+    goBack: (num?: number, ...args: any[]) => Promise<Taro.General.CallbackResult>;
+    popAndPush: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    push: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    toView: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    popToTop: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
 }
 
-/**
- * 用于多个页面传递state数据，数据保存在内存中
- * @author wxup
- * @create 2018-10-06 13:06
- **/
 interface ViewRouteState<Q = any, S = any, P = any> {
     viewParams: Q;
     viewState: S;

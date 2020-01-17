@@ -160,4 +160,23 @@ declare const AppRouterMapping: <T>(configuration?: AppRouterMappingConfiguratio
  */
 declare const RouteMapping: (pathname?: string) => (target: any, prop: any) => any;
 
-export { AppCommandRouter, AppRouterMapping, AppRouterMappingConfiguration, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction, RouteConfirmBeforeJumping, RouteMapping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };
+declare class AbstractAppCommandRouter implements AppCommandRouter {
+    getBrowseHistory: () => Array<NavigatorDescriptorObject>;
+    getCurrentObject: () => NavigatorDescriptorObject;
+    getCurrentPathname: () => string;
+    getCurrentState: <S = RouteUriVariable>() => S;
+    getCurrentUriVariables: <S = RouteUriVariable>() => S;
+    getNavigatorAdapter: () => NavigatorAdapter;
+    getNavigatorContextAdapter: () => NavigatorContextAdapter;
+    goBack: (num?: number, ...args: any[]) => (void | Promise<any | void>);
+    isStackTop: () => boolean;
+    isView: (pathname: string) => boolean;
+    popAndPush: NavigatorJumpRouteFunction;
+    popToTop: NavigatorJumpRouteFunction;
+    push: NavigatorJumpRouteFunction;
+    reLaunch: NavigatorJumpRouteFunction;
+    replace: NavigatorJumpRouteFunction;
+    toView: NavigatorJumpRouteFunction;
+}
+
+export { AbstractAppCommandRouter, AppCommandRouter, AppRouterMapping, AppRouterMappingConfiguration, NavigatorAdapter, NavigatorContextAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction, RouteConfirmBeforeJumping, RouteMapping, RouteUriVariable, RouterCommand, RouterCommandConfiguration, RouterCommandMethod, appCommandRouterFactory };

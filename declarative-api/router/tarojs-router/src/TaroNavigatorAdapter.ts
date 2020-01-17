@@ -3,7 +3,7 @@ import {
     NavigatorDescriptorObject,
     RouteUriVariable
 } from "fengwuxp-declarative-router-adapter";
-import * as Taro from "@tarojs/taro";
+import Taro from "@tarojs/taro";
 import {setNextViewState} from './PageStatTransferHelper';
 
 

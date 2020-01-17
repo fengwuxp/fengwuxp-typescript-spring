@@ -1,3 +1,5 @@
+import Taro from "@tarojs/taro";
+
 /**
  * 用于多个页面传递state数据，数据保存在内存中
  * @author wxup

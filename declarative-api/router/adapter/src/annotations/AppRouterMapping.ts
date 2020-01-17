@@ -9,6 +9,7 @@ export interface AppRouterMappingConfiguration extends Partial<RouterCommandConf
     autoJoinQueryString?: boolean
 }
 
+
 /**
  *
  * @param configuration
@@ -16,7 +17,7 @@ export interface AppRouterMappingConfiguration extends Partial<RouterCommandConf
  */
 export const AppRouterMapping = <T>(configuration?: AppRouterMappingConfiguration): Function => {
 
-    return (clazz: { new(...args: any[]): {} }): T & Partial<AppCommandRouter> => {
+    return (clazz: { new(...args: T[]): {} }): T & Partial<AppCommandRouter> => {
 
         // @ts-ignore
         return class extends clazz implements AppCommandRouter {
