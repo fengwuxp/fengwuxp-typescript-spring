@@ -126,10 +126,10 @@ describe("test  app command router factory", () => {
     });
 
     test("test mock annotation", () => {
-        mockAppCommandRouter.login();
+        mockAppCommandRouter.login({id: 2}, {name: "2"});
         const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
         logger.debug(navigatorAdapter);
-        mockAppCommandRouter.push("/test")
+        mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})
     });
 
     test("test mock app router", () => {

@@ -2,6 +2,7 @@ import Taro, {Component, Config} from '@tarojs/taro'
 import {View, Text} from '@tarojs/components'
 import './index.less'
 import ExampleService from '@feign/services/ExampleService'
+import {AppRouter} from "@src/AppRouter";
 
 export default class Index extends Component {
 
@@ -9,10 +10,16 @@ export default class Index extends Component {
     }
 
     componentDidMount() {
-        ExampleService.queryMember({}).then(() => {
+        ExampleService.queryMember({
+            querySize: 1
+        }).then(() => {
 
         }).catch(() => {
-
+            AppRouter.member({
+                memberId: 1
+            },{
+                name:"test111"
+            });
         })
     }
 

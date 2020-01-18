@@ -5,6 +5,7 @@ const aliasDirs = [
     "container",
     "constant",
     "components",
+    "feign",
     "enums",
     "utils"
 ];
@@ -15,13 +16,13 @@ const aliasDirs = [
  */
 const generateAliasConfig = () => {
     const alias = {
-        "@src": path.resolve(__dirname, "./src"),
+        "@src": path.resolve(__dirname,"..", "./src"),
     };
 
     aliasDirs.forEach((dir) => {
-        alias[`@${dir}`] = path.resolve(__dirname, './src/${dir}');
+        alias[`@${dir}`] = path.resolve(__dirname,"..", `./src/${dir}`);
     });
-    alias['fengwuxp-typescript-feign'] = path.resolve(__dirname, "node_modules", 'fengwuxp-typescript-feign', "esnext");
+    alias['fengwuxp-typescript-feign'] = path.resolve(__dirname, "..", "node_modules", 'fengwuxp-typescript-feign', "esnext");
     return alias;
 };
 

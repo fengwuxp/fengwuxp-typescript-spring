@@ -12,7 +12,7 @@ FeignRequestOptions} from "fengwuxp-typescript-feign";
         import {QueryMemberEvt} from "./evt/QueryMemberEvt";
         import {FindMemberEvt} from "./evt/FindMemberEvt";
         import {CreateMemberEvt} from "./evt/CreateMemberEvt";
-        import {PageInfo} from "oak_common";
+        import {PageInfo} from "oak-common";
         import {MemberInfo} from "./info/MemberInfo";
 
     /**

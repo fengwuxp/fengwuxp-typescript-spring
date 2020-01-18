@@ -48,7 +48,7 @@ export async function transferViewState() {
             if (data == null) {
                 return null;
             }
-            return JSON.parse(data);
+            return data;
         }).catch(() => {
             return Promise.resolve(null);
         });

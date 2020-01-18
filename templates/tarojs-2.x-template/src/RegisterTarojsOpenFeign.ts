@@ -22,7 +22,7 @@ import {
 import {TarojsHttpAdaptor, TarojsNetworkStatusListener} from 'feign-boot-tarojs-stater'
 import Taro from '@tarojs/taro'
 import {AppStorage} from "./AppStorage";
-import {OakUnifiedRespProcessInterceptor, OakApiSignatureStrategy} from "oak_common";
+import {OakUnifiedRespProcessInterceptor, OakApiSignatureStrategy} from "oak-common";
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -41,13 +41,13 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
         return AppStorage.getMemberInfo().then((userInfo) => {
 
             return {
-                authorization: userInfo.token,
-                expireDate: userInfo.expiration_date
+                authorization: "11",
+                expireDate: new Date().getTime()
             } as any
         }).catch((e) => {
             return {
-                authorization: null,
-                expireDate: -1
+                authorization: '12',
+                expireDate: new Date().getTime()
             }
         })
 
@@ -59,8 +59,9 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
      * @param req
      */
     public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
+        console.log("刷新token", authorization);
         return Promise.resolve({
-            authorization: null,
+            authorization: "13",
             expireDate: -1
         } as any)
     }
@@ -119,7 +120,7 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
     apiSignatureStrategy = () => {
 
         const OAK = process.env.OAK;
-        return new OakApiSignatureStrategy(OAK.clientId, OAK.clientSecret,"minapp");
+        return new OakApiSignatureStrategy(OAK.clientId, OAK.clientSecret, "minapp");
     }
 
 
