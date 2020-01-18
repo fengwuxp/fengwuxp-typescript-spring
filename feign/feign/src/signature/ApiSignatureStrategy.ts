@@ -1,5 +1,5 @@
-import {FeignOptions} from "../annotations/Feign";
 import {UriVariable} from "../template/RestOperations";
+import {FeignRequestBaseOptions} from "../FeignRequestOptions";
 
 /**
  * api signature strategy
@@ -17,12 +17,12 @@ export interface SimpleApiSignatureStrategy extends ApiSignatureStrategy {
 
 
     /**
-     * 签名
-     * @param fields        需要参与签名的字段
-     * @param data          请求数据
-     * @param feignOptions  请求数据
+     * sign
+     * @param fields        need sign filed
+     * @param data          request body data or url param
+     * @param feignOptions  feign request options
      */
-    sign: (fields: string[], data: UriVariable, feignOptions: FeignOptions) => void;
+    sign: (fields: string[], data: UriVariable, feignRequestBaseOptions: FeignRequestBaseOptions) => void;
 
 
 }

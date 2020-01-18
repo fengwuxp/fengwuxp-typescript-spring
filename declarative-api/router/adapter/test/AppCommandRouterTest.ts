@@ -96,12 +96,15 @@ const mockNavigatorAdapter = {
 
 } as any;
 
-// @ts-ignore
 @AppRouterMapping({
     navigatorAdapter: () => mockNavigatorAdapter,
     navigatorContextAdapter: () => mockNavigatorContextAdapter
 })
-class MockAppCommandRouter extends AbstractAppCommandRouter {
+abstract class AbstractCommandRouter extends AbstractAppCommandRouter {
+
+}
+
+class MockAppCommandRouter extends AbstractCommandRouter {
 
     @RouteMapping("login_view")
     login: RouterCommandMethod;
@@ -125,7 +128,7 @@ describe("test  app command router factory", () => {
     test("test mock annotation", () => {
         mockAppCommandRouter.login();
         const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
-        logger.debug(navigatorAdapter)
+        logger.debug(navigatorAdapter);
         mockAppCommandRouter.push("/test")
     });
 

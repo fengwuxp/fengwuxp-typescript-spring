@@ -1,3 +1,5 @@
+import {FeignOptions} from "./annotations/Feign";
+
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
@@ -10,7 +12,7 @@ export {DataObfuscation} from "./annotations/security/DataObfuscation";
 export {Signature} from "./annotations/security/Signature";
 export {FileUpload} from "./annotations/upload/FileUpload";
 export {FeignRetry} from "./annotations/retry/FeignRetry";
-export {Feign} from "./annotations/Feign";
+export {Feign, FeignOptions} from "./annotations/Feign";
 
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
 export {
@@ -44,6 +46,7 @@ export {FeignConfiguration} from "./configuration/FeignConfiguration";
 export {default as FeignConfigurationRegistry} from "./configuration/FeignConfigurationRegistry";
 
 export {HttpMethod} from "./constant/http/HttpMethod";
+export {HttpStatus} from "./constant/http/HttpStatus";
 export {HttpMediaType} from "./constant/http/HttpMediaType";
 export {
     defaultApiModuleName,
@@ -81,7 +84,7 @@ export {
     ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseErrorHandler
 } from "./template/ResponseErrorHandler";
 export {ResponseExtractor, ResponseExtractorInterface, ResponseExtractorFunction} from "./template/ResponseExtractor";
-export {RestOperations} from "./template/RestOperations";
+export {RestOperations, UriVariable, QueryParamType} from "./template/RestOperations";
 export {default as RestTemplate} from "./template/RestTemplate";
 
 export {

@@ -10,7 +10,7 @@ import {invokeFunctionInterface} from "..";
  * unified failure toast
  * @param response
  */
-export type UnifiedFailureToast = (response: HttpResponse) => void | Promise<void>;
+export type UnifiedFailureToast = (response: HttpResponse | string) => void | Promise<void>;
 
 
 export type FeignUIToastFunction = (message: string) => Promise<void> | void;

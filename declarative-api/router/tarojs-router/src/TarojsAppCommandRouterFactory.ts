@@ -23,7 +23,7 @@ export const getRouterCommandConfiguration = (confirmBeforeJumping?: RouteConfir
                                               navigatorContextAdapter?: NavigatorContextAdapter): RouterCommandConfiguration => {
 
     return {
-        confirmBeforeJumping: () => confirmBeforeJumping,
+        confirmBeforeJumping: confirmBeforeJumping == null ? undefined : () => confirmBeforeJumping,
         methodNameCommandResolver: () => methodNameCommandResolver || repeatTheFirstWord,
         navigatorAdapter: (): NavigatorAdapter => navigatorAdapter || new TaroNavigatorAdapter(),
         navigatorContextAdapter: (): NavigatorContextAdapter => navigatorContextAdapter || new TarojsNavigatorContextAdapter()
