@@ -1,4 +1,4 @@
-import { HttpRequest, HttpAdapter, ResolveHttpResponse, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
+import { HttpRequest, HttpAdapter, HttpResponse, NetworkStatusListener, NetworkStatus } from 'fengwuxp-typescript-feign';
 
 interface TarojsHttpRequest extends HttpRequest {
     /**
@@ -53,13 +53,12 @@ interface TarojsHttpRequest extends HttpRequest {
  */
 declare class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest> {
     private timeout;
-    private resolveHttpResponse;
     /**
      *
      * @param timeout  default 5000ms
      * @param resolveHttpResponse
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
+    constructor(timeout?: number);
     send: (req: TarojsHttpRequest) => Promise<HttpResponse<any>>;
     private buildRequest;
 }

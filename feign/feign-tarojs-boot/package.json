@@ -38,6 +38,7 @@
   },
   "dependencies": {
     "@tarojs/taro": "^2.0.0-beta.14",
-    "feign-boot-stater": "^1.0.0"
+    "feign-boot-stater": "^1.0.0",
+    "fengwuxp-typescript-feign": "^1.0.0"
   }
 }
