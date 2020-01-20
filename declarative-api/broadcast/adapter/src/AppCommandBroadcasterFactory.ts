@@ -26,10 +26,10 @@ export const appCommandBroadcasterFactory = <T extends AppCommandBroadcaster>(co
                                                                               pathPrefix?: string): T => {
 
     const methodNameCommandResolver = typeof configuration.methodNameCommandResolver === "function" ?
-        configuration.methodNameCommandResolver() : reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver,initialLowercase);
+        configuration.methodNameCommandResolver() : reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver, initialLowercase);
     const broadcaster = new DefaultEventBroadcastAdapterWrapper(configuration.broadcastAdapter(), pathPrefix);
 
-    return newProxyInstanceEnhance<T>(navigator as any, null,
+    return newProxyInstanceEnhance<T>(broadcaster as any, null,
         (object, propertyKey: string, receiver) => {
 
             return function (...args: any[]): any {

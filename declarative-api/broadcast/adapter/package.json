@@ -29,7 +29,7 @@
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
     "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
-    "publish:lib": "npm run rollup:build && npm run npm:publish"
+    "publish:lib": "npm run test & npm run rollup:build && npm run npm:publish"
   },
   "keywords": [
     "route",

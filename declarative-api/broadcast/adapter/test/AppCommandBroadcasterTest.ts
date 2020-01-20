@@ -72,6 +72,13 @@ class MockEventBroadcastAdapter implements EventBroadcastAdapter {
         this.eventMap.set(eventType, functions);
     }
 
+    once(eventType: string, listener: (...args: any[]) => any, context: any): BroadcastSubscription {
+        return undefined;
+    }
+
+
+
+
 }
 
 describe("test  app command broadcaster factory", () => {
