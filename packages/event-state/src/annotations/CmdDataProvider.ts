@@ -1,7 +1,7 @@
 import EventStateManagerHolder from "../EventStateManagerHolder";
 import {newProxyInstanceEnhance} from "fengwuxp-common-proxy";
-import {MethodNameCommandResolver} from "fengwuxp-declarative-command";
-import {noneResolver} from "../../../../declarative-api/declarative-command/src/SimpleMethodNameCommandResolver";
+import {MethodNameCommandResolver, noneResolver} from "fengwuxp-declarative-command";
+
 
 /**
  * 指令数据提供者配置

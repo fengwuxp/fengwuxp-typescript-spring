@@ -1,5 +1,6 @@
 export {MethodNameCommandResolver} from "./MethodNameCommandResolver";
 export {
+    noneResolver,
     toHumpResolver, toLineResolver,
     toLocaleUpperCaseResolver,
     toUpperCaseResolver,

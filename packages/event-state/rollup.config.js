@@ -1,5 +1,4 @@
 import * as os from 'os';
-import * as  path from "path";
 import resolve from 'rollup-plugin-node-resolve';
 import common from 'rollup-plugin-commonjs';
 import babel from 'rollup-plugin-babel';
@@ -23,15 +22,10 @@ const getConfig = (isProd) => {
         // Specify here external modules which you don't want to include in your bundle (for instance: 'lodash', 'moment' etc.)
         // https://rollupjs.org/guide/en#external-e-external
         external: [
-            "core-js",
-            "@babel/runtime-corejs2",
-            "@babel/runtime-corejs3",
-            "reflect-metadata",
             "fengwuxp-declarative-command",
-            "history",
-            "querystring",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "rxjs"
         ],
         output: [
             {

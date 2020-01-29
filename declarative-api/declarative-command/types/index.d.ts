@@ -3,6 +3,7 @@
  */
 declare type MethodNameCommandResolver = (method: string) => string;
 
+declare const noneResolver: MethodNameCommandResolver;
 /**
  * 下划线转驼峰
  * @param methodName
@@ -62,4 +63,4 @@ declare const reduceRightCommandResolvers: (...resolvers: MethodNameCommandResol
  */
 declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: string[], defaultCommand: string) => string[];
 
-export { MethodNameCommandResolver, firstUpperCaseToLeftIncline, initialLowercase, initialUpperCase, reduceRightCommandResolvers, repeatTheFirstWord, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };
+export { MethodNameCommandResolver, firstUpperCaseToLeftIncline, initialLowercase, initialUpperCase, noneResolver, reduceRightCommandResolvers, repeatTheFirstWord, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };

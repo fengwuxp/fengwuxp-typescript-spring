@@ -23,7 +23,7 @@
   },
   "dependencies": {
     "css": "^2.2.4",
-    "css-loader": "^3.2.0",
+    "css-loader": "^0.28.11",
     "less": "^3.10.3",
     "less-loader": "^4.1.0",
     "node-sass": "^4.11.0",
