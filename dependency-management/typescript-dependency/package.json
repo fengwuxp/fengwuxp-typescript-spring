@@ -1,7 +1,7 @@
 {
-  "name": "fengwuxp-library-starter",
+  "name": "fengwuxp-typescipt-dependency",
   "version": "1.0.0",
-  "description": "common library dependency management",
+  "description": "typescript dependency management",
   "main": "index.js",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
@@ -19,15 +19,11 @@
   },
   "author": "wuxp",
   "license": "ISC",
-  "devDependencies": {
-  },
+  "devDependencies": {},
   "dependencies": {
     "@types/node": "^12.7.7",
-    "chai": "^4.2.0",
+    "awesome-typescript-loader": "^5.2.1",
     "tslib": "^1.10.0",
-    "typescript": "^3.7.5",
-    "fengwuxp-babel-dependency": "^1.0.0",
-    "fengwuxp-jest-dependency": "^1.0.0",
-    "fengwuxp-rollup-dependency": "^1.0.0"
+    "typescript": "^3.7.5"
   }
 }

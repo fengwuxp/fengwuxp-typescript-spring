@@ -5,19 +5,17 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "downlevelIteration": true,
     "module": "esnext",
     "target": "esnext",
     "sourceMap": false,
-    "baseUrl": "./src",
     "importHelpers": true,
     "types": [
       "node",
-      "jest",
-      "lodash"
+      "jest"
     ],
     "lib": [
       "dom",
+      "es2015",
       "es7",
       "es2018",
       "es2018.promise"
