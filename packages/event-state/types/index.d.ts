@@ -25,6 +25,24 @@ interface CmdDataProviderType {
  */
 declare const CmdDataProvider: CmdDataProviderType;
 
+interface CmdProviderMethodOptions {
+    /**
+     * 状态属性的名称
+     * 默认：方法名称
+     */
+    propName?: string;
+    /**
+     * 是否忽略该方法 默认：false
+     */
+    ignore?: boolean;
+}
+/**
+ * 指令数据提供者 用于增强方法描述的注解
+ * @param options
+ * @constructor
+ */
+declare const CmdProviderMethod: (options: CmdProviderMethodOptions) => (target: any, methodName: any) => void;
+
 /**
  * 应用事件类型
  */
@@ -156,4 +174,4 @@ declare class EventStateManagerHolder {
     static setManager: (manager: EventStateManager) => void;
 }
 
-export { AbstractEventState, AbstractEventStateManager, ApplicationEventType, CmdDataProvider, CmdDataProviderOptions, CmdDataProviderType, EventState, EventStateManager, EventStateManagerHolder, RxjsEventState, RxjsEventStateManager, Subscription };
+export { AbstractEventState, AbstractEventStateManager, ApplicationEventType, CmdDataProvider, CmdDataProviderOptions, CmdDataProviderType, CmdProviderMethod, CmdProviderMethodOptions, EventState, EventStateManager, EventStateManagerHolder, RxjsEventState, RxjsEventStateManager, Subscription };

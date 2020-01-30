@@ -1,4 +1,5 @@
 export {default as CmdDataProvider, CmdDataProviderType, CmdDataProviderOptions} from "./annotations/CmdDataProvider";
+export {default as CmdProviderMethod,CmdProviderMethodOptions} from "./annotations/CmdProviderMethod";
 export {ApplicationEventType} from "./enums/ApplicationEventType";
 export {AbstractEventState} from "./event/AbstractEventState";
 export {AbstractEventStateManager} from "./event/AbstractEventStateManager";

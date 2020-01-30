@@ -1,7 +1,8 @@
 import EventStateManagerHolder from "../EventStateManagerHolder";
-import {newProxyInstanceEnhance} from "fengwuxp-common-proxy";
+import {newProxyInstance, newProxyInstanceEnhance, ProxyScope} from "fengwuxp-common-proxy";
 import {MethodNameCommandResolver, noneResolver} from "fengwuxp-declarative-command";
-
+import {CmdProviderMethodOptions} from "./CmdProviderMethod";
+import {Reflection as Reflect} from '@abraham/reflection';
 
 /**
  * 指令数据提供者配置
@@ -51,17 +52,26 @@ const CmdDataProvider: CmdDataProviderType = (options: CmdDataProviderOptions = 
                 super();
                 const eventStateManager = EventStateManagerHolder.getManager();
                 const eventState = eventStateManager.getEventState(options.eventName);
-                return newProxyInstanceEnhance(this, (object: any, propertyKey: string, receiver: any) => {
+                const proxyInstance = newProxyInstanceEnhance(this, (object: any, propertyKey: string, receiver: any) => {
                     const state = eventState.getState();
+                    const cmdProviderOptions: Readonly<CmdProviderMethodOptions> = Reflect.getMetadata(CMD_DATA_PROVIDER_KEY, object, propertyKey);
                     return async function (...args) {
+                        const oldFunction = object[propertyKey];
+                        if (cmdProviderOptions != null) {
+                            if (cmdProviderOptions.ignore) {
+                                // 忽略该方法的处理
+                                oldFunction.bind(proxyInstance, ...args)();
+                                return;
+                            }
+                        }
                         const commandResolver = CmdDataProvider.commandResolver;
-                        const propName: string = commandResolver(propertyKey);
-                        const oldFunction = object[propName];
-                        const newState = await oldFunction(...args, state[propName]);
+                        const propName: string = cmdProviderOptions == null ? commandResolver(propertyKey) : cmdProviderOptions.propName || commandResolver(propertyKey);
+                        const newState = await oldFunction.bind(proxyInstance, ...args, state[propName])();
                         await eventState.setState(newState, propName);
                         return newState;
                     }
                 }, null);
+                return proxyInstance;
             }
         }
     }
@@ -78,5 +88,7 @@ CmdDataProvider.setMethodNameCommandResolver = function (commandResolver: Method
 };
 
 CmdDataProvider.setMethodNameCommandResolver(noneResolver);
+
+export const CMD_DATA_PROVIDER_KEY = "_cmd_data_provider_";
 
 export default CmdDataProvider;

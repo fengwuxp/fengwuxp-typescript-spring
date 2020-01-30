@@ -25,7 +25,8 @@ const getConfig = (isProd) => {
             "fengwuxp-declarative-command",
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
-            "rxjs"
+            "rxjs",
+            "@abraham/reflection"
         ],
         output: [
             {
@@ -66,11 +67,11 @@ const getConfig = (isProd) => {
                 exclude: [],
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
             }),
-            babel({
-                exclude: "node_modules/**",
-                babelHelpers: "runtime",
-                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
-            }),
+            // babel({
+            //     exclude: "node_modules/**",
+            //     babelHelpers: "runtime",
+            //     extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
+            // }),
             analyze({
                 stdout: true,
             }),
