@@ -1,0 +1,53 @@
+{
+  "name": "fengwuxp-routing-antd",
+  "version": "1.0.0",
+  "description": "routing antd",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "esnext": "esnext/index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "dist",
+    "es",
+    "types"
+  ],
+  "author": "wuxp",
+  "license": "ISC",
+  "scripts": {
+    "yarn:install": "yarn install",
+    "npm:publish": "npm publish",
+    "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
+    "test": "jest --config ./jest.config.js --verbose=true",
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
+  },
+  "keywords": [
+    "route",
+    "adapter",
+    "typescript"
+  ],
+  "devDependencies": {
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2",
+    "@babel/runtime-corejs3": "^7.7.2"
+  },
+  "dependencies": {
+    "fengwuxp-routing-core": "^1.0.0",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-declarative-command": "^1.0.0"
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+}

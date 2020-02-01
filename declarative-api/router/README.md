@@ -46,3 +46,4 @@
     mockAppRouter["home"]();
 
 ```
+- 提供dialog式路由
