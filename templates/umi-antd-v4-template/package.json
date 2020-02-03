@@ -24,6 +24,7 @@
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",
     "fengwuxp-routing-antd": "^1.0.0",
+    "fengwuxp-routing-core": "^1.0.0",
     "fengwuxp-styles-dependency": "^1.0.0",
     "fengwuxp-typescipt-dependency": "^1.0.0",
     "fengwuxp-webpack-4.x-dependency": "^1.0.0"

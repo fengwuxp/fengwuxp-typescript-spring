@@ -23,9 +23,9 @@ declare class BrowserNavigatorAdapter implements NavigatorAdapter {
 }
 
 declare class BrowserNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> implements NavigatorContextAdapter<T> {
-    private browseHistory;
-    constructor();
-    getBrowseHistory: () => T[];
+    private history;
+    constructor(history?: History);
+    getBrowseHistory: () => never;
     getCurrentObject: () => T;
     getCurrentPathname: () => string;
     getCurrentState: <S = RouteUriVariable>() => any;

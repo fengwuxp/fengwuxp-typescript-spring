@@ -5,6 +5,7 @@ import {formatMessage} from 'umi-plugin-react/locale';
 import defaultSettings from '../config/defaultSettings';
 import {RouteView, RouteContextHolder} from "fengwuxp-routing-core";
 import {AppRouter} from "@/AppRouter";
+import {AntdRouteContext} from "@/AntdRouteContext";
 
 
 RouteView.setDefaultCondition("#user!=null");
@@ -13,8 +14,8 @@ RouteContextHolder.setRouteContextFactory(() => {
   return {
     ...AppRouter.getCurrentObject(),
     user: null
-  }
-})
+  } as AntdRouteContext
+});
 
 
 const {pwa} = defaultSettings;

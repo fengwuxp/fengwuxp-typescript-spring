@@ -4,44 +4,50 @@ import {
     RouteUriVariable
 } from "fengwuxp-declarative-router-adapter";
 import {parse} from "querystring";
+import {History} from "history";
 
 
 export default class BrowserNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject>
     implements NavigatorContextAdapter<T> {
 
-    private browseHistory: T[] = [];
+    private history: History;
 
-    // private initLength = window.history.length;
-
-    constructor() {
+    constructor(history: History = window["g_history"]) {
+        this.history = history;
     }
 
-    getBrowseHistory = () => this.browseHistory;
+    getBrowseHistory = () => {
+        throw new Error("not support");
+    };
 
     getCurrentObject = (): T => {
+        const location = this.history.location;
         return {
+            search: location.search,
+            state: location.state,
+            hash: location.hash,
+            key: location.key,
             pathname: this.getCurrentPathname(),
-            state: this.getCurrentState(),
             uriVariables: this.getCurrentUriVariables()
-        } as any;
+        } as T;
     };
 
     getCurrentPathname = () => location.hostname;
 
-    getCurrentState = <S = RouteUriVariable>() => this.browseHistory[history.length - 1].state;
+    getCurrentState = <S = RouteUriVariable>() => this.history.location.state;
 
     getCurrentUriVariables = <S = RouteUriVariable>() => parse(location.search.substring(1)) as any;
 
-    isStackTop = () => history.length === 1;
+    isStackTop = () => this.history.length === 1;
 
     isView = (pathname: string) => this.getCurrentPathname() === pathname;
 
     onStateChange = (preState, currentState) => {
         if (this.isStackTop()) {
-            this.browseHistory = [];
+
         } else {
-            this.browseHistory.pop();
+
         }
-        this.browseHistory.push(this.getCurrentObject());
+
     }
 }
