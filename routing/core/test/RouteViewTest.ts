@@ -105,11 +105,11 @@ describe("test routing", () => {
         RouteContextHolder.setRouteContextFactory(mockRouteContextFactory);
         const routeContext = RouteContextHolder.getRouteContext();
 
-        assert.equal(true, spelRouteConditionParser("${pathname =='mock'}", routeContext), "路径匹配失败");
-        assert.equal(false, spelRouteConditionParser("${uriVariables.a =='mock'}", routeContext), "参数匹配失败")
+        assert.equal(true, spelRouteConditionParser("#pathname =='mock'", routeContext), "路径匹配失败");
+        assert.equal(false, spelRouteConditionParser("#uriVariables.a =='mock'", routeContext), "参数匹配失败")
         assert.equal(true, spelRouteConditionParser((mockRouteContext: MockRouteContext) => {
             logger.debug("mock rout context", mockRouteContext);
-            return "${userInfo.enabled}"
+            return "#userInfo.enabled"
 
         }, routeContext), "用户状态未启用")
 

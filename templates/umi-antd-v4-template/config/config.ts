@@ -22,7 +22,7 @@ const plugins: IPlugin[] = [
         baseNavigator: true,
       },
       dynamicImport: {
-        loadingComponent: './components/PageLoading/index',
+        loadingComponent: './components/loading/index',
         webpackChunkName: true,
         level: 3,
       },
@@ -75,7 +75,7 @@ export default {
               name: 'login',
               icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
               path: '/user/login',
-              component: './user/login',
+              component: './user/LoginView',
             },
             {
               component: '404',
@@ -85,41 +85,21 @@ export default {
         {
           path: '/',
           component: '../layouts/BasicLayout',
+          Routes: ['./node_modules/fengwuxp-routing-react/src/condition/DefaultConditionRoute.tsx'],
           routes: [
             {
-              name: 'uform',
+              name: '演示',
               icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
-              path: '/uform',
+              path: '/demo',
               routes: [
                 {
                   name: 'site',
                   icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
-                  path: '/uform/simple',
-                  component: './uform/simple',
-                },
-                {
-                  name: 'verification',
-                  icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
-                  path: '/uform/verification',
-                  component: './uform/verification',
+                  path: '/demo/create',
+                  component: './demo/CreateDemoView',
                 },
               ]
             },
-
-            {
-              name: '表格',
-              // icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
-              path: '/table',
-              routes: [
-                {
-                  name: '搜索表格',
-                  icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
-                  path: '/table/demo',
-                  component: './list/table-list/',
-                }
-              ]
-            }
-
           ],
         },
         {

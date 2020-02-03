@@ -32,6 +32,8 @@ const getConfig = (isProd) => {
             "fengwuxp-routing-core",
             "fengwuxp-event-state",
             "react",
+            "react-is",
+            "react-router",
             "immer"
         ],
         output: [

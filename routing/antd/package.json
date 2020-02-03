@@ -20,6 +20,9 @@
   "files": [
     "dist",
     "es",
+    "lib",
+    "esnetx",
+    "src",
     "types"
   ],
   "author": "wuxp",
@@ -39,10 +42,10 @@
     "typescript"
   ],
   "devDependencies": {
+    "@ant-design/pro-layout": "4.10.11-rc.6",
     "@babel/runtime-corejs3": "^7.7.2",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
-    "@ant-design/pro-layout": "4.10.11-rc.6"
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "@types/react": "^16.9.19",

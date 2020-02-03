@@ -19,6 +19,7 @@
     "antd": "^4.0.0-rc.2",
     "feign-boot-browser-stater": "^1.0.0",
     "fengwuxp-babel-dependency": "^1.0.0",
+    "fengwuxp-browser-router": "^1.0.0",
     "fengwuxp-browser-storage": "^1.0.0",
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",

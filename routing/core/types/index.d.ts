@@ -64,6 +64,10 @@ interface RouteViewType {
      */
     setDefaultCondition: (condition: RouteConditionType) => RouteViewType;
     /**
+     * 获取默认的路由条件
+     */
+    getDefaultCondition: () => RouteConditionType;
+    /**
      * 添加一个增强处理器
      * @param enhancer
      */
@@ -113,7 +117,7 @@ declare type RouteConditionParser = (condition: RouteConditionType, routeContext
 
 /**
  * 基于spring expression language 的路由条件解析
- * @param condition
+ * @param condition         if condition is null return true
  * @param routeContext
  * @param args
  */
@@ -125,4 +129,4 @@ declare class RouteContextHolder {
     static setRouteContextFactory: (factory: RouteContextFactory<RouteContext>) => void;
 }
 
-export { RouteConditionFunction, RouteConditionParser, RouteConditionType, RouteContext, RouteContextFactory, RouteContextHolder, RouteView, RouteViewEnhancer, RouteViewOptions, RouteViewType, spelRouteConditionParser as SpelRouteConditionParser };
+export { RouteConditionFunction, RouteConditionParser, RouteConditionType, RouteContext, RouteContextFactory, RouteContextHolder, RouteView, RouteViewEnhancer, RouteViewOptions, RouteViewType, spelRouteConditionParser as SpelRouteConditionParser, ViewShowMode };

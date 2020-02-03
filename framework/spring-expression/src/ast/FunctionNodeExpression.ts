@@ -97,7 +97,7 @@ export default class FunctionNodeExpression implements Expression {
                   let {${executeVariableNames}}=arguments[0];      
                   return ${this.expressionString};
             `;
-            console.log("执行的代码", code);
+            // console.log("执行的代码", code);
             return new Function(code)(context);
         }
 

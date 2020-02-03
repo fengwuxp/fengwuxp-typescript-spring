@@ -3,6 +3,19 @@ import {Button, message, notification} from 'antd';
 import React from 'react';
 import {formatMessage} from 'umi-plugin-react/locale';
 import defaultSettings from '../config/defaultSettings';
+import {RouteView, RouteContextHolder} from "fengwuxp-routing-core";
+import {AppRouter} from "@/AppRouter";
+
+
+RouteView.setDefaultCondition("#user!=null");
+RouteContextHolder.setRouteContextFactory(() => {
+
+  return {
+    ...AppRouter.getCurrentObject(),
+    user: null
+  }
+})
+
 
 const {pwa} = defaultSettings;
 // if pwa is true

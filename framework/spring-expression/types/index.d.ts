@@ -61,7 +61,6 @@ interface ParserContext {
      * @return true if the expression is a template, false otherwise
      */
     isTemplate: () => boolean;
-    getRegExp: () => RegExp;
     /**
      * For template expressions, returns the prefix that identifies the start of an
      * expression block within a string. For example: "${"
@@ -92,9 +91,6 @@ interface ExpressionParser {
     parseExpression: (expressionString: string, context?: ParserContext) => Expression;
 }
 
-interface SpelParserConfiguration {
-}
-
 declare class SpelExpression implements Expression {
     private expression;
     constructor(expression: Expression);
@@ -104,12 +100,13 @@ declare class SpelExpression implements Expression {
     setValue: (context: EvaluationContext, rootObject: object, value: any) => void;
 }
 
+interface SpelParserConfiguration {
+}
+
 declare class InternalSpelExpressionParser implements ExpressionParser {
-    private static VALID_QUALIFIED_ID_PATTERN;
     private configuration;
     constructor(configuration?: SpelParserConfiguration);
     parseExpression: (expressionString: string, context?: ParserContext) => SpelExpression;
-    private isValidQualifiedId;
 }
 
 /**
@@ -143,7 +140,7 @@ declare class FunctionNodeExpression implements Expression {
     getValue: <T = any>(context?: EvaluationContext, rootObject?: object) => any;
     isWritable: (context?: EvaluationContext, rootObject?: object) => boolean;
     setValue: (context: EvaluationContext, rootObject: object, value: any) => any;
-    private converterFunctionNode;
+    private getExecuteVariableNames;
 }
 
-export { ConstantExpression, EvaluationContext, Expression, ExpressionParser, FunctionNodeExpression, InternalSpelExpressionParser, ParserContext, SpelExpression, SpelExpressionParser, SpelParserConfiguration };
+export { ConstantExpression, EvaluationContext, Expression, ExpressionParser, FunctionNodeExpression, InternalSpelExpressionParser, ParserContext, SpelExpression, SpelExpressionParser };

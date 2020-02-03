@@ -1,7 +1,8 @@
 import {Redirect, Route, RouteComponentProps} from "react-router";
 import * as React from "react";
 import {ConditionRoute, ConditionRouteFallbackTye, ConditionRouteProps} from "./ConditionRoute";
-import {spelRouteConditionParser, RouteContextHolder} from "fengwuxp-routing-core";
+import {SpelRouteConditionParser, RouteContextHolder, ViewShowMode} from "fengwuxp-routing-core";
+import DialogViewRoute from "../DialogViewRoute";
 
 
 const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, props: RouteComponentProps<any>) => {
@@ -23,26 +24,35 @@ const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, p
  * @param props
  * @constructor
  */
-const DefaultPrivateRoute: ConditionRoute = (props: ConditionRouteProps) => {
+const DefaultConditionRoute: ConditionRoute = (props: ConditionRouteProps) => {
     const {
         path,
         exact,
         strict,
         condition,
-        fallback,
-        extraProps
+        fallback
     } = props;
     return (
         <Route path={path}
                exact={exact}
                strict={strict}
                render={(routeProps) => (
-                   spelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props) ? (
-                       <props.component {...routeProps} {...extraProps} />) : (
+                   SpelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props) ? (renderView(props, routeProps)) : (
                        renderNoneAuthenticationFallback(fallback, routeProps)
                    )
                )}/>
     );
 };
 
-export default DefaultPrivateRoute;
+const renderView = (props: ConditionRouteProps, routeProps) => {
+
+    if (props.showMode === ViewShowMode.DIALOG) {
+        // 对话框方式展示
+        return <DialogViewRoute {...routeProps} {...props.extraProps}>
+            <props.component {...routeProps} {...props.extraProps} />
+        </DialogViewRoute>
+    }
+    return <props.component {...routeProps} {...props.extraProps} />
+};
+
+export default DefaultConditionRoute;

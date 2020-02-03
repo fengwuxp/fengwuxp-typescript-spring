@@ -12,7 +12,8 @@
     "jsx": "react",
     "types": [
       "node",
-      "jest"
+      "jest",
+      "react"
     ],
     "lib": [
       "dom",

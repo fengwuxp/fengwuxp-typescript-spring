@@ -20,6 +20,9 @@
   "files": [
     "dist",
     "es",
+    "lib",
+    "esnetx",
+    "src",
     "types"
   ],
   "author": "wuxp",
