@@ -82,12 +82,18 @@ export interface RouteViewType {
     setDefaultCondition: (condition: RouteConditionType) => RouteViewType;
 
     /**
+     * 获取默认的路由条件
+     */
+    getDefaultCondition: () => RouteConditionType;
+
+    /**
      * 添加一个增强处理器
      * @param enhancer
      */
     addEnhancer: (enhancer: RouteViewEnhancer) => RouteViewType;
 
     // removeEnhancer: (enhancer: RouteViewEnhancer) => RouteViewType;
+
 
 }
 
@@ -160,5 +166,7 @@ RouteView.setDefaultCondition = (condition: RouteConditionType) => {
     DEFAULT_ROUTE_VIEW_OPTIONS.condition = condition;
     return RouteView;
 };
+
+RouteView.getDefaultCondition = () => DEFAULT_ROUTE_VIEW_OPTIONS.condition;
 
 export default RouteView;

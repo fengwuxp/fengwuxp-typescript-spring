@@ -15,7 +15,6 @@ export interface ParserContext {
      */
     isTemplate: () => boolean;
 
-    getRegExp: () => RegExp;
 
     /**
      * For template expressions, returns the prefix that identifies the start of an
@@ -43,16 +42,18 @@ export const TEMPLATE_EXPRESSION: ParserContext = {
         return true;
     },
 
-    getRegExp: () => {
-        return /\$\{([^\}]*)\}/g;
-    },
+    // getRegExp: () => {
+    //     // return /\$\{([^\}]*)\}/g;
+    //     // return /\#\{([^\}]*)\}/g;
+    //     return /\#([^\}]*)/g;
+    // },
 
     getExpressionPrefix: () => {
-        return "${";
+        return "#";
     },
 
     getExpressionSuffix: () => {
-        return "}";
+        return "";
     }
 
 };

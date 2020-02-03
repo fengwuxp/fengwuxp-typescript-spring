@@ -13,4 +13,5 @@ export default class RouteContextHolder {
     public static setRouteContextFactory = (factory: RouteContextFactory) => {
         RouteContextHolder.ROUTE_CONTEXT_FACTORY = factory;
     }
+
 }

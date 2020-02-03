@@ -9,11 +9,15 @@ const EXPRESSION_CACHE: Map<string, Expression> = new Map<string, Expression>();
 
 /**
  * 基于spring expression language 的路由条件解析
- * @param condition
+ * @param condition         if condition is null return true
  * @param routeContext
  * @param args
  */
 const spelRouteConditionParser: RouteConditionParser = (condition: RouteConditionType, routeContext: RouteContext, ...args) => {
+
+    if (condition == null) {
+        return true;
+    }
 
     if (typeof condition === "function") {
 

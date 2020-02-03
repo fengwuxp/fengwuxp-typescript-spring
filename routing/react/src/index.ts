@@ -4,5 +4,5 @@ export {
     ReactCmdDataProviderEnhancerProps
 } from "./ReactCmdDataProviderEnhancer";
 
-export {PrivateRoute, PrivateRouteAuthenticator, PrivateRouteFallbackTye, PrivateRouteProps} from "./PrivateRoute";
-export {default as DefaultPrivateRoute} from "./DefaultPrivateRoute"
+export {ConditionRoute, ConditionRouteFallbackTye, ConditionRouteProps} from "./condition/ConditionRoute";
+export {default as DefaultConditionRoute} from "./condition/DefaultConditionRoute"

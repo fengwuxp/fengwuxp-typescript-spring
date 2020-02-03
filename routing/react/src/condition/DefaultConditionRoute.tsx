@@ -1,9 +1,10 @@
 import {Redirect, Route, RouteComponentProps} from "react-router";
 import * as React from "react";
-import {PrivateRoute, PrivateRouteFallbackTye, PrivateRouteProps} from "./PrivateRoute";
+import {ConditionRoute, ConditionRouteFallbackTye, ConditionRouteProps} from "./ConditionRoute";
+import {spelRouteConditionParser, RouteContextHolder} from "fengwuxp-routing-core";
 
 
-const renderNoneAuthenticationFallback = (fallback: PrivateRouteFallbackTye, props: RouteComponentProps<any>) => {
+const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, props: RouteComponentProps<any>) => {
 
     if (typeof fallback === "string") {
         return <Redirect to={{
@@ -22,12 +23,12 @@ const renderNoneAuthenticationFallback = (fallback: PrivateRouteFallbackTye, pro
  * @param props
  * @constructor
  */
-const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
+const DefaultPrivateRoute: ConditionRoute = (props: ConditionRouteProps) => {
     const {
         path,
         exact,
         strict,
-        authenticator,
+        condition,
         fallback,
         extraProps
     } = props;
@@ -36,7 +37,8 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
                exact={exact}
                strict={strict}
                render={(routeProps) => (
-                   authenticator.isAuthenticated() ? (<props.component {...routeProps} {...extraProps} />) : (
+                   spelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props) ? (
+                       <props.component {...routeProps} {...extraProps} />) : (
                        renderNoneAuthenticationFallback(fallback, routeProps)
                    )
                )}/>
