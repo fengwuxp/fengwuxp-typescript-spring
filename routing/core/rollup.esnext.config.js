@@ -26,7 +26,8 @@ const getConfig = (isProd) => {
             "@abraham/reflection",
             "fengwuxp-declarative-command",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "fengwuxp-spring-expression"
         ],
         output: [
             {

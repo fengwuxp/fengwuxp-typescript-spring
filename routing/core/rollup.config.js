@@ -31,7 +31,8 @@ const getConfig = (isProd) => {
             "history",
             "querystring",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "fengwuxp-spring-expression"
         ],
         output: [
             {

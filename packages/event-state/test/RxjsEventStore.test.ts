@@ -1,12 +1,9 @@
 import * as log4js from "log4js";
-import {EventState} from "../src/event/EventState";
-import {Subscription} from "../src/event/Subscription";
-import {newProxyInstanceEnhance, ProxyScope} from "fengwuxp-common-proxy";
-import {Subject} from "rxjs";
 import EventStateManagerHolder from "../src/EventStateManagerHolder";
 import CmdDataProvider from "../src/annotations/CmdDataProvider";
 import {ApplicationEventType} from "../src/enums/ApplicationEventType";
 import CmdProviderMethod from "../src/annotations/CmdProviderMethod";
+import produce from "immer"
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -105,7 +102,32 @@ describe("test rxjs event store", () => {
         mockDataProvider.goodsList();
         logger.debug(subscriber.isClosed());
 
-    }, 10 * 100)
+    }, 10 * 100);
+
+
+    test("test immer js", () => {
+        const baseState = [
+            {
+                todo: "Learn typescript",
+                done: true
+            },
+            {
+                todo: "Try immer",
+                done: false
+            }
+        ]
+
+        const nextState = produce(baseState, draftState => {
+            draftState.push({
+                todo: "Tweet about it",
+                done: false
+            })
+            draftState[1].done = true
+        });
+
+
+        logger.debug("nextState", nextState);
+    })
 
 });
 

@@ -1,9 +1,28 @@
+interface RouteContext {
+    pathname: string;
+    uriVariables: Record<string, any>;
+    state: Record<string, any>;
+}
+declare type RouteContextFactory<T extends RouteContext = RouteContext> = () => T;
+
 /**
- * 路由条件处理函数
+ * @return true or false  or spel表达式
  */
-declare type RouteConditionFunction = (context: any, ...args: any[]) => boolean | string | string[];
+declare type RouteConditionFunction = (context: RouteContext, ...args: any[]) => boolean | string | string[];
 declare type RouteConditionType = string | string[] | boolean | RouteConditionFunction;
+/**
+ * 页面展示模式
+ */
+declare enum ViewShowMode {
+    DEFAULT = 0,
+    DIALOG = 1
+}
 interface RouteViewOptions {
+    /**
+     * 页面展示模式
+     * 默认：{@see ViewShowMode#DEFAULT}
+     */
+    showMode?: ViewShowMode;
     /**
      * pathname
      * 如果值未定义，将使用约定式路由或配置式路由
@@ -11,6 +30,12 @@ interface RouteViewOptions {
      * @see https://umijs.org/zh/guide/app-structure.html#src-layouts-index-js
      */
     pathname?: string;
+    /**
+     * 父路由页面
+     * 如果是组件对象将会在编译阶段解析后移除
+     * 默认：undefined
+     */
+    parent?: any;
     /**
      * 视图名称
      * 支持 spel 表达式
@@ -23,7 +48,6 @@ interface RouteViewOptions {
     exact?: boolean;
     /**
      * 进入页面的条件，例如进行登陆检查、权限检查等
-
      * default true
      */
     condition?: RouteConditionType;
@@ -33,7 +57,7 @@ interface RouteViewOptions {
  */
 declare type RouteViewEnhancer = (target: any, options: RouteViewOptions) => any;
 interface RouteViewType {
-    (options?: RouteViewOptions): any;
+    <T = {}>(options?: RouteViewOptions & T): any;
     /**
      * 设置默认的条件
      * @param condition
@@ -77,4 +101,28 @@ interface RouteViewType {
  */
 declare const RouteView: RouteViewType;
 
-export { RouteConditionFunction, RouteConditionType, RouteView, RouteViewEnhancer, RouteViewType };
+/**
+ * 条件路由解析
+ * @param condition {@see RouteConditionType} support spel
+ * @param routeContext {@see RouteContext}
+ * @param args 而外的参数，例如react 组件的props
+ *
+ * @return
+ */
+declare type RouteConditionParser = (condition: RouteConditionType, routeContext: RouteContext, ...args: any[]) => boolean;
+
+/**
+ * 基于spring expression language 的路由条件解析
+ * @param condition
+ * @param routeContext
+ * @param args
+ */
+declare const spelRouteConditionParser: RouteConditionParser;
+
+declare class RouteContextHolder {
+    private static ROUTE_CONTEXT_FACTORY;
+    static getRouteContext: <T extends RouteContext>() => RouteContext;
+    static setRouteContextFactory: (factory: RouteContextFactory<RouteContext>) => void;
+}
+
+export { RouteConditionFunction, RouteConditionParser, RouteConditionType, RouteContext, RouteContextFactory, RouteContextHolder, RouteView, RouteViewEnhancer, RouteViewOptions, RouteViewType, spelRouteConditionParser as SpelRouteConditionParser };

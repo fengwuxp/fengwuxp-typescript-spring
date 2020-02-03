@@ -38,7 +38,8 @@
   ],
   "devDependencies": {
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.5"
+    "typescript": "^3.7.5",
+    "immer": "^5.3.2"
   },
   "dependencies": {
     "@abraham/reflection": "^0.7.0",

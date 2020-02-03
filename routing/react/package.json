@@ -1,0 +1,59 @@
+{
+  "name": "fengwuxp-routing-react",
+  "version": "1.0.0",
+  "description": "routing react",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "esnext": "esnext/index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "dist",
+    "es",
+    "types"
+  ],
+  "author": "wuxp",
+  "license": "ISC",
+  "scripts": {
+    "yarn:install": "yarn install",
+    "npm:publish": "npm publish",
+    "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
+    "test": "jest --config ./jest.config.js --verbose=true",
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
+  },
+  "keywords": [
+    "route",
+    "adapter",
+    "typescript"
+  ],
+  "devDependencies": {
+    "@babel/runtime-corejs3": "^7.7.2",
+    "fengwuxp-library-starter": "^1.0.0",
+    "typescript": "^3.7.2"
+  },
+  "dependencies": {
+    "@types/react": "^16.9.19",
+    "@types/react-router": "^5.1.4",
+    "fengwuxp-browser-router": "^1.0.0",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-event-state": "^1.0.0",
+    "fengwuxp-routing-core": "^1.0.0",
+    "immer": "^5.3.2",
+    "react": "^16.12.0",
+    "react-router": "^5.1.2"
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+}

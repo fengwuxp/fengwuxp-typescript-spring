@@ -22,7 +22,7 @@ export interface AuthenticationProvider {
      *
      * @throws AuthenticationException if authentication fails.
      */
-    authenticate: (authentication: Authentication) => Authentication
+    authenticate: (authentication: Authentication) => Promise<Authentication>
 
 
     /**

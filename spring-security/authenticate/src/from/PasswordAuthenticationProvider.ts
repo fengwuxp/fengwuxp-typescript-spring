@@ -11,7 +11,10 @@ export default class PasswordAuthenticationProvider implements AuthenticationPro
     };
 
 
-    supports: (authenticationType: any) => boolean;
+    supports = (authenticationType: any) => {
+
+        return authenticationType === UsernamePasswordAuthenticationToken;
+    };
 
 
 }

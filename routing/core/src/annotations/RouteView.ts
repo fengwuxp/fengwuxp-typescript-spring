@@ -1,11 +1,34 @@
 /**
  * 路由条件处理函数
  */
-export type RouteConditionFunction = (context, ...args) => boolean | string | string[];
+import {RouteContext} from "../context/RouteContext";
+
+/**
+ * @return true or false  or spel表达式
+ */
+export type RouteConditionFunction = (context: RouteContext, ...args) => boolean | string | string[];
 
 export type RouteConditionType = string | string[] | boolean | RouteConditionFunction;
 
+/**
+ * 页面展示模式
+ */
+export enum ViewShowMode {
+
+    DEFAULT,
+
+    // 以弹窗形式显示，需要路由框架进行支持
+    DIALOG,
+
+}
+
 export interface RouteViewOptions {
+
+    /**
+     * 页面展示模式
+     * 默认：{@see ViewShowMode#DEFAULT}
+     */
+    showMode?: ViewShowMode;
 
     /**
      * pathname
@@ -14,6 +37,13 @@ export interface RouteViewOptions {
      * @see https://umijs.org/zh/guide/app-structure.html#src-layouts-index-js
      */
     pathname?: string;
+
+    /**
+     * 父路由页面
+     * 如果是组件对象将会在编译阶段解析后移除
+     * 默认：undefined
+     */
+    parent?: any;
 
     /**
      * 视图名称
@@ -30,10 +60,10 @@ export interface RouteViewOptions {
 
     /**
      * 进入页面的条件，例如进行登陆检查、权限检查等
-
      * default true
      */
     condition?: RouteConditionType;
+
 }
 
 /**
@@ -43,7 +73,7 @@ export type RouteViewEnhancer = (target: any, options: RouteViewOptions, /*propK
 
 
 export interface RouteViewType {
-    (options?: RouteViewOptions): any;
+    <T = {}>(options?: RouteViewOptions & T): any;
 
     /**
      * 设置默认的条件
@@ -66,6 +96,8 @@ const ROUTE_VIEW_ENHANCERS: RouteViewEnhancer[] = [];
 
 // 默认的路由配置
 const DEFAULT_ROUTE_VIEW_OPTIONS: RouteViewOptions = {
+    showMode: ViewShowMode.DEFAULT,
+    exact: true,
     condition: true
 };
 
@@ -99,7 +131,7 @@ const DEFAULT_ROUTE_VIEW_OPTIONS: RouteViewOptions = {
  * @param options
  * @constructor
  */
-const RouteView: RouteViewType = (options?: RouteViewOptions): Function => {
+const RouteView: RouteViewType = <T = {}>(options?: RouteViewOptions & T): Function => {
 
 
     /**
