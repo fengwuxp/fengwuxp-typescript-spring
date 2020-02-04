@@ -1,7 +1,7 @@
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 
 
-const UTF_8 = ";charset=UTF-8";
+// const UTF_8 = ";charset=UTF-8";
 
 /**
  * determine if two HttpMediaTypes are the same
@@ -17,5 +17,10 @@ export const mediaTypeIsEq = (type1: HttpMediaType | string, type2: HttpMediaTyp
     if (type1 === type2) {
         return true;
     }
-    return type1.replace(UTF_8, "") === type2.replace(UTF_8, "");
+    // return type1.replace(UTF_8, "") === type2.replace(UTF_8, "");
+
+    const [t1] = type1.split(";");
+    const [t2] = type2.split(";");
+    return t1 == t2;
+
 };

@@ -19,6 +19,7 @@ export const AppRouterMapping = <T>(configuration?: AppRouterMappingConfiguratio
 
     return (clazz: { new(...args: T[]): {} }): T & Partial<AppCommandRouter> => {
 
+        const methodNameCommandResolver = configuration.methodNameCommandResolver == null ? null : configuration.methodNameCommandResolver();
         // @ts-ignore
         return class extends clazz implements AppCommandRouter {
             constructor() {
@@ -28,6 +29,13 @@ export const AppRouterMapping = <T>(configuration?: AppRouterMappingConfiguratio
                     methodNameCommandResolver: () => {
                         return (methodName) => {
                             const method = that[methodName];
+                            if (method == null) {
+                                if (methodNameCommandResolver == null) {
+                                    return methodName;
+                                } else {
+                                    return methodNameCommandResolver(methodName);
+                                }
+                            }
                             return method.pathname;
                         };
                     },

@@ -1,4 +1,4 @@
-import {RouteContext} from "fengwuxp-routing-core";
+import { RouteContext } from 'fengwuxp-routing-core';
 
 
 export interface AntdRouteContext extends RouteContext {

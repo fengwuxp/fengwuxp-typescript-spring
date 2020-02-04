@@ -1,5 +1,5 @@
 import SVG from 'react-inlinesvg';
-import React, {CSSProperties} from "react";
+import React, { CSSProperties } from 'react';
 
 export interface SvnIconProps {
 
@@ -17,11 +17,11 @@ export interface SvnIconProps {
 }
 
 const SvgIcon = (props: SvnIconProps) => {
-  const {size, color, src, style, className} = props;
+  const { size, color, src, style, className } = props;
 
-  return <i style={{fontSize: size, color, ...style}} className={className}>
-    <SVG width={"1em"}
-         height={"1em"}
+  return <i style={{ fontSize: size, color, ...style }} className={className}>
+    <SVG width="1em"
+         height="1em"
          fill="currentColor"
          src={src}/>
   </i>

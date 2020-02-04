@@ -1,44 +1,45 @@
-import "./RegisterBrowserOpenFeign";
-import {Button, message, Modal, notification} from 'antd';
-import {ArrowLeftOutlined} from "@ant-design/icons";
-import React, {useState} from 'react';
-import {formatMessage} from 'umi-plugin-react/locale';
+import './RegisterBrowserOpenFeign';
+import { Button, message, notification } from 'antd';
+import { ArrowLeftOutlined } from '@ant-design/icons';
+import React from 'react';
+import { formatMessage } from 'umi-plugin-react/locale';
+import { RouteContextHolder, RouteView, ViewShowMode } from 'fengwuxp-routing-core';
+import { AntdPageHeaderEnhancer, AntdRouteViewOptions } from 'fengwuxp-routing-antd';
+import { PageHeaderWrapper } from '@ant-design/pro-layout';
 import defaultSettings from '../config/defaultSettings';
-import {RouteContextHolder, RouteView, ViewShowMode} from "fengwuxp-routing-core";
-import {AppRouter} from "@/AppRouter";
-import {AntdRouteContext} from "@/AntdRouteContext";
-import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from "fengwuxp-routing-antd";
-import {PageHeaderWrapper} from "@ant-design/pro-layout";
+import { AppRouter } from '@/AppRouter';
+import { AntdRouteContext } from '@/AntdRouteContext';
 
-const userIsLogin = "#user==null";
+const userIsLogin = '#user==null';
 
 AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-
-  console.log("viewProps", viewProps, options);
+  console.log('viewProps', viewProps, options);
   const pageHeader = options.pageHeader || {};
 
   if (options.showMode === ViewShowMode.DIALOG || viewProps.viewShowModel === ViewShowMode.DIALOG) {
-
-    const [visible, setVisible] = useState(true);
-
-    return <Modal
-      title={viewProps.route.name}
-      visible={true}
-      width={"70%"}
-      onCancel={() => {
-        setVisible(false);
-        AppRouter.goBack();
-      }}
-      footer={visible}>
-      <ReactComponent {...viewProps}/>
-    </Modal>
-
+    // const [visible, setVisible] = useState(true);
+    //
+    // return <Modal
+    //   title={viewProps.route.name}
+    //   visible={true}
+    //   width={"60%"}
+    //   style={{marginLeft: 300}}
+    //   onCancel={() => {
+    //     setVisible(false);
+    //     AppRouter.goBack();
+    //   }}
+    //   footer={visible}>
+    //   <ReactComponent {...viewProps}/>
+    // </Modal>
+    return <ReactComponent {...viewProps}/>;
   }
+
+  const showBack = !location.pathname.endsWith('/list');
 
   return <>
     <PageHeaderWrapper title={pageHeader.title || viewProps.route.name}
                        content={pageHeader.content}
-                       backIcon={<ArrowLeftOutlined/>}
+                       backIcon={showBack ? <ArrowLeftOutlined/> : false}
                        onBack={() => AppRouter.goBack()}>
       <ReactComponent {...viewProps}/>
     </PageHeaderWrapper>
@@ -46,7 +47,6 @@ AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRoute
 });
 
 AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-
   if (options.condition === userIsLogin) {
     AppRouter.login();
     return null;
@@ -59,21 +59,18 @@ AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: A
 
 RouteView.addEnhancer(AntdPageHeaderEnhancer);
 RouteView.setDefaultCondition(userIsLogin);
-RouteContextHolder.setRouteContextFactory(() => {
-
-  return {
+RouteContextHolder.setRouteContextFactory(() => ({
     ...AppRouter.getCurrentObject(),
-    user: null
-  } as AntdRouteContext
-});
+    user: null,
+  } as AntdRouteContext));
 
 
-const {pwa} = defaultSettings;
+const { pwa } = defaultSettings;
 // if pwa is true
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(formatMessage({id: 'app.pwa.offline'}));
+    message.warning(formatMessage({ id: 'app.pwa.offline' }));
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -96,7 +93,7 @@ if (pwa) {
             resolve(msgEvent.data);
           }
         };
-        worker.postMessage({type: 'skip-waiting'}, [channel.port2]);
+        worker.postMessage({ type: 'skip-waiting' }, [channel.port2]);
       });
       // Refresh current page to use the updated HTML and other assets after SW has skiped waiting
       window.location.reload(true);
@@ -111,12 +108,12 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {formatMessage({id: 'app.pwa.serviceworker.updated.ok'})}
+        {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
       </Button>
     );
     notification.open({
-      message: formatMessage({id: 'app.pwa.serviceworker.updated'}),
-      description: formatMessage({id: 'app.pwa.serviceworker.updated.hint'}),
+      message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
+      description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
       btn,
       key,
       onClose: async () => {
@@ -125,7 +122,7 @@ if (pwa) {
   });
 } else if ('serviceWorker' in navigator) {
   // unregister service worker
-  const {serviceWorker} = navigator;
+  const { serviceWorker } = navigator;
   if (serviceWorker.getRegistrations) {
     serviceWorker.getRegistrations().then(sws => {
       sws.forEach(sw => {

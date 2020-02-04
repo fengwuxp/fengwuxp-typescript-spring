@@ -2,7 +2,7 @@ import {
     AppCommandStorage,
     GetStorageCommandMethod,
     RemoveStorageCommandMethod,
-    SetStorageCommandMethod
+    SetStorageCommandMethod,
 } from 'fengwuxp-declarative-storage-adapter'
 import { browserAppCommandStorageFactory } from 'fengwuxp-browser-storage'
 
@@ -15,4 +15,3 @@ export interface BrowserAppStorage extends AppCommandStorage {
 }
 
 export const AppStorage = browserAppCommandStorageFactory<BrowserAppStorage>()
-

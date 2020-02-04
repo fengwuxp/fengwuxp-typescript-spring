@@ -3,20 +3,19 @@
  * You can view component api by:
  * https://github.com/ant-design/ant-design-pro-layout
  */
-import React, {useState} from 'react';
+import React, { useState } from 'react';
 
-import DefaultFooter from "@ant-design/pro-layout/es/Footer"
-import ProLayout, {BasicLayoutProps as ProLayoutProps} from "@ant-design/pro-layout/es/BasicLayout"
-import {Settings} from '@ant-design/pro-layout/es/defaultSettings'
-import {MenuDataItem} from "@ant-design/pro-layout/es/typings"
+import DefaultFooter from '@ant-design/pro-layout/es/Footer'
+import ProLayout, { BasicLayoutProps as ProLayoutProps } from '@ant-design/pro-layout/es/BasicLayout'
+import { Settings } from '@ant-design/pro-layout/es/defaultSettings'
+import { MenuDataItem } from '@ant-design/pro-layout/es/typings'
 import SettingDrawer from '@ant-design/pro-layout/es/SettingDrawer/index'
 
-// import {HeartTwoTone} from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons/lib/components/AntdIcon';
-import defaultSettings from '../../config/defaultSettings';
 
 import Link from 'umi/link';
 import history from 'umi/router';
+import defaultSettings from '../../config/defaultSettings';
 import logo from '../assets/logo.svg';
 import SvgIcon from '@/components/icon/SvgIcon';
 
@@ -40,7 +39,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
     fixSiderbar: true,
     fixedHeader: true,
   });
-  console.log("props", props);
+  console.log('props', props);
   return (
     <>
       <ProLayout
@@ -72,7 +71,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           const icon = menuItemProps.icon as any;
           const item = <span>
             <span>
-              {typeof icon === "string" ? <SvgIcon className={"anticon"} src={icon}/> : <AntdIcon icon={icon}/>}
+              {typeof icon === 'string' ? <SvgIcon className="anticon" src={icon}/> : <AntdIcon icon={icon}/>}
             </span>
             {menuItemProps.name}
           </span>

@@ -26,6 +26,10 @@ interface NavigatorDescriptorObject extends LocationDescriptorObject {
  */
 interface NavigatorAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> {
     /**
+     * 以对话框的形式打开一个页面
+     */
+    pushDialog?: NavigatorJumpRouteFunction;
+    /**
      * 跳转到下个页面
      * @param navigatorDescriptorObject
      */

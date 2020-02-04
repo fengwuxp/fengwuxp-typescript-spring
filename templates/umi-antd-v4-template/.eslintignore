@@ -2,3 +2,9 @@
 /scripts
 /config
 .history
+/src/
+/src/pages
+/src/components
+/src/layouts
+/src/locales
+/src/feign

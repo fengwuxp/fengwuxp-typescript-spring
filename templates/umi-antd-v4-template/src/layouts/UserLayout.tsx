@@ -1,8 +1,8 @@
-import {DefaultFooter, MenuDataItem, getMenuData, getPageTitle} from '@ant-design/pro-layout';
-import {Helmet} from 'react-helmet';
-import {Link} from 'umi';
+import { DefaultFooter, MenuDataItem, getMenuData, getPageTitle } from '@ant-design/pro-layout';
+import { Helmet } from 'react-helmet';
+import { Link } from 'umi';
 import React from 'react';
-import {formatMessage} from 'umi-plugin-react/locale';
+import { formatMessage } from 'umi-plugin-react/locale';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 
@@ -20,14 +20,14 @@ const UserLayout: React.FC<UserLayoutProps> = props => {
     },
   } = props;
 
-  const {routes = []} = route;
+  const { routes = [] } = route;
   const {
     children,
     location = {
       pathname: '',
     },
   } = props;
-  const {breadcrumb} = getMenuData(routes);
+  const { breadcrumb } = getMenuData(routes);
   const title = getPageTitle({
     pathname: location.pathname,
     formatMessage,

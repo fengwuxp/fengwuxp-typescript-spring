@@ -2,8 +2,7 @@ import {IConfig, IPlugin} from 'umi-types';
 import slash from 'slash2';
 import defaultSettings from './defaultSettings';
 import themePluginConfig from './themePluginConfig';
-import * as path from 'path';
-import CopyWebpackPlugin from 'copy-webpack-plugin';
+import {webpackPlugin} from "./plugin.config";
 
 const plugins: IPlugin[] = [
   // ['umi-plugin-antd-icon-config', {}],
@@ -86,6 +85,7 @@ export default {
           path: '/',
           component: '../layouts/BasicLayout',
           // Routes: ['./node_modules/fengwuxp-routing-react/src/condition/DefaultConditionRoute.tsx'],
+          // Routes: ['./src/DefaultConditionRoute'],
           routes: [
             {
               name: 'demo管理',
@@ -94,7 +94,8 @@ export default {
                 {
                   name: '演示模块1',
                   icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
-                  path: '/demo',
+                  path: '/demo/',
+                  // component: './demo/DemoListView',
                   routes: [
                     {
                       name: 'demo列表',
@@ -191,21 +192,37 @@ export default {
     //     camel2DashComponentName: false
     //   },
     //   "@uform/antd"
+    // ],
+    // [
+    //   "import",
+    //   {
+    //     "libraryName": "fengwuxp-typescript-feign",
+    //     "libraryDirectory": "esnext",
+    //     "style": false,
+    //     camel2DashComponentName: false
+    //   },
+    //   "fengwuxp-typescript-feign"
     // ]
   ],
-  chainWebpack: function (config, {webpack}) {
-
-    // console.log("--from-->", path.resolve(__dirname, "../src/assets/svg/"));
-    // console.log("--to-->", path.resolve(__dirname, `../dist/static/svg/`));
-    config.plugin("copy-static-resources").use(CopyWebpackPlugin, [
-      [
-        {
-          from: path.resolve(__dirname, "../src/assets/svg/"),
-          to: path.resolve(__dirname, `../dist/static/svg/`)
-        },
-      ]
-    ]);
-
-  },
+  // chainWebpack: function (config, {webpack}) {
+  //
+  //   config.plugin("copy-static-resources").use(CopyWebpackPlugin, [
+  //     [
+  //       {
+  //         from: path.resolve(__dirname, "../src/assets/svg/"),
+  //         to: path.resolve(__dirname, `../dist/static/svg/`)
+  //       },
+  //     ]
+  //   ]);
+  //
+  // },
+  chainWebpack: webpackPlugin,
+  // proxy: {
+  //   '/server/api/': {
+  //     target: 'https://preview.pro.ant.design/',
+  //     changeOrigin: true,
+  //     pathRewrite: { '^/server': '' },
+  //   },
+  // },
   treeShaking: false
 } as IConfig;

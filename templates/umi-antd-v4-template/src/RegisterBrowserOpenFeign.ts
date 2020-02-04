@@ -13,42 +13,38 @@ import {
   RoutingClientHttpRequestInterceptor,
   SimpleNetworkStatusListener,
   stringDateConverter,
-  UnifiedFailureToastExecutorInterceptor
+  UnifiedFailureToastExecutorInterceptor,
 } from 'fengwuxp-typescript-feign'
 import {
   ClientHttpInterceptorRegistry,
   FeignClientInterceptorRegistry,
   FeignConfigurationAdapter,
-  feignConfigurationInitializer
+  feignConfigurationInitializer,
 } from 'feign-boot-stater'
-import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-browser-stater'
+import { BrowserHttpAdapter, BrowserNetworkStatusListener } from 'feign-boot-browser-stater'
 
-import {message} from 'antd';
-import {AppStorage} from "@/BrowserAppStorage";
+import { message } from 'antd';
+import { AppStorage } from '@/BrowserAppStorage';
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
-
   public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
     headers.Authorization = authorization.authorization
     return headers
   }
 
   public getAuthorization = (req: Readonly<HttpRequest>) => {
-    console.log("获取token")
-    return AppStorage.getUserInfo().then((userInfo) => {
-      return {
+    console.log('获取token')
+    return AppStorage.getUserInfo().then(userInfo => ({
         authorization: userInfo.token,
-        expireDate: userInfo.expiration_date
-      }
-    }).catch((e) => {
-      return {
+        expireDate: userInfo.expiration_date,
+      })).catch(e => ({
         authorization: null,
-        expireDate: -1
+        expireDate: -1,
         // expireDate: new Date().getTime() + 1000 * 1000
-      }
-    })
+      }))
   }
-  public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
+
+  public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) =>
     // return UserService.refreshToken({}, {
     //   headers: this.appendAuthorizationHeader(authorization, req.headers || {})
     // }).then((userInfo) => {
@@ -60,32 +56,25 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
     //   })
     // })
 
-    return {
+     ({
       authorization: null,
-      expireDate: -1
-    }
-  }
-
+      expireDate: -1,
+    })
 }
 
 
 class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
-  public defaultProduce = () => {
-    return HttpMediaType.FORM_DATA
-  }
+  public defaultProduce = () => HttpMediaType.FORM_DATA
 
-  public httpAdapter = () => {
-    return new BrowserHttpAdapter(10 * 1000)
-  }
+  public httpAdapter = () => new BrowserHttpAdapter(10 * 1000)
 
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
-      new BrowserNetworkStatusListener()
-      , new SimpleNetworkStatusListener()))
-    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(""))
+      new BrowserNetworkStatusListener(),
+       new SimpleNetworkStatusListener()))
+    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor('/api'));
     interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
       .excludePathPatterns()
-
   }
 
   public registryFeignClientExecutorInterceptors = (interceptorRegistry: FeignClientInterceptorRegistry) => {
@@ -95,15 +84,15 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
       },
       showProgressBar(options: ProgressBarOptions) {
         message.destroy()
-      }
+      },
     }))
 
     // codec
     interceptorRegistry.addInterceptor(new CodecFeignClientExecutorInterceptor(
       [
         // 将时间类型转换为 时间戳格式
-        new DateEncoder(stringDateConverter())
-      ]
+        new DateEncoder(stringDateConverter()),
+      ],
     ));
 
     // 统一数据转换，错误提示
@@ -113,12 +102,9 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
     }))
   }
 
-  public feignUIToast = () => {
-    return (text: string) => {
+  public feignUIToast = () => (text: string) => {
       message.info(text)
     }
-  }
-
 }
 
 /**
