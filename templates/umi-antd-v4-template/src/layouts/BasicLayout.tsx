@@ -11,7 +11,7 @@ import {Settings} from '@ant-design/pro-layout/es/defaultSettings'
 import {MenuDataItem} from "@ant-design/pro-layout/es/typings"
 import SettingDrawer from '@ant-design/pro-layout/es/SettingDrawer/index'
 
-import {HeartTwoTone} from '@ant-design/icons';
+// import {HeartTwoTone} from '@ant-design/icons';
 import AntdIcon from '@ant-design/icons/lib/components/AntdIcon';
 import defaultSettings from '../../config/defaultSettings';
 
@@ -52,12 +52,6 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           </Link>
         )}
         breakpoint={false}
-        links={[
-          <>
-            <HeartTwoTone/>
-            <span>name</span>
-          </>,
-        ]}
         onCollapse={handleMenuCollapse}
         breadcrumbRender={(routers = []) => [
           {

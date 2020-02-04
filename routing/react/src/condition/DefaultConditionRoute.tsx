@@ -37,7 +37,7 @@ const DefaultConditionRoute: ConditionRoute = (props: ConditionRouteProps) => {
                exact={exact}
                strict={strict}
                render={(routeProps) => (
-                   SpelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props) ? (renderView(props, routeProps)) : (
+                   SpelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props,routeProps) ? (renderView(props, routeProps)) : (
                        renderNoneAuthenticationFallback(fallback, routeProps)
                    )
                )}/>

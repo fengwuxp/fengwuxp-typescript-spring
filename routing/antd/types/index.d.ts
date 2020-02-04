@@ -7,14 +7,19 @@ interface RenderPageHeaderProps {
     extraContent?: React.ReactNode;
     backIcon?: () => React.ReactNode;
 }
-declare type RenderPageHeaderFunction = (children: React.Component, pageHeaderProps: RenderPageHeaderProps) => React.Component;
+declare type RenderPageHeaderFunction = (children: React.Component, options: AntdRouteViewOptions, viewProps: any) => React.ReactElement;
+declare type RenderNoAuthorityFunction = (children: React.Component, options: AntdRouteViewOptions, viewProps: any) => React.ReactElement;
 interface AntdPageHeaderEnhancerType {
-    (children: React.Component, options: RouteViewOptions): React.Component;
     /**
      * 设置render 方法
      * @param render
      */
     setWrapperRender: (render: RenderPageHeaderFunction) => AntdPageHeaderEnhancerType;
+    /**
+     * 渲染无权限视图
+     * @param render
+     */
+    setRenderNoAuthorityView: (render: RenderNoAuthorityFunction) => AntdPageHeaderEnhancerType;
 }
 declare type AntdRouteViewOptions = RouteViewOptions & {
     pageHeader: RenderPageHeaderProps;

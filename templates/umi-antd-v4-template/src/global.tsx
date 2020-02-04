@@ -1,14 +1,64 @@
 import "./RegisterBrowserOpenFeign";
-import {Button, message, notification} from 'antd';
-import React from 'react';
+import {Button, message, Modal, notification} from 'antd';
+import {ArrowLeftOutlined} from "@ant-design/icons";
+import React, {useState} from 'react';
 import {formatMessage} from 'umi-plugin-react/locale';
 import defaultSettings from '../config/defaultSettings';
-import {RouteView, RouteContextHolder} from "fengwuxp-routing-core";
+import {RouteContextHolder, RouteView, ViewShowMode} from "fengwuxp-routing-core";
 import {AppRouter} from "@/AppRouter";
 import {AntdRouteContext} from "@/AntdRouteContext";
+import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from "fengwuxp-routing-antd";
+import {PageHeaderWrapper} from "@ant-design/pro-layout";
 
+const userIsLogin = "#user==null";
 
-RouteView.setDefaultCondition("#user!=null");
+AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
+
+  console.log("viewProps", viewProps, options);
+  const pageHeader = options.pageHeader || {};
+
+  if (options.showMode === ViewShowMode.DIALOG || viewProps.viewShowModel === ViewShowMode.DIALOG) {
+
+    const [visible, setVisible] = useState(true);
+
+    return <Modal
+      title={viewProps.route.name}
+      visible={true}
+      width={"70%"}
+      onCancel={() => {
+        setVisible(false);
+        AppRouter.goBack();
+      }}
+      footer={visible}>
+      <ReactComponent {...viewProps}/>
+    </Modal>
+
+  }
+
+  return <>
+    <PageHeaderWrapper title={pageHeader.title || viewProps.route.name}
+                       content={pageHeader.content}
+                       backIcon={<ArrowLeftOutlined/>}
+                       onBack={() => AppRouter.goBack()}>
+      <ReactComponent {...viewProps}/>
+    </PageHeaderWrapper>
+  </>
+});
+
+AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
+
+  if (options.condition === userIsLogin) {
+    AppRouter.login();
+    return null;
+  }
+
+  return <>
+    <div>你没有访问该页面的权限 {options.condition}</div>
+  </>
+});
+
+RouteView.addEnhancer(AntdPageHeaderEnhancer);
+RouteView.setDefaultCondition(userIsLogin);
 RouteContextHolder.setRouteContextFactory(() => {
 
   return {

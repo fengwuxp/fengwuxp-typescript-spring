@@ -30,7 +30,8 @@ const getConfig = (isProd) => {
             "fengwuxp-routing-core",
             "fengwuxp-routing-react",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "antd"
         ],
         output: [
             {

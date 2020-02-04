@@ -85,19 +85,31 @@ export default {
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          Routes: ['./node_modules/fengwuxp-routing-react/src/condition/DefaultConditionRoute.tsx'],
+          // Routes: ['./node_modules/fengwuxp-routing-react/src/condition/DefaultConditionRoute.tsx'],
           routes: [
             {
-              name: '演示',
+              name: 'demo管理',
               icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
-              path: '/demo',
               routes: [
                 {
-                  name: 'site',
-                  icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
-                  path: '/demo/create',
-                  component: './demo/CreateDemoView',
-                },
+                  name: '演示模块1',
+                  icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
+                  path: '/demo',
+                  routes: [
+                    {
+                      name: 'demo列表',
+                      icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+                      path: '/demo/list',
+                      component: './demo/DemoListView',
+                    },
+                    {
+                      name: '创建demo',
+                      icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+                      path: '/demo/create',
+                      component: './demo/CreateDemoView',
+                    },
+                  ]
+                }
               ]
             },
           ],

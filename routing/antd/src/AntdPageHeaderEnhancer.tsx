@@ -1,4 +1,10 @@
-import {RouteViewEnhancer, RouteViewOptions} from "fengwuxp-routing-core";
+import {
+    SpelRouteConditionParser,
+    RouteContextHolder,
+    ViewShowMode,
+    RouteViewEnhancer,
+    RouteViewOptions
+} from "fengwuxp-routing-core";
 import React from "react";
 
 
@@ -15,11 +21,12 @@ export interface RenderPageHeaderProps {
 
 }
 
-export type RenderPageHeaderFunction = (children: React.Component, pageHeaderProps: RenderPageHeaderProps) => React.Component;
+export type RenderPageHeaderFunction = (children: React.Component, options: AntdRouteViewOptions, viewProps) => React.ReactElement;
+export type RenderNoAuthorityFunction = (children: React.Component, options: AntdRouteViewOptions, viewProps) => React.ReactElement;
 
 export interface AntdPageHeaderEnhancerType {
 
-    (children: React.Component, options: RouteViewOptions): React.Component;
+    // (children: React.Component, options: RouteViewOptions): React.Component;
 
 
     /**
@@ -27,11 +34,24 @@ export interface AntdPageHeaderEnhancerType {
      * @param render
      */
     setWrapperRender: (render: RenderPageHeaderFunction) => AntdPageHeaderEnhancerType;
+
+    /**
+     * 渲染无权限视图
+     * @param render
+     */
+    setRenderNoAuthorityView: (render: RenderNoAuthorityFunction) => AntdPageHeaderEnhancerType;
 }
+
+let NO_AUTHORITY_VIEW: RenderNoAuthorityFunction = (ReactComponent: any, options: AntdRouteViewOptions, viewProps) => <>
+    <ReactComponent {...viewProps}/>
+</>;
 
 
 // 默认不处理
-let PAGE_HEADER_RENDER: RenderPageHeaderFunction = (children: React.Component, pageHeaderProps: RenderPageHeaderProps) => children;
+let PAGE_HEADER_RENDER: RenderPageHeaderFunction = (ReactComponent: any, options: AntdRouteViewOptions, viewProps) => <>
+    <ReactComponent {...viewProps}/>
+</>;
+;
 
 export type AntdRouteViewOptions = RouteViewOptions & {
     pageHeader: RenderPageHeaderProps
@@ -44,11 +64,31 @@ export type AntdRouteViewOptions = RouteViewOptions & {
  */
 const AntdPageHeaderEnhancer: RouteViewEnhancer & AntdPageHeaderEnhancerType = (children: React.Component, options: AntdRouteViewOptions) => {
 
-    return PAGE_HEADER_RENDER(children, options.pageHeader);
+
+    return (props) => {
+        const b = SpelRouteConditionParser(options.condition, {
+            ...RouteContextHolder.getRouteContext(),
+            ...props
+        }, options);
+
+        // if (props.showMode === ViewShowMode.DIALOG) {
+        //
+        //     return <Model>
+        //
+        //     </Model>
+        // }
+
+        return b ? PAGE_HEADER_RENDER(children, options, props) : NO_AUTHORITY_VIEW(children, options, props);
+    }
 };
 
 AntdPageHeaderEnhancer.setWrapperRender = (render: RenderPageHeaderFunction) => {
     PAGE_HEADER_RENDER = render;
+    return AntdPageHeaderEnhancer;
+};
+
+AntdPageHeaderEnhancer.setRenderNoAuthorityView = (render: RenderNoAuthorityFunction) => {
+    NO_AUTHORITY_VIEW = render;
     return AntdPageHeaderEnhancer;
 };
 

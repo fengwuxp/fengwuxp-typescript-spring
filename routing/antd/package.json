@@ -49,6 +49,7 @@
   },
   "dependencies": {
     "@types/react": "^16.9.19",
+    "antd": "4.0.0-rc.2",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
     "fengwuxp-routing-core": "^1.0.0",
