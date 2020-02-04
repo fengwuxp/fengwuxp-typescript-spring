@@ -26,7 +26,7 @@ import {
   createFormActions,
 } from '@uform/antd/esm';
 import classNames from 'classnames';
-import {AppRouter} from '@/AppRouter';
+import AppRouter from '@/AppRouter';
 import MockService from '@/feign/MockService';
 import {DemoItem, Sex} from '../../../mock/dmeo_table';
 import styles from './style.less';

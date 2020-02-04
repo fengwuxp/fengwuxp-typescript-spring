@@ -9,30 +9,26 @@ import {
   RouteConfirmBeforeJumping,
   RouterCommandMethod,
   RouteMapping,
-  AbstractAppCommandRouter,
+  AbstractAppCommandRouter
 } from 'fengwuxp-declarative-router-adapter'
-import { LoginViewProps } from '@/pages/user/LoginView';
+import {LoginViewProps} from '@/pages/user/LoginView';
 import history from '@/pages/.umi/history'
-import { CreateDemoViewProps } from '@/pages/demo/CreateDemoView';
-import { DemoListViewProps } from '@/pages/demo/DemoListView';
-import { MethodNameCommandResolver } from '../../../declarative-api/declarative-command/src';
+import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
+// import {CreateDemoViewProps} from '@/pages/demo/CreateDemoView';
+// import {DemoListViewProps} from '@/pages/demo/DemoListView';
+
 
 export interface AppRouterInterface extends AppCommandRouter {
 
 
   login: RouterCommandMethod<LoginViewProps>;
 
-  demoListView: RouterCommandMethod<DemoListViewProps>;
+  demoListView: RouterCommandMethod;
 
-  demoCreateView: RouterCommandMethod<CreateDemoViewProps>;
+  demoCreateView: RouterCommandMethod;
 }
-
-const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) =>
-
-  // 判断是否需要登录
-
-   true
-;
+// 判断是否需要登录
+const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) => true
 
 
 // @ts-ignore
@@ -44,7 +40,7 @@ const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: Nav
  * @param methodName
  */
 export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: string) => methodName.replace('View', '')
-    .replace(/([A-Z])/g, '/$1').toLowerCase();
+  .replace(/([A-Z])/g, '/$1').toLowerCase();
 
 
 @AppRouterMapping({
@@ -55,16 +51,15 @@ export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: st
   pathPrefix: '/',
 })
 class AntdAppRouter extends AbstractAppCommandRouter implements AppRouterInterface {
+
   @RouteMapping('/user/login')
   login: RouterCommandMethod<LoginViewProps>;
 
-
   // @RouteMapping("/demo/list")
-  demoListView: RouterCommandMethod<DemoListViewProps>;
+  demoListView: RouterCommandMethod;
 
   // @RouteMapping("/demo/create")
-  demoCreateView: RouterCommandMethod<CreateDemoViewProps>;
+  demoCreateView: RouterCommandMethod;
 }
 
-
-export const AppRouter = new AntdAppRouter();
+export default new AntdAppRouter();

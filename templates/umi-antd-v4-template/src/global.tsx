@@ -1,14 +1,14 @@
 import './RegisterBrowserOpenFeign';
-import { Button, message, notification } from 'antd';
-import { ArrowLeftOutlined } from '@ant-design/icons';
+import {Button, message, notification} from 'antd';
+import {ArrowLeftOutlined} from '@ant-design/icons';
 import React from 'react';
-import { formatMessage } from 'umi-plugin-react/locale';
-import { RouteContextHolder, RouteView, ViewShowMode } from 'fengwuxp-routing-core';
-import { AntdPageHeaderEnhancer, AntdRouteViewOptions } from 'fengwuxp-routing-antd';
-import { PageHeaderWrapper } from '@ant-design/pro-layout';
+import {formatMessage} from 'umi-plugin-react/locale';
+import {RouteContextHolder, RouteView, ViewShowMode} from 'fengwuxp-routing-core';
+import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from 'fengwuxp-routing-antd';
+import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import defaultSettings from '../config/defaultSettings';
-import { AppRouter } from '@/AppRouter';
-import { AntdRouteContext } from '@/AntdRouteContext';
+import AppRouter from '@/AppRouter';
+import {AntdRouteContext} from '@/AntdRouteContext';
 
 const userIsLogin = '#user==null';
 
@@ -60,17 +60,17 @@ AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: A
 RouteView.addEnhancer(AntdPageHeaderEnhancer);
 RouteView.setDefaultCondition(userIsLogin);
 RouteContextHolder.setRouteContextFactory(() => ({
-    ...AppRouter.getCurrentObject(),
-    user: null,
-  } as AntdRouteContext));
+  ...AppRouter.getCurrentObject(),
+  user: null,
+} as AntdRouteContext));
 
 
-const { pwa } = defaultSettings;
+const {pwa} = defaultSettings;
 // if pwa is true
 if (pwa) {
   // Notify user if offline now
   window.addEventListener('sw.offline', () => {
-    message.warning(formatMessage({ id: 'app.pwa.offline' }));
+    message.warning(formatMessage({id: 'app.pwa.offline'}));
   });
 
   // Pop up a prompt on the page asking the user if they want to use the latest version
@@ -93,7 +93,7 @@ if (pwa) {
             resolve(msgEvent.data);
           }
         };
-        worker.postMessage({ type: 'skip-waiting' }, [channel.port2]);
+        worker.postMessage({type: 'skip-waiting'}, [channel.port2]);
       });
       // Refresh current page to use the updated HTML and other assets after SW has skiped waiting
       window.location.reload(true);
@@ -108,12 +108,12 @@ if (pwa) {
           reloadSW();
         }}
       >
-        {formatMessage({ id: 'app.pwa.serviceworker.updated.ok' })}
+        {formatMessage({id: 'app.pwa.serviceworker.updated.ok'})}
       </Button>
     );
     notification.open({
-      message: formatMessage({ id: 'app.pwa.serviceworker.updated' }),
-      description: formatMessage({ id: 'app.pwa.serviceworker.updated.hint' }),
+      message: formatMessage({id: 'app.pwa.serviceworker.updated'}),
+      description: formatMessage({id: 'app.pwa.serviceworker.updated.hint'}),
       btn,
       key,
       onClose: async () => {
@@ -122,7 +122,7 @@ if (pwa) {
   });
 } else if ('serviceWorker' in navigator) {
   // unregister service worker
-  const { serviceWorker } = navigator;
+  const {serviceWorker} = navigator;
   if (serviceWorker.getRegistrations) {
     serviceWorker.getRegistrations().then(sws => {
       sws.forEach(sw => {

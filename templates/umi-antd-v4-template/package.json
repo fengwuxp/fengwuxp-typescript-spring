@@ -22,7 +22,7 @@
     "@ant-design/icons": "4.0.0-rc.0",
     "@ant-design/pro-layout": "4.10.11-rc.6",
     "@uform/antd": "2.0.0",
-    "antd": "^4.0.0-rc.2",
+    "antd": "4.0.0-rc.2",
     "feign-boot-browser-stater": "^1.0.0",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-browser-router": "^1.0.0",
