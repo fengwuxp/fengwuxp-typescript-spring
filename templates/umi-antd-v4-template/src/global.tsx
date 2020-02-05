@@ -9,8 +9,23 @@ import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import defaultSettings from '../config/defaultSettings';
 import AppRouter from '@/AppRouter';
 import {AntdRouteContext} from '@/AntdRouteContext';
+import {getLoginUser} from "@/SessionManager";
+import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
 
-const userIsLogin = '#user==null';
+console.log("--process-->",
+  process.env,
+  process.env.UMI_ENV,
+  process.env.API_ADDRESS,
+);
+
+CmdDataProvider.setEventNameGenerator(() => {
+  const pathname = location.pathname;
+  console.log("location.pathname", pathname);
+  return `${ApplicationEventType.ROUTE}_${pathname}`;
+});
+
+// 用于判断用户是否登录的条件
+const USER_IS_LOGIN_CONDITION = '#loginUser!=null';
 
 AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
   console.log('viewProps', viewProps, options);
@@ -47,7 +62,7 @@ AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRoute
 });
 
 AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-  if (options.condition === userIsLogin) {
+  if (options.condition === USER_IS_LOGIN_CONDITION) {
     AppRouter.login();
     return null;
   }
@@ -58,10 +73,10 @@ AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: A
 });
 
 RouteView.addEnhancer(AntdPageHeaderEnhancer);
-RouteView.setDefaultCondition(userIsLogin);
+RouteView.setDefaultCondition(USER_IS_LOGIN_CONDITION);
 RouteContextHolder.setRouteContextFactory(() => ({
   ...AppRouter.getCurrentObject(),
-  user: null,
+  loginUser: getLoginUser(),
 } as AntdRouteContext));
 
 

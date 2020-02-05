@@ -1,16 +1,17 @@
-import { Feign, FeignRequestOptions, GetMapping } from 'fengwuxp-typescript-feign';
+import {Feign, FeignRequestOptions, GetMapping} from 'fengwuxp-typescript-feign';
 
-import { PageInfo } from 'oak-common';
-import { DemoItem } from '../../mock/dmeo_table';
+import {PageInfo} from 'oak-common';
+import {DemoItem} from '../../../mock/dmeo_table';
 
 /**
  * 类：例子服务
  * */
 
 @Feign({
-  value: '/',
+  value: '/mock/',
 })
 class MockService {
+
   @GetMapping({
     value: '/menu/list',
   })

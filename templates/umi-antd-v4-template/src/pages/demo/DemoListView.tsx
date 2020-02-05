@@ -27,7 +27,7 @@ import {
 } from '@uform/antd/esm';
 import classNames from 'classnames';
 import AppRouter from '@/AppRouter';
-import MockService from '@/feign/MockService';
+import MockService from '@/feign/mock/MockService';
 import {DemoItem, Sex} from '../../../mock/dmeo_table';
 import styles from './style.less';
 import marginStyles from '@/assets/styles/margin.less';

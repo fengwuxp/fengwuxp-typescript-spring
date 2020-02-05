@@ -42,7 +42,7 @@ const plugins: IPlugin[] = [
   ]
 ];
 
-// plugins.push(['umi-plugin-antd-theme', themePluginConfig]);
+console.log("process.env.UMI_ENV", process.env.UMI_ENV);
 
 export default {
   plugins,
@@ -164,11 +164,17 @@ export default {
   // alias: {
   //   'static': path.resolve(__dirname, '../static/')
   // },
-  // publicPath: "/static_resources/",
-  // externals: {
-  //   "react": "window.React",
-  //   "react-dom": "window.ReactDOM"
-  // },
+  publicPath: "/static_resources/",
+  define: {
+    "process.env.UMI_ENV": process.env.UMI_ENV,
+    "process.env.API_ADDRESS": "/api",
+  },
+  externals: {
+    // "react": "window.React",
+    // "react-dom": "window.ReactDOM",
+    // "rxjs": "window.Rxjs",
+    // "antd": "window.Antd"
+  },
   extraBabelIncludes: [
     /node_modules[\\/][\\@]uform[\\/]antd[\\/]esm/
   ],
@@ -182,46 +188,14 @@ export default {
         camel2DashComponentName: false
       },
       "@ant-design/icons"
-    ],
-    // [
-    //   "import",
-    //   {
-    //     "libraryName": "@uform/antd",
-    //     "libraryDirectory": "esm",
-    //     "style": false,
-    //     camel2DashComponentName: false
-    //   },
-    //   "@uform/antd"
-    // ],
-    // [
-    //   "import",
-    //   {
-    //     "libraryName": "fengwuxp-typescript-feign",
-    //     "libraryDirectory": "esnext",
-    //     "style": false,
-    //     camel2DashComponentName: false
-    //   },
-    //   "fengwuxp-typescript-feign"
-    // ]
+    ]
   ],
-  // chainWebpack: function (config, {webpack}) {
-  //
-  //   config.plugin("copy-static-resources").use(CopyWebpackPlugin, [
-  //     [
-  //       {
-  //         from: path.resolve(__dirname, "../src/assets/svg/"),
-  //         to: path.resolve(__dirname, `../dist/static/svg/`)
-  //       },
-  //     ]
-  //   ]);
-  //
-  // },
   chainWebpack: webpackPlugin,
   // proxy: {
-  //   '/server/api/': {
-  //     target: 'https://preview.pro.ant.design/',
+  //   '/api/': {
+  //     target: process.env.API_ADDRESS,
   //     changeOrigin: true,
-  //     pathRewrite: { '^/server': '' },
+  //     pathRewrite: {'^/api': ''},
   //   },
   // },
   treeShaking: false

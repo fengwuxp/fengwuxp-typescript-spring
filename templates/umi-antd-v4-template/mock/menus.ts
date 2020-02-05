@@ -1,4 +1,4 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
 
 /**
  * 模拟菜单数据
@@ -10,5 +10,5 @@ const getMenus = (req: Request, res: Response) => {
 };
 
 export default {
-  'GET /api/menu/list': getMenus,
+  'GET /api/mock/menu/list': getMenus,
 };

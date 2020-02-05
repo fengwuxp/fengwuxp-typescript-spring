@@ -57,5 +57,5 @@ begin = querySize * queryPage;
 };
 
 export default {
-  'GET /api/demo/page': getDemoPages,
+  'GET /api/mock/demo/page': getDemoPages,
 };

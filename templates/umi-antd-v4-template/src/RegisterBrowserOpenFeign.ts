@@ -21,10 +21,10 @@ import {
   FeignConfigurationAdapter,
   feignConfigurationInitializer,
 } from 'feign-boot-stater'
-import { BrowserHttpAdapter, BrowserNetworkStatusListener } from 'feign-boot-browser-stater'
+import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-browser-stater'
 
-import { message } from 'antd';
-import { AppStorage } from '@/BrowserAppStorage';
+import {message} from 'antd';
+import {AppStorage} from '@/BrowserAppStorage';
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
   public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
@@ -35,13 +35,13 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
   public getAuthorization = (req: Readonly<HttpRequest>) => {
     console.log('获取token')
     return AppStorage.getUserInfo().then(userInfo => ({
-        authorization: userInfo.token,
-        expireDate: userInfo.expiration_date,
-      })).catch(e => ({
-        authorization: null,
-        expireDate: -1,
-        // expireDate: new Date().getTime() + 1000 * 1000
-      }))
+      authorization: userInfo.token,
+      expireDate: userInfo.expiration_date,
+    })).catch(e => ({
+      authorization: null,
+      expireDate: -1,
+      // expireDate: new Date().getTime() + 1000 * 1000
+    }))
   }
 
   public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) =>
@@ -56,7 +56,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
     //   })
     // })
 
-     ({
+    ({
       authorization: null,
       expireDate: -1,
     })
@@ -71,8 +71,8 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
       new BrowserNetworkStatusListener(),
-       new SimpleNetworkStatusListener()))
-    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor('/api'));
+      new SimpleNetworkStatusListener()))
+    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(process.env.API_ADDRESS));
     interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
       .excludePathPatterns()
   }
@@ -103,8 +103,8 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
   }
 
   public feignUIToast = () => (text: string) => {
-      message.info(text)
-    }
+    message.info(text)
+  }
 }
 
 /**

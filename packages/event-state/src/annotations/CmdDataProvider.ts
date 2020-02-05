@@ -39,6 +39,10 @@ const CmdDataProvider: CmdDataProviderType = (options: CmdDataProviderOptions = 
 
     const eventNameGenerator: EventNameGenerator = CmdDataProvider.eventNameGenerator;
 
+    if (eventNameGenerator == null && options.eventName == null) {
+        throw new Error("event name is null")
+    }
+
     if (eventNameGenerator && options.eventName == null) {
         options.eventName = eventNameGenerator();
     }
