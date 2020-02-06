@@ -11,6 +11,7 @@ import AppRouter from '@/AppRouter';
 import {AntdRouteContext} from '@/AntdRouteContext';
 import {getLoginUser} from "@/SessionManager";
 import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
+import {USER_IS_LOGIN_CONDITION} from "@/constant/RouteCondition";
 
 console.log("--process-->",
   process.env,
@@ -24,8 +25,6 @@ CmdDataProvider.setEventNameGenerator(() => {
   return `${ApplicationEventType.ROUTE}_${pathname}`;
 });
 
-// 用于判断用户是否登录的条件
-const USER_IS_LOGIN_CONDITION = '#loginUser!=null';
 
 AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
   console.log('viewProps', viewProps, options);

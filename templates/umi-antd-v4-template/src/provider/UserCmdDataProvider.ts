@@ -17,6 +17,7 @@ class UserCmdDataProvider {
 
 
     return UserService.login(req, {useProgressBar: false}).then((user) => {
+      user.avatar = 'https://gw.alipayobjects.com/zos/antfincdn/XAosXuNZyF/BiazfanxmamNRoxxVxka.png';
       saveLoginUser(user);
       return user;
     });

@@ -79,8 +79,11 @@ interface GetStorageOptions {
 }
 
 declare type SetStorageCommandMethod<T> = (data?: T, options?: number | PersistenceStorageOptions) => Promise<void>;
+declare type SetStorageCommandMethodSync<T> = (data?: T, options?: number | PersistenceStorageOptions) => void;
 declare type GetStorageCommandMethod<T = any> = (options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<T>;
+declare type GetStorageCommandMethodSync<T = any> = (options?: GetStorageOptions | true | StorageUpdateStrategy) => T;
 declare type RemoveStorageCommandMethod = () => Promise<void>;
+declare type RemoveStorageCommandMethodSync = () => void;
 /**
  * app command storage
  */
@@ -153,4 +156,4 @@ declare enum StorageCommand {
     CLEAR = "clear"
 }
 
-export { AppCommandStorage, DefaultWrapperStorageAdapter, GetStorageCommandMethod, GetStorageOptions, PersistenceStorageOptions, RemoveStorageCommandMethod, SetStorageCommandMethod, StorageAdapter, StorageCommand, StorageSyncAdapter, StorageUpdateStrategy, appCommandStorageFactory };
+export { AppCommandStorage, DefaultWrapperStorageAdapter, GetStorageCommandMethod, GetStorageCommandMethodSync, GetStorageOptions, PersistenceStorageOptions, RemoveStorageCommandMethod, RemoveStorageCommandMethodSync, SetStorageCommandMethod, SetStorageCommandMethodSync, StorageAdapter, StorageCommand, StorageSyncAdapter, StorageUpdateStrategy, appCommandStorageFactory };

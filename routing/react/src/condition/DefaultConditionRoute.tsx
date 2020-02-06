@@ -20,7 +20,7 @@ const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, p
 };
 
 /**
- * 默认的私有的路由，需要登录
+ * 默认的condition的路由
  * @param props
  * @constructor
  */

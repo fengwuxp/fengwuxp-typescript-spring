@@ -2,8 +2,9 @@ import React, {useState} from 'react';
 import classNames from "classnames";
 import styles from "./style.less";
 import LoginFrom from './components/login';
-import UserCmdDataProvider from './UserCmdDataProvider';
-import {Form, Checkbox} from 'antd';
+import UserCmdDataProvider from '../../provider/UserCmdDataProvider';
+import {Form, Checkbox, message} from 'antd';
+import AppRouter from '@/AppRouter';
 
 const {UserName, Password, Submit} = LoginFrom;
 
@@ -21,9 +22,15 @@ const LoginView = (props: LoginViewProps) => {
   const [loading, setLoading] = useState(false);
   const [autoLogin, setAutoLogin] = useState(true);
   const onFinish = (values) => {
-    console.log('Success:', values);
+    console.log('onFinish:', values);
     setLoading(true);
-    UserCmdDataProvider.login(values).finally(() => {
+    UserCmdDataProvider.login(values).then(() => {
+      message.success("登录成功", 2, () => {
+        AppRouter.push("/");
+      });
+    }).catch((e) => {
+      console.log("e", e);
+    }).finally(() => {
       setLoading(false);
     })
 

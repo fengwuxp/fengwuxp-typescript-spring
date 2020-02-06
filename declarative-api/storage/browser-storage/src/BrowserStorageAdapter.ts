@@ -27,23 +27,34 @@ export default class BrowserStorageAdapter implements StorageAdapter {
     };
 
     getStorage = <T = string>(key: string, options?: (GetStorageOptions | true | StorageUpdateStrategy)): Promise<T> => {
-        const item = this.storage.getItem(key);
+        const item = this.getStorageSync(key);
         if (item == null) {
             return Promise.reject();
         }
-        return Promise.resolve(item as any);
+        return Promise.resolve(item);
     };
 
     removeStorage = (key: (string | string[])) => {
 
-        this.storage.removeItem(key as string);
-        return Promise.resolve(key);
+        return Promise.resolve(this.removeStorage(key));
     };
 
     setStorage = (key: string, data: string, options?: (number | PersistenceStorageOptions)) => {
 
-        return this.storage.setItem(key, data);
-    }
+        return this.setStorageSync(key, data);
+    };
+
+    getStorageSync = <T = any>(key: string) => {
+        return this.storage.getItem(key) as any;
+    };
+
+    removeStorageSync = (key: (string | string[])) => {
+        this.storage.removeItem(key as string);
+    };
+
+    setStorageSync = (key: string, data: (object | string | boolean | number), options?: PersistenceStorageOptions) => {
+        return this.storage.setItem(key, data as any);
+    };
 
 
 }

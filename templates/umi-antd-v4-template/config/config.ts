@@ -65,6 +65,7 @@ export default {
         {
           path: '/user',
           component: '../layouts/UserLayout',
+          Routes: ['./src/DefaultPrivateRoute'],
           routes: [
             {
               path: '/user',
@@ -84,8 +85,7 @@ export default {
         {
           path: '/',
           component: '../layouts/BasicLayout',
-          // Routes: ['./node_modules/fengwuxp-routing-react/src/condition/DefaultConditionRoute.tsx'],
-          // Routes: ['./src/DefaultConditionRoute'],
+          Routes: ['./src/DefaultPrivateRoute'],
           routes: [
             {
               name: 'demo管理',
@@ -191,12 +191,5 @@ export default {
     ]
   ],
   chainWebpack: webpackPlugin,
-  // proxy: {
-  //   '/api/': {
-  //     target: process.env.API_ADDRESS,
-  //     changeOrigin: true,
-  //     pathRewrite: {'^/api': ''},
-  //   },
-  // },
   treeShaking: false
 } as IConfig;

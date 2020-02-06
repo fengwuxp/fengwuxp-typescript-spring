@@ -15,7 +15,7 @@ import defaultSettings from '../../config/defaultSettings';
 import logo from '../assets/logo.svg';
 import SvgIcon from '@/components/icon/SvgIcon';
 import AppRouter from "@/AppRouter";
-
+import RightContent from "@/components/globalheader/RightContent";
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {
@@ -81,14 +81,7 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
           )
         }}
         // menuDataRender={menuDataRender}
-        rightContentRender={() => (
-          <div
-            style={{
-              padding: '0 16px',
-            }}
-          >
-          </div>
-        )}
+        rightContentRender={() => <RightContent layout={settings.layout}/>}
         footerRender={() => <DefaultFooter/>}
         collapsed={collapsed}
         onMenuHeaderClick={() => AppRouter.push("/")}

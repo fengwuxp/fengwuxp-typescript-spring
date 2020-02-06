@@ -47,6 +47,9 @@ export const appCommandStorageFactory = <T extends AppCommandStorage,
 
             return function (...args: any[]) {
                 //尝试从方法名称中解析到 指令
+                if (isSyncMethod) {
+                    propertyKey = propertyKey.substring(0, propertyKey.length - 4);
+                }
                 let [command, storageKey] = tryConverterMethodNameCommandResolver(propertyKey, STORAGE_COMMAND_VALUES, StorageCommand.GET);
                 storageKey = storageKey.replace(storageKey[0], storageKey[0].toLocaleLowerCase());
                 storageKey = methodNameCommandResolver(storageKey);

@@ -27,8 +27,9 @@ import {message} from 'antd';
 import {AppStorage} from '@/BrowserAppStorage';
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
+
   public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
-    headers.Authorization = authorization.authorization
+    headers.Authorization = authorization.authorization;
     return headers
   }
 
@@ -36,7 +37,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
     console.log('获取token')
     return AppStorage.getUserInfo().then(userInfo => ({
       authorization: userInfo.token,
-      expireDate: userInfo.expiration_date,
+      expireDate: userInfo.tokenExpired,
     })).catch(e => ({
       authorization: null,
       expireDate: -1,
@@ -66,7 +67,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
 class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
   public defaultProduce = () => HttpMediaType.FORM_DATA
 
-  public httpAdapter = () => new BrowserHttpAdapter(10 * 1000)
+  public httpAdapter = () => new BrowserHttpAdapter(20 * 1000)
 
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(

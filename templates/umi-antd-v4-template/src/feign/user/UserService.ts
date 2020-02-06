@@ -1,5 +1,6 @@
 import {Feign, FeignRequestOptions, GetMapping, PostMapping} from 'fengwuxp-typescript-feign';
 import {LoginReq} from "@/feign/user/req/LoginReq";
+import {LoginUserInfo} from "@/feign/user/info/LoginUserInfo";
 
 
 /**
@@ -14,8 +15,13 @@ class MockService {
   @PostMapping({
     value: '/login',
   })
-  login: (req: LoginReq, option?: FeignRequestOptions) => Promise<any>;
+  login: (req: LoginReq, option?: FeignRequestOptions) => Promise<LoginUserInfo>;
 
+
+  @PostMapping({
+    value: '/logout',
+  })
+  logout: (req?, option?: FeignRequestOptions) => Promise<void>;
 
   @GetMapping({
     value: '/mobile/{userType}',

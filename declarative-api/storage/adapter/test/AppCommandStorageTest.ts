@@ -3,7 +3,7 @@ import * as log4js from "log4js";
 import {reduceRightCommandResolvers, toLineResolver, toUpperCaseResolver} from "fengwuxp-declarative-command";
 import {
     AppCommandStorage,
-    GetStorageCommandMethod,
+    GetStorageCommandMethod, GetStorageCommandMethodSync,
     RemoveStorageCommandMethod,
     SetStorageCommandMethod
 } from "../src/AppCommandStorage";
@@ -21,6 +21,7 @@ interface MockAppCommandStorage extends AppCommandStorage {
     setMaxWaitTimes: SetStorageCommandMethod<number>;
 
     getMaxWaitTimes: GetStorageCommandMethod<number>;
+    getMaxWaitTimesSync: GetStorageCommandMethodSync<number>;
 
     removeMaxWaitTimes: RemoveStorageCommandMethod;
 
@@ -32,10 +33,13 @@ describe("test  app command storage factory", () => {
     let mockStorage = {};
     // let mockStorage = {};
 
+
     const mockAppStorage = appCommandStorageFactory<MockAppCommandStorage>({
         methodNameCommandResolver: function () {
             return reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver);
         },
+
+        // @ts-ignore
         storageAdapter: function () {
 
             return {
@@ -51,8 +55,8 @@ describe("test  app command storage factory", () => {
                 },
 
                 getStorage: function (key: string, options: GetStorageOptions | true | StorageUpdateStrategy) {
-                    logger.debug("获取数据", key);
-                    let mockStorageElement = mockStorage[key];
+
+                    let mockStorageElement = this.getStorageSync(key);
                     if (mockStorageElement == null) {
                         return Promise.reject();
                     }
@@ -60,16 +64,29 @@ describe("test  app command storage factory", () => {
                 },
 
                 removeStorage: function (key: string | string[]): Promise<string[]> {
-                    logger.debug("移除数据", key);
-                    delete mockStorage[key as string];
-                    return Promise.resolve(key as string[]);
+                    return Promise.resolve(this.removeStorageSync(key));
                 },
 
                 setStorage: function (key: string, data: object | string | boolean | number, options: number | PersistenceStorageOptions) {
+                    this.setStorageSync(key, data, options);
+                },
+
+                getStorageSync: function (key: string) {
+                    logger.debug("获取数据", key);
+                    return mockStorage[key];
+                },
+
+                removeStorageSync: function (key: string | string[]) {
+                    logger.debug("移除数据", key);
+                    delete mockStorage[key as string];
+                    return [key];
+                },
+
+                setStorageSync: function (key: string, data: object | string | boolean | number, options: PersistenceStorageOptions) {
                     logger.debug("保存数据", key, data);
                     mockStorage[key] = data;
-                    return;
                 }
+
 
             };
         },
@@ -91,9 +108,10 @@ describe("test  app command storage factory", () => {
         let keys = await mockAppStorage.getKeys();
         logger.debug("keys", keys);
         mockAppStorage.removeMaxWaitTimes();
-         maxWaitTimes = await mockAppStorage.getMaxWaitTimes(true);
         maxWaitTimes = await mockAppStorage.getMaxWaitTimes(true);
-        logger.debug("maxWaitTimes", maxWaitTimes);
+        maxWaitTimes = await mockAppStorage.getMaxWaitTimes(true);
+        const maxWaitTimesSync = mockAppStorage.getMaxWaitTimesSync();
+        logger.debug("maxWaitTimes", maxWaitTimes, maxWaitTimesSync);
     }, 2 * 1000);
 
 });
