@@ -4,6 +4,7 @@ import { ComponentType } from 'react';
 
 interface ReactCmdDataProviderEnhancerProps {
     globalEvents?: string[];
+    safeMode?: boolean;
 }
 declare type ReactCmdDataProviderRouteViewOptions = RouteViewOptions & {
     cmdDataProvider?: ReactCmdDataProviderEnhancerProps;
@@ -38,7 +39,7 @@ interface ConditionRouteProps extends RouteProps, RouteViewOptions {
 declare type ConditionRoute = ComponentType<ConditionRouteProps>;
 
 /**
- * 默认的私有的路由，需要登录
+ * 默认的condition的路由
  * @param props
  * @constructor
  */
