@@ -35,8 +35,8 @@ export default class BrowserStorageAdapter implements StorageAdapter {
     };
 
     removeStorage = (key: (string | string[])) => {
-
-        return Promise.resolve(this.removeStorage(key));
+        this.removeStorageSync(key);
+        return Promise.resolve(key as string);
     };
 
     setStorage = (key: string, data: string, options?: (number | PersistenceStorageOptions)) => {

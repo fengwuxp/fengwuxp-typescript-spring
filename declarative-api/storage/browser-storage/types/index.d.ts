@@ -17,7 +17,7 @@ declare class BrowserStorageAdapter implements StorageAdapter {
     clearAll: () => void;
     getKeys: () => Promise<never>;
     getStorage: <T = string>(key: string, options?: true | GetStorageOptions | StorageUpdateStrategy) => Promise<T>;
-    removeStorage: (key: string | string[]) => any;
+    removeStorage: (key: string | string[]) => Promise<string>;
     setStorage: (key: string, data: string, options?: number | PersistenceStorageOptions) => void;
     getStorageSync: <T = any>(key: string) => any;
     removeStorageSync: (key: string | string[]) => void;
