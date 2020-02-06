@@ -1,6 +1,6 @@
-import {CmdDataProvider, CmdProviderMethod} from "fengwuxp-event-state";
+import {CmdDataProvider} from "fengwuxp-event-state";
 import UserService from "@/feign/user/UserService";
-import {saveLoginUser} from "@/SessionManager";
+import {removeLoginUser, saveLoginUser} from "@/SessionManager";
 import {LoginReq} from "@/feign/user/req/LoginReq";
 
 
@@ -10,10 +10,11 @@ import {LoginReq} from "@/feign/user/req/LoginReq";
 class UserCmdDataProvider {
 
 
-  @CmdProviderMethod({
-    propName: "loginUser"
-  })
+  // @CmdProviderMethod({
+  //   propName: "loginUser"
+  // })
   login = (req: LoginReq): Promise<any> => {
+
 
     return UserService.login(req, {useProgressBar: false}).then((user) => {
       saveLoginUser(user);
@@ -21,6 +22,14 @@ class UserCmdDataProvider {
     });
   };
 
+  /**
+   * 退出登录
+   */
+  logout = (): Promise<any> => {
+    return UserService.logout({}, {useProgressBar: false}).then(() => {
+      removeLoginUser();
+    });
+  }
 
 }
 
