@@ -12,6 +12,10 @@ export interface EventState<T = any> {
      */
     getEventName: () => string;
 
+    /**
+     * 初始化状态
+     */
+    initState: () => void | Promise<void>;
 
     /**
      * 获取状态
@@ -40,3 +44,13 @@ export interface EventState<T = any> {
     close: () => void;
 
 }
+
+type InitStateSynFC<T> = () => T;
+type InitStateAsyncFC<T> = () => Promise<T>;
+
+type InitSateType<T> = {
+    selectEvent: () => string[];
+    init: (...otherSates: any[]) => T | Promise<T>
+}
+
+export type InitStateInvoker<T = any> = InitStateSynFC<T> | InitStateAsyncFC<T> | InitSateType<T>;

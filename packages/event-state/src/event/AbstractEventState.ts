@@ -1,25 +1,27 @@
-import {EventState} from "./EventState";
+import {EventState, InitStateInvoker} from "./EventState";
 import {Subscription} from "./Subscription";
+import {StateProvider} from "../provider/StateProvider";
+import EventStateManagerHolder from "../EventStateManagerHolder";
 
-export abstract class AbstractEventState<T = any> implements EventState<T> {
+export abstract class AbstractEventState<T = any> implements EventState<T>, StateProvider<T> {
+
+    public defaultState: InitStateInvoker<T>;
 
     protected eventName: string;
-
-    private removeStateHandle: Function;
 
     protected state: T;
 
     protected stateIsComplex: boolean;
 
+    private removeStateHandle: Function;
 
-    constructor(eventName: string, initSate: T, removeStateHandle?: Function) {
+
+    constructor(eventName: string, initInvoker: InitStateInvoker<T>, removeStateHandle?: Function) {
         this.eventName = eventName;
         this.removeStateHandle = removeStateHandle;
-        this.state = initSate === undefined ? {} as T : initSate;
-        const stateType = typeof this.state;
-        this.stateIsComplex = stateType === "object" || stateType === "function";
-    }
+        this.defaultState = initInvoker;
 
+    }
 
     close = () => {
         if (typeof this.removeStateHandle === "function") {
@@ -28,6 +30,34 @@ export abstract class AbstractEventState<T = any> implements EventState<T> {
     };
 
     getEventName = () => this.eventName;
+
+    initState = async () => {
+        const invoker = this.defaultState;
+        if (invoker == null) {
+            this.state = {} as any;
+            this.stateIsComplex = true;
+            return;
+        }
+        let state;
+        if (typeof invoker === "function") {
+            state = await invoker();
+        } else {
+            const {
+                selectEvent,
+                init
+            } = invoker;
+            state = await Promise.all(
+                selectEvent().map(name => {
+                    return EventStateManagerHolder.getManager().getEventState(name)
+                })
+            ).then((values) => {
+                return init(...values);
+            });
+        }
+        this.stateIsComplex = typeof state === "object";
+        this.state = state;
+
+    };
 
     getState = () => this.state;
 
@@ -40,12 +70,13 @@ export abstract class AbstractEventState<T = any> implements EventState<T> {
         return this.broadcastStateUpdate();
     };
 
+
     /**
      * 广播这个状态的更新
      */
     protected abstract broadcastStateUpdate: () => Promise<void>;
 
-    abstract subject: ( handle: (data: T) => void) => Subscription;
+    abstract subject: (handle: (data: T) => void) => Subscription;
 
 
 }

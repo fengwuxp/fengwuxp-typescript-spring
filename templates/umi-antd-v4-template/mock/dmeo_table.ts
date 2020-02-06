@@ -1,25 +1,6 @@
-import { Request, Response } from 'express';
+import {Request, Response} from 'express';
+import {DemoItem, Sex} from "./model/DemoItem";
 
-export enum Sex {
-
-  MAN,
-  WOMAN
-}
-
-export interface DemoItem {
-
-  id: number;
-
-  name: string;
-
-  age: number;
-
-  birthday: Date | number;
-
-  avatar: string;
-
-  sex: Sex;
-}
 
 const total = 6000;
 /**
@@ -30,10 +11,11 @@ const total = 6000;
 const getDemoPages = (req: Request, res: Response) => {
   const items: DemoItem[] = [];
   console.log('req.query', req.query);
-  const { querySize } = req.query;
-  const { queryPage } = req.query;
-  let i = 0; const
-begin = querySize * queryPage;
+  const {querySize} = req.query;
+  const {queryPage} = req.query;
+  let i = 0;
+  const
+    begin = querySize * queryPage;
   while (i++ < querySize) {
     items.push({
       id: begin + i,

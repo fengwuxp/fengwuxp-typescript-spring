@@ -83,6 +83,10 @@ interface EventState<T = any> {
      */
     getEventName: () => string;
     /**
+     * 初始化状态
+     */
+    initState: () => void | Promise<void>;
+    /**
      * 获取状态
      */
     getState: () => T;
@@ -103,15 +107,34 @@ interface EventState<T = any> {
      */
     close: () => void;
 }
+declare type InitStateSynFC<T> = () => T;
+declare type InitStateAsyncFC<T> = () => Promise<T>;
+declare type InitSateType<T> = {
+    selectEvent: () => string[];
+    init: (...otherSates: any[]) => T | Promise<T>;
+};
+declare type InitStateInvoker<T = any> = InitStateSynFC<T> | InitStateAsyncFC<T> | InitSateType<T>;
 
-declare abstract class AbstractEventState<T = any> implements EventState<T> {
+/**
+ * state provider
+ */
+interface StateProvider<T = any> {
+    /**
+     * init sate
+     */
+    readonly defaultState?: InitStateInvoker<T>;
+}
+
+declare abstract class AbstractEventState<T = any> implements EventState<T>, StateProvider<T> {
+    defaultState: InitStateInvoker<T>;
     protected eventName: string;
-    private removeStateHandle;
     protected state: T;
     protected stateIsComplex: boolean;
-    constructor(eventName: string, initSate: T, removeStateHandle?: Function);
+    private removeStateHandle;
+    constructor(eventName: string, initInvoker: InitStateInvoker<T>, removeStateHandle?: Function);
     close: () => void;
     getEventName: () => string;
+    initState: () => Promise<void>;
     getState: () => T;
     setState: (newState: any, propKey?: string) => Promise<void>;
     /**
@@ -133,7 +156,7 @@ interface EventStateManager {
      * 获取一个状态
      * @param eventName
      */
-    getEventState: <T = any>(eventName: string) => EventState<T>;
+    getEventState: <T = any>(eventName: string, initState?: InitStateInvoker<T>) => EventState<T> | Promise<EventState<T>>;
     /**
      * 移除一个状态
      * @param eventName
@@ -143,22 +166,22 @@ interface EventStateManager {
 
 declare abstract class AbstractEventStateManager implements EventStateManager {
     protected eventStateMap: Map<string, EventState | EventState[]>;
-    protected abstract newEventState: (event: string) => EventState;
-    getEventState: <T = any>(eventName: string) => EventState<any>;
+    protected abstract newEventState: (event: string, initInvoker: InitStateInvoker) => Promise<EventState>;
+    getEventState: <T = any>(eventName: string, initInvoker?: InitStateInvoker<T>) => Promise<EventState<any>>;
     getEventNames: () => string[];
     removeEventState: (eventName: string) => void;
 }
 
 declare class RxjsEventState<T> extends AbstractEventState<T> {
     private rxjsSubject;
-    constructor(eventName: string, initSate?: T, removeStateHandle?: Function);
+    constructor(eventName: string, initInvoker?: InitStateInvoker<T>, removeStateHandle?: Function);
     protected broadcastStateUpdate: () => Promise<void>;
     subject: (handle: (data: T) => void) => Subscription;
 }
 
 declare class RxjsEventStateManager extends AbstractEventStateManager {
     constructor();
-    protected newEventState: (event: string) => RxjsEventState<unknown>;
+    protected newEventState: (event: string, initInvoker: InitStateInvoker<any>) => Promise<RxjsEventState<any>>;
 }
 
 declare class EventStateManagerHolder {
@@ -174,4 +197,4 @@ declare class EventStateManagerHolder {
     static setManager: (manager: EventStateManager) => void;
 }
 
-export { AbstractEventState, AbstractEventStateManager, ApplicationEventType, CmdDataProvider, CmdDataProviderOptions, CmdDataProviderType, CmdProviderMethod, CmdProviderMethodOptions, EventState, EventStateManager, EventStateManagerHolder, RxjsEventState, RxjsEventStateManager, Subscription };
+export { AbstractEventState, AbstractEventStateManager, ApplicationEventType, CmdDataProvider, CmdDataProviderOptions, CmdDataProviderType, CmdProviderMethod, CmdProviderMethodOptions, EventState, EventStateManager, EventStateManagerHolder, InitStateInvoker, RxjsEventState, RxjsEventStateManager, StateProvider, Subscription };

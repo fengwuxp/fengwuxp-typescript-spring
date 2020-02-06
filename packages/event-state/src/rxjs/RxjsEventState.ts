@@ -1,14 +1,15 @@
 import {AbstractEventState} from "../event/AbstractEventState";
 import {Subscription} from "../event/Subscription";
 import {Subject} from "rxjs";
+import {InitStateInvoker} from "../event/EventState";
 
 
 export default class RxjsEventState<T> extends AbstractEventState<T> {
 
     private rxjsSubject: Subject<any>;
 
-    constructor(eventName: string, initSate?: T, removeStateHandle?: Function) {
-        super(eventName, initSate, removeStateHandle);
+    constructor(eventName: string, initInvoker?: InitStateInvoker<T>, removeStateHandle?: Function) {
+        super(eventName, initInvoker, removeStateHandle);
         this.rxjsSubject = new Subject<any>();
     }
 

@@ -1,5 +1,6 @@
 import {AbstractEventStateManager} from "../event/AbstractEventStateManager";
 import RxjsEventState from "./RxjsEventState";
+import {InitStateInvoker} from "../event/EventState";
 
 
 export default class RxjsEventStateManager extends AbstractEventStateManager {
@@ -9,9 +10,11 @@ export default class RxjsEventStateManager extends AbstractEventStateManager {
         super();
     }
 
-    protected newEventState = (event: string) => {
+    protected newEventState = async (event: string, initInvoker:InitStateInvoker) => {
 
-        return new RxjsEventState(event);
+        const rxjsEventState = new RxjsEventState(event, initInvoker);
+        await rxjsEventState.initState();
+        return rxjsEventState;
     };
 
 

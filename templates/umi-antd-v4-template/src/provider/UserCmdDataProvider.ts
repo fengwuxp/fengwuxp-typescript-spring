@@ -7,7 +7,7 @@ import {LoginReq} from "@/feign/user/req/LoginReq";
 @CmdDataProvider({
   eventName: "login"
 })
-class UserCmdDataProvider {
+class UserCmdDataProvider implements StateProvider{
 
 
   // @CmdProviderMethod({

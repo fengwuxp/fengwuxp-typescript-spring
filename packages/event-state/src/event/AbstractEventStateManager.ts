@@ -1,5 +1,5 @@
 import {EventStateManager} from "./EventStateManager";
-import {EventState} from "./EventState";
+import {EventState, InitStateInvoker} from "./EventState";
 import {ApplicationEventType} from "../enums/ApplicationEventType";
 
 
@@ -8,20 +8,19 @@ export abstract class AbstractEventStateManager implements EventStateManager {
     protected eventStateMap: Map<string, EventState | EventState[]> = new Map<string, EventState | EventState[]>();
 
 
-    protected abstract newEventState: (event: string) => EventState;
+    protected abstract newEventState: (event: string, initInvoker:InitStateInvoker) => Promise<EventState>;
 
-    getEventState = <T = any>(eventName: string) => {
+    getEventState = async <T = any>(eventName: string, initInvoker?: InitStateInvoker<T>) => {
         let eventStates = this.eventStateMap.get(eventName);
         if (eventStates == null) {
-
+            const eventState = await this.newEventState(eventName, initInvoker);
             if (eventName.startsWith(ApplicationEventType.ROUTE)) {
-                eventStates = [this.newEventState(eventName)];
+                eventStates = [eventState];
             } else {
-                eventStates = this.newEventState(eventName);
+                eventStates = eventState;
             }
             this.eventStateMap.set(eventName, eventStates);
         }
-
         if (Array.isArray(eventStates)) {
             return eventStates[eventStates.length - 1];
         } else {

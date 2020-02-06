@@ -1,4 +1,4 @@
-import {EventState} from "./EventState";
+import {EventState, InitStateInvoker} from "./EventState";
 
 
 /**
@@ -16,7 +16,7 @@ export interface EventStateManager {
      * 获取一个状态
      * @param eventName
      */
-    getEventState: <T = any>(eventName: string) => EventState<T>;
+    getEventState: <T = any>(eventName: string, initState?:InitStateInvoker<T>) => EventState<T> | Promise<EventState<T>>;
 
     /**
      * 移除一个状态

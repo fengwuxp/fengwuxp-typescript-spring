@@ -12,6 +12,7 @@ import {AntdRouteContext} from '@/AntdRouteContext';
 import {getLoginUser} from "@/SessionManager";
 import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
 import {USER_IS_LOGIN_CONDITION} from "@/constant/RouteCondition";
+import "@/provider/UserCmdDataProvider";
 
 console.log("--process-->",
   process.env,

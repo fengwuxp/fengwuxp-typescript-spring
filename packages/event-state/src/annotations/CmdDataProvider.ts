@@ -3,6 +3,7 @@ import {newProxyInstance, newProxyInstanceEnhance, ProxyScope} from "fengwuxp-co
 import {MethodNameCommandResolver, noneResolver} from "fengwuxp-declarative-command";
 import {CmdProviderMethodOptions} from "./CmdProviderMethod";
 import {Reflection as Reflect} from '@abraham/reflection';
+import {StateProvider} from "../provider/StateProvider";
 
 /**
  * 指令数据提供者配置
@@ -50,16 +51,18 @@ const CmdDataProvider: CmdDataProviderType = (options: CmdDataProviderOptions = 
 
     return (clazz: { new(...args: any[]): {} }): any => {
 
-        return class extends clazz {
+        return class extends clazz implements StateProvider {
 
             constructor() {
                 super();
                 const eventStateManager = EventStateManagerHolder.getManager();
-                const eventState = eventStateManager.getEventState(options.eventName);
+                const defaultState = this['defaultState'];
+                const eventSateHolder = eventStateManager.getEventState(options.eventName, defaultState);
                 const proxyInstance = newProxyInstanceEnhance(this, (object: any, propertyKey: string, receiver: any) => {
-                    const state = eventState.getState();
                     const cmdProviderOptions: Readonly<CmdProviderMethodOptions> = Reflect.getMetadata(CMD_DATA_PROVIDER_KEY, object, propertyKey);
                     return async function (...args) {
+                        const eventState = await eventSateHolder;
+                        const state = eventState.getState();
                         const oldFunction = object[propertyKey];
                         if (cmdProviderOptions != null) {
                             if (cmdProviderOptions.ignore) {
@@ -77,7 +80,10 @@ const CmdDataProvider: CmdDataProviderType = (options: CmdDataProviderOptions = 
                 }, null);
                 return proxyInstance;
             }
+
+            // defaultState: undefined;
         }
+
     }
 };
 

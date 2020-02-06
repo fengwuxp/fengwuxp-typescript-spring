@@ -25,42 +25,41 @@ import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-brows
 
 import {message} from 'antd';
 import {AppStorage} from '@/BrowserAppStorage';
+import UserService from "@/feign/user/UserService";
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
   public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
     headers.Authorization = authorization.authorization;
     return headers
-  }
+  };
 
   public getAuthorization = (req: Readonly<HttpRequest>) => {
-    console.log('获取token')
+    console.log('获取token', req);
     return AppStorage.getUserInfo().then(userInfo => ({
       authorization: userInfo.token,
       expireDate: userInfo.tokenExpired,
     })).catch(e => ({
       authorization: null,
-      expireDate: -1,
-      // expireDate: new Date().getTime() + 1000 * 1000
+      expireDate: -1
     }))
-  }
+  };
 
-  public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) =>
-    // return UserService.refreshToken({}, {
-    //   headers: this.appendAuthorizationHeader(authorization, req.headers || {})
-    // }).then((userInfo) => {
-    //   return AppStorage.setUserInfo(userInfo).then(() => {
-    //     return {
-    //       authorization: userInfo.token,
-    //       expireDate: userInfo.expiration_date
-    //     }
-    //   })
-    // })
+  public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
+    authorization.authorization = "11111111";
+    console.log("refresh token", authorization, req);
 
-    ({
-      authorization: null,
-      expireDate: -1,
+    return UserService.refreshToken({}, {
+      headers: this.appendAuthorizationHeader(authorization, req.headers || {})
+    }).then((userInfo) => {
+      return AppStorage.setUserInfo(userInfo).then(() => {
+        return {
+          authorization: userInfo.token,
+          expireDate: userInfo.tokenExpired
+        }
+      });
     })
+  }
 }
 
 
@@ -72,10 +71,10 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
       new BrowserNetworkStatusListener(),
-      new SimpleNetworkStatusListener()))
+      new SimpleNetworkStatusListener()));
     interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(process.env.API_ADDRESS));
     interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
-      .excludePathPatterns()
+      .excludePathPatterns("/login")
   }
 
   public registryFeignClientExecutorInterceptors = (interceptorRegistry: FeignClientInterceptorRegistry) => {

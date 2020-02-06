@@ -4,6 +4,7 @@ import CmdDataProvider from "../src/annotations/CmdDataProvider";
 import {ApplicationEventType} from "../src/enums/ApplicationEventType";
 import CmdProviderMethod from "../src/annotations/CmdProviderMethod";
 import produce from "immer"
+import {StateProvider} from "../src";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -24,18 +25,24 @@ interface DataProviderOptions {
 
 const getCurrentEventName = () => {
     return `${ApplicationEventType.GLOBAL}_test`;
-}
+};
 
 
 type UpdateStateMethod<T> = (inputState?: T, state?: T) => T | Promise<T>;
 
 CmdDataProvider.setEventNameGenerator(() => {
     return getCurrentEventName();
-})
+});
 
 @CmdDataProvider()
-class MockDataProvider {
+class MockDataProvider implements StateProvider {
 
+    defaultState = () => {
+
+        return Promise.resolve({
+            mock: 1
+        });
+    };
 
     userName: UpdateStateMethod<string> = (inputState, state: string) => {
 
@@ -81,9 +88,9 @@ describe("test rxjs event store", () => {
     };
 
     const eventStateManager = EventStateManagerHolder.getManager();
-    const eventState = eventStateManager.getEventState(getCurrentEventName());
-    test("test rxjs event store stat", async () => {
 
+    test("test rxjs event store stat", async () => {
+        const eventState = await eventStateManager.getEventState(getCurrentEventName());
         const subscriber = eventState.subject((data) => {
             logger.debug("接收到事件1", data)
         });

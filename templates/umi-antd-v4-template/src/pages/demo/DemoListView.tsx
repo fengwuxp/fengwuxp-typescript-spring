@@ -28,12 +28,13 @@ import {
 import classNames from 'classnames';
 import AppRouter from '@/AppRouter';
 import MockService from '@/feign/mock/MockService';
-import {DemoItem, Sex} from '../../../mock/dmeo_table';
+import {DemoItem, Sex} from '../../../mock/model/DemoItem';
 import styles from './style.less';
 import marginStyles from '@/assets/styles/margin.less';
+import {ReactCmdDataProviderEnhancerProps} from "fengwuxp-routing-react";
 
 
-const defautColumns: ColumnProps<DemoItem>[] = [
+const defaultColumns: ColumnProps<DemoItem>[] = [
   {
     title: 'ID',
     align: 'center',
@@ -122,15 +123,18 @@ interface DemoListViewState {
 /**
  *  demo list
  */
-@RouteView<AntdRouteViewOptions>({
+@RouteView<AntdRouteViewOptions & ReactCmdDataProviderEnhancerProps>({
   pageHeader: {
     content: 'demo list',
   },
+  globalEvents: [
+    "login"
+  ]
 })
 export default class DemoListView extends React.Component<DemoListViewProps, DemoListViewState> {
   state: DemoListViewState = {
     records: null,
-    columns: defautColumns,
+    columns: defaultColumns,
     loading: true,
     pagination: {
       current: 1,

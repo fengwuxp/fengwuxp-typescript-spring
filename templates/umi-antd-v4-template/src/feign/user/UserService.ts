@@ -23,6 +23,11 @@ class MockService {
   })
   logout: (req?, option?: FeignRequestOptions) => Promise<void>;
 
+  @PostMapping({
+    value: '/oak_user/refresh_token',
+  })
+  refreshToken: (req?, option?: FeignRequestOptions) => Promise<LoginUserInfo>;
+
   @GetMapping({
     value: '/mobile/{userType}',
   })
