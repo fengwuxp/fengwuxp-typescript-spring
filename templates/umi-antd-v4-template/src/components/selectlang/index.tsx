@@ -4,7 +4,7 @@ import { getLocale, setLocale } from 'umi-plugin-react/locale';
 import { ClickParam } from 'antd/es/menu';
 import React from 'react';
 import classNames from 'classnames';
-import HeaderDropdown from '../HeaderDropdown';
+import HeaderDropdown from '../headerdropdown';
 import styles from './index.less';
 
 interface SelectLangProps {

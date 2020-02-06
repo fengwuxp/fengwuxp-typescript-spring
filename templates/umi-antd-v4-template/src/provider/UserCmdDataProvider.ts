@@ -1,14 +1,18 @@
-import {CmdDataProvider} from "fengwuxp-event-state";
+import {CmdDataProvider, StateProvider} from "fengwuxp-event-state";
 import UserService from "@/feign/user/UserService";
-import {removeLoginUser, saveLoginUser} from "@/SessionManager";
+import {getLoginUser, removeLoginUser, saveLoginUser} from "@/SessionManager";
 import {LoginReq} from "@/feign/user/req/LoginReq";
 
 
 @CmdDataProvider({
   eventName: "login"
 })
-class UserCmdDataProvider implements StateProvider{
+class UserCmdDataProvider implements StateProvider {
 
+  defaultState = () => {
+    console.log("初始化用户信息");
+    return getLoginUser();
+  };
 
   // @CmdProviderMethod({
   //   propName: "loginUser"

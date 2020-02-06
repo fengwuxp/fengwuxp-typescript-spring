@@ -15,6 +15,8 @@ export abstract class AbstractEventState<T = any> implements EventState<T>, Stat
 
     private removeStateHandle: Function;
 
+    protected isInitStatus = false;
+
 
     constructor(eventName: string, initInvoker: InitStateInvoker<T>, removeStateHandle?: Function) {
         this.eventName = eventName;
@@ -32,6 +34,11 @@ export abstract class AbstractEventState<T = any> implements EventState<T>, Stat
     getEventName = () => this.eventName;
 
     initState = async () => {
+        if (this.isInitStatus) {
+            return Promise.reject();
+        }
+        this.isInitStatus = true;
+
         const invoker = this.defaultState;
         if (invoker == null) {
             this.state = {} as any;
@@ -56,7 +63,6 @@ export abstract class AbstractEventState<T = any> implements EventState<T>, Stat
         }
         this.stateIsComplex = typeof state === "object";
         this.state = state;
-
     };
 
     getState = () => this.state;

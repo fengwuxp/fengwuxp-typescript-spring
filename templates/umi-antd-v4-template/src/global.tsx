@@ -12,20 +12,21 @@ import {AntdRouteContext} from '@/AntdRouteContext';
 import {getLoginUser} from "@/SessionManager";
 import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
 import {USER_IS_LOGIN_CONDITION} from "@/constant/RouteCondition";
-import "@/provider/UserCmdDataProvider";
+import {ReactCmdDataProviderEnhancer} from "fengwuxp-routing-react/src";
 
 console.log("--process-->",
   process.env,
   process.env.UMI_ENV,
   process.env.API_ADDRESS,
 );
-
+RouteView.addEnhancer(ReactCmdDataProviderEnhancer)
 CmdDataProvider.setEventNameGenerator(() => {
   const pathname = location.pathname;
   console.log("location.pathname", pathname);
   return `${ApplicationEventType.ROUTE}_${pathname}`;
 });
 
+import "@/provider/UserCmdDataProvider";
 
 AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
   console.log('viewProps', viewProps, options);

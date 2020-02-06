@@ -74,7 +74,7 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
       new SimpleNetworkStatusListener()));
     interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(process.env.API_ADDRESS));
     interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
-      .excludePathPatterns("/login")
+      .excludePathPatterns("/login", "/api/mock/**")
   }
 
   public registryFeignClientExecutorInterceptors = (interceptorRegistry: FeignClientInterceptorRegistry) => {

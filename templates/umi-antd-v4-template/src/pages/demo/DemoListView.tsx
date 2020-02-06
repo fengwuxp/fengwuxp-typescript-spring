@@ -31,7 +31,7 @@ import MockService from '@/feign/mock/MockService';
 import {DemoItem, Sex} from '../../../mock/model/DemoItem';
 import styles from './style.less';
 import marginStyles from '@/assets/styles/margin.less';
-import {ReactCmdDataProviderEnhancerProps} from "fengwuxp-routing-react";
+import {ReactCmdDataProviderRouteViewOptions} from "fengwuxp-routing-react";
 
 
 const defaultColumns: ColumnProps<DemoItem>[] = [
@@ -123,13 +123,15 @@ interface DemoListViewState {
 /**
  *  demo list
  */
-@RouteView<AntdRouteViewOptions & ReactCmdDataProviderEnhancerProps>({
+@RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions>({
   pageHeader: {
     content: 'demo list',
   },
-  globalEvents: [
-    "login"
-  ]
+  cmdDataProvider: {
+    globalEvents: [
+      "login"
+    ]
+  }
 })
 export default class DemoListView extends React.Component<DemoListViewProps, DemoListViewState> {
   state: DemoListViewState = {
@@ -158,13 +160,22 @@ export default class DemoListView extends React.Component<DemoListViewProps, Dem
   };
 
 
+  constructor(props: DemoListViewProps, context: any) {
+    super(props, context);
+    console.log('---constructor DemoListView----->', props["login"]);
+  }
+
   componentDidMount(): void {
-    console.log('---DemoListView----->', this.props);
+    // console.log('---DemoListView----->', this.props);
+    console.log('---componentDidMount DemoListView----->', this.props["login"]);
     this.loadNextData();
   }
 
   render(): React.ReactElement {
     const {columns, loading, records, pagination, selectedRowKeys} = this.state;
+    // if (this.props["login"]) {
+    //   console.log('---render DemoListView----->', this.props);
+    // }
     const rowSelection: TableRowSelection<DemoItem> = {
       selectedRowKeys,
       onChange: this.handleRowSelectChange,
