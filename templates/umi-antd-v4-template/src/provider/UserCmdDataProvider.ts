@@ -2,10 +2,12 @@ import {CmdDataProvider, StateProvider} from "fengwuxp-event-state";
 import UserService from "@/feign/user/UserService";
 import {getLoginUser, removeLoginUser, saveLoginUser} from "@/SessionManager";
 import {LoginReq} from "@/feign/user/req/LoginReq";
+import {ANT_DESIGN_GLOBAL_EVENT_NAME} from "@/AntGlobalEventNames";
+
 
 
 @CmdDataProvider({
-  eventName: "login"
+  eventName: ANT_DESIGN_GLOBAL_EVENT_NAME.GLOBAL_USER_LOGIN_EVENT
 })
 class UserCmdDataProvider implements StateProvider {
 

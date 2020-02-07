@@ -1,84 +1,16 @@
 import './RegisterBrowserOpenFeign';
 import {Button, message, notification} from 'antd';
-import {ArrowLeftOutlined} from '@ant-design/icons';
 import React from 'react';
 import {formatMessage} from 'umi-plugin-react/locale';
-import {RouteContextHolder, RouteView, ViewShowMode} from 'fengwuxp-routing-core';
-import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from 'fengwuxp-routing-antd';
-import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import defaultSettings from '../config/defaultSettings';
-import AppRouter from '@/AppRouter';
-import {AntdRouteContext} from '@/AntdRouteContext';
-import {getLoginUser} from "@/SessionManager";
-import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
-import {USER_IS_LOGIN_CONDITION} from "@/constant/RouteCondition";
-import {ReactCmdDataProviderEnhancer} from "fengwuxp-routing-react/src";
+import "./RouteViewConfiguration";
+import "@/provider/UserCmdDataProvider";
 
 console.log("--process-->",
   process.env,
   process.env.UMI_ENV,
   process.env.API_ADDRESS,
 );
-RouteView.addEnhancer(ReactCmdDataProviderEnhancer)
-CmdDataProvider.setEventNameGenerator(() => {
-  const pathname = location.pathname;
-  console.log("location.pathname", pathname);
-  return `${ApplicationEventType.ROUTE}_${pathname}`;
-});
-
-import "@/provider/UserCmdDataProvider";
-
-AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-  console.log('viewProps', viewProps, options);
-  const pageHeader = options.pageHeader || {};
-
-  if (options.showMode === ViewShowMode.DIALOG || viewProps.viewShowModel === ViewShowMode.DIALOG) {
-    // const [visible, setVisible] = useState(true);
-    //
-    // return <Modal
-    //   title={viewProps.route.name}
-    //   visible={true}
-    //   width={"60%"}
-    //   style={{marginLeft: 300}}
-    //   onCancel={() => {
-    //     setVisible(false);
-    //     AppRouter.goBack();
-    //   }}
-    //   footer={visible}>
-    //   <ReactComponent {...viewProps}/>
-    // </Modal>
-    return <ReactComponent {...viewProps}/>;
-  }
-
-  const showBack = !location.pathname.endsWith('/list');
-
-  return <>
-    <PageHeaderWrapper title={pageHeader.title || viewProps.route.name}
-                       content={pageHeader.content}
-                       backIcon={showBack ? <ArrowLeftOutlined/> : false}
-                       onBack={() => AppRouter.goBack()}>
-      <ReactComponent {...viewProps}/>
-    </PageHeaderWrapper>
-  </>
-});
-
-AntdPageHeaderEnhancer.setRenderNoAuthorityView((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-  if (options.condition === USER_IS_LOGIN_CONDITION) {
-    AppRouter.login();
-    return null;
-  }
-
-  return <>
-    <div>你没有访问该页面的权限 {options.condition}</div>
-  </>
-});
-
-RouteView.addEnhancer(AntdPageHeaderEnhancer);
-RouteView.setDefaultCondition(USER_IS_LOGIN_CONDITION);
-RouteContextHolder.setRouteContextFactory(() => ({
-  ...AppRouter.getCurrentObject(),
-  loginUser: getLoginUser(),
-} as AntdRouteContext));
 
 
 const {pwa} = defaultSettings;

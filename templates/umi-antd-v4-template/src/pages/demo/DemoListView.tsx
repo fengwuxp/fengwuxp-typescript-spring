@@ -32,6 +32,8 @@ import {DemoItem, Sex} from '../../../mock/model/DemoItem';
 import styles from './style.less';
 import marginStyles from '@/assets/styles/margin.less';
 import {ReactCmdDataProviderRouteViewOptions} from "fengwuxp-routing-react";
+import {LoginUserInfo} from "@/feign/user/info/LoginUserInfo";
+import {AntGlobalStateType} from "@/AntGlobalEventNames";
 
 
 const defaultColumns: ColumnProps<DemoItem>[] = [
@@ -97,16 +99,17 @@ const defaultColumns: ColumnProps<DemoItem>[] = [
     align: 'center',
     key: 'action',
     render: (text, record) => <span>
-          <a href="javascript:;"><FormOutlined title="编辑"/></a>
-          <a className={classNames(marginStyles.margin_left_20)} href="javascript:;"><SnippetsOutlined title="查看"/></a>
-          <a className={classNames(marginStyles.margin_left_20)} href="javascript:;"><DeleteOutlined
-            title="删除"/></a>
+          <span><FormOutlined title="编辑"/></span>
+          <span className={classNames(marginStyles.margin_left_20)}><SnippetsOutlined title="查看"/></span>
+          <span className={classNames(marginStyles.margin_left_20)}><DeleteOutlined
+            title="删除"/></span>
         </span>,
   },
 ];
 
 export interface DemoListViewProps {
 
+  loginUser: LoginUserInfo;
 }
 
 interface DemoListViewState {
@@ -123,14 +126,19 @@ interface DemoListViewState {
 /**
  *  demo list
  */
-@RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions>({
+@RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions<DemoListViewProps, AntGlobalStateType>>({
   pageHeader: {
     content: 'demo list',
   },
   cmdDataProvider: {
-    globalEvents: [
-      "login"
-    ]
+    propMapEventName: (names) => {
+      console.log("--cmdDataProvider-->", {
+        loginUser: names.loginUser
+      })
+      return {
+        loginUser: names.loginUser
+      }
+    }
   }
 })
 export default class DemoListView extends React.Component<DemoListViewProps, DemoListViewState> {
@@ -162,20 +170,16 @@ export default class DemoListView extends React.Component<DemoListViewProps, Dem
 
   constructor(props: DemoListViewProps, context: any) {
     super(props, context);
-    console.log('---constructor DemoListView----->', props["login"]);
+
   }
 
   componentDidMount(): void {
-    // console.log('---DemoListView----->', this.props);
-    console.log('---componentDidMount DemoListView----->', this.props["login"]);
+    console.log('---DemoListView----->', this.props);
     this.loadNextData();
   }
 
   render(): React.ReactElement {
     const {columns, loading, records, pagination, selectedRowKeys} = this.state;
-    // if (this.props["login"]) {
-    //   console.log('---render DemoListView----->', this.props);
-    // }
     const rowSelection: TableRowSelection<DemoItem> = {
       selectedRowKeys,
       onChange: this.handleRowSelectChange,

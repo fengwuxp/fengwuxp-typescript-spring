@@ -1,21 +1,37 @@
-import { RouteViewOptions, RouteViewEnhancer } from 'fengwuxp-routing-core';
+import { RouteViewOptions } from 'fengwuxp-routing-core';
 import { RouteProps, RouteComponentProps } from 'react-router';
 import { ComponentType } from 'react';
 
-interface ReactCmdDataProviderEnhancerProps {
-    globalEvents?: string[];
+declare type EventNameMapPropsNameResult<PropsType> = Partial<PropsType>;
+declare type MapEventNameToPropNameFactory<PropsType, GlobalPropType> = (globalPropNames: GlobalPropType) => EventNameMapPropsNameResult<PropsType>;
+interface ReactCmdDataProviderEnhancerProps<PropsType, GlobalPropType> {
+    /**
+     * 需要监听的全局状态事件
+     * 返回结果：{
+     *     propName:EVENT_NAME
+     * }
+     */
+    propMapEventName?: MapEventNameToPropNameFactory<PropsType, GlobalPropType>;
     safeMode?: boolean;
 }
-declare type ReactCmdDataProviderRouteViewOptions = RouteViewOptions & {
-    cmdDataProvider?: ReactCmdDataProviderEnhancerProps;
+declare type ReactCmdDataProviderRouteViewOptions<PropsType, GlobalProps> = RouteViewOptions & {
+    cmdDataProvider?: ReactCmdDataProviderEnhancerProps<PropsType, GlobalProps>;
 };
+declare type GlobalEventNameType<GlobalPropType, GlobalEventType> = {
+    [key in keyof GlobalPropType]: GlobalEventType[keyof GlobalEventType];
+};
+interface ReactCmdDataProviderEnhancerType {
+    (ReactComponent: any, options: ReactCmdDataProviderRouteViewOptions<any, any>): any;
+    registerGlobalEventNames: <GlobalPropType, GlobalEventTyp>(globalNames: GlobalEventNameType<GlobalPropType, GlobalEventTyp>) => ReactCmdDataProviderEnhancerType;
+}
 /**
  * 用于增强视图 自动监听event state
+ * 自动将url 参数注入 props
  * @param ReactComponent
  * @param options
  * @constructor
  */
-declare const ReactCmdDataProviderEnhancer: RouteViewEnhancer;
+declare const ReactCmdDataProviderEnhancer: ReactCmdDataProviderEnhancerType;
 
 declare type ConditionRouteFallback = (props: RouteComponentProps<any>) => ComponentType<any>;
 declare type ConditionRouteFallbackTye = string | ConditionRouteFallback;
@@ -39,10 +55,11 @@ interface ConditionRouteProps extends RouteProps, RouteViewOptions {
 declare type ConditionRoute = ComponentType<ConditionRouteProps>;
 
 /**
- * 默认的condition的路由
- * @param props
- * @constructor
+ * event names
+ * key: state name
+ * value: event name
  */
-declare const DefaultConditionRoute: ConditionRoute;
+interface GlobalEventNames {
+}
 
-export { ConditionRoute, ConditionRouteFallbackTye, ConditionRouteProps, DefaultConditionRoute, ReactCmdDataProviderEnhancer, ReactCmdDataProviderEnhancerProps, ReactCmdDataProviderRouteViewOptions };
+export { ConditionRoute, ConditionRouteFallbackTye, ConditionRouteProps, GlobalEventNameType, GlobalEventNames, ReactCmdDataProviderEnhancer, ReactCmdDataProviderEnhancerProps, ReactCmdDataProviderEnhancerType, ReactCmdDataProviderRouteViewOptions };
