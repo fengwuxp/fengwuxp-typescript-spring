@@ -5,33 +5,32 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "declaration": true,
-    "target": "es5",
-    "outDir": "lib",
+    "downlevelIteration": true,
+    "module": "esnext",
+    "target": "esnext",
     "sourceMap": false,
-    "strict": false,
     "baseUrl": "./src",
-    "importHelpers": false,
+    "importHelpers": true,
     "types": [
       "node",
-      "jest",
-      "js-yaml",
-      "lodash"
+      "jest"
     ],
     "lib": [
+      "esnext",
       "es6",
-      "es2015",
-      "es2015.promise"
+      "es7",
+      "es2018",
+      "es2018.promise"
     ]
   },
   "include": [
     "./src/**/*",
     "./test/**/*",
-    "./types/**/*.d.ts"
+    "./types/**/*.d.ts",
+    "node_modules/**/*/types/**/*.d.ts"
   ],
   "exclude": [
     "dist",
-    "./test",
     "node_modules",
     "**/*.spec.ts"
   ]

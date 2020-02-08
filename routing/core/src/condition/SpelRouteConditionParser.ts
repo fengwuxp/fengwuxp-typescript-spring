@@ -19,14 +19,14 @@ const spelRouteConditionParser: RouteConditionParser = (condition: RouteConditio
         return true;
     }
 
-    if (typeof condition === "function") {
-
-        return spelRouteConditionParser(condition(routeContext, ...args), routeContext, ...args);
-    }
-
     if (typeof condition === "boolean") {
         return condition;
     }
+
+    if (typeof condition === "function") {
+        return spelRouteConditionParser(condition(routeContext, ...args), routeContext, ...args);
+    }
+
     if (Array.isArray(condition)) {
         return condition.map((item) => {
             return spelRouteConditionParser(item, routeContext, ...args);

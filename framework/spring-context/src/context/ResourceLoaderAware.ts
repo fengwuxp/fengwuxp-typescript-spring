@@ -1,5 +1,6 @@
-import {Aware} from "../../../spring-beans/src/factory/Aware";
-import {ResourceLoader} from "../../../spring-core/src/io/ResourceLoader";
+import {ResourceLoader} from "fengwuxp-spring-core/esnext/io/ResourceLoader";
+import {Aware} from "fengwuxp-spring-beans/esnext/Aware";
+
 
 /**
  * Interface to be implemented by any object that wishes to be notified of
@@ -30,6 +31,7 @@ import {ResourceLoader} from "../../../spring-core/src/io/ResourceLoader";
  * automatic type conversion by the bean factory.
  * @see ApplicationContextAware
  */
+
 export interface ResourceLoaderAware extends Aware {
 
     /**
