@@ -42,6 +42,10 @@ interface RouteViewOptions {
      */
     name?: string;
     /**
+     * 路由顺序 值越小 越靠前
+     */
+    order?: number;
+    /**
      * 是否精确匹配路径（pathname）
      * default true
      */

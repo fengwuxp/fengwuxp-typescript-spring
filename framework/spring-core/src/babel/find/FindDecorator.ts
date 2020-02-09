@@ -1,6 +1,7 @@
 import {Decorator, File, isCallExpression, isClassDeclaration, isIdentifier} from "@babel/types";
-import {findExportDefaultDeclaration, resolveModuleName} from "./FindAst";
+import {findExportDefaultDeclaration} from "./FindAst";
 import {ModulePackageInfo} from "../ModulePackageInfo";
+import {resolveModuleName} from "./FindImportDeclaration";
 
 
 /**

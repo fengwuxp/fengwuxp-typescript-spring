@@ -28,7 +28,7 @@ export interface AppRouterInterface extends AppCommandRouter {
   demoCreateView: RouterCommandMethod;
 }
 // 判断是否需要登录
-const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) => true
+const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) => true;
 
 
 // @ts-ignore

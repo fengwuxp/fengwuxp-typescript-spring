@@ -1,7 +1,8 @@
-import {File, isCallExpression, isFunctionDeclaration, isVariableDeclaration, VariableDeclaration} from "@babel/types";
+import {File, isCallExpression, isVariableDeclaration, VariableDeclaration} from "@babel/types";
 import {ModulePackageInfo} from "../ModulePackageInfo";
-import {findExportDefaultDeclaration, resolveModuleName} from "./FindAst";
+import {findExportDefaultDeclaration} from "./FindAst";
 import {matchCallExpression} from "./FindCallExpression";
+import {resolveModuleName} from './FindImportDeclaration';
 
 
 /**

@@ -2,7 +2,6 @@ import {ExpressionParser} from "../ExpressionParser";
 import {ParserContext, TEMPLATE_EXPRESSION} from "../ParserContext";
 import SpelExpression from "./SpelExpression";
 import FunctionNodeExpression from "../ast/FunctionNodeExpression";
-import {SpelParserConfiguration} from "../SpelParserConfiguration";
 import ConstantExpression from "../ast/ConstantExpression";
 
 
@@ -10,11 +9,11 @@ export default class InternalSpelExpressionParser implements ExpressionParser {
 
     // private static VALID_QUALIFIED_ID_PATTERN = new RegExp('[\\p{L}\\p{N}_$]+');
 
-    private configuration: SpelParserConfiguration;
+    // private configuration: SpelParserConfiguration;
 
 
-    constructor(configuration?: SpelParserConfiguration) {
-        this.configuration = configuration;
+    constructor(configuration?) {
+        // this.configuration = configuration;
     }
 
     parseExpression = (expressionString: string, context: ParserContext = TEMPLATE_EXPRESSION): SpelExpression => {

@@ -8,6 +8,7 @@ export interface DetailProps {
 }
 
 @RouteView({
+    name: "详情",
     condition: "member.add"
 })
 class DetailView extends React.Component<DetailProps> {

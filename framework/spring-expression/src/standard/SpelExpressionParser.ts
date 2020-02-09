@@ -1,7 +1,6 @@
 import {ExpressionParser} from "../ExpressionParser";
 import {ParserContext} from "../ParserContext";
 import InternalSpelExpressionParser from "./InternalSpelExpressionParser";
-import {SpelParserConfiguration} from 'SpelParserConfiguration';
 import SpelExpression from "./SpelExpression";
 
 /**
@@ -11,7 +10,7 @@ export default class SpelExpressionParser implements ExpressionParser {
 
     private internalSpelExpressionParser: InternalSpelExpressionParser;
 
-    constructor(configuration?: SpelParserConfiguration) {
+    constructor(configuration?) {
         this.internalSpelExpressionParser = new InternalSpelExpressionParser(configuration);
     }
 

@@ -1,5 +1,3 @@
-import { SpelParserConfiguration as SpelParserConfiguration$1 } from 'SpelParserConfiguration';
-
 /**
  * Expressions are executed in an evaluation context. It is in this context that
  * references are resolved when encountered during expression evaluation.
@@ -100,12 +98,8 @@ declare class SpelExpression implements Expression {
     setValue: (context: EvaluationContext, rootObject: object, value: any) => void;
 }
 
-interface SpelParserConfiguration {
-}
-
 declare class InternalSpelExpressionParser implements ExpressionParser {
-    private configuration;
-    constructor(configuration?: SpelParserConfiguration);
+    constructor(configuration?: any);
     parseExpression: (expressionString: string, context?: ParserContext) => SpelExpression;
 }
 
@@ -114,7 +108,7 @@ declare class InternalSpelExpressionParser implements ExpressionParser {
  */
 declare class SpelExpressionParser implements ExpressionParser {
     private internalSpelExpressionParser;
-    constructor(configuration?: SpelParserConfiguration$1);
+    constructor(configuration?: any);
     parseExpression: (expressionString: string, context?: ParserContext) => SpelExpression;
     parseRaw: (expressionString: string) => SpelExpression;
 }

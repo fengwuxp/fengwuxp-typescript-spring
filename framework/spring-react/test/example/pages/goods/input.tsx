@@ -8,8 +8,8 @@ export interface InputProps {
 }
 
 @RouteView({
-    condition:"member.add",
-    parent: IndexView,
+    condition: "member.add",
+    parent: "/index",
 
 })
 export default class InputView extends React.Component<InputProps> {

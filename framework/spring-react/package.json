@@ -19,7 +19,8 @@
   "typings": "types/index.d.ts",
   "files": [
     "src",
-    "esnext"
+    "esnext",
+    "template"
   ],
   "author": "wuxp",
   "license": "ISC",
@@ -35,11 +36,13 @@
     "typescript"
   ],
   "dependencies": {
+    "@babel/preset-env": "^7.8.4",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "@babel/template": "^7.0.0",
     "@babel/traverse": "^7.0.0",
     "@babel/types": "^7.0.0",
+    "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "core-js": "^3.4.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
@@ -47,6 +50,8 @@
     "fengwuxp-routing-core": "^1.0.0",
     "fengwuxp-spring-context": "^1.0.0",
     "fengwuxp-spring-core": "^1.0.0",
+    "jest": "25.1.0",
+    "ts-jest": "25.2.0",
     "typescript": "^3.7.2"
   },
   "devDependencies": {

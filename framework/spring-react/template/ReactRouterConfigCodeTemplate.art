@@ -1,0 +1,40 @@
+import asyncComponent from "fengwuxp-spring-react/src/route/AsyncComponent";
+import {SpringReactRouteConfig} from "fengwuxp-spring-react/src/route/SpringReactRouteConfig";
+
+/**
+ * 自动生成的路由配置列表
+ **/
+export const routes: Array<SpringReactRouteConfig> = [
+
+   {{each routes route index }}
+
+      {
+        {{if route.name}} name : "{{route.name}}",   {{/if}}
+        path : "{{route.pathname}}",
+        exact : {{route.exact}},
+        strict : {{route.strict}},
+        {{if route.condition}}
+        condition: {{route.condition}},
+        {{/if}}
+        component : asyncComponent( ()=> import("{{route.component}}")),
+        {{if route.routes}}
+        routes:[
+           {{each route.routes subRoute index2 }}
+             {
+               {{if route.name}} name : "{{subRoute.name}}",   {{/if}}
+                path : "{{subRoute.pathname}}",
+                exact : {{subRoute.exact}},
+               {{if subRoute.condition}}
+                  condition: {{subRoute.condition}},
+                {{/if}}
+                component : asyncComponent( ()=> import("{{subRoute.component}}")),
+             }
+              {{if index2 < route.routes.length-1}}, {{/if}}
+           {{/each}}
+          ]
+        {{/if}}
+      }
+      {{if index < routes.length-1}}, {{/if}}
+
+   {{/each}}
+]

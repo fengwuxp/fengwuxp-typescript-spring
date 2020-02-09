@@ -1,5 +1,5 @@
 import * as React from "react";
-import {RouteView} from "fengwuxp-routing-core";
+import {RouteView, RouteViewOptions} from "fengwuxp-routing-core";
 
 
 interface ListViewProps {
@@ -11,6 +11,7 @@ const ListView = (props: ListViewProps) => {
     return null;
 };
 
-export default RouteView({
+export default RouteView<RouteViewOptions>({
+    order:1,
     condition: "#member!=null"
 })(ListView);

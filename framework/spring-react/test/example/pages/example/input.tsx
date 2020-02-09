@@ -7,7 +7,8 @@ interface InputProps {
 }
 
 @RouteView({
-    condition:"#member.add"
+    order: 2,
+    condition: "#member.add"
 })
 export default class InputView extends React.Component<InputProps> {
 

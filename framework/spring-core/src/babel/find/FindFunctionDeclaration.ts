@@ -1,6 +1,7 @@
 import {File, FunctionDeclaration, isFunctionDeclaration} from "@babel/types";
 import {ModulePackageInfo} from "../ModulePackageInfo";
-import {findExportDefaultDeclaration, resolveModuleName} from "./FindAst";
+import {findExportDefaultDeclaration} from "./FindAst";
+import { resolveModuleName } from './FindImportDeclaration';
 
 
 /**

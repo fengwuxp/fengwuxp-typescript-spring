@@ -33,11 +33,7 @@
     "lerna": "^3.6.0"
   },
   "dependencies": {
-    "@angular/compiler": "^8.2.12",
-    "@angular/compiler-cli": "^8.2.12",
-    "@angular/core": "^8.2.12",
     "pretty-format": "^25.1.0",
-    "ts-import-plugin": "^1.6.2",
     "typescript": "^3.6.4"
   }
 }

@@ -4,7 +4,6 @@ import {TypeFilter} from "fengwuxp-spring-core/esnext/core/type/TypeFilter";
 import {ResourcePatternResolver} from "fengwuxp-spring-core/esnext/io/support/ResourcePatternResolver";
 import PathMatchingResourcePatternResolver
     from "fengwuxp-spring-core/esnext/io/support/PathMatchingResourcePatternResolver";
-import * as  path from "path";
 import * as fs from "fs";
 import {fileURLToPath} from "url";
 
@@ -30,11 +29,11 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
 
     private _resourcePatternResolver: ResourcePatternResolver;
 
-    private projectPath: string;
+    private projectBasePath: string;
 
 
-    constructor(projectPath: string = path.join(__dirname, "../../../../../")) {
-        this.projectPath = projectPath;
+    constructor(projectBasePath: string = fs.realpathSync(process.cwd())) {
+        this.projectBasePath = projectBasePath;
     }
 
     /**
@@ -48,7 +47,7 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
         const resources = resourcePatternResolver.getResources(locationPattern);
         const files = resources.map(resource => {
             const filepath = fileURLToPath(resource.getURL());
-            return [fs.readFileSync(filepath, "UTF-8")]
+            return [filepath, fs.readFileSync(filepath, "UTF-8")]
         }).map(([filepath, sourceCodeText]) => {
             return {
                 filepath,
@@ -84,7 +83,7 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
 
     private getResourcePatternResolver = (): ResourcePatternResolver => {
         if (this._resourcePatternResolver == null) {
-            this._resourcePatternResolver = new PathMatchingResourcePatternResolver(this.projectPath);
+            this._resourcePatternResolver = new PathMatchingResourcePatternResolver(this.projectBasePath);
         }
         return this._resourcePatternResolver;
     };
