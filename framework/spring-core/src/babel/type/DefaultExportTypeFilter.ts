@@ -2,6 +2,7 @@ import {BabelTypeFilter} from "./BabelTypeFilter";
 import {File} from '@babel/types';
 import {ModulePackageInfo} from "../ModulePackageInfo";
 import {findDefaultDeclarationHandlers} from "../find";
+import { MetadataType} from "../../core/type/TypeFilter";
 
 
 /**
@@ -17,12 +18,12 @@ export default class DefaultExportTypeFilter implements BabelTypeFilter {
         this.modulePackageInfo = modulePackageInfo;
     }
 
-    match = (file: File) => {
+    match = (metadataType: MetadataType) => {
 
         const modulePackageInfo = this.modulePackageInfo;
         return findDefaultDeclarationHandlers.reduce((prev, handle) => {
             if (prev == null) {
-                return handle(file, modulePackageInfo);
+                return handle(metadataType.file, modulePackageInfo);
             }
             return prev;
         }, null) != null;

@@ -1,6 +1,6 @@
 import {parse} from "@babel/parser";
 import {File} from "@babel/types";
-import {TypeFilter} from "fengwuxp-spring-core/esnext/core/type/TypeFilter";
+import {MetadataType, TypeFilter} from "fengwuxp-spring-core/esnext/core/type/TypeFilter";
 import {ResourcePatternResolver} from "fengwuxp-spring-core/esnext/io/support/ResourcePatternResolver";
 import PathMatchingResourcePatternResolver
     from "fengwuxp-spring-core/esnext/io/support/PathMatchingResourcePatternResolver";
@@ -23,9 +23,9 @@ import {fileURLToPath} from "url";
 export default class FilePathScanningCandidateProgramProvider /*implements EnvironmentCapable, ResourceLoaderAware*/ {
 
 
-    private includeFilters: TypeFilter<any>[] = [];
+    private includeFilters: TypeFilter[] = [];
 
-    private excludeFilters: TypeFilter<any>[] = [];
+    private excludeFilters: TypeFilter[] = [];
 
     private _resourcePatternResolver: ResourcePatternResolver;
 
@@ -41,11 +41,21 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
      * @param locationPattern the package to check for annotated classes
      * @return a corresponding Set of autodetected bean definitions
      */
-    findCandidateComponents = (locationPattern: string): Set<{ filepath: string, file: File }> => {
+    findCandidateComponents = (locationPattern: string): Set<MetadataType> => {
 
         const resourcePatternResolver = this.getResourcePatternResolver();
         const resources = resourcePatternResolver.getResources(locationPattern);
-        const files = resources.map(resource => {
+        const {excludeFilters, includeFilters} = this;
+        const files = resources.filter((resource) => {
+            return !excludeFilters.map((filter) => {
+                return filter.match({
+                    filepath: fileURLToPath(resource.getURL()),
+                    file: null
+                });
+            }).reduce((previousValue, currentValue) => {
+                return previousValue && currentValue
+            }, false);
+        }).map(resource => {
             const filepath = fileURLToPath(resource.getURL());
             return [filepath, fs.readFileSync(filepath, "UTF-8")]
         }).map(([filepath, sourceCodeText]) => {
@@ -60,16 +70,22 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
                     ]
                 })
             }
+        }).filter((metadata) => {
+            return includeFilters.map((filter) => {
+                return filter.match(metadata);
+            }).reduce((previousValue, currentValue) => {
+                return previousValue && currentValue
+            }, false);
         });
 
-        return new Set<{ filepath: string, file: File }>(files);
+        return new Set<MetadataType>(files);
     };
 
 
     /**
      * Add an include type filter to the <i>end</i> of the inclusion list.
      */
-    public addIncludeFilter = (includeFilter: TypeFilter<any>) => {
+    public addIncludeFilter = (includeFilter: TypeFilter) => {
         this.includeFilters.push(includeFilter);
     };
 
@@ -77,7 +93,7 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
     /**
      * Add an exclude type filter to the <i>front</i> of the exclusion list.
      */
-    public addExcludeFilter = (excludeFilter: TypeFilter<any>) => {
+    public addExcludeFilter = (excludeFilter: TypeFilter) => {
         this.excludeFilters.push(excludeFilter);
     };
 

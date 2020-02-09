@@ -27,7 +27,8 @@ export interface CodeGeneratorOptions {
         outputFilName: string
     }>;
 
-
+    // 排除的目录或文件，支持ant 匹配
+    excludeFiles?: string[];
 
     // 将文件路径转换为路径
     filenameTransformPathname?: (scanPackages: string[], filename: string) => string;

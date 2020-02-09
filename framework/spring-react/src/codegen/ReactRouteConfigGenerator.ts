@@ -34,6 +34,7 @@ import {isAliasImport, normalizeAliasImportPath} from "fengwuxp-spring-core/esne
 import ArtCodegenTemplateLoader from "fengwuxp-spring-context/esnext/codegen/template/art/ArtCodegenTemplateLoader";
 import {CodegenTemplateLoader} from "fengwuxp-spring-context/esnext/codegen/template/CodegenTemplateLoader";
 import {CompilerOptions} from "typescript";
+import {PathMatchFilter} from "fengwuxp-spring-core/esnext/core/type/PathMatchFilter";
 
 const ROUTE_VIEW_DECORATOR_PATH = "fengwuxp-routing-core";
 const ROUTE_VIEW_DECORATOR_NAME = "RouteView";
@@ -132,6 +133,11 @@ export default class ReactRouteConfigGenerator {
         this.codeOptions = codeOptions;
         const filePathScanningCandidateProgramProvider = new FilePathScanningCandidateProgramProvider();
         filePathScanningCandidateProgramProvider.addIncludeFilter(ROUTE_VIEW_DECORATOR_FILTER);
+
+        if (!codeOptions.excludeFiles != null) {
+            filePathScanningCandidateProgramProvider.addExcludeFilter(new PathMatchFilter(codeOptions.excludeFiles))
+        }
+
         this.filePathScanningCandidateProgramProvider = filePathScanningCandidateProgramProvider;
         this.codegenTemplateLoader = new ArtCodegenTemplateLoader(codeOptions.templateFileDir);
     }

@@ -3,13 +3,10 @@
   "compilerOptions": {
     "resolveJsonModule": true,
     "allowSyntheticDefaultImports": true,
-    "baseUrl": "./test",
+    "baseUrl": ".",
     "paths": {
-      "@test/*": [
-        "./*"
-      ],
-      "@pages/*": [
-        "./example/pages/*"
+      "@/*": [
+        "./src/*"
       ]
     }
   }

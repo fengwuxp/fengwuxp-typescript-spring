@@ -1,5 +1,6 @@
-import {File} from "@babel/types";
+
 import {BabelTypeFilter} from "./BabelTypeFilter";
+import {MetadataType} from "../../core/type/TypeFilter";
 
 
 /**
@@ -16,7 +17,7 @@ export class DecoratorTypeFilter implements BabelTypeFilter {
         this.decoratorName = decoratorName;
     }
 
-    match = (file: File) => {
+    match = (file: MetadataType) => {
 
         return null;
     };

@@ -1,5 +1,14 @@
-export interface TypeFilter<T = any> {
+import {File} from "@babel/types";
+
+export interface MetadataType {
+
+    file: File;
+
+    filepath: string
+}
+
+export interface TypeFilter {
 
 
-    match: (file: T) => boolean;
+    match: (metadata: MetadataType,) => boolean;
 }
