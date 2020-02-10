@@ -15,6 +15,7 @@ export class FileSystemResource extends AbstractResource {
 
     constructor(filePath: string) {
         super();
+        filePath = path.normalize(filePath);
         this.filePath = filePath;
         this.url = pathToFileURL(filePath);
         const strings = filePath.split(path.sep);

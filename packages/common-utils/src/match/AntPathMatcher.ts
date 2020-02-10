@@ -1,6 +1,7 @@
 import {PathMatcher} from "./PathMatcher";
 import XRegExp from "xregexp";
 import * as quotemeta from "xregexp-quotemeta";
+
 quotemeta.addSupportTo(XRegExp);
 
 const DEFAULT_PATH_SEPARATOR = '/';
@@ -288,7 +289,7 @@ export default class AntPathMatcher implements PathMatcher {
 
 
     private tokenizePath = (path: string) => {
-        return path.split(DEFAULT_PATH_SEPARATOR).filter(x => x).map(x => x.trim());
+        return path.split(this.pathSeparator).filter(x => x).map(x => x.trim());
     };
 
     private tokenizePattern = (pattern: string) => {

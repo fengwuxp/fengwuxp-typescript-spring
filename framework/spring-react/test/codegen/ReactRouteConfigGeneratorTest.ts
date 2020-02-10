@@ -8,13 +8,14 @@ describe("react route config generator", () => {
 
 
     test("test react route config", () => {
+
         const reactRouteConfigGenerator = new ReactRouteConfigGenerator(
             ["/test/example/pages/**", "/test/example/views/**"],
             teconfig.compilerOptions,
             {
                 ...DEFAULT_CODEGEN_OPTIONS,
                 excludeFiles: [
-                    `${fs.realpathSync(process.cwd())}/test/example/pages/example/**`
+                   path.normalize( `${fs.realpathSync(process.cwd())}/test/example/pages/example/**`)
                 ]
             }
         );

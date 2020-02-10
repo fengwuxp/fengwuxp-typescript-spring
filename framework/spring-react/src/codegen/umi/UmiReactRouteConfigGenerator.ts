@@ -1,9 +1,14 @@
-import ReactRouteConfigGenerator from '../ReactRouteConfigGenerator';
+import ReactRouteConfigGenerator, {
+    DEFAULT_CODEGEN_OPTIONS,
+    DEFAULT_EXCLUDE,
+    DEFAULT_TEMPLATE_LIST
+} from '../ReactRouteConfigGenerator';
 import ts from 'typescript';
 import {CodeGeneratorOptions, TemplateType} from "../CodeGeneratorOptions";
 import {GenerateSpringReactRouteOptions} from "../GenerateSpringReactRouteOptions";
 import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 import * as path from "path";
+import {DEFAULT_GENERATOR_OUTPUT_DIR} from "../../constant/ConstantVar";
 
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
@@ -14,7 +19,16 @@ const DEFAULT_ORDER_MAP: Record<string, number> = {
     'detail': 3,
     'lookup': 4,
 };
-
+const UMI_CODEGEN_OPTIONS: CodeGeneratorOptions = {
+    ...DEFAULT_CODEGEN_OPTIONS,
+    templateFileDir: path.resolve(__dirname, "../../../template"),
+    excludeFiles: [
+        "/src/pages/.umi/**",
+        "/src/pages/user/**",
+        ...DEFAULT_EXCLUDE
+    ]
+};
+UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplate";
 /**
  * umijs的路由生成
  */
@@ -27,11 +41,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
     constructor(scanPackages: string[],
                 teConfigCompilerOptions: ts.CompilerOptions,
                 orderMap: Record<string, number> = DEFAULT_ORDER_MAP,
-                codeOptions?: CodeGeneratorOptions) {
+                codeOptions: CodeGeneratorOptions = UMI_CODEGEN_OPTIONS) {
         super(scanPackages, teConfigCompilerOptions, codeOptions);
-        if (codeOptions == null || codeOptions.templateList == null) {
-            this.codeOptions.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplate";
-        }
         this.orderMap = orderMap;
     }
 

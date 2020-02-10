@@ -2,9 +2,9 @@ import {File} from "@babel/types";
 
 export interface MetadataType {
 
-    file: File;
+    filepath: string;
 
-    filepath: string
+    file?: File;
 }
 
 export interface TypeFilter {

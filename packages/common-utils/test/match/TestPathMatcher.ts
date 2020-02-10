@@ -3,16 +3,19 @@ import AntPathMatcher from "../../src/match/AntPathMatcher";
 import SimplePathMatcher from "../../src/match/SimplePathMatcher";
 
 
-
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
 describe("test path match", () => {
 
 
-
     test("ant path matcher", () => {
-        const antPathMatcher = new AntPathMatcher();
+        const antPathMatcher = new AntPathMatcher("\\");
+
+
+        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/a.tsx"));
+        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
+        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
 
         function match(pattern, paths: string[]) {
 
@@ -36,7 +39,7 @@ describe("test path match", () => {
         // match('/app/**/example', ["/app/foo/example", "/cpp/foo/example", '/app/foo/example1']);
         // match('/**/*.jsp', ['/app/dir/file.jsp', '/app/foo/dir/file.html']);
         // match('/api/**/user/refreshToken', ['/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
-        match('/api/**/user/authCode', ['/api/1.0.0/user/authCode', '/abc/path1/hhh','/abc/path']);
+        match('/api/**/user/authCode', ['/api/1.0.0/user/authCode', '/abc/path1/hhh', '/abc/path']);
 
     });
 
@@ -56,7 +59,7 @@ describe("test path match", () => {
         // match('/api/**/user/refreshToken', ['http://abc.d/api/1.0.0/user/refreshToken', '/abc/path1/hhh','/abc/path']);
         //http://117.50.43.50:52001/app/v1.0/user/login /app/**/user/login
         // match('/app/**/user/login', ['http://117.50.43.50:52001/app/v1.0/user/login','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
-        match('/app/**/user/authCode', ['http://117.50.43.50:52001/app/v1.0/user/authCode','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
+        match('/app/**/user/authCode', ['http://117.50.43.50:52001/app/v1.0/user/authCode', 'http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh', '/abc/path']);
     })
 });
 

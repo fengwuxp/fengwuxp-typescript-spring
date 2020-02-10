@@ -66,12 +66,25 @@ export const DEFAULT_TEMPLATE_LIST = [
     }
 ];
 
+export const DEFAULT_EXCLUDE = [
+    "/src/pages/*.ts",
+    "/src/pages/*.tsx",
+    "/src/pages/*.js",
+    "/src/pages/*.jsx",
+    "/src/pages/**.ejs",
+    "/src/pages/**.less",
+    "/src/pages/**.sass",
+    "/src/pages/**.scss",
+    "/src/pages/**.css",
+];
+
 export const DEFAULT_CODEGEN_OPTIONS: CodeGeneratorOptions = {
     projectBasePath: projectBasePath,
     outputPath: DEFAULT_GENERATOR_OUTPUT_DIR,
     templateList: DEFAULT_TEMPLATE_LIST,
-    templateFileDir: path.join(projectBasePath, "./template"),
-    routeBasePath: "/"
+    templateFileDir: path.resolve(__dirname, "../../template"),
+    routeBasePath: "/",
+    excludeFiles: DEFAULT_EXCLUDE
 };
 
 /**
@@ -132,10 +145,12 @@ export default class ReactRouteConfigGenerator {
         this.scanPackages = scanPackages;
         this.codeOptions = codeOptions;
         const filePathScanningCandidateProgramProvider = new FilePathScanningCandidateProgramProvider();
-        filePathScanningCandidateProgramProvider.addIncludeFilter(ROUTE_VIEW_DECORATOR_FILTER);
-
-        if (!codeOptions.excludeFiles != null) {
-            filePathScanningCandidateProgramProvider.addExcludeFilter(new PathMatchFilter(codeOptions.excludeFiles))
+        // filePathScanningCandidateProgramProvider.addIncludeFilter(ROUTE_VIEW_DECORATOR_FILTER);
+        const excludeFiles = codeOptions.excludeFiles;
+        if (!excludeFiles != null) {
+            filePathScanningCandidateProgramProvider.addExcludeFilter(new PathMatchFilter(excludeFiles.map((item) => {
+                return item.startsWith(projectBasePath) ? item : `${projectBasePath}${item}`;
+            })))
         }
 
         this.filePathScanningCandidateProgramProvider = filePathScanningCandidateProgramProvider;

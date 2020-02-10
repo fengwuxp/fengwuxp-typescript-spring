@@ -10,6 +10,14 @@ export default class SimplePathMatcher implements PathMatcher {
     // combine: (pattern1, pattern2) => string;
     // extractPathWithinPattern: (pattern: string, path: string) => string;
     // extractUriTemplateVariables: (pattern: string, path: string) => Map<String, String>;
+
+    private pathSeparator: string;
+
+
+    constructor(pathSeparator: string = DEFAULT_PATH_SEPARATOR) {
+        this.pathSeparator = pathSeparator;
+    }
+
     isPattern = (path: string) => {
         return (path.indexOf('*') != -1 || path.indexOf('?') != -1);
     };
@@ -27,9 +35,10 @@ export default class SimplePathMatcher implements PathMatcher {
             pattern = `**${pattern}`;
         }
         const endWithWildcard = pattern.endsWith("**");
-        const endWithSeparator = pattern.endsWith(DEFAULT_PATH_SEPARATOR);
+        const pathSeparator = this.pathSeparator;
+        const endWithSeparator = pattern.endsWith(pathSeparator);
 
-        const strings = pattern.split(DEFAULT_PATH_SEPARATOR)
+        const strings = pattern.split(pathSeparator)
             .filter((str) => {
                 return str.trim().length > 0;
             });
@@ -40,11 +49,11 @@ export default class SimplePathMatcher implements PathMatcher {
                     return "(.*?)";
                 }
                 if (!endWithSeparator && index === strings.length - 1) {
-                    return `${DEFAULT_PATH_SEPARATOR}${str}`;
+                    return `${pathSeparator}${str}`;
                 }
-                return `${DEFAULT_PATH_SEPARATOR}${str}${DEFAULT_PATH_SEPARATOR}`;
+                return `${pathSeparator}${str}${pathSeparator}`;
             }).join("");
-        regExpString = regExpString.replace(new RegExp(`${DEFAULT_PATH_SEPARATOR}${DEFAULT_PATH_SEPARATOR}`, 'g'), DEFAULT_PATH_SEPARATOR);
+        regExpString = regExpString.replace(new RegExp(`${pathSeparator}${pathSeparator}`, 'g'), pathSeparator);
         if (!endWithWildcard) {
             regExpString = `${regExpString}$`;
         }

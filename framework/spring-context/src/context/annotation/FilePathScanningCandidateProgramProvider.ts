@@ -1,5 +1,4 @@
 import {parse} from "@babel/parser";
-import {File} from "@babel/types";
 import {MetadataType, TypeFilter} from "fengwuxp-spring-core/esnext/core/type/TypeFilter";
 import {ResourcePatternResolver} from "fengwuxp-spring-core/esnext/io/support/ResourcePatternResolver";
 import PathMatchingResourcePatternResolver
@@ -47,13 +46,18 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
         const resources = resourcePatternResolver.getResources(locationPattern);
         const {excludeFilters, includeFilters} = this;
         const files = resources.filter((resource) => {
+            if (excludeFilters.length == 0) {
+                // 默认不排除
+                return true;
+            }
+            const filepath = fileURLToPath(resource.getURL());
             return !excludeFilters.map((filter) => {
                 return filter.match({
-                    filepath: fileURLToPath(resource.getURL()),
+                    filepath: filepath,
                     file: null
                 });
             }).reduce((previousValue, currentValue) => {
-                return previousValue && currentValue
+                return previousValue || currentValue
             }, false);
         }).map(resource => {
             const filepath = fileURLToPath(resource.getURL());
@@ -71,12 +75,16 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
                 })
             }
         }).filter((metadata) => {
+            if (includeFilters.length == 0) {
+                // 默认包含
+                return true;
+            }
             return includeFilters.map((filter) => {
                 return filter.match(metadata);
             }).reduce((previousValue, currentValue) => {
-                return previousValue && currentValue
+                return previousValue || currentValue
             }, false);
-        });
+        }).filter(this.isCandidateComponent);
 
         return new Set<MetadataType>(files);
     };
@@ -95,6 +103,18 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
      */
     public addExcludeFilter = (excludeFilter: TypeFilter) => {
         this.excludeFilters.push(excludeFilter);
+    };
+
+    /**
+     * Determine whether the given bean definition qualifies as candidate.
+     * <p>The default implementation checks whether the class is not an interface
+     * and not dependent on an enclosing class.
+     * <p>Can be overridden in subclasses.
+     * @param metadataType the bean definition to check
+     * @return whether the bean definition qualifies as a candidate component
+     */
+    protected isCandidateComponent = (metadataType: MetadataType) => {
+        return metadataType != null;
     };
 
     private getResourcePatternResolver = (): ResourcePatternResolver => {

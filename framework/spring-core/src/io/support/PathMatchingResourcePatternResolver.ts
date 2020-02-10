@@ -12,14 +12,14 @@ export default class PathMatchingResourcePatternResolver implements ResourcePatt
 
     private static TAG: string = "PathMatchingResourcePatternResolver";
 
-    private _pathMatcher: PathMatcher = new AntPathMatcher();
+    private _pathMatcher: PathMatcher = new AntPathMatcher(path.sep);
 
     private _resourceLoader: ResourceLoader;
 
     private basePath: string;
 
     constructor(basePath: string, resourceLoader: ResourceLoader = new FileSystemResourceLoader()) {
-        this.basePath = basePath;
+        this.basePath = path.normalize(basePath);
         this._resourceLoader = resourceLoader;
     }
 
@@ -30,15 +30,15 @@ export default class PathMatchingResourcePatternResolver implements ResourcePatt
 
     getResources = (locationPattern: string) => {
 
-        logger.debug(`${PathMatchingResourcePatternResolver.TAG} pattern match `, locationPattern);
 
         const {pathMatcher, resourceLoader, basePath} = this;
+        locationPattern = path.normalize(locationPattern);
+        logger.debug(`${PathMatchingResourcePatternResolver.TAG} pattern match `, locationPattern);
         const isPattern = pathMatcher.isPattern(locationPattern);
         if (!isPattern) {
             return [];
         }
-        locationPattern = path.normalize(locationPattern);
-        const rootDir = path.join(basePath, this.determineRootDir(locationPattern));
+        const rootDir = path.normalize(path.join(basePath, this.determineRootDir(locationPattern)));
         logger.debug(`${PathMatchingResourcePatternResolver.TAG} root dir `, rootDir);
         if (!fs.existsSync(rootDir)) {
             return [];
@@ -99,7 +99,7 @@ export default class PathMatchingResourcePatternResolver implements ResourcePatt
                 return this.recursiveDir(_filepath);
             }).flatMap((items) => [...items]);
         } else {
-            return [filepath];
+            return [path.normalize(filepath)];
         }
     };
 
