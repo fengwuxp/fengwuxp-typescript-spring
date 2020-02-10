@@ -2,9 +2,13 @@ export default [
    {{each routes route index }}
  {
          name: '{{route.name}}',
-        // icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
+         {{if route.icon!=null}}
+         icon: {{route.icon}},
+         {{/if}}
          path: '{{route.path}}',
-         redirect: '{{route.path}}',
+         {{if route.redirect!=null}}
+         redirect: '{{route.redirect}}',
+         {{/if}}
          routes: [
           {{each route.routes route index }}
            {

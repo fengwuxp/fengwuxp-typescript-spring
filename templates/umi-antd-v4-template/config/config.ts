@@ -3,6 +3,7 @@ import slash from 'slash2';
 import defaultSettings from './defaultSettings';
 import themePluginConfig from './themePluginConfig';
 import {webpackPlugin} from "./plugin.config";
+// import routes from "../.spring/routes";
 import routes from "./routes";
 
 const plugins: IPlugin[] = [

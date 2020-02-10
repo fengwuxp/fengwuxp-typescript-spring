@@ -35,6 +35,7 @@ import ArtCodegenTemplateLoader from "fengwuxp-spring-context/esnext/codegen/tem
 import {CodegenTemplateLoader} from "fengwuxp-spring-context/esnext/codegen/template/CodegenTemplateLoader";
 import {CompilerOptions} from "typescript";
 import {PathMatchFilter} from "fengwuxp-spring-core/esnext/core/type/PathMatchFilter";
+import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
 
 const ROUTE_VIEW_DECORATOR_PATH = "fengwuxp-routing-core";
 const ROUTE_VIEW_DECORATOR_NAME = "RouteView";
@@ -43,7 +44,7 @@ const ROUTE_VIEW_DECORATOR_INFO = {
     packageName: ROUTE_VIEW_DECORATOR_PATH,
     moduleName: ROUTE_VIEW_DECORATOR_NAME
 };
-const ROUTE_VIEW_DECORATOR_FILTER = new DefaultExportTypeFilter(ROUTE_VIEW_DECORATOR_INFO);
+// const ROUTE_VIEW_DECORATOR_FILTER = new DefaultExportTypeFilter(ROUTE_VIEW_DECORATOR_INFO);
 
 
 const projectBasePath = fs.realpathSync(process.cwd());
@@ -71,11 +72,16 @@ export const DEFAULT_EXCLUDE = [
     "/src/pages/*.tsx",
     "/src/pages/*.js",
     "/src/pages/*.jsx",
-    "/src/pages/**.ejs",
-    "/src/pages/**.less",
-    "/src/pages/**.sass",
-    "/src/pages/**.scss",
-    "/src/pages/**.css",
+    "/src/pages/*.ejs",
+    "/src/pages/*.css",
+    "/src/pages/*.less",
+    "/src/pages/*.scss",
+    "/src/pages/*.sass",
+    "/src/pages/**/*.ejs",
+    "/src/pages/**/*.css",
+    "/src/pages/**/*.less",
+    "/src/pages/**/*.sass",
+    "/src/pages/**/*.scss"
 ];
 
 export const DEFAULT_CODEGEN_OPTIONS: CodeGeneratorOptions = {
@@ -88,15 +94,15 @@ export const DEFAULT_CODEGEN_OPTIONS: CodeGeneratorOptions = {
 };
 
 /**
- * 使用文件目录和文件名称组成 然后全小写
+ * 获取简单的 pathname
  * @param scanPackages
  * @param filepath
  */
-const defaultFilePathTransformStrategy = (scanPackages: string[], filepath: string) => {
+export const getSimplePathname = (scanPackages: string[], filepath: string): string[] => {
     const values = filepath.split(path.sep);
     const filename = values.pop();
     const dir = values.pop();
-    const pathname = filename.split(".")[0];
+    let pathname = filename.split(".")[0];
     const number = scanPackages.map(item => {
         const values = item.split("/");
         const s = values.pop();
@@ -106,9 +112,27 @@ const defaultFilePathTransformStrategy = (scanPackages: string[], filepath: stri
         return values.pop();
     }).indexOf(dir);
     if (number >= 0) {
-        return pathname.toLowerCase();
+        return [pathname]
     }
+    return [dir, pathname];
+};
 
+/**
+ * 使用文件目录和文件名称组成 然后全小写
+ * @param scanPackages
+ * @param filepath
+ */
+const defaultFilePathTransformStrategy = (scanPackages: string[], filepath: string) => {
+
+    const values = getSimplePathname(scanPackages, filepath);
+    if (values.length == 1) {
+        return `/${values[0]}`;
+    }
+    let [dir, pathname] = values;
+    if (pathname.endsWith("View")) {
+        pathname = pathname.substr(0, pathname.length - 4);
+    }
+    pathname = toLineResolver(initialLowercase(pathname));
     return `/${dir}/${pathname}`.toLowerCase();
 };
 
@@ -127,6 +151,7 @@ export default class ReactRouteConfigGenerator {
 
     protected filePathScanningCandidateProgramProvider: FilePathScanningCandidateProgramProvider;
 
+    protected maxRouteOrder: number = 9999999;
 
     // 相对项目跟目录
     protected scanPackages: string[];
@@ -176,7 +201,8 @@ export default class ReactRouteConfigGenerator {
         const {codegenTemplateLoader, codeOptions: {templateList, routeBasePath, outputPath}} = this;
         // 生成路由配置
         templateList.forEach((item) => {
-            const data = item.type === TemplateType.ROUTE_CONFIG ? {
+            const isConfig = item.type === TemplateType.ROUTE_CONFIG;
+            const data = isConfig ? {
                 routes: this.sortByExact(routes)
             } : {
                 routes: this.sortByExact(routeConfigs),
@@ -264,6 +290,23 @@ export default class ReactRouteConfigGenerator {
         return routes;
     };
 
+    protected sortRoute = (routes: GenerateSpringReactRouteOptions[]) => {
+
+        return routes.sort((item1, item2) => {
+            const order1 = this.getRouteOrder(item1);
+            const order2 = this.getRouteOrder(item2);
+            return order1 - order2;
+        })
+    };
+
+    protected getRouteOrder = (route: GenerateSpringReactRouteOptions) => {
+        if (route.order != null) {
+            return route.order;
+        }
+
+        return this.maxRouteOrder;
+    }
+
     /**
      * 生成路由配置
      * @param filepath
@@ -311,12 +354,12 @@ export default class ReactRouteConfigGenerator {
                 //&& value.type === "ArrowFunctionExpression"
                 if (name === "condition") {
                     attr[name] = generator(value).code;
+                } else if (name === 'icon') {
+                    attr[name] = generator(value).code;
                 } else if (name === "parent") {
-
-                    if (isStringLiteral(value)) {
+                    if (isStringLiteral(value) && StringUtils.hasText(value.value)) {
                         attr[name] = value.value;
                     }
-
                     if (isIdentifier(value)) {
                         //有父页面属性，获取父页面的导入语句
                         const importDeclaration = findImportDeclarationByModuleName(file, value.name);
@@ -328,13 +371,9 @@ export default class ReactRouteConfigGenerator {
                             importPath: importPath
                         };
                     }
-
-
                 } else {
-                    attr[name] = value.value;
+                    attr[name] = value.value == null ? '' : value.value;
                 }
-
-
                 return attr as GenerateSpringReactRouteOptions;
             })
         }).flatMap((items) => [...items])

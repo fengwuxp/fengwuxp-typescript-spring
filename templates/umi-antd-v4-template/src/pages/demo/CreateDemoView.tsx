@@ -1,7 +1,7 @@
 import React from 'react';
-import { RouteView } from 'fengwuxp-routing-core';
-import { AntdRouteViewOptions } from 'fengwuxp-routing-antd';
-import { ModalProps } from 'antd/lib/modal/Modal';
+import {RouteView} from 'fengwuxp-routing-core';
+import {AntdRouteViewOptions} from 'fengwuxp-routing-antd';
+import {ModalProps} from 'antd/lib/modal/Modal';
 import {
   SchemaForm,
   Field,
@@ -11,7 +11,7 @@ import {
   createFormActions,
 } from '@uform/antd/esm'
 
-import { Button, Card } from 'antd'
+import {Button, Card} from 'antd'
 
 export interface CreateDemoViewProps {
 
@@ -30,15 +30,21 @@ const actions = createFormActions();
   // showMode: ViewShowMode.DIALOG,
   pageHeader: {
     content: 'demo 创建',
-  },
+  }
 })
 export default class CreateDemoView extends React.Component<CreateDemoViewProps, CreateDemoViewState> {
-  render(): React.ReactElement {
+
+
+  constructor(props: CreateDemoViewProps, context: any) {
+    super(props, context);
+  }
+
+  render = () => {
     return <Card bordered={false}>
       <SchemaForm
         onSubmit={v => console.log(v)}
         actions={actions}
-        labelCol={{ span: 7 }}
+        labelCol={{span: 7}}
         initialValues={{
           upload3: [{
             downloadURL:
@@ -48,11 +54,11 @@ export default class CreateDemoView extends React.Component<CreateDemoViewProps,
             name: 'doc.svg',
           }],
         }}
-        wrapperCol={{ span: 12 }}
+        wrapperCol={{span: 12}}
         onValidateFailed={results => {
           console.log('results', results);
         }}
-        effects={($, { setFieldState }) => {
+        effects={($, {setFieldState}) => {
           $('onFormMount').subscribe(() => {
             setFieldState('radio', state => {
               state.required = true
@@ -73,7 +79,7 @@ export default class CreateDemoView extends React.Component<CreateDemoViewProps,
           required
           title="Select"
           name="select"
-          x-props={{ style: { maxWidth: 300 } }}
+          x-props={{style: {maxWidth: 300}}}
         />
         <Field
           type="checkbox"
@@ -118,24 +124,24 @@ export default class CreateDemoView extends React.Component<CreateDemoViewProps,
           type="upload"
           title="拖拽上传文件"
           name="upload2"
-          x-props={{ listType: 'dragger' }}
+          x-props={{listType: 'dragger'}}
         />
         <Field
           type="upload"
           title="普通上传文件"
           name="upload3"
-          x-props={{ listType: 'text' }}
+          x-props={{listType: 'text'}}
         />
         <Field
           type="range"
           title="范围选择"
           name="range"
-          x-props={{ min: 0, max: 1024, marks: [0, 1024] }}
+          x-props={{min: 0, max: 1024, marks: [0, 1024]}}
         />
         <Field
           type="transfer"
-          enum={[{ key: 1, title: '选项1' }, { key: 2, title: '选项2' }]}
-          x-props={{ render: item => item.title }}
+          enum={[{key: 1, title: '选项1'}, {key: 2, title: '选项2'}]}
+          x-props={{render: item => item.title}}
           title="穿梭框"
           name="transfer"
         />

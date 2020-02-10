@@ -6,6 +6,9 @@ export interface GenerateSpringReactRouteOptions {
 
     name?: string;
 
+    // 图标
+    icon?: string;
+
     // 路由顺序，值越小 越靠前
     order?: number;
 

@@ -1,13 +1,16 @@
 import * as React from "react";
-import {RouteView} from "fengwuxp-routing-core";
+import {RouteView, RouteViewOptions} from "fengwuxp-routing-core";
 
 
 interface DetailProps {
 
 }
 
-@RouteView({
-    condition: "#member.add"
+@RouteView<RouteViewOptions & {
+    icon: any
+}>({
+    condition: "#member.add",
+    icon: require("react")
 })
 export default class DetailView extends React.Component<DetailProps> {
 

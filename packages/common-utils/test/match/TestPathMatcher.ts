@@ -10,12 +10,13 @@ describe("test path match", () => {
 
 
     test("ant path matcher", () => {
-        const antPathMatcher = new AntPathMatcher("\\");
+        const antPathMatcher = new AntPathMatcher();
 
 
-        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/a.tsx"));
-        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
-        logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
+        // logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/a.tsx"));
+        // logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
+        // logger.debug(antPathMatcher.match("/demo/*.tsx", "/demo/b/a.tsx"));
+        logger.debug(antPathMatcher.match("/src/pages/**/*.less", "/src/pages/demo/style.less"));
 
         function match(pattern, paths: string[]) {
 

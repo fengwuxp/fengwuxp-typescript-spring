@@ -46,6 +46,7 @@
     "core-js": "^3.4.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-declarative-command": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
     "fengwuxp-routing-core": "^1.0.0",
     "fengwuxp-spring-context": "^1.0.0",

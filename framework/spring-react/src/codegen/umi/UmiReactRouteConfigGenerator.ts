@@ -1,7 +1,7 @@
 import ReactRouteConfigGenerator, {
     DEFAULT_CODEGEN_OPTIONS,
     DEFAULT_EXCLUDE,
-    DEFAULT_TEMPLATE_LIST
+    DEFAULT_TEMPLATE_LIST, getSimplePathname
 } from '../ReactRouteConfigGenerator';
 import ts from 'typescript';
 import {CodeGeneratorOptions, TemplateType} from "../CodeGeneratorOptions";
@@ -9,6 +9,7 @@ import {GenerateSpringReactRouteOptions} from "../GenerateSpringReactRouteOption
 import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 import * as path from "path";
 import {DEFAULT_GENERATOR_OUTPUT_DIR} from "../../constant/ConstantVar";
+import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
 
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
@@ -19,14 +20,52 @@ const DEFAULT_ORDER_MAP: Record<string, number> = {
     'detail': 3,
     'lookup': 4,
 };
+
+const VIEW_PATH_NAMES = [
+    "Crate",
+    "Input",
+    "Edit",
+    "List",
+    "Detail",
+    "Show",
+    "Lookup",
+];
+
+/**
+ * 基于uim js的管理后台约定路由命名方式
+ * @param scanPackages
+ * @param filepath
+ */
+export const umiModelFilenameTransformPathname = (scanPackages: string[], filepath: string) => {
+    const values = getSimplePathname(scanPackages, filepath);
+    if (values.length == 1) {
+        return `/${values[0]}`;
+    }
+    let [dir, pathname] = values;
+    if (pathname.endsWith("View")) {
+        pathname = pathname.substr(0, pathname.length - 4);
+    }
+    const newPathname = VIEW_PATH_NAMES.find(item => {
+        return pathname.indexOf(item) >= 0;
+    });
+    if (newPathname != null) {
+        return `/${dir}/${newPathname.toLowerCase()}`.toLowerCase();
+    }
+    pathname = toLineResolver(initialLowercase(pathname));
+    return `/${dir}/${pathname}`.toLowerCase();
+};
 const UMI_CODEGEN_OPTIONS: CodeGeneratorOptions = {
     ...DEFAULT_CODEGEN_OPTIONS,
+    templateList: DEFAULT_TEMPLATE_LIST.map((item) => {
+        return {...item};
+    }),
     templateFileDir: path.resolve(__dirname, "../../../template"),
     excludeFiles: [
         "/src/pages/.umi/**",
         "/src/pages/user/**",
         ...DEFAULT_EXCLUDE
-    ]
+    ],
+    filenameTransformPathname: umiModelFilenameTransformPathname
 };
 UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplate";
 /**
@@ -34,7 +73,7 @@ UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTem
  */
 export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenerator {
 
-    private maxOrder: number = 9999999;
+
     private orderMap: Record<string, number>;
 
 
@@ -59,14 +98,16 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         const {codegenTemplateLoader, codeOptions: {templateList, routeBasePath, outputPath, projectBasePath}} = this;
         // 生成路由配置
         templateList.forEach((item) => {
-            const data = item.type === TemplateType.ROUTE_CONFIG ? {
+            const isConfig = item.type === TemplateType.ROUTE_CONFIG;
+            const data = isConfig ? {
                 routes
             } : {
                 routes: this.sortByExact(routeConfigs),
                 routeBasePath
             };
             const codegenTemplate = codegenTemplateLoader.load(item.templateName);
-            codegenTemplate.render(path.join(projectBasePath, outputPath, item.outputFilName), data);
+            const finallyOutputPath = isConfig ? "./config" : outputPath;
+            codegenTemplate.render(path.join(projectBasePath, finallyOutputPath, item.outputFilName), data);
         })
     };
 
@@ -74,7 +115,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         routes: GenerateSpringReactRouteOptions[],
         name: string,
         path: string,
-        redirect: string
+        redirect: string,
+        icon: string
     }> => {
 
         const routeMap: Map<string, GenerateSpringReactRouteOptions[]> = new Map<string, GenerateSpringReactRouteOptions[]>();
@@ -98,27 +140,23 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         const result = [];
         for (const [key, routes] of routeMap.entries()) {
             const first = routes[0];
+            let icon = first.icon;
+            if (icon != null && !icon.startsWith("require")) {
+                icon = `'${icon}'`;
+            }
             result.push({
                 routes: this.sortRoute(routes),
                 name: first.name || '',
                 path: `/${key}`,
                 redirect: first.pathname,
+                icon
             })
         }
 
         return result;
     };
 
-    private sortRoute = (routes: GenerateSpringReactRouteOptions[]) => {
-
-        return routes.sort((item1, item2) => {
-            const order1 = this.getRouteOrder(item1);
-            const order2 = this.getRouteOrder(item2);
-            return order1 - order2;
-        })
-    };
-
-    private getRouteOrder = (route: GenerateSpringReactRouteOptions) => {
+    protected getRouteOrder = (route: GenerateSpringReactRouteOptions) => {
         if (route.order != null) {
             return route.order;
         }
@@ -128,6 +166,6 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             return order;
         }
 
-        return this.maxOrder;
+        return this.maxRouteOrder;
     }
 }

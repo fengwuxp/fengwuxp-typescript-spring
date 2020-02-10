@@ -18,7 +18,8 @@ export default class PathMatchingResourcePatternResolver implements ResourcePatt
 
     private basePath: string;
 
-    constructor(basePath: string, resourceLoader: ResourceLoader = new FileSystemResourceLoader()) {
+    constructor(basePath: string,
+                resourceLoader: ResourceLoader = new FileSystemResourceLoader()) {
         this.basePath = path.normalize(basePath);
         this._resourceLoader = resourceLoader;
     }

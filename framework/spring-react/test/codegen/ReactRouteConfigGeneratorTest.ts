@@ -15,7 +15,7 @@ describe("react route config generator", () => {
             {
                 ...DEFAULT_CODEGEN_OPTIONS,
                 excludeFiles: [
-                   path.normalize( `${fs.realpathSync(process.cwd())}/test/example/pages/example/**`)
+                   // path.normalize( `${fs.realpathSync(process.cwd())}/test/example/pages/example/**`)
                 ]
             }
         );

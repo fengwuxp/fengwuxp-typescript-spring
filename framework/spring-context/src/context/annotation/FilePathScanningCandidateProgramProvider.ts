@@ -69,6 +69,7 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
                     sourceType: "module",
                     plugins: [
                         "typescript",
+                        "jsx",
                         "classProperties",
                         "decorators-legacy"
                     ]
