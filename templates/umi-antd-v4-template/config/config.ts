@@ -67,7 +67,7 @@ export default {
         {
           path: '/user',
           component: '../layouts/UserLayout',
-          Routes: ['./src/DefaultPrivateRoute'],
+          // Routes: ['./src/DefaultPrivateRoute'],
           routes: [
             {
               path: '/user',

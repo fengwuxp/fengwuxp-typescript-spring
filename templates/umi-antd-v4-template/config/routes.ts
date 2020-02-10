@@ -8,7 +8,7 @@ export default [
 
       {
         name: 'list',
-        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        icon: require(`@ant-design/icons-svg/lib/asn/SmileOutlined`).default,
         path: '/demo/list',
         component: './demo/DemoListView',
       },

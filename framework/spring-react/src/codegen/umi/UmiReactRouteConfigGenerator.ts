@@ -143,9 +143,14 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             const sortRoutes = this.sortRoute(routes);
             const first = sortRoutes[0];
             let icon = first.icon;
-            if (icon != null && !icon.startsWith("require")) {
-                icon = `'${icon}'`;
+            if (icon == null) {
+                icon = "require('@ant-design/icons-svg/lib/asn/SmileOutlined').default";
+            } else {
+                if (!icon.startsWith("require")) {
+                    icon = `'${icon}'`;
+                }
             }
+
             result.push({
                 routes: sortRoutes,
                 name: first.name || '',
