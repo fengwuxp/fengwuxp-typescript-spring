@@ -1,37 +1,40 @@
-const routes = [
+export default [
 
   {
-    name: '',
-    // icon: require(`@ant-design/icons-svg/lib/asn/AimOutlined`).default,
+    name: 'demo',
     path: '/demo',
-    redirect: '/demo',
+    redirect: '/demo/list',
     routes: [
 
       {
-        name: '',
-        path: '/demo/createdemoview',
-        component: './demo/CreateDemoView',
-      },
-
-      {
-        name: '',
-        path: '/demo/demodetailview',
-        component: './demo/DemoDetailView',
-      },
-
-      {
-        name: '',
-        path: '/demo/demolistview',
+        name: 'list',
+        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        path: '/demo/list',
         component: './demo/DemoListView',
       },
 
       {
-        name: '',
-        path: '/demo/editdemoview',
+        name: 'edit',
+        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        path: '/demo/edit',
         component: './demo/EditDemoView',
       },
-    ]
-  }
 
-];
-export default routes
+      {
+        name: 'detail',
+        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        path: '/demo/detail',
+        component: './demo/DemoDetailView',
+      },
+
+      {
+        name: 'create_demo',
+        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        path: '/demo/create_demo',
+        component: './demo/CreateDemoView',
+      },
+
+    ]
+  },
+
+]

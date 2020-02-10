@@ -22,7 +22,7 @@ const DEFAULT_ORDER_MAP: Record<string, number> = {
 };
 
 const VIEW_PATH_NAMES = [
-    "Crate",
+    "Create",
     "Input",
     "Edit",
     "List",
@@ -139,13 +139,15 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
         const result = [];
         for (const [key, routes] of routeMap.entries()) {
-            const first = routes[0];
+
+            const sortRoutes = this.sortRoute(routes);
+            const first = sortRoutes[0];
             let icon = first.icon;
             if (icon != null && !icon.startsWith("require")) {
                 icon = `'${icon}'`;
             }
             result.push({
-                routes: this.sortRoute(routes),
+                routes: sortRoutes,
                 name: first.name || '',
                 path: `/${key}`,
                 redirect: first.pathname,

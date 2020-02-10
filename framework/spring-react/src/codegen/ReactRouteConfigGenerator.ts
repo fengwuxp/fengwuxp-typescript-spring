@@ -372,7 +372,8 @@ export default class ReactRouteConfigGenerator {
                         };
                     }
                 } else {
-                    attr[name] = value.value == null ? '' : value.value;
+                    const val = value.value;
+                    attr[name] = val == null ? '' : val;
                 }
                 return attr as GenerateSpringReactRouteOptions;
             })
@@ -437,8 +438,10 @@ export default class ReactRouteConfigGenerator {
         }
 
         const pathnameTransformMethodNameResolver = this.codeOptions.pathnameTransformMethodNameResolver || defaultPathnameTransformToMethodName;
-
         springReactRouteConfig.routeMethodName = pathnameTransformMethodNameResolver(springReactRouteConfig.pathname);
+        if (springReactRouteConfig.name == null) {
+            springReactRouteConfig.name = '';
+        }
 
         return springReactRouteConfig;
 

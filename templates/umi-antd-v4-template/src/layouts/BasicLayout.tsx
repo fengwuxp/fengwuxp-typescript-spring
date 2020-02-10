@@ -66,6 +66,9 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         }}
         menuItemRender={(menuItemProps, defaultDom) => {
           const icon = menuItemProps.icon as any;
+          if (true) {
+            return defaultDom;
+          }
           const item = <span>
             <span>
               {typeof icon === 'string' ? <SvgIcon className="anticon" src={icon}/> : <AntdIcon icon={icon}/>}
