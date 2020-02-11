@@ -1,40 +1,131 @@
-export default [
+import {IRoute} from "umi-types/config";
 
+// const routes: IRoute[] = [
+//
+//   {
+//     name: '/demo/list管理',
+//     icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+//     // path: '/demo',
+//     routes: [
+//       {
+//         name: '/demo/list',
+//         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+//         path: '/demo',
+//         routes: [
+//
+//           {
+//             name: '/demo/list',
+//
+//             path: '/demo/list',
+//             component: './demo/DemoListView',
+//           },
+//
+//           {
+//             name: '/demo/edit',
+//
+//             path: '/demo/edit',
+//             component: './demo/EditDemoView',
+//           },
+//
+//           {
+//             name: '/demo/detail',
+//
+//             path: '/demo/detail',
+//             component: './demo/DemoDetailView',
+//           },
+//
+//           {
+//             name: '/demo/create',
+//
+//             path: '/demo/create',
+//             component: './demo/CreateDemoView',
+//           },
+//
+//         ]
+//       }
+//     ]
+//   },
+// ]
+
+const routes: IRoute[] = [
   {
-    name: 'demo',
+    name: '/demo/list',
+    icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
     path: '/demo',
-    redirect: '/demo/list',
     routes: [
 
       {
-        name: 'list',
-        icon: require(`@ant-design/icons-svg/lib/asn/SmileOutlined`).default,
+        name: '/demo/list',
+
         path: '/demo/list',
         component: './demo/DemoListView',
       },
 
       {
-        name: 'edit',
-        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        name: '/demo/edit',
+
         path: '/demo/edit',
         component: './demo/EditDemoView',
       },
 
       {
-        name: 'detail',
-        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
+        name: '/demo/detail',
+
         path: '/demo/detail',
         component: './demo/DemoDetailView',
       },
 
       {
-        name: 'create_demo',
-        icon: require(`@ant-design/icons-svg/lib/asn/AccountBookOutlined`).default,
-        path: '/demo/create_demo',
+        name: '/demo/create',
+
+        path: '/demo/create',
         component: './demo/CreateDemoView',
       },
 
     ]
   },
+  {
+    name: '/demo/list管理',
+    icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+    // path: '/demo',
+    routes: [
+      {
+        name: '/demo/list',
+        icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+        path: '/demo',
+        routes: [
 
+          {
+            name: '/demo/list',
+
+            path: '/demo/list',
+            component: './demo/DemoListView',
+          },
+
+          {
+            name: '/demo/edit',
+
+            path: '/demo/edit',
+            component: './demo/EditDemoView',
+          },
+
+          {
+            name: '/demo/detail',
+
+            path: '/demo/detail',
+            component: './demo/DemoDetailView',
+          },
+
+          {
+            name: '/demo/create',
+
+            path: '/demo/create',
+            component: './demo/CreateDemoView',
+          },
+
+        ]
+      }
+    ]
+  },
 ]
+export default routes

@@ -223,7 +223,8 @@ export default class ReactRouteConfigGenerator {
         }).map((value) => {
             return [...value];
         }).flatMap((items) => [...items])
-            .map(this.buildRouteConfig);
+            .map(this.buildRouteConfig)
+            .filter(item => item != null);
     };
 
     /**

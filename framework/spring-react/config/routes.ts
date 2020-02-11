@@ -1,46 +1,48 @@
-export default [
+import {IRoute} from "umi-types/config";
+
+const routes: IRoute[] = [
 
     {
-        name: '管理',
+        name: '/example/list管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/example',
-
-        redirect: '/example/list',
-
         routes: [
             {
-                name: '',
+                name: '/example/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/example',
-
-                redirect: '/example/list',
-
                 routes: [
 
                     {
-                        name: '',
+                        name: '/example/list',
+
                         path: '/example/list',
                         component: './example/list',
                     },
 
                     {
-                        name: '',
+                        name: '/example/edit',
+
                         path: '/example/edit',
                         component: './example/edit',
                     },
 
                     {
-                        name: '',
+                        name: '/example/input',
+
                         path: '/example/input',
                         component: './example/input',
                     },
 
                     {
-                        name: '',
+                        name: '/example/detail',
+
+                        icon: require("react"),
+
                         path: '/example/detail',
                         component: './example/detail',
                     },
@@ -52,46 +54,44 @@ export default [
 
 
     {
-        name: '管理',
+        name: '/goods/list管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/goods',
-
-        redirect: '/goods/list',
-
         routes: [
             {
-                name: '',
+                name: '/goods/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/goods',
-
-                redirect: '/goods/list',
-
                 routes: [
 
                     {
-                        name: '',
+                        name: '/goods/list',
+
                         path: '/goods/list',
                         component: './goods/list',
                     },
 
                     {
-                        name: '',
+                        name: '/goods/input',
+
                         path: '/goods/input',
                         component: './goods/input',
                     },
 
                     {
-                        name: '',
+                        name: '/goods/edit',
+
                         path: '/goods/edit',
                         component: './goods/edit',
                     },
 
                     {
-                        name: '',
+                        name: '/goods/detail',
+
                         path: '/goods/detail',
                         component: './goods/detail',
                     },
@@ -103,28 +103,23 @@ export default [
 
 
     {
-        name: '管理',
+        name: '/index管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/index',
-
-        redirect: '/index',
-
         routes: [
             {
-                name: '',
+                name: '/index',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/index',
-
-                redirect: '/index',
-
                 routes: [
 
                     {
-                        name: '',
+                        name: '/index',
+
                         path: '/index',
                         component: './pages/index',
                     },
@@ -136,40 +131,37 @@ export default [
 
 
     {
-        name: '管理',
+        name: '/member/list管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/member',
-
-        redirect: '/member/list',
-
         routes: [
             {
-                name: '',
+                name: '/member/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/member',
-
-                redirect: '/member/list',
-
                 routes: [
 
                     {
-                        name: '',
+                        name: '/member/list',
+
                         path: '/member/list',
                         component: './member/list',
                     },
 
                     {
-                        name: '',
+                        name: '/member/input',
+
                         path: '/member/input',
                         component: './member/input',
                     },
 
                     {
                         name: '详情',
+
                         path: '/member/detail',
                         component: './member/detail',
                     },
@@ -186,9 +178,6 @@ export default [
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/member_edit',
-
-        redirect: '/member_edit',
-
         routes: [
             {
                 name: '用户编辑',
@@ -196,13 +185,11 @@ export default [
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/member_edit',
-
-                redirect: '/member_edit',
-
                 routes: [
 
                     {
                         name: '用户编辑',
+
                         path: '/member_edit',
                         component: './member/edit',
                     },
@@ -214,46 +201,44 @@ export default [
 
 
     {
-        name: '管理',
+        name: '/order/list管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/order',
-
-        redirect: '/order/list',
-
         routes: [
             {
-                name: '',
+                name: '/order/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
                 path: '/order',
-
-                redirect: '/order/list',
-
                 routes: [
 
                     {
-                        name: '',
+                        name: '/order/list',
+
                         path: '/order/list',
                         component: './order/list',
                     },
 
                     {
-                        name: '',
+                        name: '/order/input',
+
                         path: '/order/input',
                         component: './order/input',
                     },
 
                     {
-                        name: '',
+                        name: '/order/edit',
+
                         path: '/order/edit',
                         component: './order/edit',
                     },
 
                     {
-                        name: '',
+                        name: '/order/detail',
+
                         path: '/order/detail',
                         component: './order/detail',
                     },
@@ -265,3 +250,6 @@ export default [
 
 
 ]
+
+
+export default routes

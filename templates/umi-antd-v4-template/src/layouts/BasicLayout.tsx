@@ -67,11 +67,13 @@ const BasicLayout: React.FC<BasicLayoutProps> = props => {
         menuItemRender={(menuItemProps, defaultDom) => {
           const icon = menuItemProps.icon as any;
           const item = <span>
-            <span>
+            {
+              icon != null && <span>
               {typeof icon === 'string' ? <SvgIcon className="anticon" src={icon}/> : <AntdIcon icon={icon}/>}
             </span>
+            }
             {menuItemProps.name}
-          </span>
+          </span>;
           return menuItemProps.isUrl ? (
             item
           ) : (

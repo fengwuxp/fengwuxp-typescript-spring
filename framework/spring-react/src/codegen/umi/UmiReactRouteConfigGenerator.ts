@@ -11,6 +11,7 @@ import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 import * as path from "path";
 import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
 import {RouteLevel, UmiCodeGeneratorOptions} from "./UmiCodeGeneratorOptions";
+import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
@@ -68,9 +69,9 @@ const UMI_CODEGEN_OPTIONS: UmiCodeGeneratorOptions = {
         ...DEFAULT_EXCLUDE
     ],
     filenameTransformPathname: umiModelFilenameTransformPathname,
-    routeLevel: RouteLevel.TWO
+    routeLevel: RouteLevel.THREE
 };
-UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplateLevel2";
+UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplateLevel3";
 /**
  * umijs的路由生成
  */
@@ -92,7 +93,12 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
     generate = () => {
 
-        const routeConfigs: GenerateSpringReactRouteOptions[] = this.getRouteConfigs();
+        const routeConfigs: GenerateSpringReactRouteOptions[] = this.getRouteConfigs().map(item => {
+            if (!StringUtils.hasText(item.name)) {
+                item.name = item.pathname;
+            }
+            return item;
+        });
         logger.debug("GenerateSpringReactRouteOptions length", routeConfigs.length);
         // const routes: GenerateSpringReactRouteOptions[] = this.margeFatherAndSonRoutes(routeConfigs);
 
