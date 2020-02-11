@@ -126,21 +126,21 @@ interface DemoListViewState {
 /**
  *  demo list
  */
-@RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions<DemoListViewProps, AntGlobalStateType>>({
-  pageHeader: {
-    content: 'demo list',
-  },
-  cmdDataProvider: {
-    propMapEventName: (names) => {
-      console.log("--cmdDataProvider-->", {
-        loginUser: names.loginUser
-      })
-      return {
-        loginUser: names.loginUser
-      }
-    }
-  }
-})
+// @RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions<DemoListViewProps, AntGlobalStateType>>({
+//   pageHeader: {
+//     content: 'demo list',
+//   },
+//   cmdDataProvider: {
+//     propMapEventName: (names) => {
+//       console.log("--cmdDataProvider-->", {
+//         loginUser: names.loginUser
+//       })
+//       return {
+//         loginUser: names.loginUser
+//       }
+//     }
+//   }
+// })
 export default class DemoListView extends React.Component<DemoListViewProps, DemoListViewState> {
   state: DemoListViewState = {
     records: null,

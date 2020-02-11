@@ -1,15 +1,16 @@
 import ReactRouteConfigGenerator, {
     DEFAULT_CODEGEN_OPTIONS,
     DEFAULT_EXCLUDE,
-    DEFAULT_TEMPLATE_LIST, getSimplePathname
+    DEFAULT_TEMPLATE_LIST,
+    getSimplePathname
 } from '../ReactRouteConfigGenerator';
 import ts from 'typescript';
-import {CodeGeneratorOptions, TemplateType} from "../CodeGeneratorOptions";
+import {TemplateType} from "../CodeGeneratorOptions";
 import {GenerateSpringReactRouteOptions} from "../GenerateSpringReactRouteOptions";
 import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 import * as path from "path";
-import {DEFAULT_GENERATOR_OUTPUT_DIR} from "../../constant/ConstantVar";
 import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
+import {RouteLevel, UmiCodeGeneratorOptions} from "./UmiCodeGeneratorOptions";
 
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
@@ -54,7 +55,8 @@ export const umiModelFilenameTransformPathname = (scanPackages: string[], filepa
     pathname = toLineResolver(initialLowercase(pathname));
     return `/${dir}/${pathname}`.toLowerCase();
 };
-const UMI_CODEGEN_OPTIONS: CodeGeneratorOptions = {
+
+const UMI_CODEGEN_OPTIONS: UmiCodeGeneratorOptions = {
     ...DEFAULT_CODEGEN_OPTIONS,
     templateList: DEFAULT_TEMPLATE_LIST.map((item) => {
         return {...item};
@@ -65,9 +67,10 @@ const UMI_CODEGEN_OPTIONS: CodeGeneratorOptions = {
         "/src/pages/user/**",
         ...DEFAULT_EXCLUDE
     ],
-    filenameTransformPathname: umiModelFilenameTransformPathname
+    filenameTransformPathname: umiModelFilenameTransformPathname,
+    routeLevel: RouteLevel.TWO
 };
-UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplate";
+UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplateLevel2";
 /**
  * umijs的路由生成
  */
@@ -80,9 +83,10 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
     constructor(scanPackages: string[],
                 teConfigCompilerOptions: ts.CompilerOptions,
                 orderMap: Record<string, number> = DEFAULT_ORDER_MAP,
-                codeOptions: CodeGeneratorOptions = UMI_CODEGEN_OPTIONS) {
+                codeOptions: UmiCodeGeneratorOptions = UMI_CODEGEN_OPTIONS) {
         super(scanPackages, teConfigCompilerOptions, codeOptions);
         this.orderMap = orderMap;
+        this.setRouteLevel(codeOptions.routeLevel);
     }
 
 
@@ -109,6 +113,11 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             const finallyOutputPath = isConfig ? "./config" : outputPath;
             codegenTemplate.render(path.join(projectBasePath, finallyOutputPath, item.outputFilName), data);
         })
+    };
+
+    setRouteLevel = (level: RouteLevel) => {
+        this.codeOptions["routeLevel"] = level;
+        this.codeOptions.templateList[0].templateName = `./umi/UmiRouterConfigCodeTemplateLevel${level}`;
     };
 
     private groupByDirName = (routes: GenerateSpringReactRouteOptions[]): Array<{

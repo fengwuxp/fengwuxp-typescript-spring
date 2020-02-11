@@ -1,0 +1,29 @@
+export default [
+
+                  {{each routes route index }}
+
+                     {
+                       {{if route.name}} name : "{{route.name}}",   {{/if}}
+                       path : "{{route.pathname}}",
+                       component : asyncComponent( ()=> import("{{route.component}}")),
+                       {{if route.routes}}
+                       routes:[
+                          {{each route.routes subRoute index2 }}
+                            {
+                              {{if route.name}} name : "{{subRoute.name}}",   {{/if}}
+                               path : "{{subRoute.pathname}}",
+                               exact : {{subRoute.exact}},
+                              {{if subRoute.condition}}
+                                 condition: {{subRoute.condition}},
+                               {{/if}}
+                               component : asyncComponent( ()=> import("{{subRoute.component}}")),
+                            }
+                             {{if index2 < route.routes.length-1}}, {{/if}}
+                          {{/each}}
+                         ]
+                       {{/if}}
+                     }
+                     {{if index < routes.length-1}}, {{/if}}
+
+                  {{/each}}
+               ]

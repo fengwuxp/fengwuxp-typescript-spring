@@ -1,0 +1,36 @@
+export default [
+   {{each routes route index }}
+    {
+                  name: '{{route.name}}管理',
+                  {{if route.icon!=null}}
+                   icon: {{route.icon}},
+                   {{/if}}
+                   path: '{{route.path}}',
+                   {{if route.redirect!=null}}
+                   redirect: '{{route.redirect}}',
+                  {{/if}}
+                  routes: [
+                    {
+                    name: '{{route.name}}',
+                    {{if route.icon!=null}}
+                    icon: {{route.icon}},
+                    {{/if}}
+                     path: '{{route.path}}',
+                    {{if route.redirect!=null}}
+                     redirect: '{{route.redirect}}',
+                    {{/if}}
+                     routes: [
+                              {{each route.routes route index }}
+                               {
+                                 name: '{{route.name}}',
+                                 path: '{{route.pathname}}',
+                                 component: '{{route.component}}',
+                               },
+                       {{/each}}
+                      ]
+                    }
+                 ]
+    },
+
+  {{/each}}
+]
