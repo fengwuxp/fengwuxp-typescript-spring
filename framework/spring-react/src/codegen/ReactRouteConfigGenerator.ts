@@ -2,7 +2,8 @@ import FilePathScanningCandidateProgramProvider
     from "fengwuxp-spring-context/esnext/context/annotation/FilePathScanningCandidateProgramProvider";
 import DefaultExportTypeFilter from "fengwuxp-spring-core/esnext/babel/type/DefaultExportTypeFilter";
 import {
-    CallExpression,
+    ArgumentPlaceholder,
+    CallExpression, Expression,
     File,
     Identifier,
     isArrowFunctionExpression,
@@ -10,8 +11,8 @@ import {
     isClassDeclaration,
     isDecorator,
     isIdentifier, isStringLiteral,
-    isVariableDeclaration,
-    ObjectExpression,
+    isVariableDeclaration, JSXNamespacedName,
+    ObjectExpression, ObjectMethod, ObjectProperty, SpreadElement,
     TSTypeAnnotation,
     TSTypeParameterInstantiation,
     TSTypeReference
@@ -347,7 +348,6 @@ export default class ReactRouteConfigGenerator {
         const expressionArguments = expression.arguments;
 
         const springReactRouteConfig: GenerateSpringReactRouteOptions = expressionArguments.map((item: ObjectExpression) => {
-
             return item.properties.map((prop: any) => {
                 const name = prop.key.name;
                 const value = prop.value;
@@ -375,9 +375,11 @@ export default class ReactRouteConfigGenerator {
                 } else {
                     const val = value.value;
                     attr[name] = val == null ? '' : val;
+                    this.enhancedProcessProp(attr as GenerateSpringReactRouteOptions, prop);
                 }
                 return attr as GenerateSpringReactRouteOptions;
-            })
+            });
+
         }).flatMap((items) => [...items])
             .reduce((prev, current) => {
                 return {
@@ -385,6 +387,7 @@ export default class ReactRouteConfigGenerator {
                     ...current
                 } as GenerateSpringReactRouteOptions
             }, {} as GenerateSpringReactRouteOptions);
+
 
         const {codeOptions: {filenameTransformPathname}, scanPackages} = this;
 
@@ -444,7 +447,19 @@ export default class ReactRouteConfigGenerator {
             springReactRouteConfig.name = '';
         }
 
+
         return springReactRouteConfig;
+
+    };
+
+
+    /**
+     * 增强处理prop
+     * @param route
+     * @param prop
+     */
+    protected enhancedProcessProp = (route: GenerateSpringReactRouteOptions, prop: ObjectMethod | ObjectProperty | SpreadElement): void => {
+
 
     };
 

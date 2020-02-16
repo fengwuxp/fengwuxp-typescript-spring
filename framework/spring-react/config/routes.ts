@@ -39,7 +39,7 @@ const routes: IRoute[] =[
                                             },
                                     
                                             {
-                                              name: '/example/detail',
+                                              name: '标题',
                                               
                                                 icon: require("react"),
                                                

@@ -137,7 +137,7 @@ const getRequestHandle = (cacheTotal: number, setTotal) => {
     })
   };
 
-}
+};
 
 
 const ExampleListView = (props: ExampleListViewProps) => {
@@ -184,7 +184,7 @@ const ExampleListView = (props: ExampleListViewProps) => {
       />
     </>
   );
-}
+};
 
 export default RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions<DemoListViewProps, AntGlobalStateType>>({
   pageHeader: {
@@ -194,7 +194,7 @@ export default RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOpt
     propMapEventName: (names) => {
       console.log("--cmdDataProvider-->", {
         loginUser: names.loginUser
-      })
+      });
       return {
         loginUser: names.loginUser
       }

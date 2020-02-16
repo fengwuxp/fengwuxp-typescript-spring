@@ -128,6 +128,7 @@ interface DemoListViewState {
  */
 @RouteView<AntdRouteViewOptions & ReactCmdDataProviderRouteViewOptions<DemoListViewProps, AntGlobalStateType>>({
   pageHeader: {
+    title: "演示列表",
     content: 'demo list',
   },
   cmdDataProvider: {
@@ -197,7 +198,7 @@ export default class DemoListView extends React.Component<DemoListViewProps, Dem
         <div className={styles.tableListForm}>{this.renderForm()}</div>
         <div className={styles.tableListOperator}>
           <Button icon={<PlusOutlined/>} type="primary" onClick={() => {
-            AppRouter.demoCreateView();
+            AppRouter.demoCreate();
           }}>新建</Button>
           {selectedRowKeys.length > 0 && (
             <span>

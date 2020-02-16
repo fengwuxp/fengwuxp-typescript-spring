@@ -7,8 +7,13 @@ export interface DetailProps {
 }
 
 @RouteView<RouteViewOptions & {
-    icon: any
+    icon: any,
+    pageHeader: any
 }>({
+    pageHeader: {
+        title: "标题",
+        content: 'example 创建',
+    },
     condition: "#member.add",
     icon: require("react")
 })

@@ -8,6 +8,7 @@
       "dom"
     ],
     "sourceMap": true,
+    "resolveJsonModule": true,
     "jsx": "react",
     "emitDeclarationOnly": true,
     "emitDecoratorMetadata": true,
@@ -35,7 +36,8 @@
   },
   "include": [
     "./src/**/*",
-    "./.spring/**/*"
+    "./.spring/**/*",
+    "./test/**/*"
   ],
   "exclude": [
     "node_modules",

@@ -4,7 +4,6 @@ import {
 } from 'fengwuxp-browser-router'
 import {
   AppRouterMapping,
-  AppCommandRouter,
   NavigatorDescriptorObject,
   RouteConfirmBeforeJumping,
   RouterCommandMethod,

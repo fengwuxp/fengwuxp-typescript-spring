@@ -3,14 +3,14 @@ import {IRoute} from "umi-types/config";
 const routes: IRoute[] =[
                 
                  {
-                               name: '/demo/list管理',
+                               name: '演示列表管理',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
                                 path: '/demo',
                                routes: [
                                  {
-                                 name: '/demo/list',
+                                 name: '演示列表',
                                  
                                  icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                  
@@ -18,7 +18,7 @@ const routes: IRoute[] =[
                                   routes: [
                                            
                                             {
-                                              name: '/demo/list',
+                                              name: '演示列表',
                                               
                                               path: '/demo/list',
                                               component: './demo/DemoListView',
@@ -71,6 +71,13 @@ const routes: IRoute[] =[
                                               
                                               path: '/example/list',
                                               component: './example/ExampleListView',
+                                            },
+                                    
+                                            {
+                                              name: '标题',
+                                              
+                                              path: '/example/crate_example',
+                                              component: './example/CrateExampleView',
                                             },
                                     
                                    ]

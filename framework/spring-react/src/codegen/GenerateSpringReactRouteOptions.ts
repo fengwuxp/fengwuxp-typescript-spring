@@ -6,6 +6,9 @@ export interface GenerateSpringReactRouteOptions {
 
     name?: string;
 
+    // 标题
+    title?: string;
+
     // 图标
     icon?: string;
 

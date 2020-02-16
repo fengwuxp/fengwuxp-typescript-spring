@@ -11,6 +11,7 @@ import * as path from "path";
 import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
 import {RouteLevel, UmiCodeGeneratorOptions} from "./UmiCodeGeneratorOptions";
 import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
+import {isObjectExpression, isStringLiteral, ObjectProperty} from "@babel/types";
 
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
@@ -109,12 +110,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
     generate = () => {
 
-        const routeConfigs: GenerateSpringReactRouteOptions[] = this.getRouteConfigs().map(item => {
-            if (!StringUtils.hasText(item.name)) {
-                item.name = item.pathname;
-            }
-            return item;
-        });
+        const routeConfigs: GenerateSpringReactRouteOptions[] = this.getRouteConfigs();
         logger.debug("GenerateSpringReactRouteOptions length", routeConfigs.length);
 
         // 先生成AppRouter和AppRouterInterface
@@ -149,6 +145,28 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         this.codeOptions.templateList[0].templateName = `./umi/UmiRouterConfigCodeTemplateLevel${level}`;
     };
 
+    /**
+     * 增强处理prop
+     * @param route
+     * @param prop
+     */
+    protected enhancedProcessProp = (route: GenerateSpringReactRouteOptions, prop: any) => {
+
+        const name = prop.key.name;
+        const value = prop.value;
+        if (name == "pageHeader") {
+            if (isObjectExpression(value)) {
+                value.properties.map((item: ObjectProperty) => {
+                    const value = item.value;
+                    if (isStringLiteral(value)) {
+                        route[item.key.name] = value.value;
+                    }
+                })
+            }
+        }
+
+    };
+
     private groupByDirName = (routes: GenerateSpringReactRouteOptions[]): Array<{
         routes: GenerateSpringReactRouteOptions[],
         name: string,
@@ -165,7 +183,6 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             let p1 = values.pop();
             let p2 = values.pop();
             item.component = `./${p2}/${p1}`;
-
             const [$1, dir] = item.pathname.split("/");
             let routes = routeMap.get(dir);
             if (routes == null) {
@@ -176,6 +193,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         });
 
         const result = [];
+
         for (const [key, routes] of routeMap.entries()) {
 
             const sortRoutes = this.sortRoute(routes);
@@ -189,9 +207,13 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 }
             }
 
+            sortRoutes.forEach(item => {
+                item.name = this.getRouteName(item) || '';
+            });
             result.push({
                 routes: sortRoutes,
-                name: first.name || '',
+                name: this.getRouteName(first) || '',
+                title: first.title || '',
                 path: `/${key}`,
                 redirect: first.pathname,
                 icon
@@ -212,5 +234,13 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         }
 
         return this.maxRouteOrder;
+    };
+
+
+    private getRouteName = (item: GenerateSpringReactRouteOptions): string => {
+        const name = ["name", "title", "pathname"].find((key) => {
+            return StringUtils.hasText(item[key])
+        });
+        return item[name];
     }
 }
