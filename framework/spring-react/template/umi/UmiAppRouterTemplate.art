@@ -1,0 +1,28 @@
+import {
+  RouterCommandMethod,
+  AbstractAppCommandRouter,
+  RouteMapping
+} from 'fengwuxp-declarative-router-adapter'
+import {SpringAppRouterInterface} from "./SpringAppRouterInterface";
+
+ {{each routes route index }}
+    {{if route.propsType!=null}}
+    import { {{route.propsType.name}}{{index}} } from "./SpringAppRouterInterface";
+    {{/if}}
+ {{/each}}
+
+
+export default class SpringUmiAppRouter extends AbstractAppCommandRouter implements SpringAppRouterInterface {
+
+
+  {{each routes route index }}
+     {{if route.propsType!=null}}
+      @RouteMapping('{{route.pathname}}')
+      {{route.routeMethodName}}: RouterCommandMethod<Partial<{{route.propsType.name}}{{index}}>>
+     {{else}}
+      @RouteMapping('{{route.pathname}}')
+      {{route.routeMethodName}}: RouterCommandMethod;
+     {{/if}}
+   {{/each}}
+}
+

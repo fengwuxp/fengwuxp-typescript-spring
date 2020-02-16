@@ -1,8 +1,5 @@
-import {browserNativeAppCommandRouterFactory, BrowserNavigatorAdapter} from 'fengwuxp-browser-router'
 import {
     AppCommandRouter,
-    NavigatorDescriptorObject,
-    RouteConfirmBeforeJumping,
     RouterCommandMethod
 } from 'fengwuxp-declarative-router-adapter'
  {{each routes route index }}
@@ -10,7 +7,7 @@ import {
     import { {{route.propsType.name}} as {{route.propsType.name}}{{index}} } from "{{route.component}}";
     {{/if}}
  {{/each}}
-export interface AppRouterInterface extends AppCommandRouter {
+export interface SpringAppRouterInterface extends AppCommandRouter {
 
    {{each routes route index }}
     {{if route.propsType!=null}}

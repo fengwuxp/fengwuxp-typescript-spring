@@ -2,7 +2,7 @@ import * as React from "react";
 import {RouteView} from "fengwuxp-routing-core";
 
 
-interface InputProps {
+export interface InputProps {
 
 }
 

@@ -2,7 +2,7 @@ import * as React from "react";
 import {RouteView} from "fengwuxp-routing-core";
 
 
-interface EditProps {
+export interface EditProps {
 
 }
 

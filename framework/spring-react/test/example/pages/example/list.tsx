@@ -2,7 +2,7 @@ import * as React from "react";
 import {RouteView, RouteViewOptions} from "fengwuxp-routing-core";
 
 
-interface ListViewProps {
+export interface ListViewProps {
 
 }
 

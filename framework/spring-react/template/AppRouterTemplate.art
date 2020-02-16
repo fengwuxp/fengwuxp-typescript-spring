@@ -1,13 +1,19 @@
-import {browserNativeAppCommandRouterFactory, BrowserNavigatorAdapter} from 'fengwuxp-browser-router'
 import {
-    AppRouterMapping,
-    AppCommandRouter,
-    NavigatorDescriptorObject,
-    RouteConfirmBeforeJumping,
-    RouterCommandMethod
+  BrowserNavigatorAdapter,
+  BrowserNavigatorContextAdapter
+} from 'fengwuxp-browser-router'
+import {
+  AppRouterMapping,
+  NavigatorDescriptorObject,
+  RouteConfirmBeforeJumping,
+  RouterCommandMethod,
+  AbstractAppCommandRouter,
+  RouteMapping
 } from 'fengwuxp-declarative-router-adapter'
+import {MethodNameCommandResolver} from "fengwuxp-declarative-command";
 import {createBrowserHistory} from "history";
-import {AppRouterInterface} from "./AppRouterInterface";
+import {SpringAppRouterInterface} from "./SpringAppRouterInterface";
+
  {{each routes route index }}
     {{if route.propsType!=null}}
     import { {{route.propsType.name}}{{index}} } from "./AppRouterInterface";
@@ -26,7 +32,7 @@ export const history = createBrowserHistory({basename: "{{routeBasePath}}"});
   methodNameCommandResolver: () => upperCaseToLeftIncline,
   pathPrefix: "{{routeBasePath}}",
 })
-class AppRouter extends AbstractAppCommandRouter implements AppRouterInterface {
+class SpringAppRouter extends AbstractAppCommandRouter implements AppRouterInterface {
 
 
   {{each routes route index }}
@@ -40,4 +46,4 @@ class AppRouter extends AbstractAppCommandRouter implements AppRouterInterface {
    {{/each}}
 }
 
-export default new AppRouter();
+export default new SpringAppRouter();

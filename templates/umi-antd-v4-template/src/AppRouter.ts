@@ -9,24 +9,13 @@ import {
   RouteConfirmBeforeJumping,
   RouterCommandMethod,
   RouteMapping,
-  AbstractAppCommandRouter
 } from 'fengwuxp-declarative-router-adapter'
 import {LoginViewProps} from '@/pages/user/LoginView';
 import history from '@/pages/.umi/history'
 import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
-// import {CreateDemoViewProps} from '@/pages/demo/CreateDemoView';
-// import {DemoListViewProps} from '@/pages/demo/DemoListView';
+import AppRouter from "../.spring/SpringUmiAppRouter";
 
 
-export interface AppRouterInterface extends AppCommandRouter {
-
-
-  login: RouterCommandMethod<LoginViewProps>;
-
-  demoListView: RouterCommandMethod;
-
-  demoCreateView: RouterCommandMethod;
-}
 // 判断是否需要登录
 const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) => true;
 
@@ -50,16 +39,11 @@ export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: st
   methodNameCommandResolver: () => upperCaseToLeftIncline,
   pathPrefix: '/',
 })
-class AntdAppRouter extends AbstractAppCommandRouter implements AppRouterInterface {
+class AntdAppRouter extends AppRouter {
 
   @RouteMapping('/user/login')
   login: RouterCommandMethod<LoginViewProps>;
 
-  // @RouteMapping("/demo/list")
-  demoListView: RouterCommandMethod;
-
-  // @RouteMapping("/demo/create")
-  demoCreateView: RouterCommandMethod;
 }
 
 export default new AntdAppRouter();

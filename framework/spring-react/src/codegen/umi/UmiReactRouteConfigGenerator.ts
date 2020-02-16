@@ -1,7 +1,6 @@
 import ReactRouteConfigGenerator, {
     DEFAULT_CODEGEN_OPTIONS,
     DEFAULT_EXCLUDE,
-    DEFAULT_TEMPLATE_LIST,
     getSimplePathname
 } from '../ReactRouteConfigGenerator';
 import ts from 'typescript';
@@ -57,11 +56,28 @@ export const umiModelFilenameTransformPathname = (scanPackages: string[], filepa
     return `/${dir}/${pathname}`.toLowerCase();
 };
 
+const DEFAULT_UMI_TEMPLATE_LIST = [
+    {
+        templateName: "./umi/UmiRouterConfigCodeTemplateLevel3",
+        outputFilName: "routes.ts",
+        type: TemplateType.ROUTE_CONFIG
+    },
+    {
+        templateName: "./AppRouterInterfaceTemplate",
+        outputFilName: "SpringAppRouterInterface.d.ts",
+        type: TemplateType.ROUTER
+    },
+    {
+        templateName: "./umi/UmiAppRouterTemplate",
+        outputFilName: "SpringUmiAppRouter.ts",
+        type: TemplateType.ROUTER
+    }
+];
+
+
 const UMI_CODEGEN_OPTIONS: UmiCodeGeneratorOptions = {
     ...DEFAULT_CODEGEN_OPTIONS,
-    templateList: DEFAULT_TEMPLATE_LIST.map((item) => {
-        return {...item};
-    }),
+    templateList: DEFAULT_UMI_TEMPLATE_LIST,
     templateFileDir: path.resolve(__dirname, "../../../template"),
     excludeFiles: [
         "/src/pages/.umi/**",
@@ -71,7 +87,7 @@ const UMI_CODEGEN_OPTIONS: UmiCodeGeneratorOptions = {
     filenameTransformPathname: umiModelFilenameTransformPathname,
     routeLevel: RouteLevel.THREE
 };
-UMI_CODEGEN_OPTIONS.templateList[0].templateName = "./umi/UmiRouterConfigCodeTemplateLevel3";
+
 /**
  * umijs的路由生成
  */
@@ -100,24 +116,31 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             return item;
         });
         logger.debug("GenerateSpringReactRouteOptions length", routeConfigs.length);
-        // const routes: GenerateSpringReactRouteOptions[] = this.margeFatherAndSonRoutes(routeConfigs);
 
-        // 按照目录相同的路由分组
-        const routes = this.groupByDirName(routeConfigs);
-
+        // 先生成AppRouter和AppRouterInterface
         const {codegenTemplateLoader, codeOptions: {templateList, routeBasePath, outputPath, projectBasePath}} = this;
-        // 生成路由配置
-        templateList.forEach((item) => {
-            const isConfig = item.type === TemplateType.ROUTE_CONFIG;
-            const data = isConfig ? {
-                routes
-            } : {
+        templateList.filter(item => {
+            return item.type !== TemplateType.ROUTE_CONFIG;
+        }).forEach((item) => {
+            const data = {
                 routes: this.sortByExact(routeConfigs),
                 routeBasePath
             };
             const codegenTemplate = codegenTemplateLoader.load(item.templateName);
-            const finallyOutputPath = isConfig ? "./config" : outputPath;
-            codegenTemplate.render(path.join(projectBasePath, finallyOutputPath, item.outputFilName), data);
+            codegenTemplate.render(path.join(projectBasePath, outputPath, item.outputFilName), data);
+        });
+
+        // 按照目录相同的路由分组
+        const routes = this.groupByDirName(routeConfigs);
+        // 生成路由配置
+        templateList.filter(item => {
+            return item.type === TemplateType.ROUTE_CONFIG;
+        }).forEach((item) => {
+            const data = {
+                routes
+            };
+            const codegenTemplate = codegenTemplateLoader.load(item.templateName);
+            codegenTemplate.render(path.join(projectBasePath, "./config", item.outputFilName), data);
         })
     };
 

@@ -49,7 +49,7 @@ const ROUTE_VIEW_DECORATOR_INFO = {
 
 const projectBasePath = fs.realpathSync(process.cwd());
 
-export const DEFAULT_TEMPLATE_LIST = [
+const DEFAULT_TEMPLATE_LIST = [
     {
         templateName: "./ReactRouterConfigCodeTemplate",
         outputFilName: "routes.ts",
@@ -57,12 +57,12 @@ export const DEFAULT_TEMPLATE_LIST = [
     },
     {
         templateName: "./AppRouterInterfaceTemplate",
-        outputFilName: "AppRouterInterface.d.ts",
+        outputFilName: "SpringAppRouterInterface.d.ts",
         type: TemplateType.ROUTER
     },
     {
         templateName: "./AppRouterTemplate",
-        outputFilName: "AppRouter.ts",
+        outputFilName: "SpringAppRouter.ts",
         type: TemplateType.ROUTER
     }
 ];
@@ -418,9 +418,9 @@ export default class ReactRouteConfigGenerator {
         } else {
             //计算相对路径
             // /test/example/views/member/input
-            // const p1 = filepath.replace(projectBasePath, "");
-            // componentImportPath = path.relative(`/${outputPath}/${outputFilename}.ts`, p1);
-            componentImportPath = path.relative(`${projectBasePath}${outputPath}/`, filepath);
+            //path.relative(`${projectBasePath}${outputPath}/g.ts`, filepath)
+            const relativePath = filepath.replace(projectBasePath, "");
+            componentImportPath = `..${relativePath}`;
         }
         componentImportPath = this.normalizeImportPath(componentImportPath);
 
