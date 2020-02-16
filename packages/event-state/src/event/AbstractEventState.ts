@@ -22,7 +22,6 @@ export abstract class AbstractEventState<T = any> implements EventState<T>, Stat
         this.eventName = eventName;
         this.removeStateHandle = removeStateHandle;
         this.defaultState = initInvoker;
-
     }
 
     close = () => {
@@ -69,10 +68,15 @@ export abstract class AbstractEventState<T = any> implements EventState<T>, Stat
 
     setState = (newState: any, propKey?: string) => {
         if (this.stateIsComplex && propKey != null) {
-            this.state[propKey] = newState;
+            let state = this.state;
+            if (state == null) {
+                state = {} as T;
+            }
+            state[propKey] = newState;
         } else {
             this.state = newState;
         }
+        // 广播状态
         return this.broadcastStateUpdate();
     };
 

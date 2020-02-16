@@ -131,10 +131,11 @@ declare abstract class AbstractEventState<T = any> implements EventState<T>, Sta
     protected state: T;
     protected stateIsComplex: boolean;
     private removeStateHandle;
+    protected isInitStatus: boolean;
     constructor(eventName: string, initInvoker: InitStateInvoker<T>, removeStateHandle?: Function);
     close: () => void;
     getEventName: () => string;
-    initState: () => Promise<void>;
+    initState: () => Promise<never>;
     getState: () => T;
     setState: (newState: any, propKey?: string) => Promise<void>;
     /**

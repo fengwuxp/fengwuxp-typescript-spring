@@ -38,6 +38,31 @@ const getDemoPages = (req: Request, res: Response) => {
   res.json(result);
 };
 
+const demos = [];
+
+const createDemo = (req: Request, res: Response) => {
+  const body = req.body;
+  console.log("==crate demo==>", body);
+  demos.push([body]);
+};
+
+
+const editDemo = (req: Request, res: Response) => {
+  const body = req.body;
+  console.log("==crate demo==>", body);
+  demos.push([body]);
+};
+
+const getDemo = (req: Request, res: Response) => {
+
+  res.json({
+    ...demos[0]
+  });
+};
+
 export default {
   'GET /api/mock/demo/page': getDemoPages,
+  'GET /api/mock/demo/create': createDemo,
+  'GET /api/mock/demo/edit': editDemo,
+  'GET /api/mock/demo/detail': getDemo,
 };

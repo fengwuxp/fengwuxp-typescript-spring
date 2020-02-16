@@ -887,7 +887,7 @@ declare const Feign: <T extends FeignProxyClient = FeignProxyClient>(options: Fe
 
 /**
  * abstract http client
- * Request header with 'Content-Type' as 'application / x-www-form-urlencoded' is provided by default
+ * Request header with 'Content-Type' as 'application/x-www-form-urlencoded' is provided by default
  */
 declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> implements HttpClient<T> {
     protected httpAdapter: HttpAdapter<T>;

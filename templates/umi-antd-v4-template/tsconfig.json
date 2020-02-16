@@ -10,6 +10,8 @@
     "sourceMap": true,
     "baseUrl": ".",
     "jsx": "react",
+    "emitDeclarationOnly": true,
+    "emitDecoratorMetadata": true,
     "allowSyntheticDefaultImports": true,
     "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,

@@ -73,9 +73,15 @@ const CmdDataProvider: CmdDataProviderType = (options: CmdDataProviderOptions = 
                         }
                         const commandResolver = CmdDataProvider.commandResolver;
                         const propName: string = cmdProviderOptions == null ? commandResolver(propertyKey) : cmdProviderOptions.propName || commandResolver(propertyKey);
-                        const newState = await oldFunction.bind(proxyInstance, ...args, state[propName])();
-                        await eventState.setState(newState, propName);
-                        return newState;
+                        const stateElement = state == null ? null : state[propName];
+                        try {
+                            const newState = await oldFunction.bind(proxyInstance, ...args, stateElement)();
+                            await eventState.setState(newState, propName);
+                            return newState;
+                        } catch (e) {
+                            return Promise.reject(e);
+                        }
+
                     }
                 }, null);
                 return proxyInstance;

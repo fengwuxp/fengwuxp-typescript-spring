@@ -51,7 +51,7 @@ let NO_AUTHORITY_VIEW: RenderNoAuthorityFunction = (ReactComponent: any, options
 let PAGE_HEADER_RENDER: RenderPageHeaderFunction = (ReactComponent: any, options: AntdRouteViewOptions, viewProps) => <>
     <ReactComponent {...viewProps}/>
 </>;
-;
+
 
 export type AntdRouteViewOptions = RouteViewOptions & {
     pageHeader: RenderPageHeaderProps

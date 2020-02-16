@@ -42,7 +42,7 @@ export default class CreateDemoView extends React.Component<CreateDemoViewProps,
   render = () => {
     return <Card bordered={false}>
       <SchemaForm
-        onSubmit={v => console.log(v)}
+        onSubmit={this.submit}
         actions={actions}
         labelCol={{span: 7}}
         initialValues={{
@@ -181,5 +181,9 @@ export default class CreateDemoView extends React.Component<CreateDemoViewProps,
         </FormButtonGroup>
       </SchemaForm>
     </Card>
+  };
+
+  private submit = (values) => {
+
   }
 }

@@ -85,47 +85,24 @@ const routes: IRoute[] = [
     ]
   },
   {
-    name: '/demo/list管理',
+    name: 'example管理',
     icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
-    // path: '/demo',
     routes: [
       {
-        name: '/demo/list',
+        name: 'example列表',
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
-        path: '/demo',
+        path: '/example',
         routes: [
 
           {
-            name: '/demo/list',
-
-            path: '/demo/list',
-            component: './demo/DemoListView',
+            name: '/example/list',
+            path: '/example/list',
+            component: './example/ExampleListView',
           },
-
-          {
-            name: '/demo/edit',
-
-            path: '/demo/edit',
-            component: './demo/EditDemoView',
-          },
-
-          {
-            name: '/demo/detail',
-
-            path: '/demo/detail',
-            component: './demo/DemoDetailView',
-          },
-
-          {
-            name: '/demo/create',
-
-            path: '/demo/create',
-            component: './demo/CreateDemoView',
-          },
-
         ]
       }
     ]
-  },
-]
+  }
+];
+
 export default routes

@@ -11,6 +11,7 @@ import {ReactCmdDataProviderEnhancer} from "fengwuxp-routing-react";
 import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import {ANT_DESIGN_GLOBAL_EVENT_PROP_MAP, AntGlobalStateType, AntDesignGlobalEventNames} from "@/AntGlobalEventNames";
 
+console.log("==load route configuration=>");
 
 // 注册全局事件
 ReactCmdDataProviderEnhancer.registerGlobalEventNames<AntGlobalStateType, AntDesignGlobalEventNames>(ANT_DESIGN_GLOBAL_EVENT_PROP_MAP);

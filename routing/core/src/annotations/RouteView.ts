@@ -54,7 +54,7 @@ export interface RouteViewOptions {
     /**
      * 路由顺序 值越小 越靠前
      */
-    order?:number;
+    order?: number;
 
     /**
      * 是否精确匹配路径（pathname）
@@ -155,7 +155,7 @@ const RouteView: RouteViewType = <T = {}>(options?: RouteViewOptions & T): Funct
             ...options
         };
         return ROUTE_VIEW_ENHANCERS.reduceRight((previousValue, currentValue) => {
-            return currentValue(target, _o, /*name, descriptor*/);
+            return currentValue(previousValue, _o, /*name, descriptor*/);
         }, target);
     }
 };

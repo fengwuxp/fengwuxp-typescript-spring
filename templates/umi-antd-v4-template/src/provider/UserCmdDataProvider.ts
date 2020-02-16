@@ -5,7 +5,6 @@ import {LoginReq} from "@/feign/user/req/LoginReq";
 import {ANT_DESIGN_GLOBAL_EVENT_NAME} from "@/AntGlobalEventNames";
 
 
-
 @CmdDataProvider({
   eventName: ANT_DESIGN_GLOBAL_EVENT_NAME.GLOBAL_USER_LOGIN_EVENT
 })

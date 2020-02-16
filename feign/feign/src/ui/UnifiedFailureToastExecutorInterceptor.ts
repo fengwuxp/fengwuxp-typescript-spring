@@ -17,10 +17,10 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
     // jump authentication view
     protected toAuthenticationViewHandle: Function;
 
-    constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle?: Function) {
+    constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle: Function = function () {
+    }) {
         this.unifiedFailureToast = unifiedFailureToast;
-        this.toAuthenticationViewHandle = toAuthenticationViewHandle || function () {
-        };
+        this.toAuthenticationViewHandle = toAuthenticationViewHandle;
     }
 
 
@@ -29,8 +29,8 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
             return response;
         }
         if (response.statusCode === HttpStatus.UNAUTHORIZED) {
-            UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = true;
             if (!UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW) {
+                UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = true;
                 this.toAuthenticationViewHandle();
                 setTimeout(() => {
                     UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = false

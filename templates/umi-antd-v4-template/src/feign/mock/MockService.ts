@@ -1,7 +1,7 @@
 import {Feign, FeignRequestOptions, GetMapping} from 'fengwuxp-typescript-feign';
 
 import {PageInfo} from 'oak-common';
-import {DemoItem} from '../../../mock/dmeo_table';
+import {DemoItem} from '../../../mock/model/DemoItem';
 
 /**
  * 类：例子服务

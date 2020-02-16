@@ -26,6 +26,9 @@ import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-brows
 import {message} from 'antd';
 import {AppStorage} from '@/BrowserAppStorage';
 import UserService from "@/feign/user/UserService";
+import {OakApiSignatureStrategy} from "oak-common";
+import {removeLoginUser} from "@/SessionManager";
+import AppRouter from './AppRouter';
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -64,9 +67,17 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
 
 
 class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
-  public defaultProduce = () => HttpMediaType.FORM_DATA
 
-  public httpAdapter = () => new BrowserHttpAdapter(20 * 1000)
+
+  public defaultProduce = () => HttpMediaType.FORM_DATA;
+
+  public httpAdapter = () => new BrowserHttpAdapter(20 * 1000);
+
+
+  public apiSignatureStrategy = () => {
+
+    return new OakApiSignatureStrategy("app", "2aecdd9db7d816462e2232632c90f8fa", "web");
+  };
 
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
@@ -96,11 +107,24 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
     ));
 
     // 统一数据转换，错误提示
-    interceptorRegistry.addInterceptor(new UnifiedFailureToastExecutorInterceptor((response: HttpResponse | string) => {
-      console.log('response', response)
-      message.info(response)
-    }))
-  }
+    interceptorRegistry.addInterceptor(new UnifiedFailureToastExecutorInterceptor(
+      (response: HttpResponse | string) => {
+        console.log('response', response);
+        let text = response;
+        if (typeof response === "object") {
+          const data = response.data;
+          if (data != null) {
+            text = data.message;
+          }
+        }
+        message.error(text)
+      },
+      () => {
+        console.log("==to login=>")
+        removeLoginUser();
+        AppRouter.login();
+      }))
+  };
 
   public feignUIToast = () => (text: string) => {
     message.info(text)
