@@ -30,6 +30,7 @@ import {OakApiSignatureStrategy} from "oak-common";
 import {removeLoginUser} from "@/SessionManager";
 import AppRouter from './AppRouter';
 import {API_ADDRESS, APP_ID, APP_SECRET} from "@/env/EnvVariableConfiguration";
+import {HttpStatus} from "../../../feign/feign/src";
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -113,9 +114,13 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
         console.log('response', response);
         let text = response;
         if (typeof response === "object") {
-          const data = response.data;
-          if (data != null) {
-            text = data.message;
+          if (response.statusCode === HttpStatus.GATEWAY_TIMEOUT) {
+            text = response.statusText;
+          } else {
+            const data = response.data;
+            if (data != null) {
+              text = data.message;
+            }
           }
         }
         message.error(text)

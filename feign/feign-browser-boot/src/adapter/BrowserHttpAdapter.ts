@@ -7,7 +7,7 @@ import {
     HttpMethod,
     HttpResponse,
     mediaTypeIsEq,
-    ResolveHttpResponse
+    ResolveHttpResponse,
 } from "fengwuxp-typescript-feign";
 import {BrowserHttpRequest} from './BrowserHttpRequest';
 
@@ -162,19 +162,30 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      */
     private parse = (response: Response): Promise<any> => {
 
-        if (!response.ok) {
-            return Promise.reject(response);
-        }
 
         const {consumes, getHeaderByName} = this;
 
         const headers = response.headers;
-        // response.addHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length");
-        // response.addHeader("Access-Control-Expose-Headers","Content-Type,Content-Length");
 
-        if (parseInt(getHeaderByName(headers, contentLengthName)) === 0) {
-            return Promise.resolve();
+        // Transfer-Encoding：chunked 情况下没有Content-length请求头
+        if (!this.hasTransferEncoding(headers)) {
+
+            /**
+             *  在跨域的情况下需要加以下响应的请求头到，不然无法读取到content length
+             *  response.addHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length");
+             *  response.addHeader("Access-Control-Expose-Headers","Content-Type,Content-Length");
+             */
+            const contentLength = parseInt(getHeaderByName(headers, contentLengthName));
+            if (contentLength === 0 || Object.is(contentLength, NaN)) {
+                if (response.ok) {
+                    return Promise.resolve();
+                } else {
+                    return Promise.reject();
+                }
+            }
         }
+
+
         const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
 
         if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
@@ -220,5 +231,15 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     private getHeaderByName = (headers: Headers, name: string) => {
 
         return headers.get(name) || headers.get(name.toLowerCase());
+    };
+
+    /**
+     * http Transfer-Encoding
+     * @param headers
+     */
+    private hasTransferEncoding = (headers: Headers) => {
+        const name = 'Transfer-Encoding';
+        const value = headers.get(name) || headers.get(name.toLowerCase());
+        return value === "chunked";
     }
 }

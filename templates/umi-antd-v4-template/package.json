@@ -23,7 +23,7 @@
     "@ant-design/pro-layout": "4.10.11-rc.6",
     "@ant-design/pro-table": "^2.0.5",
     "@uform/antd": "2.0.0",
-    "antd": "^4.0.0-rc.4",
+    "antd": "4.0.0-rc.4",
     "feign-boot-browser-stater": "^1.0.0",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-browser-router": "^1.0.0",

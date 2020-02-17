@@ -39,11 +39,11 @@
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
     "fetch-detector": "^1.0.1",
     "fetch-ie8": "^1.5.0",
     "file-saver": "^2.0.2",
-    "isomorphic-fetch": "^2.2.1"
+    "isomorphic-fetch": "^2.2.1",
+    "typescript": "^3.7.2"
   },
   "dependencies": {
     "feign-boot-stater": "^1.0.0",

@@ -35,41 +35,48 @@ const columns: ProColumns[] = [
     title: "ID",
     dataIndex: "id",
     copyable: true,
+    align: "center",
     hideInForm: true
   },
   {
     title: "姓名",
     dataIndex: "name",
+    align: "center",
     copyable: true
   },
   {
     title: "年龄",
-    dataIndex: "age"
+    dataIndex: "age",
+    align: "center",
   },
   {
     title: "头像",
     dataIndex: "avatarUrl",
     ellipsis: true,
     width: 100,
-    hideInForm: true
+    hideInForm: true,
+    align: "center",
   },
   {
     title: "余额",
     dataIndex: "money",
     valueType: "money",
     hideInForm: true,
+    align: "center",
   },
   {
     title: "生日",
     key: "birthday",
     dataIndex: "birthday",
-    valueType: "date"
+    valueType: "date",
+    align: "center",
   },
   {
     title: "星期",
     key: "week",
     dataIndex: "week",
-    valueEnum: weeks
+    valueEnum: weeks,
+    align: "center",
   },
   {
     title: "是否启用",
@@ -78,7 +85,8 @@ const columns: ProColumns[] = [
     render: (text, record: ExampleEntityInfo, index: number, action: UseFetchDataAction<RequestData<ExampleEntityInfo>>) => {
 
       return <Switch defaultChecked={text as boolean}/>
-    }
+    },
+    align: "center",
   },
   {
     title: "操作",
@@ -102,7 +110,8 @@ const columns: ProColumns[] = [
       >
         删除
       </a>,
-    ]
+    ],
+    // align: "center",
   }
 ];
 
@@ -153,7 +162,7 @@ const ExampleListView = (props: ExampleListViewProps) => {
         className="App"
         columns={columns}
         request={getRequestHandle(total, setTotal)}
-        rowKey="key"
+        rowKey="id"
         params={{name: queryName}}
         toolBarRender={(action, rows) => [
           <Input.Search
