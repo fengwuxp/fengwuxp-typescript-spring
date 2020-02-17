@@ -76,8 +76,8 @@ const routes: IRoute[] =[
                                             {
                                               name: '标题',
                                               
-                                              path: '/example/crate_example',
-                                              component: './example/CrateExampleView',
+                                              path: '/example/create',
+                                              component: './example/CreateExampleView',
                                             },
                                     
                                    ]

@@ -77,9 +77,9 @@ const columns: ProColumns[] = [
     }
   },
   {
-    title: "option",
+    title: "操作",
     valueType: "option",
-    dataIndex: "id",
+    dataIndex: "option",
     render: (text, row, index, action) => [
       <a onClick={() => {
 
