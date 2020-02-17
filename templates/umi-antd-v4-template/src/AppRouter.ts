@@ -12,7 +12,7 @@ import {
 import {LoginViewProps} from '@/pages/user/LoginView';
 import history from '@/pages/.umi/history'
 import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
-import AppRouter from "../.spring/SpringUmiAppRouter";
+import SpringUmiAppRouter from "../.spring/SpringUmiAppRouter";
 
 
 // 判断是否需要登录
@@ -38,7 +38,7 @@ export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: st
   methodNameCommandResolver: () => upperCaseToLeftIncline,
   pathPrefix: '/',
 })
-class AntdAppRouter extends AppRouter {
+class AntdAppRouter extends SpringUmiAppRouter {
 
   @RouteMapping('/user/login')
   login: RouterCommandMethod<LoginViewProps>;

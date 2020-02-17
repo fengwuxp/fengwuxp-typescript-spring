@@ -13,11 +13,22 @@ import {ExampleEntityInfo} from "@/feign/services/simple/info/ExampleEntityInfo"
 import ExampleService from "@/feign/example/services/ExampleService";
 import {QueryExampleEntityReq} from "@/feign/services/simple/req/QueryExampleEntityReq";
 import {QueryType} from "oak-common";
+import {Week} from "@/feign/enums/Week";
 
 
 export interface ExampleListViewProps {
 
 }
+
+
+const weeks: any = Object.keys(Week).map((key) => {
+  const item = Week[key];
+  return {
+    [key]: {
+      text: item.desc
+    }
+  }
+});
 
 const columns: ProColumns[] = [
   {
@@ -46,7 +57,7 @@ const columns: ProColumns[] = [
     title: "余额",
     dataIndex: "money",
     valueType: "money",
-    hideInForm: true
+    hideInForm: true,
   },
   {
     title: "生日",
@@ -58,14 +69,7 @@ const columns: ProColumns[] = [
     title: "星期",
     key: "week",
     dataIndex: "week",
-    valueEnum: {
-      "星期一": {
-        text: "周一"
-      },
-      "星期二": {
-        text: "周二"
-      }
-    }
+    valueEnum: weeks
   },
   {
     title: "是否启用",

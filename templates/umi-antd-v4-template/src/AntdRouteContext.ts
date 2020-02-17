@@ -1,7 +1,8 @@
-import { RouteContext } from 'fengwuxp-routing-core';
+import {RouteContext} from 'fengwuxp-routing-core';
+import {LoginUserInfo} from "@/feign/user/info/LoginUserInfo";
 
 
 export interface AntdRouteContext extends RouteContext {
 
-  loginUser: any;
+  loginUser: LoginUserInfo;
 }

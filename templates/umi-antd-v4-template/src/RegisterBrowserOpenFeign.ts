@@ -29,6 +29,7 @@ import UserService from "@/feign/user/UserService";
 import {OakApiSignatureStrategy} from "oak-common";
 import {removeLoginUser} from "@/SessionManager";
 import AppRouter from './AppRouter';
+import {API_ADDRESS, APP_ID, APP_SECRET} from "@/env/EnvVariableConfiguration";
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
@@ -76,14 +77,14 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
 
   public apiSignatureStrategy = () => {
 
-    return new OakApiSignatureStrategy("app", "2aecdd9db7d816462e2232632c90f8fa", "web");
+    return new OakApiSignatureStrategy(APP_ID, APP_SECRET, "web");
   };
 
   public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
     interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
       new BrowserNetworkStatusListener(),
       new SimpleNetworkStatusListener()));
-    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(process.env.API_ADDRESS));
+    interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(API_ADDRESS));
     interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
       .excludePathPatterns("/login", "/api/mock/**")
   }
@@ -122,7 +123,7 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
       () => {
         console.log("==to login=>")
         removeLoginUser();
-        AppRouter.login();
+        AppRouter.login()
       }))
   };
 

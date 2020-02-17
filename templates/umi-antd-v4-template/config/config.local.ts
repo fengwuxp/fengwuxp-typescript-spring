@@ -8,6 +8,10 @@ export default {
   ...config,
   define: {
     "process.env.API_ADDRESS": "/api",
+    "process.env.APP_ID": "app",
+    "process.env.APP_SECRET": "2aecdd9db7d816462e2232632c90f8fa",
+    // 文件上传地址
+    "process.env.UPLOAD_FILE_URL": "http://a.b.c.com",
   },
   proxy: {
     '/api': {
