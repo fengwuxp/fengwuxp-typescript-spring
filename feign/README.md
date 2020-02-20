@@ -21,7 +21,7 @@
   feign starter的依赖，按照不同的js环境：
     nodejs: "feign-boot-nodejs-stater":"^1.0.0"                   yarn add feign-boot-nodejs-stater or npm i feign-boot-nodejs-stater
     browser(浏览器): "feign-boot-browser-stater":"^1.0.0"          yarn add feign-boot-browser-stater or npm i feign-boot-browser-stater
-    react-native: "feign-boot-react-native-stater":"^1.0.0"                    yarn add feign-boot-react-native-stater or npm i feign-boot-react-native-stater
+    react-native: "feign-boot-react-native-stater":"^1.0.0"        yarn add feign-boot-react-native-stater or npm i feign-boot-react-native-stater
 
   由于生成的sdk源文件是ts,所以需要增加ts-loader，可以使用 awesome-typescript-loader或ts-loader  
   webpack配置：
