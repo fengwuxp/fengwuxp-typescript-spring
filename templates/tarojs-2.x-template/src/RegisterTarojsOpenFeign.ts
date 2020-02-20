@@ -30,7 +30,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
     public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
         headers.token = authorization.authorization;
         return headers
-    }
+    };
 
     /**
      * 获取本地存储的token

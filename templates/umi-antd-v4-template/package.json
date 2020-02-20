@@ -23,7 +23,7 @@
     "@ant-design/pro-layout": "4.10.11-rc.6",
     "@ant-design/pro-table": "^2.0.5",
     "@uform/antd": "2.0.0",
-    "antd": "4.0.0-rc.4",
+    "antd": "^4.0.0-rc.4",
     "feign-boot-browser-stater": "^1.0.0",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-browser-router": "^1.0.0",
@@ -43,7 +43,8 @@
     "fengwuxp-typescript-feign": "^1.0.0",
     "fengwuxp-webpack-4.x-dependency": "^1.0.0",
     "oak-common": "^1.0.0",
-    "request": "^2.88.0"
+    "request": "^2.88.0",
+    "styled-icons": "^9.4.0"
   },
   "devDependencies": {
     "@types/react-test-renderer": "^16.0.3",

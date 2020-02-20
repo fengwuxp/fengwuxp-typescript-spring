@@ -14,6 +14,7 @@ import {
   SimpleNetworkStatusListener,
   stringDateConverter,
   UnifiedFailureToastExecutorInterceptor,
+  HttpStatus
 } from 'fengwuxp-typescript-feign'
 import {
   ClientHttpInterceptorRegistry,
@@ -30,15 +31,27 @@ import {OakApiSignatureStrategy} from "oak-common";
 import {removeLoginUser} from "@/SessionManager";
 import AppRouter from './AppRouter';
 import {API_ADDRESS, APP_ID, APP_SECRET} from "@/env/EnvVariableConfiguration";
-import {HttpStatus} from "../../../feign/feign/src";
 
+
+/**
+ * app接口鉴权策略
+ */
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
+  /**
+   * 添加鉴权请求头
+   * @param authorization    本地缓存的鉴权对象 {@see AppAuthenticationStrategy#getAuthorization}
+   * @param headers          请求头
+   */
   public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
     headers.Authorization = authorization.authorization;
     return headers
   };
 
+  /**
+   * 获取本地缓存的鉴权对象
+   * @param req
+   */
   public getAuthorization = (req: Readonly<HttpRequest>) => {
     console.log('获取token', req);
     return AppStorage.getUserInfo().then(userInfo => ({
@@ -50,9 +63,13 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
     }))
   };
 
+  /**
+   * token要过期提前刷新token
+   * @param authorization      本地缓存的鉴权对象 {@see AppAuthenticationStrategy#getAuthorization}
+   * @param req                触发刷新token的请求的请求参数
+   */
   public refreshAuthorization = (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
     authorization.authorization = "11111111";
-    console.log("refresh token", authorization, req);
 
     return UserService.refreshToken({}, {
       headers: this.appendAuthorizationHeader(authorization, req.headers || {})
