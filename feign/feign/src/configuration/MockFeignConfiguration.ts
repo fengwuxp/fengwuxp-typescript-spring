@@ -20,6 +20,7 @@ import AuthenticationClientHttpRequestInterceptor, {AuthenticationToken} from ".
 import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
 import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
 import {RequestURLResolver} from '../resolve/url/RequestURLResolver';
+import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -31,10 +32,14 @@ let refreshTokenCount = 0;
  * mock feign configuration
  */
 export class MockFeignConfiguration implements FeignConfiguration {
+
     getApiSignatureStrategy: () => ApiSignatureStrategy;
+
     getDefaultFeignRequestContextOptions: () => FeignRequestContextOptions;
+
     getRequestHeaderResolver: () => RequestHeaderResolver;
-    getRequestURLResolver: () => RequestURLResolver;
+
+    getRequestURLResolver= () => simpleRequestURLResolver
 
     private baseUrl: string = "http://test.ab.com/api/";
 
@@ -154,6 +159,8 @@ export class MockFeignConfiguration implements FeignConfiguration {
             })
         ]
     };
+
+
 
     getFeignUIToast = () => {
         return (message: string) => {

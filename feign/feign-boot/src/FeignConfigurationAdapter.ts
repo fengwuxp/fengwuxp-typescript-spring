@@ -1,4 +1,11 @@
-import {ApiSignatureStrategy, HttpAdapter, HttpMediaType, HttpRequest,FeignUIToast} from "fengwuxp-typescript-feign";
+import {
+    ApiSignatureStrategy,
+    HttpAdapter,
+    HttpMediaType,
+    HttpRequest,
+    FeignUIToast,
+    RequestURLResolver
+} from "fengwuxp-typescript-feign";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
 
@@ -37,6 +44,14 @@ export interface FeignConfigurationAdapter {
      * api signature
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
+
+    /**
+     * url 解析策略
+     * default restfulRequestURLResolver
+     *
+     * @see restfulRequestURLResolver
+     */
+    requestURLResolver?: () => RequestURLResolver;
 
     /**
      * feign ui toast

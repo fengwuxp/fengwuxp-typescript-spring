@@ -11,7 +11,8 @@ import {
     ProgressBarOptions,
     RoutingClientHttpRequestInterceptor,
     SimpleNetworkStatusListener,
-    stringDateConverter
+    stringDateConverter,
+    simpleRequestURLResolver
 } from 'fengwuxp-typescript-feign'
 import {
     ClientHttpInterceptorRegistry,
@@ -74,11 +75,11 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
 
     public defaultProduce = () => {
         return HttpMediaType.APPLICATION_JSON_UTF8
-    }
+    };
 
     public httpAdapter = () => {
         return new TarojsHttpAdaptor(10 * 1000)
-    }
+    };
 
     public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
         interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
@@ -98,7 +99,7 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
                     title: ""
                 })
             }
-        }))
+        }));
 
         // codec
         interceptorRegistry.addInterceptor(new CodecFeignClientExecutorInterceptor(
@@ -115,6 +116,8 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
                 title: message
             })
 
+        }, () => {
+            // 服务端返回需要登录的状态时回调这里
         }))
     };
     apiSignatureStrategy = () => {
@@ -122,6 +125,9 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
         const OAK = process.env.OAK;
         return new OakApiSignatureStrategy(OAK.clientId, OAK.clientSecret, "minapp");
     }
+
+    // 使用简单的url解析器
+    requestURLResolver = () => simpleRequestURLResolver;
 
 
     public feignUIToast = () => {

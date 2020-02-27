@@ -41,9 +41,12 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
             );
         };
 
+
         getRestTemplate = () => {
             return new RestTemplate(this.getHttpClient());
-        }
+        };
+
+        getRequestURLResolver = feignConfigurationAdapter.requestURLResolver;
     }
 
     return new A()

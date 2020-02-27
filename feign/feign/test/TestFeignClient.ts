@@ -26,7 +26,7 @@ export default class TestFeignClient {
 
 
     @GetMapping({
-        value: "/example"
+        // value: "/example"
     })
     getExample: (request: {
         id: number,

@@ -4,7 +4,7 @@ import {FeignMemberOptions} from "../../annotations/Feign";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
 
 /**
- * restful requet url resolver
+ * restful request url resolver
  * @param apiService
  * @param methodName
  */
