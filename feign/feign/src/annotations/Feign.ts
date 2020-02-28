@@ -115,7 +115,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
              * @param serviceMethod  服务方法名称
              */
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
-                return Reflect.getMetadata(FEIGN_CLINE_META_KEY, clazz, serviceMethod);
+                return getFeignClientMethodConfig(clazz, serviceMethod);
             };
 
 
@@ -123,3 +123,11 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
     }
 };
 
+/**
+ *
+ * @param clazz          feign class
+ * @param serviceMethodName  方法名称
+ */
+export const getFeignClientMethodConfig = (clazz, serviceMethodName: string) => {
+    return Reflect.getMetadata(FEIGN_CLINE_META_KEY, clazz, serviceMethodName);
+};

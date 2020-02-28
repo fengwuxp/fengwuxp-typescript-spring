@@ -41,10 +41,11 @@ export interface BaseRequestMappingOptions {
     produces?: string[];
 
     /**
-     * 需要鉴权
-     * 默认：false
+     * 强制指定接口需要认证状态，如果未指定，则按照默认的策略进行处理
+     *
+     * @see AuthenticationClientHttpRequestInterceptor
      */
-    needAuth?: boolean;
+    needCertification?: boolean;
 
 }
 
@@ -88,7 +89,6 @@ export function generateMapping<T extends BaseRequestMappingOptions>(method?: Ht
             defaultGenerateAnnotationMethodConfig(target, name, {
                 requestMapping
             });
-
             return target;
 
         };

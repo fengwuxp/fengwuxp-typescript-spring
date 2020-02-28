@@ -7,6 +7,7 @@ import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} fro
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
+import {HttpStatus} from "../constant/http/HttpStatus";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
 
 /**
@@ -50,7 +51,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
                 //  mock error response
                 return Promise.reject({
                     ok: false,
-                    statusCode: 500,
+                    statusCode: HttpStatus.INTERNAL_SERVER_ERROR,
                     statusText: null,
                     data: e
                 });

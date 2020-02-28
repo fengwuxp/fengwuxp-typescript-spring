@@ -27,6 +27,7 @@ export default class TestFeignClient {
 
     @GetMapping({
         // value: "/example"
+        needCertification: true
     })
     getExample: (request: {
         id: number,

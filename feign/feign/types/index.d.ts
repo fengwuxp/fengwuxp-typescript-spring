@@ -116,10 +116,11 @@ interface BaseRequestMappingOptions {
      */
     produces?: string[];
     /**
-     * 需要鉴权
-     * 默认：false
+     * 强制指定接口需要认证状态，如果未指定，则按照默认的策略进行处理
+     *
+     * @see AuthenticationClientHttpRequestInterceptor
      */
-    needAuth?: boolean;
+    needCertification?: boolean;
 }
 interface RequestMappingOptions extends BaseRequestMappingOptions {
     /**
@@ -586,16 +587,16 @@ interface FeignProxyClient extends FeignClient {
     /**
      * feign proxy options
      */
-    readonly feignOptions: () => FeignMemberOptions;
+    readonly feignOptions: () => Readonly<FeignMemberOptions>;
     /**
      * get feign configuration
      */
-    readonly feignConfiguration: () => FeignConfiguration;
+    readonly feignConfiguration: () => Readonly<FeignConfiguration>;
     /**
      * 获取获取接口方法的配置
      * @param serviceMethod  服务方法名称
      */
-    getFeignMethodConfig: (serviceMethod: string) => FeignClientMethodConfig;
+    getFeignMethodConfig: (serviceMethod: string) => Readonly<FeignClientMethodConfig>;
 }
 
 /**
@@ -961,10 +962,6 @@ declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
     interceptor: (req: T) => Promise<T>;
 }
 
-interface AuthenticationToken {
-    authorization: string;
-    expireDate: number;
-}
 /**
  * authentication strategy
  */
@@ -978,6 +975,11 @@ interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationT
     refreshAuthorization: (authorization: T, req: Readonly<HttpRequest>) => Promise<T> | T;
     appendAuthorizationHeader: (authorization: T, headers: Record<string, string>) => Record<string, string>;
 }
+interface AuthenticationToken {
+    authorization: string;
+    expireDate: number;
+}
+
 /**
  *  Authentication client http request interceptor
  *
@@ -1431,7 +1433,7 @@ declare class CommonResolveHttpResponse implements ResolveHttpResponse<Response>
 declare const simpleRequestHeaderResolver: RequestHeaderResolver;
 
 /**
- * restful requet url resolver
+ * restful request url resolver
  * @param apiService
  * @param methodName
  */

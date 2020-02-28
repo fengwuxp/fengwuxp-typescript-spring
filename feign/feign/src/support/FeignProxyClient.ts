@@ -17,18 +17,18 @@ export interface FeignProxyClient extends FeignClient {
     /**
      * feign proxy options
      */
-    readonly feignOptions: () => FeignMemberOptions;
+    readonly feignOptions: () => Readonly<FeignMemberOptions>;
 
     /**
      * get feign configuration
      */
-    readonly feignConfiguration: () => FeignConfiguration;
+    readonly feignConfiguration: () => Readonly<FeignConfiguration>;
 
     /**
      * 获取获取接口方法的配置
      * @param serviceMethod  服务方法名称
      */
-    getFeignMethodConfig: (serviceMethod: string) => FeignClientMethodConfig;
+    getFeignMethodConfig: (serviceMethod: string) => Readonly<FeignClientMethodConfig>;
 
     // setFeignMethodConfig: (serviceMethod: string, config: FeignClientMethodConfig) => FeignClientMethodConfig;
 

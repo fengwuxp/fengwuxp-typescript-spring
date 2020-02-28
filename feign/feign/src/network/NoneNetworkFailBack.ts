@@ -1,5 +1,6 @@
 import {HttpRequest} from "../client/HttpRequest";
 import {HttpResponse} from "../client/HttpResponse";
+import {HttpStatus} from "../constant/http/HttpStatus";
 
 
 /**
@@ -23,14 +24,14 @@ export interface NoneNetworkFailBack<T extends HttpRequest = HttpRequest> {
  * You can use this value to indicate network errors in global error prompts
  * or use FeignUIToast {@see ../ui/RequestToast}  {@see ./DefaultNetworkStatusListener}
  */
-export const MOCK_NETWORK_FAILURE_TEXT="network fail";
+export const MOCK_NETWORK_FAILURE_TEXT = "network fail";
 
 /**
  * mock in network failure response
  */
 export const MOCK_NETWORK_FAILURE_RESPONSE: HttpResponse = {
     ok: false,
-    statusCode: 504,
+    statusCode: HttpStatus.GATEWAY_TIMEOUT,
     statusText: MOCK_NETWORK_FAILURE_TEXT,
     data: undefined
 };

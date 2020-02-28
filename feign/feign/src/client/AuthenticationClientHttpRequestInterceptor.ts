@@ -1,32 +1,16 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
+import {getMappingOptions} from "../context/FiegnMappingHolder";
+import {HttpStatus} from "../constant/http/HttpStatus";
+import {AuthenticationStrategy, AuthenticationToken} from "./AuthenticationStrategy";
+import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 
-export interface AuthenticationToken {
 
-    authorization: string;
-
-    expireDate: number;
-
-}
-
-/**
- * authentication strategy
- */
-export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
-
-    /**
-     * get authorization header names
-     * default :['Authorization']
-     */
-    getAuthorizationHeaderNames?: () => Array<string>;
-
-    getAuthorization: (req: Readonly<HttpRequest>) => Promise<T> | T;
-
-    refreshAuthorization: (authorization: T, req: Readonly<HttpRequest>) => Promise<T> | T;
-
-    appendAuthorizationHeader: (authorization: T, headers: Record<string, string>) => Record<string, string>;
-
-}
+const UNAUTHORIZED_RESPONSE = {
+    ok: false,
+    statusCode: HttpStatus.UNAUTHORIZED,
+    statusText: null,
+};
 
 /**
  *  Authentication client http request interceptor
@@ -68,7 +52,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 aheadOfTimes?: number,
                 looseMode: boolean = true,
                 blockingRefreshAuthorization: boolean = true) {
-        this.authenticationStrategy = authenticationStrategy;
+        this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
         this.blockingRefreshAuthorization = blockingRefreshAuthorization;
         this.looseMode = looseMode
@@ -76,20 +60,36 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
+        let forceCertification = !this.looseMode;
+        const mappingOptions = getMappingOptions(req.url, req.method);
+        if (mappingOptions != null) {
+            if (mappingOptions.needCertification === false) {
+                // none certification
+                return req;
+            }
+            if (mappingOptions.needCertification === true) {
+                // force none certification
+                forceCertification = true;
+            }
+        }
+
         if (!this.needAppendAuthorizationHeader(req.headers)) {
             // Prevent recursion on refresh
             return req;
         }
 
-        const {aheadOfTimes, looseMode, blockingRefreshAuthorization, authenticationStrategy} = this;
+        const {aheadOfTimes, blockingRefreshAuthorization, authenticationStrategy} = this;
         let authorization: AuthenticationToken;
         try {
             authorization = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
-            if (looseMode) {
+            if (!forceCertification) {
                 return req;
             }
-            return Promise.reject(e);
+            return Promise.reject({
+                ...UNAUTHORIZED_RESPONSE,
+                data: e
+            });
         }
         if (authorization == null) {
             return Promise.reject('authorization is null');
@@ -106,11 +106,14 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             try {
                 authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
             } catch (e) {
-                if (looseMode) {
+                if (!forceCertification) {
                     return req;
                 }
                 // refresh authorization error
-                return Promise.reject(e);
+                return Promise.reject({
+                    ...UNAUTHORIZED_RESPONSE,
+                    data: e
+                });
             }
 
         } else {

@@ -5,7 +5,7 @@ import {
     HttpAdapter,
     HttpMediaType,
     HttpMethod,
-    HttpResponse,
+    HttpResponse, HttpStatus,
     mediaTypeIsEq,
     ResolveHttpResponse,
 } from "fengwuxp-typescript-feign";
@@ -67,7 +67,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
                     //丢弃请求
                     console.debug("web fetch adapter request timeout");
                     reject({
-                        status: 502,
+                        status: HttpStatus.GATEWAY_TIMEOUT,
                         headers: null,
                         data: null,
                         ok: false,

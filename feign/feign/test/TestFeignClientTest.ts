@@ -67,7 +67,7 @@ describe("test feign client", () => {
         } catch (e) {
             logger.error(e)
         }
-    }, 20 * 1000);
+    }, 40 * 1000);
 
     test("test retry", async () => {
 

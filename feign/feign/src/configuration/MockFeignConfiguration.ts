@@ -16,11 +16,11 @@ import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor"
 
 import * as log4js from "log4js";
 import UnifiedFailureToastExecutorInterceptor from "../ui/UnifiedFailureToastExecutorInterceptor";
-import AuthenticationClientHttpRequestInterceptor, {AuthenticationToken} from "../client/AuthenticationClientHttpRequestInterceptor";
+import AuthenticationClientHttpRequestInterceptor from "../client/AuthenticationClientHttpRequestInterceptor";
 import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
 import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
-import {RequestURLResolver} from '../resolve/url/RequestURLResolver';
 import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
+import {AuthenticationToken} from "../client/AuthenticationStrategy";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -39,7 +39,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getRequestHeaderResolver: () => RequestHeaderResolver;
 
-    getRequestURLResolver= () => simpleRequestURLResolver
+    getRequestURLResolver = () => simpleRequestURLResolver
 
     private baseUrl: string = "http://test.ab.com/api/";
 
@@ -159,7 +159,6 @@ export class MockFeignConfiguration implements FeignConfiguration {
             })
         ]
     };
-
 
 
     getFeignUIToast = () => {

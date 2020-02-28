@@ -1,6 +1,7 @@
 import {ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {HttpRequest} from "./HttpRequest";
 import {defaultApiModuleName} from "../constant/FeignConstVar";
+import {appendRouteMapping} from "../context/FiegnMappingHolder";
 
 
 /**
@@ -21,6 +22,7 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
             defaultMap[defaultApiModuleName] = routeMapping;
             routeMapping = defaultMap;
         }
+        appendRouteMapping(routeMapping);
         this.routeMapping = routeMapping;
     }
 
@@ -31,7 +33,7 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
 
 }
 
-const routing = (url: string, routeMapping: Record<string, string>) => {
+export const routing = (url: string, routeMapping: Record<string, string>) => {
     if (/^(http|https)/.test(url)) {
         //uri
         return normalizeUrl(url);

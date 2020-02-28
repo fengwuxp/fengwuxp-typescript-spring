@@ -15,6 +15,7 @@ import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
+import {setMappingOptions} from "./context/FiegnMappingHolder";
 
 /**
  * default feign client executor
@@ -86,7 +87,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //requestMapping
         const {requestMapping, signature, retryOptions, validateSchemaOptions} = apiService.getFeignMethodConfig(methodName);
         if (validateSchemaOptions != null) {
-            try { // request data validate
+            try {
+                // request data validate
                 await ClientRequestDataValidatorHolder.validate(originalParameter, validateSchemaOptions);
             } catch (e) {
                 // validate error
@@ -98,11 +100,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             ...args[1],
             ...defaultRequestContextOptions
         };
+
         // resolver request body，filter none value in request body or copy value
         const requestBody = feignRequestOptions.filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
         //resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
-
 
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
@@ -124,6 +126,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (feignRequestOptions.responseExtractor == null) {
             // get response extractor
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
+        }
+
+        if (requestMapping.needCertification != null) {
+            // set mapping options
+            setMappingOptions(requestURL, requestMapping);
         }
 
         // pre handle
