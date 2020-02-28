@@ -33,6 +33,8 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
 
 }
 
+const ROUTE_CACHE: Map<string, string> = new Map<string, string>();
+
 export const routing = (url: string, routeMapping: Record<string, string>) => {
     if (/^(http|https)/.test(url)) {
         //uri
@@ -41,17 +43,21 @@ export const routing = (url: string, routeMapping: Record<string, string>) => {
     if (!/^(@)/.test(url)) {
         throw  new Error(`illegal routing url -> ${url}`);
     }
-
+    let realUrl = ROUTE_CACHE.get(url);
+    if (realUrl != null) {
+        return realUrl;
+    }
     //抓取api模块名称并且进行替换
     const searchValue = /^@(.+?)\//;
-
-    return normalizeUrl(url.replace(searchValue, ($1, $2) => {
+    realUrl = normalizeUrl(url.replace(searchValue, ($1, $2) => {
         const domain = routeMapping[$2];
         if (domain == null) {
             return "";
         }
         return domain.endsWith("/") ? domain : `${domain}/`;
     }));
+    ROUTE_CACHE.set(url, realUrl);
+    return realUrl;
 };
 
 /**
