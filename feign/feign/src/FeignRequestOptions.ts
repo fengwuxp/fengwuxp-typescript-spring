@@ -146,6 +146,11 @@ export interface DataOptions {
 
 export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 
+    /**
+     * external request headers
+     */
+    // headers?: Record<string, string>;
+
 }
 
 

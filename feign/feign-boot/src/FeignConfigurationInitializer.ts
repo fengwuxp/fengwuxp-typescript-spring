@@ -47,6 +47,7 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
         };
 
         getRequestURLResolver = feignConfigurationAdapter.requestURLResolver;
+        getDefaultHttpHeaders = feignConfigurationAdapter.getDefaultHttpHeaders;
     }
 
     return new A()

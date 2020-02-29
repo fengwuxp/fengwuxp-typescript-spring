@@ -43,6 +43,11 @@ export interface FeignConfiguration {
      */
     getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
 
+    /**
+     * get default request headers
+     */
+    getDefaultHttpHeaders?: () => Record<string, string>
+
     // /**
     //  *get feign UI toast
     //  */

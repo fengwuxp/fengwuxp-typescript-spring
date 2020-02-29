@@ -10,4 +10,4 @@ export interface InterceptorRegistry {
 
 export const getInterceptors = (interceptorRegistrations: InterceptorRegistration[]) => {
     return interceptorRegistrations.map(item => item.getInterceptor());
-}
+};

@@ -842,6 +842,10 @@ interface FeignConfiguration {
      * get default feign request context options
      */
     getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
+    /**
+     * get default request headers
+     */
+    getDefaultHttpHeaders?: () => Record<string, string>;
 }
 declare type FeignConfigurationConstructor = {
     new (...args: any[]): FeignConfiguration;
@@ -1678,6 +1682,7 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     protected restTemplate: RestOperations;
     protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
     protected defaultRequestContextOptions: FeignRequestContextOptions;
+    protected defaultHeaders: Record<string, string>;
     constructor(apiService: T);
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
     private preHandle;

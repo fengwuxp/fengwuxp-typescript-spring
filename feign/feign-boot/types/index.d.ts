@@ -88,6 +88,10 @@ interface FeignConfigurationAdapter {
      * feign ui toast
      */
     feignUIToast?: () => FeignUIToast;
+    /**
+     * get default request headers
+     */
+    getDefaultHttpHeaders?: () => Record<string, string>;
 }
 
 declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => void;

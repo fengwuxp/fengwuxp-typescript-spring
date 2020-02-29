@@ -58,4 +58,9 @@ export interface FeignConfigurationAdapter {
      */
     feignUIToast?: () => FeignUIToast;
 
+    /**
+     * get default request headers
+     */
+    getDefaultHttpHeaders?: () => Record<string, string>;
+
 }

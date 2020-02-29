@@ -165,7 +165,13 @@ export class MockFeignConfiguration implements FeignConfiguration {
         return (message: string) => {
             logger.info("--ui toast--->", message);
         }
-    }
+    };
+
+    getDefaultHttpHeaders = () => {
+        return {
+            "mock-key": "1122"
+        }
+    };
 
 
 }

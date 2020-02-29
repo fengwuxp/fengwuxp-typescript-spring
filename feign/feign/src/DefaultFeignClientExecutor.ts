@@ -42,6 +42,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
     // default request context options
     protected defaultRequestContextOptions: FeignRequestContextOptions;
 
+    // default request headers
+    protected defaultHeaders: Record<string, string>;
+
     constructor(apiService: T) {
         this.apiService = apiService;
         const configuration = apiService.feignConfiguration();
@@ -51,7 +54,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRequestHeaderResolver,
             getRequestURLResolver,
             getFeignClientExecutorInterceptors,
-            getDefaultFeignRequestContextOptions
+            getDefaultFeignRequestContextOptions,
+            getDefaultHttpHeaders
         } = configuration;
 
         this.restTemplate = getRestTemplate();
@@ -68,6 +72,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (getDefaultFeignRequestContextOptions) {
             this.defaultRequestContextOptions = getDefaultFeignRequestContextOptions();
         }
+
+        if (getDefaultHttpHeaders) {
+            this.defaultHeaders = getDefaultHttpHeaders();
+        }
     }
 
     invoke = async (methodName: string, ...args): Promise<any> => {
@@ -78,7 +86,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             apiService,
             requestURLResolver,
             requestHeaderResolver,
-            defaultRequestContextOptions
+            defaultRequestContextOptions,
+            defaultHeaders
         } = this;
 
         //original parameter
@@ -115,7 +124,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
         feignRequestOptions.queryParams = queryParams;
         feignRequestOptions.body = requestSupportRequestBody ? requestBody : null;
-        feignRequestOptions.headers = headers;
+        feignRequestOptions.headers = {
+            ...defaultHeaders,
+            ...headers
+        };
 
         if (apiSignatureStrategy != null) {
             // handle api signature
