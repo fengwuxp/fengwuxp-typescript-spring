@@ -27,6 +27,10 @@ import {OakUnifiedRespProcessInterceptor, OakApiSignatureStrategy} from "oak-com
 
 class AppAuthenticationStrategy implements AuthenticationStrategy {
 
+    getAuthorizationHeaderNames = () => {
+
+        return ['token']
+    };
 
     public appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
         headers.token = authorization.authorization;

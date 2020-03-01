@@ -60,6 +60,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
+        // need force certification
         let forceCertification = !this.looseMode;
         const mappingOptions = getMappingOptions(req.url, req.method);
         if (mappingOptions != null) {
