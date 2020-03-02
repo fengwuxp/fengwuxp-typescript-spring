@@ -5,8 +5,13 @@ import {
     HttpAdapter,
     HttpMediaType,
     HttpMethod,
-    HttpResponse, HttpStatus,
+    HttpResponse,
+    HttpStatus,
     mediaTypeIsEq,
+    responseIsJson,
+    responseIsText,
+    responseIsFile,
+    contentTransferEncodingName,
     ResolveHttpResponse,
 } from "fengwuxp-typescript-feign";
 import {BrowserHttpRequest} from './BrowserHttpRequest';
@@ -128,7 +133,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             mode
         } = request;
 
-        if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+        if (headers != null && mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type
             // @see {@link https://segmentfault.com/a/1190000010205162}
             delete headers[contentTypeName];
@@ -188,22 +193,28 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
 
         const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
 
-        if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
+        const responseHeaders = {
+            [contentTypeName]: responseMediaType
+        };
+        if (responseIsJson(responseHeaders)) {
 
             return this.parseJSON(response);
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.TEXT)) {
+        } else if (responseIsText(responseHeaders)) {
 
             return this.parseText(response);
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.HTML)) {
-
-            return this.parseText(response);
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_STREAM)) {
-
-            return this.paresBlob(response);
         } else {
-            const error = new Error(`not support： ${responseMediaType}`);
-            error['response'] = response;
-            throw error;
+            if (responseIsFile({
+                ...responseHeaders,
+                [contentTransferEncodingName]: getHeaderByName(headers, contentTransferEncodingName)
+            })) {
+                return this.paresArrayBuffer(response);
+            } else {
+                // const error = new Error(`not support： ${responseMediaType}`);
+                // error['response'] = response;
+                // throw error;
+                return Promise.resolve(response)
+            }
+
         }
     };
 
@@ -219,9 +230,9 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         return response.arrayBuffer();
     }
 
-    private paresBlob(response: Response): Promise<Blob> {
-        return response.blob();
-    }
+    // private paresBlob(response: Response): Promise<Blob> {
+    //     return response.blob();
+    // }
 
     // private paresFormData(response: Response): Promise<FormData> {
     //     return response.formData();

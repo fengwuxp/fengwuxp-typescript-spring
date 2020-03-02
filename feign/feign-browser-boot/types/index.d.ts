@@ -63,7 +63,6 @@ declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
     private parseJSON;
     private parseText;
     private paresArrayBuffer;
-    private paresBlob;
     private getHeaderByName;
     /**
      * http Transfer-Encoding

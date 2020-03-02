@@ -14,6 +14,11 @@ export const contentTypeName = 'Content-Type';
 export const contentLengthName = "Content-Length";
 
 /**
+ * http header content transfer encoding name
+ */
+export const contentTransferEncodingName = 'Content-Transfer-Encoding';
+
+/**
  * feign client metadata key
  */
 export const FEIGN_CLINE_META_KEY = "FEIGN";

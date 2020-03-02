@@ -42,6 +42,9 @@ function readFilDirList(projectPath: string) {
     });
 }
 
+const fixedVersion = '"version": "1.0.0"';
+const targetVersion = '"version": "1.0.1"';
+
 /**
  * 替换发布的仓库
  * @param packagePath
@@ -55,6 +58,7 @@ function replacePrivateRegistry(packagePath: string,
     const packageJsonFilePath = path.join(packagePath, "./package.json");
     let packageJson = fs.readFileSync(packageJsonFilePath, "utf-8");
     packageJson = packageJson.replace(mainRegistry, otherRegister);
+    packageJson = packageJson.replace(fixedVersion, targetVersion);
     fs.writeFileSync(packageJsonFilePath, packageJson);
 
     //发布模块
@@ -73,6 +77,7 @@ function replacePrivateRegistry(packagePath: string,
     console.log(`发布模块： ${npmPublishCommand}  cwd  ${packagePath}`);
 
     packageJson = packageJson.replace(otherRegister, mainRegistry);
+    packageJson = packageJson.replace(targetVersion, fixedVersion);
     fs.writeFileSync(packageJsonFilePath, packageJson);
 }
 

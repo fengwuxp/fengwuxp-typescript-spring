@@ -53,6 +53,7 @@ export {
     defaultApiModuleName,
     contentTypeName,
     contentLengthName,
+    contentTransferEncodingName,
     matchUrlPathVariable,
     FEIGN_CLINE_META_KEY,
     grabUrlPathVariable
@@ -99,7 +100,7 @@ export {
     default as FeignUIToastHolder, FeignUIToastInterface, FeignUIToastFunction, FeignUIToast, UnifiedFailureToast
 } from "./ui/FeignUIToast";
 
-export {mediaTypeIsEq} from "./utils/MediaTypeUtil";
+export {mediaTypeIsEq,responseIsJson,responseIsFile,responseIsText} from "./utils/MediaTypeUtil";
 export {
     supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
 } from "./utils/SerializeRequestBodyUtil";

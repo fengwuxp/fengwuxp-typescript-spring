@@ -40,6 +40,9 @@ const factory = (feignConfigurationConstructor: FeignConfigurationConstructor) =
     return memorizationConfiguration(new feignConfigurationConstructor());
 };
 
+/**
+ * feign configuration factory
+ */
 export const configurationFactory = memoize(factory, (feignConfigurationConstructor: FeignConfigurationConstructor) => {
     if (feignConfigurationConstructor == null) {
         return 0;

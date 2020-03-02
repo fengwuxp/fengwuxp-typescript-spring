@@ -121,7 +121,7 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
             mode
         } = request;
 
-        if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+        if (headers != null && mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type
             // @see {@link https://segmentfault.com/a/1190000010205162}
             delete headers[contentTypeName];
