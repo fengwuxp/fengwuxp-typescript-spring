@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig",
+  "compilerOptions": {
+    "esModuleInterop": true,
+    "moduleResolution": "node",
+    "declaration": true,
+    "declarationDir": "./lib",
+    "outDir": "./lib",
+    "target": "es5"
+  },
+  "exclude": [
+    "dist",
+    "test",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}

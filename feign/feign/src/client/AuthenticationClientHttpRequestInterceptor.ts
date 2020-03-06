@@ -175,7 +175,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
      */
     private needAppendAuthorizationHeader = (headers: Record<string, string>) => {
         const authorizationHeaderNames = this.authenticationStrategy.getAuthorizationHeaderNames;
-        const headerNames = authorizationHeaderNames ? authorizationHeaderNames() : ["Authorization"];
+        const headerNames = authorizationHeaderNames();// authorizationHeaderNames ? authorizationHeaderNames() : ["Authorization"];
         const count = headerNames.map((headerName) => {
             return headers[headerName] != null ? 1 : 0;
         }).reduce((prev, current) => {

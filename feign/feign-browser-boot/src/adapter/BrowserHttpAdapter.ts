@@ -171,36 +171,33 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         const {consumes, getHeaderByName} = this;
 
         const headers = response.headers;
-
-        // Transfer-Encoding：chunked 情况下没有Content-length请求头
-        if (!this.hasTransferEncoding(headers)) {
-
-            /**
-             *  在跨域的情况下需要加以下响应的请求头到，不然无法读取到content length
-             *  response.addHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length");
-             *  response.addHeader("Access-Control-Expose-Headers","Content-Type,Content-Length");
-             */
-            const contentLength = parseInt(getHeaderByName(headers, contentLengthName));
-            if (contentLength === 0 || Object.is(contentLength, NaN)) {
-                if (response.ok) {
-                    return Promise.resolve();
-                } else {
-                    return Promise.reject();
-                }
-            }
-        }
-
-
         const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
 
+        // Transfer-Encoding：chunked 情况下没有Content-length请求头
+        // if (!this.hasTransferEncoding(headers) && response.body != null) {
+        /**
+         *  在跨域的情况下需要加以下响应的请求头到，不然无法读取到content length
+         *  response.addHeader("Access-Control-Allow-Headers", "Content-Type,Content-Length");
+         *  response.addHeader("Access-Control-Expose-Headers","Content-Type,Content-Length");
+         */
+        // const contentLength = parseInt(getHeaderByName(headers, contentLengthName));
+        // 降级模式
+        // const responseBodyIsEmpty = contentLength === 0 || Object.is(contentLength, NaN);
+        // }
+        if (response.body == null) {
+            if (response.ok) {
+                return Promise.resolve();
+            } else {
+                return Promise.reject();
+            }
+        }
         const responseHeaders = {
             [contentTypeName]: responseMediaType
         };
-        if (responseIsJson(responseHeaders)) {
 
+        if (responseIsJson(responseHeaders)) {
             return this.parseJSON(response);
         } else if (responseIsText(responseHeaders)) {
-
             return this.parseText(response);
         } else {
             if (responseIsFile({

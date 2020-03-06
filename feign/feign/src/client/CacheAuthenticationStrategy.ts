@@ -26,7 +26,13 @@ export default class CacheAuthenticationStrategy implements AuthenticationStrate
         return this.cacheAuthenticationToken;
     };
 
-    getAuthorizationHeaderNames = () => this.authenticationStrategy.getAuthorizationHeaderNames();
+    getAuthorizationHeaderNames = () => {
+        const authorizationHeaderNames = this.authenticationStrategy.getAuthorizationHeaderNames;
+        if (authorizationHeaderNames != null) {
+            return authorizationHeaderNames();
+        }
+        return ["Authorization"];
+    };
 
     refreshAuthorization = async (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
         this.cacheAuthenticationToken = await this.authenticationStrategy.refreshAuthorization(authorization, req);

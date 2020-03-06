@@ -2,10 +2,11 @@
   "name": "feign-boot-tarojs-stater",
   "version": "1.0.0",
   "description": "",
-  "main": "es/index.js",
+  "main": "./es/index.js",
   "typings": "types/index.d.ts",
   "files": [
     "es",
+    "src",
     "types"
   ],
   "publishConfig": {
@@ -23,7 +24,8 @@
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
-    "rollup:build": "rm -rf ./dist  && npm run tsc:build && rollup -c && rm -rf ./types-temp",
+    "tsc:esnext": "rm -rf ./types && tsc -p ./tsconfig.esnext.json ",
+    "rollup:build": "rm -rf ./es  && npm run tsc:build && rollup -c && rm -rf ./types-temp",
     "publish:lib": "npm run rollup:build && npm run npm:publish"
   },
   "author": "wuxp",

@@ -5,20 +5,19 @@
     "allowSyntheticDefaultImports": true,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "module": "esnext",
-    "target": "esnext",
+    "module": "commonjs",
+    "target": "es5",
     "sourceMap": false,
-    "baseUrl": "./src",
     "importHelpers": true,
-    "jsx": "preserve",
     "types": [
       "node",
       "jest",
-      "react",
-      "reflect-metadata"
+      "reflect-metadata",
+      "history"
     ],
     "lib": [
       "dom",
+      "es2015",
       "es7",
       "es2018",
       "es2018.promise"

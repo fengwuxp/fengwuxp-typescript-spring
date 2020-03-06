@@ -7,6 +7,7 @@ import Taro from "@tarojs/taro";
 export default class TarojsNetworkStatusListener implements NetworkStatusListener {
 
     getNetworkStatus = (): Promise<NetworkStatus> => {
+
         // @ts-ignore
         return Taro.getNetworkType().then(({networkType}) => {
             if (networkType == null || networkType === NetworkType.NONE) {
@@ -21,6 +22,7 @@ export default class TarojsNetworkStatusListener implements NetworkStatusListene
     };
 
     onChange = (callback: (networkStatus: NetworkStatus) => void) => {
+
         Taro.onNetworkStatusChange(({isConnected, networkType}) => {
             callback({
                 networkType,

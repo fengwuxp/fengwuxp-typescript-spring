@@ -1,5 +1,13 @@
 const {generateAliasConfig} = require("./BuildAliasHelper");
 
+const needIncludeModuleNames = [
+    'feign-boot-tarojs-stater',
+    'fengwuxp-tarojs-router',
+    'fengwuxp-tarojs-broadcast',
+    'fengwuxp-torojs-storage',
+    'fengwuxp-taro-starter'
+];
+
 const config = {
     projectName: 'tarojs-2.x-template',
     date: '2020-1-18',
@@ -29,6 +37,24 @@ const config = {
                     "polyfill": false,
                     "regenerator": true,
                     "moduleName": 'babel-runtime'
+                }
+            ],
+            [
+                'babel-plugin-rewrite-import',
+                {
+                    importTransformer: function (importPath,filename) {
+                        console.log("====importPath===>", importPath,filename);
+                        const isTaroJs = importPath.indexOf('@tarojs/taro') === 0;
+                        if (isTaroJs) {
+                            const taroEnv = process.env.TARO_ENV;
+                            if (taroEnv === 'h5') {
+                                return '@tarojs/taro-h5'
+                            }
+                            return importPath;
+                        }
+                        return importPath;
+                    },
+                    includePackages:needIncludeModuleNames
                 }
             ]
         ]
@@ -66,7 +92,10 @@ const config = {
                     generateScopedName: '[name]__[local]___[hash:base64:5]'
                 }
             }
-        }
+        },
+        // compile: {
+        //     include: needIncludeModuleNames
+        // }
     },
     h5: {
         publicPath: '/',
@@ -89,9 +118,11 @@ const config = {
                     generateScopedName: '[name]__[local]___[hash:base64:5]'
                 }
             }
-        }
+        },
+        // esnextModules: needIncludeModuleNames,
     },
     alias: generateAliasConfig(),
+
 }
 
 module.exports = function (merge) {

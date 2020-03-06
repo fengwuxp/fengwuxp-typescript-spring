@@ -13,6 +13,8 @@ import './app.less'
 class App extends Component {
 
     componentDidMount() {
+        console.log(typeof Taro.getNetworkType);
+        console.log(typeof Taro.navigateTo);
     }
 
     componentDidShow() {
