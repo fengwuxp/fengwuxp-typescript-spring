@@ -4,12 +4,12 @@ import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenera
 /**
  * 需要自动上传配置
  */
-export interface AutoFileUploadOptions {
+export interface AutoFileUploadOptions<T = any> {
 
     /**
      * 需要执行上传动作的字段
      */
-    fields: Array<string>;
+    fields: Array<keyof T> | Array<string>;
 
     /**
      * 上传的rul
@@ -21,7 +21,7 @@ export interface AutoFileUploadOptions {
  * @param options  需要自动上传
  * @constructor
  */
-export const FileUpload = <T extends FeignClient>(options: AutoFileUploadOptions): Function => {
+export const FileUpload = <REQ = any, T extends FeignClient = FeignClient>(options: AutoFileUploadOptions<REQ>): Function => {
 
 
     /**

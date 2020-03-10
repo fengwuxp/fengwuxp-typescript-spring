@@ -1,4 +1,4 @@
-import {Feign, HttpMediaType} from "../src";
+import {Feign, FileUpload, HttpMediaType} from "../src";
 import {RequestMapping} from "../src";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
 import {PostMapping} from "../src";
@@ -20,7 +20,7 @@ type FindMemberRequest = {
 @Feign({
     value: "/test",
     // url:"http://a.bc.cn/api",
-    configuration: MockFeignConfiguration
+    // configuration: MockFeignConfiguration
 })
 export default class TestFeignClient {
 
@@ -71,4 +71,17 @@ export default class TestFeignClient {
             memberId: number,
         },
         options?: FeignRequestOptions) => Promise<number>;
+
+    @FileUpload<{
+        goods: Array<string>
+    }>({
+        fields: ["goods"]
+    })
+    @PostMapping({
+        value: "evaluate/order",
+        produces: [HttpMediaType.APPLICATION_JSON_UTF8]
+    })
+    evaluateOrder: (req: {
+        goods: Array<string>
+    }) => Promise<void>;
 }

@@ -3,9 +3,9 @@ import {ProgressBarOptions} from "../FeignRequestOptions";
 /**
  * process bar
  */
-export interface RequestProgressBar {
+export interface RequestProgressBar<T extends ProgressBarOptions = ProgressBarOptions> {
 
-    showProgressBar: (progressBarOptions?: ProgressBarOptions) => void;
+    showProgressBar: (progressBarOptions?: T) => void;
 
     hideProgressBar: () => void;
 

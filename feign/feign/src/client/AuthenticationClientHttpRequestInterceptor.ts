@@ -1,6 +1,5 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
-import {getMappingOptions} from "../context/FiegnMappingHolder";
 import {HttpStatus} from "../constant/http/HttpStatus";
 import {AuthenticationStrategy, AuthenticationToken} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
@@ -62,7 +61,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         // need force certification
         let forceCertification = !this.looseMode;
-        const mappingOptions = getMappingOptions(req.url, req.method);
+       /* const mappingOptions = getMappingOptions(req.url, req.method);
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
@@ -72,7 +71,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // force none certification
                 forceCertification = true;
             }
-        }
+        }*/
 
         if (!this.needAppendAuthorizationHeader(req.headers)) {
             // Prevent recursion on refresh

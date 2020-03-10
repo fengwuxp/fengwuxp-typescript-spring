@@ -5,12 +5,12 @@ import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenera
 /**
  * 签名配置
  */
-export interface SignatureOptions {
+export interface SignatureOptions<T = any> {
 
     /**
      * 要签名的字段名称
      */
-    fields: Array<string>;
+    fields: Array<keyof T> | Array<string>;
 }
 
 
@@ -18,7 +18,7 @@ export interface SignatureOptions {
  * @param options 签名配置
  * @constructor
  */
-export const Signature = <T extends FeignClient>(options: SignatureOptions): Function => {
+export const Signature = <REQ = any, T extends FeignClient = FeignClient>(options: SignatureOptions<REQ>): Function => {
 
 
     /**

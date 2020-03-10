@@ -10,7 +10,7 @@ export {PutMapping} from "./annotations/mapping/PutMapping";
 export {DeleteMapping} from "./annotations/mapping/DeleteMapping";
 export {DataObfuscation} from "./annotations/security/DataObfuscation";
 export {Signature} from "./annotations/security/Signature";
-export {FileUpload} from "./annotations/upload/FileUpload";
+export {FileUpload, AutoFileUploadOptions} from "./annotations/upload/FileUpload";
 export {FeignRetry} from "./annotations/retry/FeignRetry";
 export {Feign, FeignOptions} from "./annotations/Feign";
 
@@ -100,7 +100,13 @@ export {
     default as FeignUIToastHolder, FeignUIToastInterface, FeignUIToastFunction, FeignUIToast, UnifiedFailureToast
 } from "./ui/FeignUIToast";
 
-export {mediaTypeIsEq,responseIsJson,responseIsFile,responseIsText} from "./utils/MediaTypeUtil";
+export {AbstractRequestFileObjectEncoder} from "./upload/AbstractRequestFileObjectEncoder"
+export {
+    FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface
+} from "./upload/FileUploadStrategy"
+export {AbstractFileUploadStrategy} from "./upload/AbstractFileUploadStrategy"
+
+export {mediaTypeIsEq, responseIsJson, responseIsFile, responseIsText} from "./utils/MediaTypeUtil";
 export {
     supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
 } from "./utils/SerializeRequestBodyUtil";
@@ -119,6 +125,12 @@ export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuil
 export {FeignClientExecutor} from "./FeignClientExecutor";
 export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {
-    FeignRequestBaseOptions, FeignRequestOptions, UIOptions, FeignRequestContextOptions, ProgressBarOptions
+    FeignRequestId,
+    FeignRequestBaseOptions,
+    FeignRequestOptions,
+    UIOptions,
+    FeignRequestContextOptions,
+    ProgressBarOptions,
+    FileUploadProgressBarOptions
 } from "./FeignRequestOptions";
 export {Enum} from "./EnumInterface";

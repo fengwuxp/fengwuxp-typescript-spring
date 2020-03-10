@@ -151,7 +151,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 }
             }),
             new CodecFeignClientExecutorInterceptor([
-                new DateEncoder()
+                new DateEncoder(),
             ], []),
 
             new UnifiedFailureToastExecutorInterceptor((response) => {

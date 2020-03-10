@@ -4,6 +4,11 @@ import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationR
 import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
 import ClientRequestDataValidatorHolder from "../src/validator/ClientRequestDataValidatorHolder";
 import ExampleFeignClient from "./ExampleFeignClient";
+import CodecFeignClientExecutorInterceptor from "../src/codec/CodecFeignClientExecutorInterceptor";
+import DateEncoder from "../src/codec/DateEncoder";
+import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
+import {FeignRequestOptions, FileUploadProgressBarOptions} from "../src";
+import MockFeignConfigurationTest from "./MockFeignConfigurationTest";
 
 
 const logger = log4js.getLogger();
@@ -11,7 +16,8 @@ logger.level = 'debug';
 
 describe("test feign client", () => {
 
-    FeignConfigurationRegistry.setDefaultFeignConfiguration(new MockFeignConfiguration());
+    const mockFeignConfiguration = new MockFeignConfigurationTest();
+    FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
 
     const testFeignClient = new TestFeignClient();
     const exampleFeignClient = new ExampleFeignClient();
@@ -146,5 +152,17 @@ describe("test feign client", () => {
 
     }, 10 * 1000)
 
+    test("test auto upload file ", async () => {
+
+        await testFeignClient.evaluateOrder({
+            goods: [
+                "A",
+                "B",
+                "C",
+                "D"
+            ]
+        })
+
+    }, 20 * 1000);
 });
 

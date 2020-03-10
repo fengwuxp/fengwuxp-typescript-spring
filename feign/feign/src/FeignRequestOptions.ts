@@ -4,8 +4,17 @@ import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
 
+export interface FeignRequestId {
 
-export interface FeignRequestBaseOptions {
+    /**
+     * 单次http请求的id，用于贯穿整个http请求的过程
+     * 在这个过程中可以通过该id获取到请求的上下文内容
+     * {@see HttpRequestGenerator}
+     */
+    requestId?: Readonly<string>;
+}
+
+export interface FeignRequestBaseOptions extends FeignRequestId {
 
 
     /**
@@ -55,6 +64,12 @@ export interface ProgressBarOptions {
      * 图标，字体图标名称或图片url
      */
     icon?: string;
+}
+
+export interface FileUploadProgressBarOptions extends ProgressBarOptions {
+
+    // 文件上传进度
+    // progress: number;
 }
 
 
@@ -113,6 +128,14 @@ export interface UIOptions {
      * @see {@link  ./ui/ProcessBarExecutorInterceptor.ts}
      */
     progressBarOptions?: ProgressBarOptions;
+
+    /**
+     * 进度条配置
+     * 进度条控制可以在拦截器实现
+     *
+     * @see {@link  ./ui/ProcessBarExecutorInterceptor.ts}
+     */
+    fileUploadProgressBar?: FileUploadProgressBarOptions;
 }
 
 export interface DataOptions {
@@ -144,12 +167,9 @@ export interface DataOptions {
     responseExtractor?: ResponseExtractor,
 }
 
+
 export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 
-    /**
-     * external request headers
-     */
-    // headers?: Record<string, string>;
 
 }
 

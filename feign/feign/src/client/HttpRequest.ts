@@ -1,7 +1,9 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
 
 
-export interface HttpRequest {
+
+
+export interface HttpRequest{
 
     /**
      * 请求url

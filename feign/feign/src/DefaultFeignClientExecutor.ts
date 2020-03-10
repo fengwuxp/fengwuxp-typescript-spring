@@ -15,7 +15,10 @@ import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
-import {setMappingOptions} from "./context/FiegnMappingHolder";
+import {removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
+import {parseRequestUrl} from "./context/RquestUrlMappingHolder";
+
+let REQUEST_NUM = 0;
 
 /**
  * default feign client executor
@@ -44,6 +47,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     // default request headers
     protected defaultHeaders: Record<string, string>;
+
 
     constructor(apiService: T) {
         this.apiService = apiService;
@@ -93,8 +97,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //original parameter
         const originalParameter = args[0] || {};
 
+        const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
         //requestMapping
-        const {requestMapping, signature, retryOptions, validateSchemaOptions} = apiService.getFeignMethodConfig(methodName);
+        const {requestMapping, signature, retryOptions, validateSchemaOptions} = feignMethodConfig;
         if (validateSchemaOptions != null) {
             try {
                 // request data validate
@@ -113,7 +118,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         // resolver request body，filter none value in request body or copy value
         const requestBody = feignRequestOptions.filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
         //resolver request url
-        const requestURL = requestURLResolver(apiService, methodName);
+        const requestURL = parseRequestUrl(requestURLResolver(apiService, methodName));
 
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
@@ -140,10 +145,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
 
-        if (requestMapping.needCertification != null) {
-            // set mapping options
-            setMappingOptions(requestURL, requestMapping);
-        }
+        // set mapping options
+        const requestId = `${REQUEST_NUM++}`;
+        feignRequestOptions.requestId = requestId;
+        setRequestContext(requestId, feignMethodConfig);
 
         // pre handle
         feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
@@ -223,7 +228,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             result = await handle(options, result);
             index++;
         }
-
+        removeRequestContext(options.requestId);
         return result;
     };
 
