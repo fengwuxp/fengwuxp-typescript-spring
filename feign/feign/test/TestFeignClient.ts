@@ -37,7 +37,7 @@ export default class TestFeignClient {
 
     @Signature({fields: []})
     @RequestMapping({
-        value: "//testQuery",
+        value: "/testQuery",
         method: HttpMethod.POST,
         headers: {}
     })

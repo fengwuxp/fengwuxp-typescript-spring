@@ -2,7 +2,7 @@ import {HttpResponse} from "./HttpResponse";
 import {HttpRequest} from "./HttpRequest";
 import {HttpAdapter} from "../adapter/HttpAdapter";
 import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
-import {contentTypeName} from "../constant/FeignConstVar";
+import {contentTypeName, REQUEST_ID_HEADER_NAME} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
@@ -60,6 +60,9 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
 
         const contentType = this.resolveContentType(requestData);
         requestData.body = serializeRequestBody(requestData.method, requestData.body, contentType as HttpMediaType, false);
+        if (requestData.headers != null) {
+            delete requestData.headers[REQUEST_ID_HEADER_NAME];
+        }
         return this.httpAdapter.send(requestData);
     };
 

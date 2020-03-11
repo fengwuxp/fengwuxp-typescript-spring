@@ -1,4 +1,6 @@
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
+import {HttpRequest} from "../client/HttpRequest";
+import {REQUEST_ID_HEADER_NAME} from '../constant/FeignConstVar';
 
 
 // mapping option cache
@@ -16,7 +18,6 @@ export const setRequestContext = (requestId: string, context: Readonly<FeignClie
 };
 
 
-
 /**
  * 移除上下文
  * @param requestId
@@ -32,3 +33,12 @@ export const getFeignClientMethodConfiguration = (requestId: string): Readonly<F
     return MAPPING_CACHE.get(requestId);
 
 };
+export const getFeignClientMethodConfigurationByRequest = (req: HttpRequest): Readonly<FeignClientMethodConfig> => {
+    const headers = req.headers;
+    if (headers == null) {
+        return null;
+    }
+
+    return getFeignClientMethodConfiguration(headers[REQUEST_ID_HEADER_NAME])
+};
+

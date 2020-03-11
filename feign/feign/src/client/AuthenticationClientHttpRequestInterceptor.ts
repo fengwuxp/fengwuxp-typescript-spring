@@ -3,6 +3,7 @@ import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterce
 import {HttpStatus} from "../constant/http/HttpStatus";
 import {AuthenticationStrategy, AuthenticationToken} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
+import {getFeignClientMethodConfigurationByRequest} from '../context/RequestContextHolder';
 
 
 const UNAUTHORIZED_RESPONSE = {
@@ -11,6 +12,11 @@ const UNAUTHORIZED_RESPONSE = {
     statusText: null,
 };
 
+type WaitItem = {
+    resolve: Function;
+    reject: Function;
+    request: HttpRequest;
+};
 /**
  *  Authentication client http request interceptor
  *
@@ -19,15 +25,11 @@ const UNAUTHORIZED_RESPONSE = {
 export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest>
     implements ClientHttpRequestInterceptorInterface<T> {
 
-    /// is refreshing status
+    // is refreshing status
     protected static IS_REFRESH_TOKEN_ING = false;
 
     // protected static waitingQueue: Array<any> = [];
-    protected static WAITING_QUEUE: Array<{
-        resolve: (value?: any | PromiseLike<any>) => void;
-        reject: (reason?: any) => void,
-        request: HttpRequest
-    }> = [];
+    protected static WAITING_QUEUE: Array<WaitItem> = [];
 
     // Refresh tokens 5 minutes in advance by default
     private aheadOfTimes: number;
@@ -61,7 +63,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         // need force certification
         let forceCertification = !this.looseMode;
-       /* const mappingOptions = getMappingOptions(req.url, req.method);
+        const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
@@ -71,7 +73,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // force none certification
                 forceCertification = true;
             }
-        }*/
+        }
 
         if (!this.needAppendAuthorizationHeader(req.headers)) {
             // Prevent recursion on refresh
