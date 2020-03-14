@@ -2,7 +2,11 @@ import Taro, {Component} from '@tarojs/taro'
 import {View} from '@tarojs/components'
 import {fixF2} from 'taro-f2/dist/weapp/common/f2-tool'
 import {F2Canvas} from "taro-f2";
-import F2 from "@antv/f2"
+// import F2 from "@antv/f2/lib/index"
+const F2 = require('@antv/f2/lib/core'); // 必须引入
+require('@antv/f2/lib/geom/interval'); // 引入 interval 几何标记
+require('@antv/f2/lib/coord/polar'); // 引入 极坐标
+require('@antv/f2/lib/geom/adjust/stack'); // 引入数据层叠调整类型
 
 export default class Index extends Component {
 
