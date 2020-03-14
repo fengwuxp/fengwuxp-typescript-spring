@@ -29,6 +29,9 @@ class TraoJsAppRouter extends AbstractTarojsCommandRouter implements AppRouterIn
 
     @RouteMapping("member/MemberView")
     member: RouterCommandMethod<MemberViewProps>;
+
+    @RouteMapping("charsf2/index")
+    charsF2: RouterCommandMethod<MemberViewProps>;
 }
 
 export const AppRouter = new TraoJsAppRouter();

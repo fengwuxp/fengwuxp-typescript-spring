@@ -54,7 +54,9 @@
     "es6-promise": "^4.1.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "lodash": "^4.17.15"
+    "lodash": "^4.17.15",
+    "rollup-plugin-dts": "^1.2.1",
+    "rollup-plugin-typescript2": "^0.26.0"
   },
   "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }

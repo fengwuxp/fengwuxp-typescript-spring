@@ -84,6 +84,8 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
                         return navigator.reLaunch(navigatorDescriptorObject);
                     case RouterCommand.POP_TO_TOP:
                         return navigator.popToTop(navigatorDescriptorObject);
+                    case RouterCommand.SWITCH_TAB:
+                        return navigator.switchTab(navigatorDescriptorObject);
                     default:
                         throw new Error(`not support command: ${command}`);
                 }

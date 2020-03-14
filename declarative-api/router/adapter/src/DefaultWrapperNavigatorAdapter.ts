@@ -69,6 +69,10 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         return this.jump(RouterCommand.REPLACE, object, uriVariables, state);
     };
 
+    switchTab = (object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        return this.jump(RouterCommand.SWITCH_TAB, object, uriVariables, state);
+    };
+
     getBrowseHistory = () => this.navigatorContextAdapter.getBrowseHistory();
 
     getCurrentObject = () => this.navigatorContextAdapter.getCurrentObject();

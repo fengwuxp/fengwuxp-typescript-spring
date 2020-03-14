@@ -15,11 +15,12 @@ export default class Index extends Component {
         }).then(() => {
 
         }).catch(() => {
-            AppRouter.member({
-                memberId: 1
-            },{
-                name:"test111"
-            });
+            // AppRouter.member({
+            //     memberId: 1
+            // },{
+            //     name:"test111"
+            // });
+            AppRouter.charsF2();
         })
     }
 

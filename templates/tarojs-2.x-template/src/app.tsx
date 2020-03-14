@@ -15,6 +15,7 @@ class App extends Component {
     componentDidMount() {
         console.log(typeof Taro.getNetworkType);
         console.log(typeof Taro.navigateTo);
+
     }
 
     componentDidShow() {
@@ -36,6 +37,7 @@ class App extends Component {
     config: Config = {
         pages: [
             'pages/index/index',
+            'pages/charsf2/index',
             'pages/member/MemberView'
         ],
         window: {

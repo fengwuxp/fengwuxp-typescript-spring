@@ -96,6 +96,7 @@ export {
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {default as UnifiedFailureToastExecutorInterceptor} from "./ui/UnifiedFailureToastExecutorInterceptor";
 export {RequestProgressBar} from "./ui/RequestProgressBar";
+export {FileUploadProgressBar} from "./ui/FileUploadProgressBar";
 export {
     default as FeignUIToastHolder, FeignUIToastInterface, FeignUIToastFunction, FeignUIToast, UnifiedFailureToast
 } from "./ui/FeignUIToast";

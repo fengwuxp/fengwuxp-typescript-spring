@@ -11,7 +11,8 @@ declare enum RouterCommand {
     POP_TO_TOP = "popToTop",
     POP_AND_PUSH = "popAndPush",
     RESET = "reLaunch",
-    REPLACE = "replace"
+    REPLACE = "replace",
+    SWITCH_TAB = "switchTab"
 }
 
 declare type NavigatorJumpRouteFunction = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<any> | void;
@@ -63,6 +64,10 @@ interface NavigatorAdapter<T extends NavigatorDescriptorObject = NavigatorDescri
      * 移除当前页面，并跳转新页面
      */
     popAndPush?: NavigatorJumpRouteFunction;
+    /**
+     * 跳转到tab页面的的某个页面
+     */
+    switchTab?: NavigatorJumpRouteFunction;
 }
 
 /**

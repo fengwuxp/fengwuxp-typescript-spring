@@ -6,13 +6,16 @@ var childProcess = require("child_process");
 var version = process.env.npm_package_config_version;
 var chennhPublishTargetRegistry = "http://nexus.chennh.com/repository/npm/";
 var mainPublishTargetRegistry = "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/";
+
 function readJsonFile(filepath) {
     var text = fs.readFileSync(filepath, "utf-8");
     return JSON.parse(text);
 }
+
 function isNpmProject(dirPath) {
     return fs.existsSync(dirPath + "/package.json");
 }
+
 //获取文件目录列表
 function readFilDirList(projectPath) {
     console.log("projectPath", projectPath);
@@ -25,14 +28,15 @@ function readFilDirList(projectPath) {
         if (isNpmProject(targetDir)) {
             console.log("targetDir", targetDir);
             replacePrivateRegistry(targetDir, mainPublishTargetRegistry, chennhPublishTargetRegistry);
-        }
-        else {
+        } else {
             readFilDirList(targetDir);
         }
     });
 }
+
 var fixedVersion = '"version": "1.0.0"';
-var targetVersion = '"version": "1.0.1"';
+var targetVersion = '"version": "1.0.2"';
+
 /**
  * 替换发布的仓库
  * @param packagePath
@@ -53,8 +57,7 @@ function replacePrivateRegistry(packagePath, mainRegistry, otherRegister) {
             encoding: "utf-8"
         });
         console.error("publishResult", publishResult);
-    }
-    catch (e) {
+    } catch (e) {
         console.error("发布模块异常", e);
     }
     console.log("\u53D1\u5E03\u6A21\u5757\uFF1A " + npmPublishCommand + "  cwd  " + packagePath);
@@ -62,9 +65,11 @@ function replacePrivateRegistry(packagePath, mainRegistry, otherRegister) {
     packageJson = packageJson.replace(targetVersion, fixedVersion);
     fs.writeFileSync(packageJsonFilePath, packageJson);
 }
+
 var lernaConfig = readJsonFile("./lerna.json");
 var packages = lernaConfig.packages;
-["declarative-api", "dependency-management", "packages", "feign", "starters"].forEach(function (folder) {
+// ["declarative-api", "dependency-management", "packages", "feign", "starters"].
+["feign"].forEach(function (folder) {
     var resolvePath = path.resolve(__dirname, ("../" + folder).replace("\*", ""));
     readFilDirList(resolvePath);
 });

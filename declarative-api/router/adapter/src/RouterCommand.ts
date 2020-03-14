@@ -22,7 +22,10 @@ export enum RouterCommand {
     RESET = "reLaunch",
 
     //用另一条路线替换给定键的路线
-    REPLACE = "replace"
+    REPLACE = "replace",
+
+    // 跳转到tab页面的的某个页面
+    SWITCH_TAB = "switchTab"
 
 
 }

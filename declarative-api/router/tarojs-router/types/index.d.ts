@@ -10,6 +10,7 @@ declare class TaroNavigatorAdapter implements NavigatorAdapter {
     popToTop: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
     reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
     replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    switchTab: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
 }
 
 interface ViewRouteState<Q = any, S = any, P = any> {

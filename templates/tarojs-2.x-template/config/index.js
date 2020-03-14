@@ -5,9 +5,9 @@ const needIncludeModuleNames = [
     'fengwuxp-tarojs-router',
     'fengwuxp-tarojs-broadcast',
     'fengwuxp-torojs-storage',
-    'fengwuxp-taro-starter'
+    'fengwuxp-taro-starter',
+    'taro-f2'
 ];
-
 const config = {
     projectName: 'tarojs-2.x-template',
     date: '2020-1-18',
@@ -49,6 +49,9 @@ const config = {
                             const taroEnv = process.env.TARO_ENV;
                             if (taroEnv === 'h5') {
                                 return '@tarojs/taro-h5'
+                            }
+                            if (taroEnv === 'weapp') {
+                                return '@tarojs/taro-weapp'
                             }
                             return importPath;
                         }

@@ -66,5 +66,10 @@ export interface NavigatorAdapter<T extends NavigatorDescriptorObject = Navigato
      */
     popAndPush?: NavigatorJumpRouteFunction;
 
+    /**
+     * 跳转到tab页面的的某个页面
+     */
+    switchTab?: NavigatorJumpRouteFunction;
+
 
 }

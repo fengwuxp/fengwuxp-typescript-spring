@@ -3,7 +3,7 @@ import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterce
 import {HttpStatus} from "../constant/http/HttpStatus";
 import {AuthenticationStrategy, AuthenticationToken} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
-import {getFeignClientMethodConfigurationByRequest} from '../context/RequestContextHolder';
+import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
 
 
 const UNAUTHORIZED_RESPONSE = {
@@ -12,11 +12,6 @@ const UNAUTHORIZED_RESPONSE = {
     statusText: null,
 };
 
-type WaitItem = {
-    resolve: Function;
-    reject: Function;
-    request: HttpRequest;
-};
 /**
  *  Authentication client http request interceptor
  *
@@ -25,11 +20,15 @@ type WaitItem = {
 export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest>
     implements ClientHttpRequestInterceptorInterface<T> {
 
-    // is refreshing status
+    /// is refreshing status
     protected static IS_REFRESH_TOKEN_ING = false;
 
     // protected static waitingQueue: Array<any> = [];
-    protected static WAITING_QUEUE: Array<WaitItem> = [];
+    protected static WAITING_QUEUE: Array<{
+        resolve: (value?: any | PromiseLike<any>) => void;
+        reject: (reason?: any) => void,
+        request: HttpRequest
+    }> = [];
 
     // Refresh tokens 5 minutes in advance by default
     private aheadOfTimes: number;
@@ -63,7 +62,9 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         // need force certification
         let forceCertification = !this.looseMode;
-        const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        // const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
+        const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification

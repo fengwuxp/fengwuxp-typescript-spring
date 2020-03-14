@@ -1,7 +1,7 @@
 import SVG from 'react-inlinesvg';
 import React, { CSSProperties } from 'react';
 
-export interface SvnIconProps {
+export interface SvgIconProps {
 
   // defuatl: current font size
   size?: number;
@@ -16,7 +16,7 @@ export interface SvnIconProps {
   className?: string
 }
 
-const SvgIcon = (props: SvnIconProps) => {
+const SvgIcon = (props: SvgIconProps) => {
   const { size, color, src, style, className } = props;
 
   return <i style={{ fontSize: size, color, ...style }} className={className}>

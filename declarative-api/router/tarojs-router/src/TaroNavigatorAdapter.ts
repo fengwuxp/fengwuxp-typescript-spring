@@ -48,5 +48,11 @@ export default class TaroNavigatorAdapter implements NavigatorAdapter {
         return Taro.redirectTo({url: (descriptorObject as NavigatorDescriptorObject).pathname})
     };
 
+    switchTab = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+        setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
+        return Taro.switchTab({url: (descriptorObject as NavigatorDescriptorObject).pathname})
+
+    }
+
 
 }
