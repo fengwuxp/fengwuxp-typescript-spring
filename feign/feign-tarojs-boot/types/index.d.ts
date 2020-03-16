@@ -56,7 +56,6 @@ declare class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest> {
     /**
      *
      * @param timeout  default 5000ms
-     * @param resolveHttpResponse
      */
     constructor(timeout?: number);
     send: (req: TarojsHttpRequest) => Promise<HttpResponse<any>>;

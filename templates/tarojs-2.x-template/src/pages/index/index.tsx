@@ -4,9 +4,39 @@ import './index.less'
 import ExampleService from '@feign/services/ExampleService'
 import {AppRouter} from "@src/AppRouter";
 
-export default class Index extends Component {
+
+export interface IndexProps {
+
+
+}
+
+export interface IndexSate {
+
+    a: string;
+    b: number;
+    c: boolean;
+    point: {
+        x: number;
+        y: number
+    }
+}
+
+
+export default class Index extends Component<IndexProps, IndexSate> {
+
+    state: IndexSate = {
+        a: null,
+        b: null,
+        c: false,
+        point: null
+    };
+
+    constructor(props: IndexProps, context: any) {
+        super(props, context);
+    }
 
     componentWillMount() {
+
     }
 
     componentDidMount() {
@@ -15,12 +45,18 @@ export default class Index extends Component {
         }).then(() => {
 
         }).catch(() => {
+            this.setState({
+                point: {
+                    x: 1,
+                    y: 2
+                }
+            })
             // AppRouter.member({
             //     memberId: 1
             // },{
             //     name:"test111"
             // });
-            AppRouter.charsF2();
+            // AppRouter.charsF2();
         })
     }
 
@@ -42,9 +78,23 @@ export default class Index extends Component {
      */
     config: Config = {
         navigationBarTitleText: '首页'
-    }
+    };
 
     render() {
+        const {point} = this.state;
+        console.log("==p=>");
+        if (point == null) {
+            return;
+        }
+        return (
+            <View className='index'>
+                <Text>Hello world! {point.x}</Text>
+                {this.renderItem()}
+            </View>
+        )
+    }
+
+    private renderItem = () => {
         return (
             <View className='index'>
                 <Text>Hello world!</Text>

@@ -11,7 +11,7 @@ export class MockRequestFileObjectEncoder extends AbstractRequestFileObjectEncod
 
     attrIsNeedUpload = (name: string, value, options: AutoFileUploadOptions) => {
 
-        return true;
+        return false;
     };
 
 

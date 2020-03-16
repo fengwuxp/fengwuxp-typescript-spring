@@ -34,7 +34,7 @@ export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkC
 export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";
 export {NetworkStatusListener, NetworkStatus, NetworkType} from "./network/NetworkStatusListener";
 export {NoneNetworkFailBack} from "./network/NoneNetworkFailBack";
-export {default as SimpleNetworkStatusListener} from "./network/SimpleNetworkStatusListener";
+export {default as SimpleNetworkStatusListener} from "./network/SimpleNoneNetworkFailBack";
 export {default as NetworkFeignClientExecutorInterceptor} from "./network/NetworkFeignClientExecutorInterceptor";
 
 export {default as CodecFeignClientExecutorInterceptor} from "./codec/CodecFeignClientExecutorInterceptor";

@@ -15,7 +15,7 @@ const LoginSubmit: React.FC<LoginSubmitProps> = ({className, ...rest}) => {
   const clsString = classNames(styles.submit, className);
   return (
     <FormItem>
-      <Button size="large" className={clsString} type="primary" htmlType="submit" {...rest} />
+      <Button  size="large" className={clsString} type="primary" htmlType="submit" {...rest} />
     </FormItem>
   );
 };

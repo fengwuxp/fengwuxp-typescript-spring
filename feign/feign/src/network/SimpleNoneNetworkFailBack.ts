@@ -8,7 +8,7 @@ import {HttpRequest} from "../client/HttpRequest";
  * {@field maxWaitTime}
  * {@field maxWaitLength}
  */
-export default class SimpleNetworkStatusListener<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
+export default class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
 
 
     /**

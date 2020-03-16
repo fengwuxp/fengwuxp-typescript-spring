@@ -18,7 +18,6 @@ export default class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest>
     /**
      *
      * @param timeout  default 5000ms
-     * @param resolveHttpResponse
      */
     constructor(timeout?: number) {
         this.timeout = timeout || 5 * 1000;
@@ -27,10 +26,11 @@ export default class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest>
     send = (req: TarojsHttpRequest): Promise<HttpResponse> => {
         const param = this.buildRequest(req);
         return Taro.request(param).then((resp) => {
+            const ok = resp.statusCode >= 200 && resp.statusCode < 300;
             return {
                 data: resp.data,
                 headers: resp.header,
-                ok: resp.statusCode === HttpStatus.OK,
+                ok,
                 statusCode: resp.statusCode
             }
         });

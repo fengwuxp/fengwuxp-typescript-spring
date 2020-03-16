@@ -38,7 +38,7 @@ const actions = createFormActions();
     content: 'example 创建',
   }
 })
-export default class CreateExampleView extends React.Component<CreateExampleViewProps, CreateExampleViewState> {
+export default class CreateExampleView extends React.PureComponent<CreateExampleViewProps, CreateExampleViewState> {
 
   state: CreateExampleViewState = {
     submitting: false

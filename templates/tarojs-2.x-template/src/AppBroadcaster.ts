@@ -11,10 +11,11 @@ import {tarojsAppCommandBroadcasterFactory} from 'fengwuxp-tarojs-broadcast'
  */
 export interface AppBroadcasterInterface extends AppCommandBroadcaster {
 
-  sendMemberLogin: EmitEventMethod,
+  sendMemberLogin: EmitEventMethod<any>,
 
-  receiveMemberLogin: ReceiveEventListenerMethod
+  receiveMemberLogin: ReceiveEventListenerMethod<any>
 
 }
 
 export const AppBroadcaster = tarojsAppCommandBroadcasterFactory<AppBroadcasterInterface>();
+

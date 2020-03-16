@@ -12,6 +12,7 @@ import {
     RoutingClientHttpRequestInterceptor,
     SimpleNetworkStatusListener,
     stringDateConverter,
+
     simpleRequestURLResolver
 } from 'fengwuxp-typescript-feign'
 import {
@@ -87,8 +88,8 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
 
     public registryClientHttpRequestInterceptors = (interceptorRegistry: ClientHttpInterceptorRegistry) => {
         interceptorRegistry.addInterceptor(new NetworkClientHttpRequestInterceptor(
-            new TarojsNetworkStatusListener()
-            , new SimpleNetworkStatusListener()))
+            new TarojsNetworkStatusListener(),
+            new SimpleNetworkStatusListener()));
         interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor(process.env.API_ENTRY_ADDRESS));
         interceptorRegistry.addInterceptor(new AuthenticationClientHttpRequestInterceptor(new AppAuthenticationStrategy()))
     };
@@ -124,6 +125,7 @@ export class TarojsFeignConfigurationAdapter implements FeignConfigurationAdapte
             // 服务端返回需要登录的状态时回调这里
         }))
     };
+
     apiSignatureStrategy = () => {
 
         const OAK = process.env.OAK;

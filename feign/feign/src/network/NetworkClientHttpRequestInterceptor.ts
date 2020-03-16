@@ -2,7 +2,7 @@ import {HttpRequest} from "../client/HttpRequest";
 import {ClientHttpRequestInterceptorInterface} from "../client/ClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "./NetworkStatusListener";
 import {NoneNetworkFailBack} from "./NoneNetworkFailBack";
-import SimpleNetworkStatusListener from "./SimpleNetworkStatusListener";
+import SimpleNoneNetworkFailBack from "./SimpleNoneNetworkFailBack";
 
 
 /**
@@ -35,7 +35,7 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
                 tryWaitNetworkCount?: number,
                 spinWaitMaxTimes?: number) {
         this.networkStatusListener = networkStatusListener;
-        this.noneNetworkHandler = noneNetworkHandler || new SimpleNetworkStatusListener();
+        this.noneNetworkHandler = noneNetworkHandler || new SimpleNoneNetworkFailBack();
         this.tryWaitNetworkCount = tryWaitNetworkCount || 3;
         if (this.tryWaitNetworkCount > 10) {
             throw new Error(`try wait count to max: ${tryWaitNetworkCount}`);
