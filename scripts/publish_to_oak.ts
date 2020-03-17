@@ -36,6 +36,7 @@ function replacePrivateRegistry(packagePath: string) {
 
 
     //发布模块
+    // const npmPublishCommand = `npm publish:lib  --loglevel=verbose`;
     const npmPublishCommand = `npm publish  --loglevel=verbose`;
 
     try {

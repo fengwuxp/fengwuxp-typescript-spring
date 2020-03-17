@@ -16,7 +16,6 @@ import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/Serialize
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 import {removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
-import {parseRequestUrl} from "./context/RquestUrlMappingHolder";
 import {REQUEST_ID_HEADER_NAME} from './constant/FeignConstVar';
 
 let REQUEST_NUM = 0;
@@ -119,7 +118,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         // resolver request body，filter none value in request body or copy value
         const requestBody = feignRequestOptions.filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
         //resolver request url
-        const requestURL = parseRequestUrl(requestURLResolver(apiService, methodName));
+        const requestURL = requestURLResolver(apiService, methodName);
 
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
