@@ -1,8 +1,21 @@
-const ROUTE_MAPPING: Record<string, any> = {};
+/**
+ * 路由配置
+ * @key  模块名称
+ * @value  模块对应的接口请求地址
+ */
+const ROUTE_MAPPING: Record<string, string> = {};
 
+/**
+ * 路由缓存
+ * @key  url
+ */
 const ROUTE_CACHE: Map<string, string> = new Map<string, string>();
 
-
+/**
+ * 根据 {@see ROUTE_MAPPING} 的配置进行url合并
+ * @param url             请求的url  格式 @模块名称/uri==>  例如：'@default/api/xxx/test'
+ * @param routeMapping    路由配置
+ */
 const routing = (url: string, routeMapping: Record<string, string>) => {
     if (/^(http|https)/.test(url)) {
         //uri
@@ -55,7 +68,7 @@ export const parseRequestUrl = (url: string) => {
  * 添加路由配置
  * @param routeMapping
  */
-export const appendRouteMapping = (routeMapping: Record<string, any>) => {
+export const appendRouteMapping = (routeMapping: Record<string, string>) => {
     for (const key in routeMapping) {
         ROUTE_MAPPING[key] = routeMapping[key];
     }

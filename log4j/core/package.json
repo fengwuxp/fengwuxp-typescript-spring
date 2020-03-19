@@ -1,7 +1,7 @@
 {
-  "name": "fengwuxp-spring-context",
-  "version": "1.0.3",
-  "description": "typescript spring context",
+  "name": "fengwuxp-typescript-log4j",
+  "version": "1.0.0",
+  "description": "typescript log4j",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },
@@ -18,36 +18,42 @@
   "esnext": "esnext/index.js",
   "typings": "types/index.d.ts",
   "files": [
-    "src",
-    "esnext"
+    "lib",
+    "es",
+    "esnext",
+    "types"
   ],
   "author": "wuxp",
   "license": "ISC",
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
-    "build:tsc": "rm -rf ./esnext & tsc -p ./tsconfig.build.json",
+    "tsc:build": "rm -rf ./types & tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "publish:lib": "npm run build:tsc & npm run npm:publish"
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
   },
   "keywords": [
-    "spring",
+    "fetch",
+    "feign",
     "typescript"
   ],
-  "dependencies": {
+  "devDependencies": {
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
-    "@babel/template": "^7.0.0",
-    "@babel/traverse": "^7.0.0",
-    "@babel/types": "^7.0.0",
-    "art-template": "^4.13.2",
     "core-js": "^3.4.1",
-    "fengwuxp-common-proxy": "^1.0.0",
-    "fengwuxp-common-utils": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
-    "fengwuxp-spring-beans": "^1.0.0",
-    "fengwuxp-spring-core": "^1.0.0",
     "typescript": "^3.7.2"
   },
-  "devDependencies": {}
+  "dependencies": {
+    "@abraham/reflection": "^0.7.0",
+    "@types/lodash": "^4.14.149",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "lodash": "^4.17.15",
+    "rollup-plugin-dts": "^1.2.1",
+    "rollup-plugin-typescript2": "^0.26.0"
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }

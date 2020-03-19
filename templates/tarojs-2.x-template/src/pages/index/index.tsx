@@ -3,6 +3,8 @@ import {View, Text} from '@tarojs/components'
 import './index.less'
 import ExampleService from '@feign/services/ExampleService'
 import {AppRouter} from "@src/AppRouter";
+import DemoComponent from '@src/components/demo/DemoComponent';
+import DemoComponent2 from '@src/components/demo/DemoComponent2';
 
 
 export interface IndexProps {
@@ -90,6 +92,16 @@ export default class Index extends Component<IndexProps, IndexSate> {
             <View className='index'>
                 <Text>Hello world! {point.x}</Text>
                 {this.renderItem()}
+                {/*{<DemoComponent items={["1", "2"]}*/}
+                {/*                renderItem={text => {*/}
+
+                {/*                    return <Text>{text} item</Text>*/}
+                {/*                }}/>}*/}
+                {<DemoComponent2 items={["1","222"]}
+                                 renderItem={item => {
+                                     console.log("====text==>",item)
+                                     return <Text key={1}> item</Text>
+                                 }}/>}
             </View>
         )
     }

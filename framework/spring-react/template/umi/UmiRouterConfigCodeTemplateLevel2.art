@@ -1,3 +1,4 @@
+import {ViewShowMode} from "fengwuxp-routing-core";
 export default [
    {{each routes route index }}
  {
@@ -14,7 +15,13 @@ export default [
            {
              name: '{{route.name}}',
              path: '{{route.pathname}}',
+             {{if route.condition}}
+                 condition: {{route.condition}},
+             {{/if}}
              component: '{{route.component}}',
+            {{if route.showMode}}
+                showMode:{{route.showMode}},
+            {{/if}}
            },
            {{/each}}
          ]

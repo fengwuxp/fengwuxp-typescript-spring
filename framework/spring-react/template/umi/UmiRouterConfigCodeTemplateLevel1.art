@@ -1,3 +1,4 @@
+import {ViewShowMode} from "fengwuxp-routing-core";
 export default [
 
                   {{each routes route index }}
@@ -15,6 +16,9 @@ export default [
                                exact : {{subRoute.exact}},
                               {{if subRoute.condition}}
                                  condition: {{subRoute.condition}},
+                               {{/if}}
+                               {{if subRoute.showMode}}
+                                  showMode:{{subRoute.showMode}},
                                {{/if}}
                                component : asyncComponent( ()=> import("{{subRoute.component}}")),
                             }

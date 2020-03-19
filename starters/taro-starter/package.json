@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-taro-starter",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "taro starter",
   "main": "es/index.js",
   "typings": "types/index.d.ts",

@@ -13,6 +13,7 @@ import {LoginViewProps} from '@/pages/user/LoginView';
 import history from '@/pages/.umi/history'
 import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
 import SpringUmiAppRouter from "../.spring/SpringUmiAppRouter";
+import UmiBrowserNavigatorAdapter from "@/UmiBrowserNavigatorAdapter";
 
 
 // 判断是否需要登录
@@ -34,7 +35,7 @@ export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: st
 @AppRouterMapping({
   confirmBeforeJumping: () => routeConfirmBeforeJumping,
   navigatorContextAdapter: () => new BrowserNavigatorContextAdapter(),
-  navigatorAdapter: () => new BrowserNavigatorAdapter(history),
+  navigatorAdapter: () => new UmiBrowserNavigatorAdapter(history),
   methodNameCommandResolver: () => upperCaseToLeftIncline,
   pathPrefix: '/',
 })

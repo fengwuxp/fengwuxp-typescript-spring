@@ -20,9 +20,21 @@ function readFilDirList(basePath) {
         replacePrivateRegistry(targetDir);
     });
 }
+var fixedVersion = '"version": "1.0.0"';
+var targetVersion = '"version": "1.0.3"';
 function replacePrivateRegistry(packagePath) {
+    var packageJsonFilePath = path.join(packagePath, "./package.json");
+    try {
+        var packageJson = fs.readFileSync(packageJsonFilePath, "utf-8");
+        packageJson = packageJson.replace(fixedVersion, targetVersion);
+        fs.writeFileSync(packageJsonFilePath, packageJson);
+    }
+    catch (e) {
+        return;
+    }
     //发布模块
-    var npmPublishCommand = "npm publish  --loglevel=verbose";
+    var npmPublishCommand = "npm run publish:lib  --loglevel=verbose";
+    // const npmPublishCommand = `npm publish  --loglevel=verbose`;
     try {
         var publishResult = childProcess.execSync(npmPublishCommand, {
             cwd: packagePath,
@@ -37,6 +49,6 @@ function replacePrivateRegistry(packagePath) {
 }
 var lernaConfig = readJsonFile("./lerna.json");
 var packages = lernaConfig.packages;
-["components", "browsers", "packages", "types", "oak"].forEach(function (folder) {
+["feign", "framework", "starters"].forEach(function (folder) {
     readFilDirList(("../" + folder).replace("\*", ""));
 });

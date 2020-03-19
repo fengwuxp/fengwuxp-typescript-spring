@@ -1,6 +1,6 @@
 import asyncComponent from "fengwuxp-spring-react/src/route/AsyncComponent";
 import {SpringReactRouteConfig} from "fengwuxp-spring-react/src/route/SpringReactRouteConfig";
-
+import {ViewShowMode} from "fengwuxp-routing-core";
 /**
  * 自动生成的路由配置列表
  **/
@@ -13,6 +13,9 @@ export const routes: Array<SpringReactRouteConfig> = [
         path : "{{route.pathname}}",
         exact : {{route.exact}},
         strict : {{route.strict}},
+        {{if route.showMode}}
+           showMode:{{route.showMode}},
+        {{/if}}
         {{if route.condition}}
         condition: {{route.condition}},
         {{/if}}
@@ -26,6 +29,9 @@ export const routes: Array<SpringReactRouteConfig> = [
                 exact : {{subRoute.exact}},
                {{if subRoute.condition}}
                   condition: {{subRoute.condition}},
+                {{/if}}
+                {{if subRoute.condition}}
+                   showMode:{{subRoute.showMode}},
                 {{/if}}
                 component : asyncComponent( ()=> import("{{subRoute.component}}")),
              }

@@ -32,12 +32,24 @@ function readFilDirList(basePath: string) {
 
 }
 
+const fixedVersion = '"version": "1.0.0"';
+const targetVersion = '"version": "1.0.3"';
+
 function replacePrivateRegistry(packagePath: string) {
+
+    const packageJsonFilePath = path.join(packagePath, "./package.json");
+    try {
+        let packageJson = fs.readFileSync(packageJsonFilePath, "utf-8");
+        packageJson = packageJson.replace(fixedVersion, targetVersion);
+        fs.writeFileSync(packageJsonFilePath, packageJson);
+    } catch (e) {
+        return
+    }
 
 
     //发布模块
-    // const npmPublishCommand = `npm publish:lib  --loglevel=verbose`;
-    const npmPublishCommand = `npm publish  --loglevel=verbose`;
+    const npmPublishCommand = `npm run publish:lib  --loglevel=verbose`;
+    // const npmPublishCommand = `npm publish  --loglevel=verbose`;
 
     try {
         const publishResult = childProcess.execSync(npmPublishCommand, {
@@ -56,7 +68,7 @@ function replacePrivateRegistry(packagePath: string) {
 const lernaConfig = readJsonFile("./lerna.json");
 
 const packages = lernaConfig.packages;
-["components", "browsers", "packages", "types", "oak"].forEach((folder) => {
+["feign", "framework", "starters"].forEach((folder) => {
 
     readFilDirList(`../${folder}`.replace("\*", ""));
 });

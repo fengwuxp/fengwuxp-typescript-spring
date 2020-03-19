@@ -5,6 +5,7 @@ import PathMatchingResourcePatternResolver
     from "fengwuxp-spring-core/esnext/io/support/PathMatchingResourcePatternResolver";
 import * as fs from "fs";
 import {fileURLToPath} from "url";
+import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 
 /**
  * A component provider that provides candidate components from a base package. Can
@@ -63,17 +64,21 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
             const filepath = fileURLToPath(resource.getURL());
             return [filepath, fs.readFileSync(filepath, "UTF-8")]
         }).map(([filepath, sourceCodeText]) => {
-            return {
-                filepath,
-                file: parse(sourceCodeText, {
-                    sourceType: "module",
-                    plugins: [
-                        "typescript",
-                        "jsx",
-                        "classProperties",
-                        "decorators-legacy"
-                    ]
-                })
+            try {
+                return {
+                    filepath,
+                    file: parse(sourceCodeText, {
+                        sourceType: "module",
+                        plugins: [
+                            "typescript",
+                            "jsx",
+                            "classProperties",
+                            "decorators-legacy"
+                        ]
+                    })
+                }
+            } catch (e) {
+                logger.info("解析代码错误,文件路径：", filepath)
             }
         }).filter((metadata) => {
             if (includeFilters.length == 0) {

@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-spring-react",
-  "version": "1.0.0",
+  "version": "1.0.3",
   "description": "typescript spring context",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

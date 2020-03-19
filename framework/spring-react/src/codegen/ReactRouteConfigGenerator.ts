@@ -10,7 +10,7 @@ import {
     isCallExpression,
     isClassDeclaration,
     isDecorator,
-    isIdentifier, isStringLiteral,
+    isIdentifier, isMemberExpression, isStringLiteral,
     isVariableDeclaration, JSXNamespacedName,
     ObjectExpression, ObjectMethod, ObjectProperty, SpreadElement,
     TSTypeAnnotation,
@@ -307,7 +307,7 @@ export default class ReactRouteConfigGenerator {
         }
 
         return this.maxRouteOrder;
-    }
+    };
 
     /**
      * 生成路由配置
@@ -373,7 +373,17 @@ export default class ReactRouteConfigGenerator {
                         };
                     }
                 } else {
-                    const val = value.value;
+                    let val = null;
+                    if (isMemberExpression(value)) {
+                        if (isIdentifier(value.object)) {
+                            val = value.object.name;
+                        }
+                        if (isIdentifier(value.property)) {
+                            val = `${val}.${value.property.name}`;
+                        }
+                    } else {
+                        val = value.value;
+                    }
                     attr[name] = val == null ? '' : val;
                     this.enhancedProcessProp(attr as GenerateSpringReactRouteOptions, prop);
                 }

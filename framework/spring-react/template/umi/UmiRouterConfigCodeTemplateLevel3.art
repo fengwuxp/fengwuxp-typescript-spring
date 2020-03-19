@@ -1,4 +1,5 @@
 import {IRoute} from "umi-types/config";
+import {ViewShowMode} from "fengwuxp-routing-core";
 
 const routes: IRoute[] =[
                 {{each routes route index }}
@@ -23,6 +24,12 @@ const routes: IRoute[] =[
                                                 icon: {{route.icon}},
                                                {{/if}}
                                               path: '{{route.pathname}}',
+                                              {{if route.condition}}
+                                                  condition: {{route.condition}},
+                                              {{/if}}
+                                              {{if route.showMode}}
+                                                showMode:{{route.showMode}},
+                                              {{/if}}
                                               component: '{{route.component}}',
                                             },
                                     {{/each}}

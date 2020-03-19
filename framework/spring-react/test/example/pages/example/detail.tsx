@@ -1,5 +1,5 @@
 import * as React from "react";
-import {RouteView, RouteViewOptions} from "fengwuxp-routing-core";
+import {RouteView, RouteViewOptions, ViewShowMode} from "fengwuxp-routing-core";
 
 
 export interface DetailProps {
@@ -10,6 +10,7 @@ export interface DetailProps {
     icon: any,
     pageHeader: any
 }>({
+    showMode: ViewShowMode.DIALOG,
     pageHeader: {
         title: "标题",
         content: 'example 创建',

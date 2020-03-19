@@ -15,10 +15,9 @@ import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
-import {removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
+import {appendRequestContextId, removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
 import {REQUEST_ID_HEADER_NAME} from './constant/FeignConstVar';
 
-let REQUEST_NUM = 0;
 
 /**
  * default feign client executor
@@ -146,9 +145,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // set mapping options
-        const requestId = `${REQUEST_NUM++}`;
-        feignRequestOptions.requestId = requestId;
-        feignRequestOptions.headers[REQUEST_ID_HEADER_NAME] = requestId;
+        const requestId = appendRequestContextId(feignRequestOptions);
         setRequestContext(requestId, feignMethodConfig);
 
         // pre handle
