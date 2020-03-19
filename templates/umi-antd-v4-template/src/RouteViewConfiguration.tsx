@@ -1,17 +1,19 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {ArrowLeftOutlined} from '@ant-design/icons';
 import AppRouter from '@/AppRouter';
 import {AntdRouteContext} from '@/AntdRouteContext';
 import {getLoginUser} from "@/SessionManager";
 import {ApplicationEventType, CmdDataProvider} from 'fengwuxp-event-state';
 import {USER_IS_LOGIN_CONDITION} from "@/constant/RouteCondition";
-import {RouteContextHolder, RouteView, ViewShowMode} from 'fengwuxp-routing-core';
+import {RouteContextHolder, RouteView} from 'fengwuxp-routing-core';
 import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from 'fengwuxp-routing-antd';
 import {ReactCmdDataProviderEnhancer} from "fengwuxp-routing-react";
 import {PageHeaderWrapper} from '@ant-design/pro-layout';
 import {ANT_DESIGN_GLOBAL_EVENT_PROP_MAP, AntGlobalStateType, AntDesignGlobalEventNames} from "@/AntGlobalEventNames";
+import {ENABLED_MODAL_NAME} from "@/DefaultPrivateRoute";
+import {Modal} from "antd";
 
-console.log("==load route configuration=>");
+// console.log("==load route configuration=>");
 
 // 注册全局事件
 ReactCmdDataProviderEnhancer.registerGlobalEventNames<AntGlobalStateType, AntDesignGlobalEventNames>(ANT_DESIGN_GLOBAL_EVENT_PROP_MAP);
@@ -20,30 +22,29 @@ RouteView.addEnhancer(ReactCmdDataProviderEnhancer);
 // 设置 event name 生成器
 CmdDataProvider.setEventNameGenerator(() => {
   const pathname = location.pathname;
-  console.log("location.pathname", pathname);
+  // console.log("location.pathname", pathname);
   return `${ApplicationEventType.ROUTE}_${pathname}`;
 });
 
 AntdPageHeaderEnhancer.setWrapperRender((ReactComponent: any, options: AntdRouteViewOptions, viewProps: any) => {
-  console.log('viewProps', viewProps, options);
+  // console.log('viewProps', viewProps, options);
   const pageHeader = options.pageHeader || {};
 
-  if (options.showMode === ViewShowMode.DIALOG || viewProps.viewShowModel === ViewShowMode.DIALOG) {
-    // const [visible, setVisible] = useState(true);
-    //
-    // return <Modal
-    //   title={viewProps.route.name}
-    //   visible={true}
-    //   width={"60%"}
-    //   style={{marginLeft: 300}}
-    //   onCancel={() => {
-    //     setVisible(false);
-    //     AppRouter.goBack();
-    //   }}
-    //   footer={visible}>
-    //   <ReactComponent {...viewProps}/>
-    // </Modal>
-    return <ReactComponent {...viewProps}/>;
+  if (viewProps[ENABLED_MODAL_NAME]) {
+    const [visible, setVisible] = useState(true);
+
+    return <Modal
+      title={viewProps.route.name}
+      visible={true}
+      width={"60%"}
+      style={{marginLeft: 300}}
+      onCancel={() => {
+        setVisible(false);
+        AppRouter.goBack();
+      }}
+      footer={visible}>
+      <ReactComponent {...viewProps}/>
+    </Modal>
   }
 
   const showBack = !location.pathname.endsWith('/list');
