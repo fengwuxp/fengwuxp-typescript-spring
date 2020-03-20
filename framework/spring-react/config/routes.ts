@@ -4,14 +4,14 @@ import {ViewShowMode} from "fengwuxp-routing-core";
 const routes: IRoute[] = [
 
     {
-        name: '/example/list管理',
+        name: '/example/first/list管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
         path: '/example',
         routes: [
             {
-                name: '/example/list',
+                name: '/example/first/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
@@ -19,38 +19,73 @@ const routes: IRoute[] = [
                 routes: [
 
                     {
-                        name: '/example/list',
+                        name: '/example/first/list',
 
-                        path: '/example/list',
+                        path: '/example/first/list',
 
                         condition: "#member!=null",
 
 
-                        component: './example/list',
+                        component: './first/list',
                     },
 
                     {
-                        name: '/example/edit',
+                        name: '/example/secoend/list',
 
-                        path: '/example/edit',
+                        path: '/example/secoend/list',
+
+                        condition: "#member!=null",
+
+
+                        component: './secoend/list',
+                    },
+
+                    {
+                        name: '/example/first/edit',
+
+                        path: '/example/first/edit',
 
                         condition: context => {
                             return false;
                         },
 
 
-                        component: './example/edit',
+                        component: './first/edit',
                     },
 
                     {
-                        name: '/example/input',
+                        name: '/example/first/input',
 
-                        path: '/example/input',
+                        path: '/example/first/input',
 
                         condition: "#member.add",
 
 
-                        component: './example/input',
+                        component: './first/input',
+                    },
+
+                    {
+                        name: '/example/secoend/edit',
+
+                        path: '/example/secoend/edit',
+
+                        condition: context => {
+                            return false;
+                        },
+
+
+                        component: './secoend/edit',
+                    },
+
+                    {
+                        name: '/example/secoend/input',
+
+                        path: '/example/secoend/input',
+
+                        condition: "#member.add",
+
+
+                        component: './secoend/input',
                     },
 
                     {
@@ -58,14 +93,44 @@ const routes: IRoute[] = [
 
                         icon: require("react"),
 
-                        path: '/example/detail',
+                        path: '/example/first/detail',
 
                         condition: "#member.add",
 
 
                         showMode: ViewShowMode.DIALOG,
 
-                        component: './example/detail',
+                        component: './first/detail',
+                    },
+
+                    {
+                        name: '标题',
+
+                        icon: require("react"),
+
+                        path: '/example/secoend/detail',
+
+                        condition: "#member.add",
+
+
+                        showMode: ViewShowMode.DIALOG,
+
+                        component: './secoend/detail',
+                    },
+
+                    {
+                        name: '标题',
+
+                        icon: require("react"),
+
+                        path: '/example/three/dash_board',
+
+                        condition: "#member.add",
+
+
+                        showMode: ViewShowMode.DIALOG,
+
+                        component: './three/DashBoard',
                     },
 
                 ]

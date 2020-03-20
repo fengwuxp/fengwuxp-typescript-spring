@@ -101,21 +101,34 @@ export const DEFAULT_CODEGEN_OPTIONS: CodeGeneratorOptions = {
  */
 export const getSimplePathname = (scanPackages: string[], filepath: string): string[] => {
     const values = filepath.split(path.sep);
-    const filename = values.pop();
-    const dir = values.pop();
-    let pathname = filename.split(".")[0];
-    const number = scanPackages.map(item => {
-        const values = item.split("/");
-        const s = values.pop();
-        if (s !== "**") {
-            return s;
+    const [filename] = values.pop().split(".");
+    const fileDir = values.join(path.sep);
+    const dirs = scanPackages.map(path.normalize).map(item => {
+        const values = item.split(path.sep);
+        let prev;
+        return values.map((val, index) => {
+            if (val === "**") {
+                return prev
+            }
+            prev = val;
+            return null;
+        }).find(item => item != null)
+    });
+
+    const dir = dirs.map((val: string) => {
+        const _dir = `${path.sep}${val}${path.sep}`;
+        const indexOf = fileDir.indexOf(_dir);
+        if (indexOf >= 0) {
+            return fileDir.substring(indexOf + _dir.length).replace(path.sep, "/");
         }
-        return values.pop();
-    }).indexOf(dir);
-    if (number >= 0) {
-        return [pathname]
+        return null
+    }).find(item => item != null);
+    if (dir == null) {
+        return [filename];
     }
-    return [dir, pathname];
+
+
+    return [dir, filename];
 };
 
 /**
