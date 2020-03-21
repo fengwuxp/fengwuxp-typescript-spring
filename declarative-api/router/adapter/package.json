@@ -13,8 +13,8 @@
     "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
   },
   "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
-  "main": "lib/index.js",
-  "module": "es/index.js",
+  "main": "esnext/index.js",
+  "module": "esnext/index.js",
   "esnext": "esnext/index.js",
   "typings": "types/index.d.ts",
   "files": [

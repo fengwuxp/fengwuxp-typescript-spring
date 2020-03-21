@@ -95,10 +95,35 @@ const mockNavigatorAdapter = {
     }
 
 } as any;
+let k = 0;
 
 @AppRouterMapping({
     navigatorAdapter: () => mockNavigatorAdapter,
-    navigatorContextAdapter: () => mockNavigatorContextAdapter
+    navigatorContextAdapter: () => mockNavigatorContextAdapter,
+    methodNameCommandResolver: () => toLineResolver,
+    confirmBeforeJumping: () => {
+        return (object) => {
+            // logger.debug("需要重定向到登录页面", object);
+            // return (object) => {
+            //     logger.debug("需要重定向到登录页面", object);
+            //     // return mockAppCommandRouter.login();
+            //     return mockAppCommandRouter.push;
+            // }
+            return (object) => {
+                return new Promise((resolve, reject) => {
+                    resolve(k++ % 2 === 0)
+                }).then((flag) => {
+                    if (flag) {
+                        console.log("继续跳转", object);
+                        return mockAppCommandRouter.push(object);
+                    } else {
+                        console.log("需要重定向到登录页面", object);
+                        return mockAppCommandRouter.login();
+                    }
+                })
+            }
+        }
+    }
 })
 abstract class AbstractCommandRouter extends AbstractAppCommandRouter {
 
@@ -106,8 +131,14 @@ abstract class AbstractCommandRouter extends AbstractAppCommandRouter {
 
 class MockAppCommandRouter extends AbstractCommandRouter {
 
-    @RouteMapping("login_view")
+    @RouteMapping("login_view", false)
     login: RouterCommandMethod;
+
+    @RouteMapping("home")
+    homeView: RouterCommandMethod;
+
+    @RouteMapping()
+    goodsListView: RouterCommandMethod;
 }
 
 const mockAppCommandRouter = new MockAppCommandRouter();
@@ -126,7 +157,10 @@ describe("test  app command router factory", () => {
     });
 
     test("test mock annotation", () => {
+        mockAppCommandRouter.push('/home');
         mockAppCommandRouter.login({id: 2}, {name: "2"});
+        mockAppCommandRouter.homeView();
+        mockAppCommandRouter.goodsListView();
         const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
         logger.debug(navigatorAdapter);
         mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})

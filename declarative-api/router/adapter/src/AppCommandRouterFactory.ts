@@ -19,6 +19,9 @@ const initialLowercase = (str: string) => {
     return str.replace(str[0], str[0].toLocaleLowerCase());
 };
 
+
+
+
 /**
  * app command router factory
  *
@@ -36,7 +39,8 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
     const navigator = new DefaultWrapperNavigatorAdapter(configuration.navigatorAdapter(), navigatorContextAdapter, confirmBeforeJumping, pathPrefix, autoJoinQueryString);
 
     return newProxyInstanceEnhance<T>(navigator as any, null,
-        (object, propertyKey: string, receiver) => {
+        (target, propertyKey: string, receiver) => {
+
 
             // isXX 方法
             if (propertyKey.startsWith("is")) {
@@ -46,7 +50,7 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
                         const path = methodNameCommandResolver(propertyKey.replace(/^is(\w+)View$/, ($1, $2) => {
                             return initialLowercase($2);
                         }));
-                        return object.isView(path);
+                        return target.isView(path);
                     }
                 }
             }
@@ -69,7 +73,13 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
                 const navigatorDescriptorObject = {
                     pathname,
                     state,
-                    uriVariables
+                    uriVariables,
+                    // 上下文信息
+                    // [VIEW_JUMP_CONTEXT_ID]: {
+                    //     // 方法重入次数
+                    //     count: 0,
+                    //     // originalMethodName: propertyKey
+                    // }
                 };
 
                 switch (command) {

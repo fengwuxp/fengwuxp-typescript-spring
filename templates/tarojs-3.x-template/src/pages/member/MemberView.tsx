@@ -1,4 +1,5 @@
-import Taro, {Component, Config} from '@tarojs/taro'
+import Taro from '@tarojs/taro'
+import React, { Component } from "react";
 import {View, Text} from '@tarojs/components'
 import './styles.less'
 import {initViewState} from "fengwuxp-tarojs-router";
@@ -19,7 +20,7 @@ export default class MemberView extends Component<MemberViewProps, MemberViewSta
 
     componentDidMount() {
 
-        initViewState(this).then((viewState) => {
+        initViewState(this as any).then((viewState) => {
             console.log("viewState", viewState);
         })
     }

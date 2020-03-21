@@ -19,4 +19,6 @@ export interface RouterCommandConfiguration {
 
     confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
 
+    // need authentication path configuration
+    authenticationViews?: () => string[];
 }

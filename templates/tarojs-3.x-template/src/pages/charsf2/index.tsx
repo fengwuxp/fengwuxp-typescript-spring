@@ -1,8 +1,9 @@
-import Taro, {Component} from '@tarojs/taro'
+import Taro from '@tarojs/taro'
+import React, { Component } from "react";
 import {View} from '@tarojs/components'
 import {fixF2} from 'taro-f2/dist/weapp/common/f2-tool'
 import {F2Canvas} from "taro-f2";
-import {initViewState} from "fengwuxp-tarojs-router";
+// import {initViewState} from "fengwuxp-tarojs-router";
 // import F2 from "@antv/f2/lib/index"
 const F2 = require('@antv/f2/lib/core'); // 必须引入
 require('@antv/f2/lib/geom/interval'); // 引入 interval 几何标记

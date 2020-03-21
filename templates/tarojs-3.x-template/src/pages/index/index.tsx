@@ -1,10 +1,11 @@
-import Taro, {Component, Config} from '@tarojs/taro'
+import Taro from '@tarojs/taro'
+import React, { Component } from "react";
 import {View, Text} from '@tarojs/components'
 import './index.less'
 import ExampleService from '@feign/services/ExampleService'
-import {AppRouter} from "@src/AppRouter";
-import DemoComponent from '@src/components/demo/DemoComponent';
-import DemoComponent2 from '@src/components/demo/DemoComponent2';
+// import {AppRouter} from "@src/AppRouter";
+// import DemoComponent from '@src/components/demo/DemoComponent';
+// import DemoComponent2 from '@src/components/demo/DemoComponent2';
 
 
 export interface IndexProps {
@@ -71,16 +72,6 @@ export default class Index extends Component<IndexProps, IndexSate> {
     componentDidHide() {
     }
 
-    /**
-     * 指定config的类型声明为: Taro.Config
-     *
-     * 由于 typescript 对于 object 类型推导只能推出 Key 的基本类型
-     * 对于像 navigationBarTextStyle: 'black' 这样的推导出的类型是 string
-     * 提示和声明 navigationBarTextStyle: 'black' | 'white' 类型冲突, 需要显示声明类型
-     */
-    config: Config = {
-        navigationBarTitleText: '首页'
-    };
 
     render() {
         const {point} = this.state;
@@ -97,11 +88,11 @@ export default class Index extends Component<IndexProps, IndexSate> {
 
                 {/*                    return <Text>{text} item</Text>*/}
                 {/*                }}/>}*/}
-                {<DemoComponent2 items={["1","222"]}
-                                 renderItem={item => {
-                                     console.log("====text==>",item)
-                                     return <Text key={1}> item</Text>
-                                 }}/>}
+                {/*{<DemoComponent2 items={["1","222"]}*/}
+                {/*                 renderItem={item => {*/}
+                {/*                     console.log("====text==>",item)*/}
+                {/*                     return <Text key={1}> item</Text>*/}
+                {/*                 }}/>}*/}
             </View>
         )
     }

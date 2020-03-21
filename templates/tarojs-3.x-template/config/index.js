@@ -9,7 +9,7 @@ const needIncludeModuleNames = [
     'taro-f2'
 ];
 const config = {
-    projectName: 'tarojs-2.x-template',
+    projectName: 'tarojs-3.x-template',
     date: '2020-1-18',
     designWidth: 750,
     deviceRatio: {

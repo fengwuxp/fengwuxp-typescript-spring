@@ -140,6 +140,7 @@ interface RouterCommandConfiguration {
     navigatorAdapter: () => NavigatorAdapter;
     navigatorContextAdapter: () => NavigatorContextAdapter;
     confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
+    authenticationViews?: () => string[];
 }
 
 /**
@@ -156,7 +157,7 @@ interface AppRouterMappingConfiguration extends Partial<RouterCommandConfigurati
     autoJoinQueryString?: boolean;
 }
 /**
- *
+ * 默认会检查url是否需要登录
  * @param configuration
  * @constructor
  */
@@ -165,9 +166,10 @@ declare const AppRouterMapping: <T>(configuration?: AppRouterMappingConfiguratio
 /**
  *
  * @param pathname
+ * @param needAuthentication 是否需要登录 default:true
  * @constructor
  */
-declare const RouteMapping: (pathname?: string) => (target: any, prop: any) => any;
+declare const RouteMapping: (pathname?: string, needAuthentication?: boolean) => (target: any, prop: any) => any;
 
 declare class AbstractAppCommandRouter implements AppCommandRouter {
     getBrowseHistory: () => Array<NavigatorDescriptorObject>;

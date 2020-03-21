@@ -6,7 +6,10 @@ import {RouterCommand} from "./RouterCommand";
 import {RouteUriVariable} from "./AppCommandRouter";
 import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
 
+
 const grabUrlPathVariableRegExp = /\{(.+?)\}/g;
+
+const VIEW_JUMP_CONTEXT_ID = '__VIEW_JUMP_CONTEXT__';
 
 /**
  * wrapper navigator
@@ -98,7 +101,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
      * @param uriVariables
      * @param state
      */
-    private jump = (routerCommand: RouterCommand, object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
+    private jump = async (routerCommand: RouterCommand, object, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
 
         if (typeof object === "string") {
             object = {
@@ -109,19 +112,34 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         }
 
         const navigatorDescriptorObject = this.resolveUriVariables(object, uriVariables, state);
+
         const pathname = navigatorDescriptorObject.pathname;
         if (!pathname.startsWith(this.pathPrefix)) {
             navigatorDescriptorObject.pathname = `${this.pathPrefix}${pathname}`
         }
-
-        const confirmResult = this.confirmBeforeJumping(navigatorDescriptorObject);
-        if (confirmResult === true) {
-            return (this.navigatorAdapter[routerCommand] as any)(navigatorDescriptorObject);
-        } else if (typeof confirmResult === "function") {
-            return confirmResult(navigatorDescriptorObject);
-        } else {
-            throw new Error("confirm before is not support");
+        let reentryTimes = 0;
+        if (navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID] != null) {
+            reentryTimes = ++navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID].reentryTimes;
         }
+        if (reentryTimes < 1) {
+            const confirmResult = this.confirmBeforeJumping(navigatorDescriptorObject);
+            if (confirmResult === true) {
+                return (this.navigatorAdapter[routerCommand] as any)(navigatorDescriptorObject);
+            } else if (typeof confirmResult === "function") {
+                if (navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID] == null) {
+                    navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID] = {
+                        reentryTimes: 0
+                    }
+                }
+                return confirmResult(navigatorDescriptorObject);
+            } else {
+                throw new Error("confirm before is not support");
+            }
+        } else {
+            delete navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID];
+            return (this.navigatorAdapter[routerCommand] as any)(navigatorDescriptorObject);
+        }
+
 
     };
 

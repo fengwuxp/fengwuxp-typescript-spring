@@ -41,8 +41,8 @@
         "./utils/*"
       ]
     },
-    "jsx": "preserve",
-    "jsxFactory": "Taro.createElement",
+    "jsx": "react",
+    "jsxFactory": "React.createElement",
     "allowJs": true,
     "resolveJsonModule": true,
     "typeRoots": [
