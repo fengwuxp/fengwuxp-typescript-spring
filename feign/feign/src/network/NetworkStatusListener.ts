@@ -15,12 +15,12 @@ export interface NetworkStatusListener {
     onChange: (callback: (networkStatus: NetworkStatus) => void) => void;
 }
 
-// wifi	wifi 网络
-// 2g	2g 网络
-// 3g	3g 网络
-// 4g	4g 网络
-// unknown	Android 下不常见的网络类型
-// none	无网络
+// wifi	    wifi network
+// 2g	    2g network
+// 3g	    3g network
+// 4g	    4g network
+// unknown	Android Uncommon network types
+// none	    No network
 export interface NetworkStatus {
 
     /**

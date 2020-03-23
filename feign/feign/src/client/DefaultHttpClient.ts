@@ -12,11 +12,17 @@ import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpR
 
 /**
  * default http client
- *
+ * Retry if needed {@see RetryHttpClient}
  */
 export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
 
 
+    /**
+     * In order to support different js runtime environments, the following parameters need to be provided
+     * @param httpAdapter           Request adapters for different platforms
+     * @param defaultProduce
+     * @param interceptors
+     */
     constructor(httpAdapter: HttpAdapter<T>,
                 defaultProduce?: HttpMediaType,
                 interceptors?: Array<ClientHttpRequestInterceptor<T>>) {

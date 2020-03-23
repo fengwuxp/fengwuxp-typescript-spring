@@ -2,7 +2,9 @@ import {FeignRequestBaseOptions} from "./FeignRequestOptions";
 import {HttpResponse} from "./client/HttpResponse";
 
 /**
- * execute interceptor
+ * Only executed in feign client
+ * {@see FeignClientExecutor#invoke}
+ * {@see DefaultFeignClientExecutor#invoke}
  */
 export interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> {
 

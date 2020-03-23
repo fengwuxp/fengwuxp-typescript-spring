@@ -10,6 +10,8 @@ export type HttpRequestBody = string | Record<string, any>;
 
 /**
  * http request client
+ * Provides basic http request capabilities
+ * Extend from {@see HttpAdapter }
  */
 export interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, InterceptingHttpAccessor {
 

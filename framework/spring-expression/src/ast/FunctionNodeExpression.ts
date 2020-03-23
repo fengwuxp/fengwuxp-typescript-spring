@@ -84,7 +84,7 @@ export default class FunctionNodeExpression implements Expression {
 
         this.expressionString = newExpression.join("");
 
-        // 执行阶段的变量列表
+        // 生成执行阶段的变量列表
         const executeVariableNames = this.getExecuteVariableNames(variableNames);
 
 

@@ -16,7 +16,6 @@ import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/Serialize
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 import {appendRequestContextId, removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
-import {REQUEST_ID_HEADER_NAME} from './constant/FeignConstVar';
 
 
 /**

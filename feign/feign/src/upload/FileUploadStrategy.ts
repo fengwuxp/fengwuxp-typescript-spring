@@ -10,6 +10,8 @@ export type FileUploadStrategyResult = FileUploadStrategyResultInterface | strin
 
 /**
  * file upload strategy
+ * Used to automatically upload files when requested and convert them to urls
+ * {@see HttpRequestDataEncoder}
  */
 export interface FileUploadStrategy<T> {
 

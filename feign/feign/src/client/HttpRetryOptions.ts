@@ -3,6 +3,7 @@ import {HttpResponse} from "./HttpResponse";
 
 /**
  * http retry options
+ * {@see RetryHttpClient}
  */
 export interface HttpRetryOptions {
 

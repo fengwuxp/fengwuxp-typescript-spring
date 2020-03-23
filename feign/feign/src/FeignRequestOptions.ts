@@ -14,6 +14,13 @@ export interface FeignRequestId {
     requestId?: Readonly<string>;
 }
 
+/**
+ * Used by the feign client to pass data during the request process and the interceptor
+ * {@code FeignClientExecutorInterceptor#preHandle} execution process, until the {@code RestTemplate#execute} method is called
+ *
+ * {@see FeignClientExecutorInterceptor#preHandle}
+ * {@see RestTemplate#execute}
+ */
 export interface FeignRequestBaseOptions extends FeignRequestId {
 
 

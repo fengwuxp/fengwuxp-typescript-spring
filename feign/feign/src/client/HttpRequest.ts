@@ -1,9 +1,12 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
 
 
-
-
-export interface HttpRequest{
+/**
+ * The payload object used to make the HTTP request
+ * {@see HttpAdapter}
+ * {@see HttpClient}
+ */
+export interface HttpRequest {
 
     /**
      * 请求url
@@ -17,7 +20,7 @@ export interface HttpRequest{
 
     /**
      * http request method
-     *  @see {@link /src/constant/http/HttpMethod}
+     * {@see HttpMethod}
      */
     method: HttpMethod | string;
 
@@ -29,7 +32,8 @@ export interface HttpRequest{
 
     /**
      * request time out times
-     * default: 10 * 1000 ms
+     * The default value needs to be provided by the implementation class that implements the HttpAdapter interface
+     * {@see HttpAdapter}
      */
     timeout?: number;
 

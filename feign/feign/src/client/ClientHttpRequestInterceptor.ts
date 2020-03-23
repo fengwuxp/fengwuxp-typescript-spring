@@ -3,6 +3,9 @@ import {HttpRequest} from "./HttpRequest";
 
 /**
  * Intercepts client-side HTTP requests.
+ * Only executed in http client
+ * {@see HttpClient#send}
+ * {@see DefaultHttpClient#send}
  */
 export interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
 

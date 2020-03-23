@@ -2,7 +2,7 @@ import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 
 
 /**
- *
+ * {@see ClientHttpRequestInterceptor} accessor
  */
 export interface InterceptingHttpAccessor {
 
