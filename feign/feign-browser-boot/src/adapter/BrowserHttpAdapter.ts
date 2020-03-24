@@ -190,7 +190,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
              */
             const contentLength = parseInt(getHeaderByName(headers, contentLengthName));
             // 降级模式
-            const responseBodyIsEmpty = contentLength === 0 || Object.is(contentLength, NaN);
+            const responseBodyIsEmpty = contentLength === 0;// || Object.is(contentLength, NaN);
             if (responseBodyIsEmpty) {
                 return Promise.resolve();
             }
