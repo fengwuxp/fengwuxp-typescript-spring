@@ -14,6 +14,7 @@ import MockFeignConfigurationTest from "./MockFeignConfigurationTest";
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
+
 describe("test feign client", () => {
 
     const mockFeignConfiguration = new MockFeignConfigurationTest();

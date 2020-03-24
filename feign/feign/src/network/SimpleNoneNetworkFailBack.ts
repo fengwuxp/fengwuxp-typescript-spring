@@ -5,8 +5,8 @@ import {HttpRequest} from "../client/HttpRequest";
  * simple network status listener
  *
  * The current request is suspended when the network status is unavailable, waiting for a while, and the request is continued after the network is restored.
- * {@field maxWaitTime}
- * {@field maxWaitLength}
+ * {@see SimpleNoneNetworkFailBack#maxWaitTime}
+ * {@see SimpleNoneNetworkFailBack#maxWaitLength}
  */
 export default class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
 

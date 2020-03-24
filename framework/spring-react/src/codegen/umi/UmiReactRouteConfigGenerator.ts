@@ -33,6 +33,9 @@ const VIEW_PATH_NAMES = [
     "Lookup",
 ];
 
+// 默认视图目录
+const DEFAULT_VIEW_DIRS = ["views", "pages"];
+
 /**
  * 基于uim js的管理后台约定路由命名方式
  * @param scanPackages
@@ -179,10 +182,9 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         routes.forEach(item => {
 
             // 转换component
-            let values = item.component.split("/");
-            let p1 = values.pop();
-            let p2 = values.pop();
-            item.component = `./${p2}/${p1}`;
+            const component = item.component;
+            const spiltItem = DEFAULT_VIEW_DIRS.map(item => `/${item}/`).find(dir => component.indexOf(dir) >= 0);
+            item.component = `./${component.substring(component.indexOf(spiltItem) + spiltItem.length)}`;
             const [$1, dir] = item.pathname.split("/");
             let routes = routeMap.get(dir);
             if (routes == null) {
