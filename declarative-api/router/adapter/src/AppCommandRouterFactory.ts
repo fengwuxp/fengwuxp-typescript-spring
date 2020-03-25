@@ -20,8 +20,6 @@ const initialLowercase = (str: string) => {
 };
 
 
-
-
 /**
  * app command router factory
  *
@@ -60,9 +58,13 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
 
                 //尝试从方法名称中解析到 指令
                 let [command, pathname] = tryConverterMethodNameCommandResolver(propertyKey, ROUTE_COMMAND_VALUES, RouterCommand.PUSH);
-                pathname = initialLowercase(pathname);
-                //尝试解析路径参数
-                pathname = methodNameCommandResolver(tryConverterPathnameVariableResolver(pathname));
+                if (target[propertyKey] == null) {
+                    pathname = initialLowercase(pathname);
+                    //尝试解析路径参数
+                    pathname = methodNameCommandResolver(tryConverterPathnameVariableResolver(pathname));
+                } else {
+                    pathname = methodNameCommandResolver(propertyKey);
+                }
 
                 if (ROUTE_COMMAND_VALUES.indexOf(state) >= 0) {
                     command = state as RouterCommand;

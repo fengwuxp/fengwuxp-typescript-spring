@@ -139,6 +139,9 @@ class MockAppCommandRouter extends AbstractCommandRouter {
 
     @RouteMapping()
     goodsListView: RouterCommandMethod;
+
+    @RouteMapping("account/BindMobilePhoneView", false)
+    bindMobile: RouterCommandMethod;
 }
 
 const mockAppCommandRouter = new MockAppCommandRouter();
@@ -160,6 +163,7 @@ describe("test  app command router factory", () => {
         mockAppCommandRouter.push('/home');
         mockAppCommandRouter.login({id: 2}, {name: "2"});
         mockAppCommandRouter.homeView();
+        mockAppCommandRouter.bindMobile();
         mockAppCommandRouter.goodsListView();
         const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
         logger.debug(navigatorAdapter);
