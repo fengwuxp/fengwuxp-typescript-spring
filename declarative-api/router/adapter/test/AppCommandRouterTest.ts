@@ -5,7 +5,7 @@ import {AppCommandRouter, RouterCommandMethod} from "../src/AppCommandRouter";
 import {RouterCommand} from "../src/RouterCommand";
 import {tryConverterPathnameVariableResolver} from "../src/PathnameMethodNameCommandResolver";
 import {toLineResolver} from "fengwuxp-declarative-command";
-import {AppRouterMapping} from '../src/annotations/AppRouterMapping';
+import {AppRouterMapping, AppRouterMappingConfiguration} from '../src/annotations/AppRouterMapping';
 import {RouteMapping} from '../src/annotations/RouteMapping';
 import {AbstractAppCommandRouter} from "../src";
 
@@ -126,10 +126,16 @@ let k = 0;
     }
 })
 abstract class AbstractCommandRouter extends AbstractAppCommandRouter {
-
+    constructor(configuration?: AppRouterMappingConfiguration) {
+        super();
+    }
 }
 
 class MockAppCommandRouter extends AbstractCommandRouter {
+
+    constructor(configuration?: AppRouterMappingConfiguration) {
+        super(configuration);
+    }
 
     @RouteMapping("login_view", false)
     login: RouterCommandMethod;
@@ -144,7 +150,13 @@ class MockAppCommandRouter extends AbstractCommandRouter {
     bindMobile: RouterCommandMethod;
 }
 
-const mockAppCommandRouter = new MockAppCommandRouter();
+const mockAppCommandRouter = new MockAppCommandRouter({
+    confirmBeforeJumping: () => {
+        return (object) => {
+            return true;
+        }
+    }
+});
 
 
 describe("test  app command router factory", () => {
@@ -159,15 +171,23 @@ describe("test  app command router factory", () => {
         }
     });
 
+    mockAppRouter.push({
+        pathname:"/index?a=1",
+        uriVariables:{
+
+        }
+    })
+
+
     test("test mock annotation", () => {
-        mockAppCommandRouter.push('/home');
-        mockAppCommandRouter.login({id: 2}, {name: "2"});
-        mockAppCommandRouter.homeView();
-        mockAppCommandRouter.bindMobile();
-        mockAppCommandRouter.goodsListView();
-        const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
-        logger.debug(navigatorAdapter);
-        mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})
+        // mockAppCommandRouter.push('/home');
+        // mockAppCommandRouter.login({id: 2}, {name: "2"});
+        mockAppCommandRouter.homeView(null,RouterCommand.RESET);
+        // mockAppCommandRouter.bindMobile();
+        // mockAppCommandRouter.goodsListView();
+        // const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
+        // logger.debug(navigatorAdapter);
+        // mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})
     });
 
     test("test mock app router", () => {

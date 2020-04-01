@@ -107,6 +107,31 @@ interface NavigatorContextAdapter<T extends NavigatorDescriptorObject = Navigato
 }
 
 /**
+ * Confirm before route jump
+ * @param object
+ * @return  NavigatorJumpRouteFunction or boolean ,if return  true: jump next route, if return route function NavigatorJumpRouteFunction
+ */
+declare type RouteConfirmBeforeJumping = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T) => true | NavigatorJumpRouteFunction;
+interface RouterCommandConfiguration {
+    methodNameCommandResolver: () => MethodNameCommandResolver;
+    navigatorAdapter: () => NavigatorAdapter;
+    navigatorContextAdapter: () => NavigatorContextAdapter;
+    confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
+    authenticationViews?: () => string[];
+}
+
+interface AppRouterMappingConfiguration extends Partial<RouterCommandConfiguration> {
+    pathPrefix?: string;
+    autoJoinQueryString?: boolean;
+}
+/**
+ * 默认会检查url是否需要登录
+ * @param options
+ * @constructor
+ */
+declare const AppRouterMapping: <T>(options?: AppRouterMappingConfiguration) => Function;
+
+/**
  * uri path variable
  */
 declare type UriPathVariable = Array<boolean | string | number | Date>;
@@ -125,22 +150,9 @@ declare type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (
  * app command router
  */
 interface AppCommandRouter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> extends NavigatorAdapter<T>, NavigatorContextAdapter<T> {
+    new?(configuration?: AppRouterMappingConfiguration): AppCommandRouter;
     getNavigatorAdapter: () => NavigatorAdapter;
     getNavigatorContextAdapter: () => NavigatorContextAdapter;
-}
-
-/**
- * Confirm before route jump
- * @param object
- * @return  NavigatorJumpRouteFunction or boolean ,if return  true: jump next route, if return route function NavigatorJumpRouteFunction
- */
-declare type RouteConfirmBeforeJumping = <T extends NavigatorDescriptorObject = NavigatorDescriptorObject>(object: T) => true | NavigatorJumpRouteFunction;
-interface RouterCommandConfiguration {
-    methodNameCommandResolver: () => MethodNameCommandResolver;
-    navigatorAdapter: () => NavigatorAdapter;
-    navigatorContextAdapter: () => NavigatorContextAdapter;
-    confirmBeforeJumping?: () => RouteConfirmBeforeJumping;
-    authenticationViews?: () => string[];
 }
 
 /**
@@ -151,17 +163,6 @@ interface RouterCommandConfiguration {
  * @param autoJoinQueryString
  */
 declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>>(configuration: RouterCommandConfiguration, pathPrefix?: string, autoJoinQueryString?: boolean) => T;
-
-interface AppRouterMappingConfiguration extends Partial<RouterCommandConfiguration> {
-    pathPrefix?: string;
-    autoJoinQueryString?: boolean;
-}
-/**
- * 默认会检查url是否需要登录
- * @param configuration
- * @constructor
- */
-declare const AppRouterMapping: <T>(configuration?: AppRouterMappingConfiguration) => Function;
 
 /**
  *

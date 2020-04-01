@@ -185,13 +185,18 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             const component = item.component;
             const spiltItem = DEFAULT_VIEW_DIRS.map(item => `/${item}/`).find(dir => component.indexOf(dir) >= 0);
             item.component = `./${component.substring(component.indexOf(spiltItem) + spiltItem.length)}`;
-            const [$1, dir] = item.pathname.split("/");
-            let routes = routeMap.get(dir);
-            if (routes == null) {
-                routes = [];
-                routeMap.set(dir, routes);
+            const [$0, $1, $2, $3] = item.pathname.split("/");
+            const dirs = [$0, $1];
+            if (StringUtils.hasText($3)) {
+                dirs.push($2)
             }
-            routes.push(item);
+            let dir = dirs.join("/");
+            let routeList = routeMap.get(dir);
+            if (routeList == null) {
+                routeList = [];
+                routeMap.set(dir, routeList);
+            }
+            routeList.push(item);
         });
 
         const result = [];
@@ -216,7 +221,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 routes: sortRoutes,
                 name: this.getRouteName(first) || '',
                 title: first.title || '',
-                path: `/${key}`,
+                path: key.startsWith("/") ? key : `/${key}`,
                 redirect: first.pathname,
                 icon
             })

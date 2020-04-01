@@ -1,6 +1,7 @@
 import {RouterCommand} from "./RouterCommand";
 import {NavigatorAdapter, NavigatorDescriptorObject} from "./NavigatorAdapter";
 import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
+import {AppRouterMappingConfiguration} from "./annotations/AppRouterMapping";
 
 
 /**
@@ -48,6 +49,7 @@ export type RouterCommandMethod<T = RouteUriVariable, S = RouteUriVariable> = (u
  */
 export interface AppCommandRouter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> extends NavigatorAdapter<T>, NavigatorContextAdapter<T> {
 
+    new?(configuration?: AppRouterMappingConfiguration): AppCommandRouter
 
     getNavigatorAdapter: () => NavigatorAdapter;
 

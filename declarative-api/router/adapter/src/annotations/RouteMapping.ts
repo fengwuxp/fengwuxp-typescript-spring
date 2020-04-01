@@ -8,7 +8,7 @@ export const AUTHENTICATION_VIEWS: string[] = [];
  */
 export const RouteMapping = (pathname?: string, needAuthentication: boolean = true) => {
 
-    return function (target, prop) {
+    return function (target, prop: string) {
         target[prop] = function () {
         };
         target[prop].pathname = pathname;

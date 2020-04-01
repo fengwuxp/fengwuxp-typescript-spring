@@ -1,5 +1,9 @@
-import {AbstractAppCommandRouter, AppRouterMapping} from "fengwuxp-declarative-router-adapter";
-import { getRouterCommandConfiguration } from './TarojsAppCommandRouterFactory';
+import {
+    AbstractAppCommandRouter,
+    AppRouterMapping,
+    AppRouterMappingConfiguration
+} from "fengwuxp-declarative-router-adapter";
+import {getRouterCommandConfiguration} from './TarojsAppCommandRouterFactory';
 
 
 /**
@@ -9,6 +13,10 @@ import { getRouterCommandConfiguration } from './TarojsAppCommandRouterFactory';
     ...getRouterCommandConfiguration(undefined),
     pathPrefix: "/pages/"
 })
-export abstract class AbstractTarojsCommandRouter extends AbstractAppCommandRouter{
+export abstract class AbstractTarojsCommandRouter extends AbstractAppCommandRouter {
 
+    constructor(configuration?: AppRouterMappingConfiguration) {
+        super();
+    }
 }
+

@@ -1,9 +1,11 @@
 import {AppCommandRouter, RouteUriVariable} from "./AppCommandRouter";
 import {NavigatorAdapter, NavigatorDescriptorObject, NavigatorJumpRouteFunction} from "./NavigatorAdapter";
 import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
+import {AppRouterMappingConfiguration} from "./annotations/AppRouterMapping";
 
 
 export class AbstractAppCommandRouter implements AppCommandRouter {
+
     getBrowseHistory: () => Array<NavigatorDescriptorObject>;
     getCurrentObject: () => NavigatorDescriptorObject;
     getCurrentPathname: () => string;

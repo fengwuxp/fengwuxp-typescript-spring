@@ -23,7 +23,10 @@
       "dom",
       "es6",
       "es2015",
-      "es2015.promise"
+      "es2015.promise",
+      "es7",
+      "es2018",
+      "es2019.array"
     ]
   },
   "include": [

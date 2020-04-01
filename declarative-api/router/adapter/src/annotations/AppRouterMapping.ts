@@ -13,21 +13,31 @@ export interface AppRouterMappingConfiguration extends Partial<RouterCommandConf
 
 /**
  * 默认会检查url是否需要登录
- * @param configuration
+ * @param options
  * @constructor
  */
-export const AppRouterMapping = <T>(configuration?: AppRouterMappingConfiguration): Function => {
+export const AppRouterMapping = <T>(options?: AppRouterMappingConfiguration): Function => {
 
     return (clazz: { new(...args: T[]): {} }): T & Partial<AppCommandRouter> => {
 
-        const methodNameCommandResolver = configuration.methodNameCommandResolver == null ? null : configuration.methodNameCommandResolver();
+        const methodNameCommandResolver = options.methodNameCommandResolver == null ? null : options.methodNameCommandResolver();
 
 
-        const pathPrefix = configuration.pathPrefix || '';
+        const pathPrefix = options.pathPrefix || '';
         // @ts-ignore
         return class extends clazz implements AppCommandRouter {
-            constructor() {
+
+
+            constructor(configuration?: AppRouterMappingConfiguration) {
                 super();
+                if (configuration == null) {
+                    configuration = options;
+                } else {
+                    configuration = {
+                        ...options,
+                        ...configuration
+                    }
+                }
                 const transformMethodNameToPathname = (methodName) => {
                     const method = this[methodName];
                     let pathname = methodName;

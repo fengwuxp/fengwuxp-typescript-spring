@@ -1,4 +1,4 @@
-import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouteConfirmBeforeJumping, NavigatorContextAdapter, RouterCommandConfiguration, AppCommandRouter, AbstractAppCommandRouter } from 'fengwuxp-declarative-router-adapter';
+import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouteConfirmBeforeJumping, NavigatorContextAdapter, RouterCommandConfiguration, AppCommandRouter, AbstractAppCommandRouter, AppRouterMappingConfiguration } from 'fengwuxp-declarative-router-adapter';
 import Taro from '@tarojs/taro';
 import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
 
@@ -55,6 +55,7 @@ declare const tarojsAppCommandRouterFactory: <T extends AppCommandRouter<Navigat
  * 抽象的tarojs命令路由器
  */
 declare abstract class AbstractTarojsCommandRouter extends AbstractAppCommandRouter {
+    constructor(configuration?: AppRouterMappingConfiguration);
 }
 
 export { AbstractTarojsCommandRouter, TaroNavigatorAdapter, ViewRouteState, getRouterCommandConfiguration, initViewState, setNextViewState, tarojsAppCommandRouterFactory, transferViewState };

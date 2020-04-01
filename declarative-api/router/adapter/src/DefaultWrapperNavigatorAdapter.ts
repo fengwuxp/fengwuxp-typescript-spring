@@ -24,6 +24,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
 
     private confirmBeforeJumping: RouteConfirmBeforeJumping;
 
+    // 路径前缀 web context path
     private pathPrefix: string;
 
     /**
