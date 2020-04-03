@@ -1,7 +1,6 @@
 import {HttpRequest} from "./HttpRequest";
 
 
-
 /**
  * authentication strategy
  */
@@ -21,10 +20,18 @@ export interface AuthenticationStrategy<T extends AuthenticationToken = Authenti
 
 }
 
+
+// never refresh token
+export const NEVER_REFRESH_TIME = -1;
+
 export interface AuthenticationToken {
 
     authorization: string;
 
+    /**
+     * token expire  time
+     * {@see NEVER_REFRESH_TIME}
+     */
     expireDate: number;
 
 }

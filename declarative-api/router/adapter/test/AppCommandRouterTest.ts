@@ -180,14 +180,14 @@ describe("test  app command router factory", () => {
 
 
     test("test mock annotation", () => {
-        // mockAppCommandRouter.push('/home');
-        // mockAppCommandRouter.login({id: 2}, {name: "2"});
+        mockAppCommandRouter.push('/home');
+        mockAppCommandRouter.login({id: 2}, {name: "2"});
         mockAppCommandRouter.homeView(null,RouterCommand.RESET);
-        // mockAppCommandRouter.bindMobile();
-        // mockAppCommandRouter.goodsListView();
-        // const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
-        // logger.debug(navigatorAdapter);
-        // mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})
+        mockAppCommandRouter.bindMobile();
+        mockAppCommandRouter.goodsListView();
+        const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
+        logger.debug(navigatorAdapter);
+        mockAppCommandRouter.push("/test", {id: 2}, {name: "2"})
     });
 
     test("test mock app router", () => {

@@ -107,7 +107,10 @@ export class MockFeignConfiguration implements FeignConfiguration {
             new AuthenticationClientHttpRequestInterceptor({
                 getAuthorization: (req): AuthenticationToken => {
 
-                    return authenticationToken
+                    return {
+                        authorization: Math.round(1) + '',
+                        expireDate: -1
+                    }
                 },
                 refreshAuthorization: (authorization, req) => {
                     ++refreshTokenCount;
@@ -115,7 +118,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                     const _newAuthenticationToken = {
                         ...authenticationToken
                     };
-                    _newAuthenticationToken.authorization = "refresh-token";
+                    _newAuthenticationToken.authorization =Math.round(1) + '';// "refresh-token";
                     _newAuthenticationToken.expireDate = new Date().getTime() + 60 * 60 * 1000;
                     authorization = _newAuthenticationToken;
                     return new Promise((resolve, reject) => {

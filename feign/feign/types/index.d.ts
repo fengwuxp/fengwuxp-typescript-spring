@@ -20,6 +20,11 @@ declare enum HttpMethod {
     CONNECT = "CONNECT"
 }
 
+/**
+ * The payload object used to make the HTTP request
+ * {@see HttpAdapter}
+ * {@see HttpClient}
+ */
 interface HttpRequest {
     /**
      * 请求url
@@ -31,7 +36,7 @@ interface HttpRequest {
     body?: any;
     /**
      * http request method
-     *  @see {@link /src/constant/http/HttpMethod}
+     * {@see HttpMethod}
      */
     method: HttpMethod | string;
     /**
@@ -40,13 +45,17 @@ interface HttpRequest {
     headers?: Record<string, string>;
     /**
      * request time out times
-     * default: 10 * 1000 ms
+     * The default value needs to be provided by the implementation class that implements the HttpAdapter interface
+     * {@see HttpAdapter}
      */
     timeout?: number;
 }
 
 /**
  * http request response
+ *
+ * Unified http response. Implementations of different platforms need to return instances of the object or subclasses of the object.
+ * {@see HttpAdapter}
  */
 interface HttpResponse<T = any> {
     /**
@@ -75,6 +84,9 @@ interface HttpResponse<T = any> {
  * http request adapter
  *
  * different http clients can be implemented according to different java script runtime environments.
+ *
+ * {@param T} T extends {@see HttpRequest} Implementers can expand according to different situations
+ * {@see HttpResponse}
  */
 interface HttpAdapter<T extends HttpRequest = HttpRequest> {
     /**
@@ -215,6 +227,7 @@ declare const FileUpload: <REQ = any, T extends FeignClient = FeignClient>(optio
 
 /**
  * http retry options
+ * {@see RetryHttpClient}
  */
 interface HttpRetryOptions {
     /**
@@ -254,6 +267,9 @@ declare const FeignRetry: <T extends FeignClient>(options: HttpRetryOptions) => 
 
 /**
  * Intercepts client-side HTTP requests.
+ * Only executed in http client
+ * {@see HttpClient#send}
+ * {@see DefaultHttpClient#send}
  */
 interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
     interceptor: ClientHttpRequestInterceptorFunction<T>;
@@ -268,7 +284,7 @@ declare type ClientHttpRequestInterceptorFunction<T extends HttpRequest = HttpRe
 declare type ClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> = ClientHttpRequestInterceptorFunction<T> | ClientHttpRequestInterceptorInterface<T>;
 
 /**
- *
+ * {@see ClientHttpRequestInterceptor} accessor
  */
 interface InterceptingHttpAccessor {
     /**
@@ -288,6 +304,8 @@ interface InterceptingHttpAccessor {
 declare type HttpRequestBody = string | Record<string, any>;
 /**
  * http request client
+ * Provides basic http request capabilities
+ * Extend from {@see HttpAdapter }
  */
 interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, InterceptingHttpAccessor {
     /**
@@ -646,6 +664,13 @@ interface FeignRequestId {
      */
     requestId?: Readonly<string>;
 }
+/**
+ * Used by the feign client to pass data during the request process and the interceptor
+ * {@code FeignClientExecutorInterceptor#preHandle} execution process, until the {@code RestTemplate#execute} method is called
+ *
+ * {@see FeignClientExecutorInterceptor#preHandle}
+ * {@see RestTemplate#execute}
+ */
 interface FeignRequestBaseOptions extends FeignRequestId {
     /**
      * external query parameters
@@ -812,7 +837,9 @@ interface FeignClientExecutor<T extends FeignClient = FeignProxyClient> {
 }
 
 /**
- * execute interceptor
+ * Only executed in feign client
+ * {@see FeignClientExecutor#invoke}
+ * {@see DefaultFeignClientExecutor#invoke}
  */
 interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> {
     /**
@@ -932,9 +959,15 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
 
 /**
  * default http client
- *
+ * Retry if needed {@see RetryHttpClient}
  */
 declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+    /**
+     * In order to support different js runtime environments, the following parameters need to be provided
+     * @param httpAdapter           Request adapters for different platforms
+     * @param defaultProduce
+     * @param interceptors
+     */
     constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
     send: (req: T) => Promise<HttpResponse<any>>;
     private resolveContentType;
@@ -996,6 +1029,10 @@ interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationT
 }
 interface AuthenticationToken {
     authorization: string;
+    /**
+     * token expire  time
+     * {@see NEVER_REFRESH_TIME}
+     */
     expireDate: number;
 }
 
@@ -1012,7 +1049,7 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
         request: HttpRequest;
     }>;
     private aheadOfTimes;
-    private authenticationStrategy;
+    private _authenticationStrategy;
     private blockingRefreshAuthorization;
     private looseMode;
     /**
@@ -1024,6 +1061,7 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
      */
     constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, looseMode?: boolean, blockingRefreshAuthorization?: boolean);
     interceptor: (req: T) => Promise<T>;
+    set authenticationStrategy(value: AuthenticationStrategy<AuthenticationToken>);
     /**
      * append authorization header
      * @param authorization
@@ -1131,8 +1169,8 @@ declare class DefaultNoneNetworkFailBack<T extends HttpRequest = HttpRequest> im
  * simple network status listener
  *
  * The current request is suspended when the network status is unavailable, waiting for a while, and the request is continued after the network is restored.
- * {@field maxWaitTime}
- * {@field maxWaitLength}
+ * {@see SimpleNoneNetworkFailBack#maxWaitTime}
+ * {@see SimpleNoneNetworkFailBack#maxWaitLength}
  */
 declare class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpRequest> implements NoneNetworkFailBack<T> {
     /**
@@ -1654,6 +1692,8 @@ interface FileUploadStrategyResultInterface {
 declare type FileUploadStrategyResult = FileUploadStrategyResultInterface | string;
 /**
  * file upload strategy
+ * Used to automatically upload files when requested and convert them to urls
+ * {@see HttpRequestDataEncoder}
  */
 interface FileUploadStrategy<T> {
     /**

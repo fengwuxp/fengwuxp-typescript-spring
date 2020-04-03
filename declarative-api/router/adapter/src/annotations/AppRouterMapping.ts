@@ -23,7 +23,6 @@ export const AppRouterMapping = <T>(options?: AppRouterMappingConfiguration): Fu
         const methodNameCommandResolver = options.methodNameCommandResolver == null ? null : options.methodNameCommandResolver();
 
 
-        const pathPrefix = options.pathPrefix || '';
         // @ts-ignore
         return class extends clazz implements AppCommandRouter {
 
@@ -38,6 +37,7 @@ export const AppRouterMapping = <T>(options?: AppRouterMappingConfiguration): Fu
                         ...configuration
                     }
                 }
+                const pathPrefix = configuration.pathPrefix || '';
                 const transformMethodNameToPathname = (methodName) => {
                     const method = this[methodName];
                     let pathname = methodName;

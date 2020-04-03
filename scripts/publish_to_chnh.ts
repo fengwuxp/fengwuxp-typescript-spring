@@ -42,8 +42,8 @@ function readFilDirList(projectPath: string) {
     });
 }
 
-const fixedVersion = '"version": "1.0.0"';
-const targetVersion = '"version": "1.0.1"';
+const fixedVersion = '"version": "1.0.3"';
+const targetVersion = '"version": "1.0.4"';
 
 /**
  * 替换发布的仓库
