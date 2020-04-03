@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-browser-router",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "declarative browser router",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

@@ -9,7 +9,7 @@ import {GenerateSpringReactRouteOptions} from "../GenerateSpringReactRouteOption
 import {logger} from "fengwuxp-spring-core/esnext/debug/Log4jsHelper";
 import * as path from "path";
 import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
-import {RouteLevel, UmiCodeGeneratorOptions} from "./UmiCodeGeneratorOptions";
+import {RouteLevel, UmiCodeGeneratorOptions, UmiRoute} from "./UmiCodeGeneratorOptions";
 import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 import {isObjectExpression, isStringLiteral, ObjectProperty} from "@babel/types";
 
@@ -158,6 +158,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         const name = prop.key.name;
         const value = prop.value;
         if (name == "pageHeader") {
+            // 页面header
             if (isObjectExpression(value)) {
                 value.properties.map((item: ObjectProperty) => {
                     const value = item.value;
@@ -178,6 +179,9 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         icon: string
     }> => {
 
+        /**
+         * @key 路由的第一级目录
+         */
         const routeMap: Map<string, GenerateSpringReactRouteOptions[]> = new Map<string, GenerateSpringReactRouteOptions[]>();
         routes.forEach(item => {
 
@@ -190,8 +194,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             if (StringUtils.hasText($3)) {
                 dirs.push($2)
             }
-            let dir = dirs.join("/");
-            let routeList = routeMap.get(dir);
+            const dir = dirs.join("/");
+            let routeList = routeMap.get($0);
             if (routeList == null) {
                 routeList = [];
                 routeMap.set(dir, routeList);
@@ -199,36 +203,52 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             routeList.push(item);
         });
 
-        const result = [];
-
-        for (const [key, routes] of routeMap.entries()) {
-
-            const sortRoutes = this.sortRoute(routes);
-            const first = sortRoutes[0];
-            let icon = first.icon;
-            if (icon == null) {
-                icon = "require('@ant-design/icons-svg/lib/asn/SmileOutlined').default";
-            } else {
-                if (!icon.startsWith("require")) {
-                    icon = `'${icon}'`;
-                }
+        const margeRouteMap: Map<string, UmiRoute> = new Map<string, UmiRoute>();
+        // 合并前缀相同的路由
+        routeMap.forEach((routes, key) => {
+            const keys = key.split("/").filter(k => StringUtils.hasText(k));
+            if (keys.length === 1) {
+                // 目录没有子目录
+                const umiRoute = this.getUmiRoute(key, routes);
+                margeRouteMap.set(key, {
+                    redirect: umiRoute.redirect,
+                    name: umiRoute.name,
+                    path: umiRoute.path,
+                    title: umiRoute.title,
+                    icon: this.getIcon(null),
+                    routes: [
+                        umiRoute
+                    ]
+                });
+                return
             }
+            // 目录存在子目录
+            const [prefix, $1] = keys;
+            let val = margeRouteMap.get(prefix);
+            const umiRoute = this.getUmiRoute(`${prefix}/${$1}`, routes);
+            if (val == null) {
+                val = {
+                    redirect: prefix,
+                    name: prefix,
+                    path: prefix,
+                    title: prefix,
+                    icon: this.getIcon(null),
+                    routes: []
+                };
+                margeRouteMap.set(prefix, val);
+            }
+            val.routes.push(umiRoute)
+        });
 
-            sortRoutes.forEach(item => {
-                item.name = this.getRouteName(item) || '';
-            });
-            result.push({
-                routes: sortRoutes,
-                name: this.getRouteName(first) || '',
-                title: first.title || '',
-                path: key.startsWith("/") ? key : `/${key}`,
-                redirect: first.pathname,
-                icon
-            })
+
+        const result = [];
+        for (const [key, routes] of margeRouteMap.entries()) {
+            result.push(this.getUmiRoute(key, routes))
         }
 
         return result;
     };
+
 
     protected getRouteOrder = (route: GenerateSpringReactRouteOptions) => {
         if (route.order != null) {
@@ -243,6 +263,39 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         return this.maxRouteOrder;
     };
 
+    private getUmiRoute = (key, routes) => {
+
+        if (!Array.isArray(routes)) {
+            return routes;
+        }
+
+        const sortRoutes = this.sortRoute(routes);
+        const first = sortRoutes[0];
+        const icon = this.getIcon(first.icon);
+        sortRoutes.forEach(item => {
+            item.name = this.getRouteName(item) || '';
+        });
+        return {
+            routes: sortRoutes,
+            name: this.getRouteName(first) || '',
+            title: first.title || '',
+            path: key.startsWith("/") ? key : `/${key}`,
+            redirect: first.pathname,
+            icon
+        };
+
+    };
+
+    private getIcon = (icon) => {
+        if (icon == null) {
+            return "require('@ant-design/icons-svg/lib/asn/SmileOutlined').default";
+        } else {
+            if (!icon.startsWith("require")) {
+                return `'${icon}'`;
+            }
+        }
+        return icon;
+    };
 
     private getRouteName = (item: GenerateSpringReactRouteOptions): string => {
         const name = ["name", "title", "pathname"].find((key) => {

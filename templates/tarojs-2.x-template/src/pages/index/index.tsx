@@ -5,6 +5,7 @@ import ExampleService from '@feign/services/ExampleService'
 import {AppRouter} from "@src/AppRouter";
 import DemoComponent from '@src/components/demo/DemoComponent';
 import DemoComponent2 from '@src/components/demo/DemoComponent2';
+import RefreshListContainer from '@src/components/pull-refresh/refreshListContainer';
 
 
 export interface IndexProps {
@@ -89,7 +90,7 @@ export default class Index extends Component<IndexProps, IndexSate> {
             return;
         }
         return (
-            <View className='index'>
+            <RefreshListContainer className='index'>
                 <Text>Hello world! {point.x}</Text>
                 {this.renderItem()}
                 {/*{<DemoComponent items={["1", "2"]}*/}
@@ -102,7 +103,7 @@ export default class Index extends Component<IndexProps, IndexSate> {
                                      console.log("====text==>",item)
                                      return <Text key={1}> item</Text>
                                  }}/>}
-            </View>
+            </RefreshListContainer>
         )
     }
 

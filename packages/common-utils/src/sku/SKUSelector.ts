@@ -89,7 +89,7 @@ export interface SKUSelector<V extends SKUItemValue = SKUItemValue> {
 
     /**
      * 随机选中一个
-     *  @return   当前选中的规格值以及和当前选中规格组合库存不足的规格
+     *  @return
      */
     randomSelectedSku: () => Promise<SelectResult<V>>
 

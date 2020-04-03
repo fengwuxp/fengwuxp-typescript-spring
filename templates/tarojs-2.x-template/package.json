@@ -50,7 +50,8 @@
     "nerv-devtools": "^1.5.6",
     "nervjs": "^1.5.6",
     "oak-common": "^1.0.0",
-    "taro-f2": "^2.2.0"
+    "taro-f2": "^2.2.0",
+    "taro-ui": "^2.3.2"
   },
   "devDependencies": {
     "@tarojs/mini-runner": "2.0.1",

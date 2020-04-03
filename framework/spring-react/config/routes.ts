@@ -4,18 +4,19 @@ import {ViewShowMode} from "fengwuxp-routing-core";
 const routes: IRoute[] = [
 
     {
-        name: '/example/first/list管理',
+        name: 'example管理',
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//example/first',
+        path: 'example',
         routes: [
+
             {
                 name: '/example/first/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//example/first',
+                path: '/example/first',
                 routes: [
 
                     {
@@ -29,64 +30,15 @@ const routes: IRoute[] = [
                         component: './example/first/list',
                     },
 
-                    {
-                        name: '/example/first/edit',
-
-                        path: '/example/first/edit',
-
-                        condition: context => {
-                            return false;
-                        },
-
-
-                        component: './example/first/edit',
-                    },
-
-                    {
-                        name: '/example/first/input',
-
-                        path: '/example/first/input',
-
-                        condition: "#member.add",
-
-
-                        component: './example/first/input',
-                    },
-
-                    {
-                        name: '标题',
-
-                        icon: require("react"),
-
-                        path: '/example/first/detail',
-
-                        condition: "#member.add",
-
-
-                        showMode: ViewShowMode.DIALOG,
-
-                        component: './example/first/detail',
-                    },
-
                 ]
-            }
-        ]
-    },
+            },
 
-
-    {
-        name: '/example/secoend/list管理',
-
-        icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
-
-        path: '//example/secoend',
-        routes: [
             {
                 name: '/example/secoend/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//example/secoend',
+                path: '/example/secoend',
                 routes: [
 
                     {
@@ -100,64 +52,15 @@ const routes: IRoute[] = [
                         component: './example/secoend/list',
                     },
 
-                    {
-                        name: '/example/secoend/edit',
-
-                        path: '/example/secoend/edit',
-
-                        condition: context => {
-                            return false;
-                        },
-
-
-                        component: './example/secoend/edit',
-                    },
-
-                    {
-                        name: '/example/secoend/input',
-
-                        path: '/example/secoend/input',
-
-                        condition: "#member.add",
-
-
-                        component: './example/secoend/input',
-                    },
-
-                    {
-                        name: '标题',
-
-                        icon: require("react"),
-
-                        path: '/example/secoend/detail',
-
-                        condition: "#member.add",
-
-
-                        showMode: ViewShowMode.DIALOG,
-
-                        component: './example/secoend/detail',
-                    },
-
                 ]
-            }
-        ]
-    },
+            },
 
-
-    {
-        name: '标题管理',
-
-        icon: require("react"),
-
-        path: '//example/three',
-        routes: [
             {
                 name: '标题',
 
                 icon: require("react"),
 
-                path: '//example/three',
+                path: '/example/three',
                 routes: [
 
                     {
@@ -176,7 +79,8 @@ const routes: IRoute[] = [
                     },
 
                 ]
-            }
+            },
+
         ]
     },
 
@@ -186,14 +90,15 @@ const routes: IRoute[] = [
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//goods',
+        path: '/goods',
         routes: [
+
             {
                 name: '/goods/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//goods',
+                path: '/goods',
                 routes: [
 
                     {
@@ -205,43 +110,9 @@ const routes: IRoute[] = [
                         component: './goods/list',
                     },
 
-                    {
-                        name: '/goods/input',
-
-                        path: '/goods/input',
-
-                        condition: "member.add",
-
-
-                        component: './goods/input',
-                    },
-
-                    {
-                        name: '/goods/edit',
-
-                        path: '/goods/edit',
-
-                        condition: context => {
-                            return false;
-                        },
-
-
-                        component: './goods/edit',
-                    },
-
-                    {
-                        name: '/goods/detail',
-
-                        path: '/goods/detail',
-
-                        condition: "member.add",
-
-
-                        component: './goods/detail',
-                    },
-
                 ]
-            }
+            },
+
         ]
     },
 
@@ -251,14 +122,15 @@ const routes: IRoute[] = [
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//index',
+        path: '/index',
         routes: [
+
             {
                 name: '/index',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//index',
+                path: '/index',
                 routes: [
 
                     {
@@ -273,7 +145,8 @@ const routes: IRoute[] = [
                     },
 
                 ]
-            }
+            },
+
         ]
     },
 
@@ -283,14 +156,15 @@ const routes: IRoute[] = [
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//member',
+        path: '/member',
         routes: [
+
             {
                 name: '/member/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//member',
+                path: '/member',
                 routes: [
 
                     {
@@ -302,30 +176,9 @@ const routes: IRoute[] = [
                         component: './member/list',
                     },
 
-                    {
-                        name: '/member/input',
-
-                        path: '/member/input',
-
-                        condition: "member.add",
-
-
-                        component: './member/input',
-                    },
-
-                    {
-                        name: '详情',
-
-                        path: '/member/detail',
-
-                        condition: "member.add",
-
-
-                        component: './member/detail',
-                    },
-
                 ]
-            }
+            },
+
         ]
     },
 
@@ -335,14 +188,15 @@ const routes: IRoute[] = [
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//member_edit',
+        path: '/member_edit',
         routes: [
+
             {
                 name: '用户编辑',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//member_edit',
+                path: '/member_edit',
                 routes: [
 
                     {
@@ -359,7 +213,8 @@ const routes: IRoute[] = [
                     },
 
                 ]
-            }
+            },
+
         ]
     },
 
@@ -369,14 +224,15 @@ const routes: IRoute[] = [
 
         icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-        path: '//order',
+        path: '/order',
         routes: [
+
             {
                 name: '/order/list',
 
                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
 
-                path: '//order',
+                path: '/order',
                 routes: [
 
                     {
@@ -388,43 +244,9 @@ const routes: IRoute[] = [
                         component: './order/list',
                     },
 
-                    {
-                        name: '/order/input',
-
-                        path: '/order/input',
-
-                        condition: "member.add",
-
-
-                        component: './order/input',
-                    },
-
-                    {
-                        name: '/order/edit',
-
-                        path: '/order/edit',
-
-                        condition: context => {
-                            return false;
-                        },
-
-
-                        component: './order/edit',
-                    },
-
-                    {
-                        name: '/order/detail',
-
-                        path: '/order/detail',
-
-                        condition: "member.add",
-
-
-                        component: './order/detail',
-                    },
-
                 ]
-            }
+            },
+
         ]
     },
 

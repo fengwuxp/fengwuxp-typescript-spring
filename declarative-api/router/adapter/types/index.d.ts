@@ -170,7 +170,7 @@ declare const appCommandRouterFactory: <T extends AppCommandRouter<NavigatorDesc
  * @param needAuthentication 是否需要登录 default:true
  * @constructor
  */
-declare const RouteMapping: (pathname?: string, needAuthentication?: boolean) => (target: any, prop: any) => any;
+declare const RouteMapping: (pathname?: string, needAuthentication?: boolean) => (target: any, prop: string) => any;
 
 declare class AbstractAppCommandRouter implements AppCommandRouter {
     getBrowseHistory: () => Array<NavigatorDescriptorObject>;
