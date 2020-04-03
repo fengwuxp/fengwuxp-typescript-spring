@@ -28,7 +28,12 @@ export {default as RoutingClientHttpRequestInterceptor} from "./client/RoutingCl
 export {
     default as AuthenticationClientHttpRequestInterceptor
 } from "./client/AuthenticationClientHttpRequestInterceptor";
-export {AuthenticationToken, AuthenticationStrategy} from "./client/AuthenticationStrategy";
+export {
+    AuthenticationToken,
+    AuthenticationStrategy,
+    CacheableAuthenticationStrategy,
+    NEVER_REFRESH_FLAG
+} from "./client/AuthenticationStrategy";
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
 export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";

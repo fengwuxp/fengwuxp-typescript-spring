@@ -1,10 +1,23 @@
 import {HttpRequest} from "./HttpRequest";
 
 
+
+/**
+ * marked authentication strategy cache support
+ *
+ * {@see CacheAuthenticationStrategy}
+ * {@see AuthenticationClientHttpRequestInterceptor}
+ */
+export interface CacheableAuthenticationStrategy {
+
+    // enable cache support
+    readonly enableCache?: boolean;
+}
+
 /**
  * authentication strategy
  */
-export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
+export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends CacheableAuthenticationStrategy{
 
     /**
      * get authorization header names
@@ -21,8 +34,10 @@ export interface AuthenticationStrategy<T extends AuthenticationToken = Authenti
 }
 
 
-// never refresh token
-export const NEVER_REFRESH_TIME = -1;
+
+
+// never refresh token flag
+export const NEVER_REFRESH_FLAG = -1;
 
 export interface AuthenticationToken {
 

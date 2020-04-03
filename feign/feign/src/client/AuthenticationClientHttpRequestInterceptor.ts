@@ -1,7 +1,7 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 import {HttpStatus} from "../constant/http/HttpStatus";
-import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_TIME} from "./AuthenticationStrategy";
+import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
 
@@ -34,7 +34,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     // Refresh tokens 5 minutes in advance by default
     private aheadOfTimes: number;
 
-    private _authenticationStrategy: AuthenticationStrategy;
+    private authenticationStrategy: AuthenticationStrategy;
 
     // blocking 'authorization' refresh
     private blockingRefreshAuthorization: boolean;
@@ -53,7 +53,11 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 aheadOfTimes?: number,
                 looseMode: boolean = true,
                 blockingRefreshAuthorization: boolean = true) {
-        this._authenticationStrategy = authenticationStrategy;// new CacheAuthenticationStrategy(authenticationStrategy);
+        if (authenticationStrategy.enableCache) {
+            this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
+        } else {
+            this.authenticationStrategy = authenticationStrategy;
+        }
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
         this.blockingRefreshAuthorization = blockingRefreshAuthorization;
         this.looseMode = looseMode
@@ -82,10 +86,10 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return req;
         }
 
-        const {aheadOfTimes, blockingRefreshAuthorization, _authenticationStrategy} = this;
+        const {aheadOfTimes, blockingRefreshAuthorization, looseMode, authenticationStrategy} = this;
         let authorization: AuthenticationToken;
         try {
-            authorization = await _authenticationStrategy.getAuthorization(req);
+            authorization = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
             if (!forceCertification) {
                 return req;
@@ -100,7 +104,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         }
 
         const needRefreshAuthorization = authorization.expireDate < new Date().getTime() + aheadOfTimes;
-        if (authorization.expireDate === NEVER_REFRESH_TIME || !needRefreshAuthorization) {
+        if (authorization.expireDate === NEVER_REFRESH_FLAG || !needRefreshAuthorization) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;
         }
@@ -108,7 +112,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         if (!blockingRefreshAuthorization) {
             // Concurrent refresh
             try {
-                authorization = await _authenticationStrategy.refreshAuthorization(authorization, req);
+                authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
             } catch (e) {
                 if (!forceCertification) {
                     return req;
@@ -136,11 +140,11 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // need refresh token
                 let error;
                 try {
-                    authorization = await _authenticationStrategy.refreshAuthorization(authorization, req);
+                    authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
                 } catch (e) {
                     // refresh authorization error
                     error = e;
-                    if (!this.looseMode) {
+                    if (!looseMode) {
                         return Promise.reject(e);
                     }
                 }
@@ -166,10 +170,6 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     };
 
 
-    set authenticationStrategy(value: AuthenticationStrategy<AuthenticationToken>) {
-        this._authenticationStrategy = value;
-    }
-
     /**
      * append authorization header
      * @param authorization
@@ -177,7 +177,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
      */
     private appendAuthorizationHeader = (authorization: AuthenticationToken, headers: Record<string, string>) => {
 
-        return this._authenticationStrategy.appendAuthorizationHeader(authorization, headers);
+        return this.authenticationStrategy.appendAuthorizationHeader(authorization, headers);
     };
 
     /**
@@ -185,7 +185,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
      * @param headers
      */
     private needAppendAuthorizationHeader = (headers: Record<string, string>) => {
-        const authorizationHeaderNames = this._authenticationStrategy.getAuthorizationHeaderNames;
+        const authorizationHeaderNames = this.authenticationStrategy.getAuthorizationHeaderNames;
         const headerNames = authorizationHeaderNames ? authorizationHeaderNames() : ["Authorization"];
         const count = headerNames.map((headerName) => {
             return headers[headerName] != null ? 1 : 0;
@@ -193,6 +193,9 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return prev + current;
         }, 0);
         return count !== headerNames.length;
-    }
+    };
 
+    public setAuthenticationStrategy = (authenticationStrategy: AuthenticationStrategy<AuthenticationToken>) => {
+        this.authenticationStrategy = authenticationStrategy;
+    }
 }
