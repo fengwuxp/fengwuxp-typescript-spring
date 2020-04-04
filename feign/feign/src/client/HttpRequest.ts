@@ -26,7 +26,7 @@ export interface HttpRequest {
 
 
     /**
-     * request data
+     * request headers
      */
     headers?: Record<string, string>;
 
