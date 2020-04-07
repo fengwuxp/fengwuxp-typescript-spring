@@ -233,6 +233,10 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
      */
     protected isInventoryShortage = (val: T) => {
 
+        if (val.enabled != null && val.enabled === false) {
+            return true;
+        }
+
         return val.stock <= 0;
     };
 

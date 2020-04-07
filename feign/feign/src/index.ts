@@ -31,7 +31,7 @@ export {
 export {
     AuthenticationToken,
     AuthenticationStrategy,
-    CacheableAuthenticationStrategy,
+    CacheCapableAuthenticationStrategy,
     NEVER_REFRESH_FLAG
 } from "./client/AuthenticationStrategy";
 

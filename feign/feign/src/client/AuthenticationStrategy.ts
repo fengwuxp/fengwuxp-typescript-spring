@@ -8,16 +8,19 @@ import {HttpRequest} from "./HttpRequest";
  * {@see CacheAuthenticationStrategy}
  * {@see AuthenticationClientHttpRequestInterceptor}
  */
-export interface CacheableAuthenticationStrategy {
+export interface CacheCapableAuthenticationStrategy {
 
-    // enable cache support
+    /**
+     * enable cache support
+     * if value is 'true',use {@link CacheAuthenticationStrategy} wrapper
+     */
     readonly enableCache?: boolean;
 }
 
 /**
  * authentication strategy
  */
-export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends CacheableAuthenticationStrategy{
+export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends CacheCapableAuthenticationStrategy{
 
     /**
      * get authorization header names

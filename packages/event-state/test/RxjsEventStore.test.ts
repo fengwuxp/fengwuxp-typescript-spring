@@ -133,6 +133,7 @@ describe("test rxjs event store", () => {
         });
 
 
+
         logger.debug("nextState", nextState);
     })
 

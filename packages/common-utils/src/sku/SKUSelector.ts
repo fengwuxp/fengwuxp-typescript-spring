@@ -1,11 +1,17 @@
 export type SKUItemKey = string;
 
 export interface SKUItemValue {
+
     id: string | number;
+
     // 价格
     price: number;
+
     // 库存
     stock: number;
+
+    // 是否启用
+    enabled?: boolean;
 }
 
 export type SKU<V extends SKUItemValue> = Record<SKUItemKey, V>
@@ -13,7 +19,7 @@ export type SKU<V extends SKUItemValue> = Record<SKUItemKey, V>
 // 规格值
 export type SpecificationValueItem = {
 
-    // 规格
+    // 规格名称
     specification: string;
 
     // 规格值

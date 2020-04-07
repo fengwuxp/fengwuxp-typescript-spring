@@ -61,7 +61,6 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
     };
 
 
-
     getStorage = <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => {
 
         // 如果存在配置项，则进行验证，例如过期时间
@@ -77,11 +76,14 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
             } else {
                 object = data as any;
             }
-
+            const result = object.data;
+            if (result == null) {
+                return Promise.reject();
+            }
             //数据有效
             const localStorageOptions = object.__localStorageOptions__;
             if (this.isItEffective(localStorageOptions)) {
-                return object.data;
+                return result;
             }
             return this.updateStorageItem(StorageStatus.INVALID, key, options, localStorageOptions);
         }).catch((e) => {

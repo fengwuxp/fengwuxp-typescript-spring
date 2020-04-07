@@ -4,6 +4,7 @@ import {HttpRequest} from './HttpRequest';
 
 /**
  * cache AuthenticationStrategy
+ * {@see CacheCapableAuthenticationStrategy#enableCache}
  */
 export default class CacheAuthenticationStrategy implements AuthenticationStrategy {
 
