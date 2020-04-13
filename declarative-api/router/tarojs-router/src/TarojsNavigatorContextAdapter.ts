@@ -3,7 +3,8 @@ import {
     NavigatorDescriptorObject,
     RouteUriVariable
 } from "fengwuxp-declarative-router-adapter";
-import {parse} from "querystring";
+import Taro from "@tarojs/taro";
+import {PAGE_VIEW_STATE} from "./PageStatTransferHelper";
 
 
 export default class TarojsNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject>
@@ -24,11 +25,23 @@ export default class TarojsNavigatorContextAdapter<T extends NavigatorDescriptor
         } as any;
     };
 
-    getCurrentPathname = () => null;
+    getCurrentPathname = () => {
+        const currentPages = Taro.getCurrentPages();
+        if (currentPages == null || currentPages.length == 0) {
+            return null;
+        }
+        return currentPages.pop().route
+    };
 
-    getCurrentState = <S = RouteUriVariable>() => null;
+    getCurrentState = () => {
+        const result = Taro.getStorageSync(PAGE_VIEW_STATE);
+        if (result == null) {
+            return null;
+        }
+        return result.data;
+    }
 
-    getCurrentUriVariables = <S = RouteUriVariable>() => null;
+    getCurrentUriVariables = <S = RouteUriVariable>() => null
 
     isStackTop = () => false;
 

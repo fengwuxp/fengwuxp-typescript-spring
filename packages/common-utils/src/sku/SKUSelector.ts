@@ -47,7 +47,7 @@ export type SelectResult<V extends SKUItemValue> = {
     /*
     * 无效的规格属性值
     * */
-    invalid: Array<SpecificationValueItem>;
+    invalid: Array<SpecificationValueItem[]>;
 }
 
 export enum ExpectAction {

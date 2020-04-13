@@ -9,9 +9,9 @@ logger.level = 'debug';
 describe("sku select", () => {
 
     const sku: SKU<SKUItemValue> = {
-        '4G|白色|电信': {id: 1, price: 2, stock: 0},
-        '4G|黑色|电信': {id: 1, price: 2, stock: 10},
-        '4G|金色|电信': {id: 1, price: 2, stock: 10},
+        // '4G|白色|电信': {id: 1, price: 2, stock: 0},
+        // '4G|黑色|电信': {id: 1, price: 2, stock: 10},
+        // '4G|金色|电信': {id: 1, price: 2, stock: 10},
 
         '4G|白色|移动': {id: 1, price: 2, stock: 0},
         '4G|黑色|移动': {id: 1, price: 2, stock: 10},

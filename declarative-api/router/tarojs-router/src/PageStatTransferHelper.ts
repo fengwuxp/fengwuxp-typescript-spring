@@ -9,7 +9,7 @@ import Taro from "@tarojs/taro";
 
 
 //页面状态传递key
-const PAGE_VIEW_STATE = "___PAGE_VIEW_STATE___";
+export const PAGE_VIEW_STATE = "___PAGE_VIEW_STATE___";
 
 
 export interface ViewRouteState<Q = any, S = any, P = any> {

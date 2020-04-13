@@ -3,6 +3,8 @@ import Taro from '@tarojs/taro';
 import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
 
 declare class TaroNavigatorAdapter implements NavigatorAdapter {
+    private customRouteMapping;
+    constructor(customRouteMapping?: Record<string, string>);
     goBack: (num?: number, ...args: any[]) => Promise<Taro.General.CallbackResult>;
     popAndPush: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
     push: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
@@ -11,6 +13,7 @@ declare class TaroNavigatorAdapter implements NavigatorAdapter {
     reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
     replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
     switchTab: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => Promise<Taro.General.CallbackResult>;
+    protected getPageUrl: (url: any) => any;
 }
 
 interface ViewRouteState<Q = any, S = any, P = any> {

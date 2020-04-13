@@ -17,7 +17,7 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
     private selectedValues: SpecificationValueItem[];
 
     // 无效的规格属性值
-    private invalidValues: SpecificationValueItem[];
+    private invalidValues: SpecificationValueItem[][];
 
 
     constructor(sku: SKU<T>, specificationAttrValues: SpecificationValueItem[][]) {
@@ -187,16 +187,17 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
      * @param values
      */
     protected markDisabled = (values: SpecificationValueItem[][]) => {
-        const markMaps: Map<SpecificationValueItem, number[]> = new Map();
-        values.map((values) => {
-            const skuItem = this.getSkuItem(values);
+        const markMaps: Map<SpecificationValueItem, number[]/*库存是否失效*/> = new Map();
+        values.forEach((items) => {
+            const skuItem = this.getSkuItem(items);
             if (skuItem == null) {
-                throw new Error(`sku not found ${values}`);
+                // throw new Error(`sku not found ${values}`);
+                return null;
             }
             // 判断是库存是否不足
             const isInventoryShortage = this.isInventoryShortage(skuItem);
             // 设置标记
-            values.forEach((item) => {
+            items.forEach((item) => {
                 let number = markMaps.get(item) || [];
                 if (isInventoryShortage) {
                     number.push(-1)
@@ -207,7 +208,7 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
             })
         });
 
-        const invalidValues = new Set<SpecificationValueItem>();
+        const invalidValues = this.specificationAttrValues.map(item => []);
         const selectedValues = this.selectedValues;
         // const specificationAttrValues = this.specificationAttrValues;
         markMaps.forEach((value, key) => {
@@ -217,12 +218,13 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
                 if (indexOf >= 0) {
                     // selectedValues[indexOf] = null;
                 } else {
-                    invalidValues.add(key);
+                    // invalidValues.add(key);
+                    invalidValues[key.specificationIndex].push(key);
                 }
             }
         });
 
-        this.invalidValues = [...invalidValues];
+        this.invalidValues = invalidValues;
 
     };
 
