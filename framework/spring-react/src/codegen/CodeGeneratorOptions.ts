@@ -41,6 +41,7 @@ export interface CodeGeneratorOptions {
      * 别名配置的根路径
      */
     aliasBasePath?: string;
+
     /**
      * 导入语句的别名配置
      */
@@ -48,7 +49,10 @@ export interface CodeGeneratorOptions {
         [key: string]: string[];
     };
 
-    // 默认 /
+    // 默认
     routeBasePath?: string;
+
+    // 在菜单中隐藏
+    hideInMenu?: boolean;
 
 }

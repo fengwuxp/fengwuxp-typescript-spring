@@ -31,6 +31,9 @@ const routes: IRoute[] =[
                                               {{if route.showMode}}
                                                 showMode:{{route.showMode}},
                                               {{/if}}
+                                              {{if route.hideInMenu}}
+                                                 hideInMenu:{{route.hideInMenu}},
+                                              {{/if}}
                                               component: '{{route.component}}',
                                             },
                                     {{/each}}

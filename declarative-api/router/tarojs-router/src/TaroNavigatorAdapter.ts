@@ -10,6 +10,13 @@ import {setNextViewState} from './PageStatTransferHelper';
 export default class TaroNavigatorAdapter implements NavigatorAdapter {
 
 
+    private customRouteMapping: Record<string, string>;
+
+
+    constructor(customRouteMapping?: Record<string, string>) {
+        this.customRouteMapping = customRouteMapping;
+    }
+
     goBack = (num?: number, ...args: any[]) => {
         return Taro.navigateBack();
     };
@@ -51,6 +58,13 @@ export default class TaroNavigatorAdapter implements NavigatorAdapter {
     switchTab = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
         setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
         return Taro.switchTab({url: (descriptorObject as NavigatorDescriptorObject).pathname})
+    };
+
+    protected getPageUrl = (url) => {
+        const {customRouteMapping} = this;
+        if (customRouteMapping == null) {
+            return null;
+        }
 
     }
 

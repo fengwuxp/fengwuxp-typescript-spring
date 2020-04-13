@@ -129,6 +129,13 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             codegenTemplate.render(path.join(projectBasePath, outputPath, item.outputFilName), data);
         });
 
+        // hideInMenu
+        routeConfigs.forEach((item) => {
+            if (item.pathname.endsWith('detail')) {
+                item['hideInMenu'] = true;
+            }
+        })
+
         // 按照目录相同的路由分组
         const routes = this.groupByDirName(routeConfigs);
         // 生成路由配置
@@ -180,7 +187,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
     }> => {
 
         /**
-         * @key 路由的第一级目录
+         * @key    路由的第一级目录
+         * @value  页面列表配置
          */
         const routeMap: Map<string, GenerateSpringReactRouteOptions[]> = new Map<string, GenerateSpringReactRouteOptions[]>();
         routes.forEach(item => {
@@ -195,7 +203,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 dirs.push($2)
             }
             const dir = dirs.join("/");
-            let routeList = routeMap.get($0);
+            let routeList = routeMap.get(dir);
             if (routeList == null) {
                 routeList = [];
                 routeMap.set(dir, routeList);
