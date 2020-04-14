@@ -65,15 +65,22 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
+
+        const looseMode1 = this.looseMode;
         // need force certification
-        let forceCertification = !this.looseMode;
+        let forceCertification = !looseMode1;
         // const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
-                return req;
+                // return req;
+                if (looseMode1) {
+                    forceCertification = false
+                } else {
+                    return req;
+                }
             }
             if (mappingOptions.needCertification === true) {
                 // force none certification
