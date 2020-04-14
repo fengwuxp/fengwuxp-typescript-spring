@@ -21,7 +21,7 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
 
 
     constructor(sku: SKU<T>, specificationAttrValues: SpecificationValueItem[][]) {
-        this.sku = sku;
+        this.sku = this.sortSkuKey(sku);
         this.specificationAttrValues = specificationAttrValues;
         // 初始化
         this.selectedValues = specificationAttrValues.map(item => null);
@@ -62,8 +62,8 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
      * @param value          被点击的值
      */
     onClick = (value: SpecificationValueItem): Promise<SelectResult<T>> => {
-        const selected = this.isSelected(value);
-        if (selected) {
+        if (this.isSelected(value)) {
+            // 当前选项已经选中，则移除
             return this.remove(value)
         } else {
             return this.selected(value);
@@ -80,7 +80,6 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
     private actionItem = (value: SpecificationValueItem, action: ExpectAction): Promise<SelectResult<T>> => {
 
         const {selectedValues, specificationAttrValues} = this;
-
         if (ExpectAction.SELECTED === action) {
             // 选中
             selectedValues[value.specificationIndex] = value;
@@ -89,8 +88,7 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
             selectedValues[value.specificationIndex] = null;
         }
         this.permutationsSpecification(selectedValues, specificationAttrValues);
-
-        const sku = this.selectedValues.includes(null) ? null : this.getSkuItem(this.selectedValues);
+        const sku = selectedValues.includes(null) ? null : this.getSkuItem(selectedValues);
         const isInventoryShortage = sku == null ? false : this.isInventoryShortage(sku);
         if (isInventoryShortage) {
             this.invalidValues = [];
@@ -98,7 +96,7 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
         return Promise.resolve({
             sku,
             // 如果选中的没有库存 移除所有选中
-            selected: isInventoryShortage ? [] : this.selectedValues.filter(item => item != null),
+            selected: isInventoryShortage ? [] : selectedValues/*.filter(item => item != null)*/,
             invalid: this.invalidValues
         });
 
@@ -243,27 +241,35 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
     };
 
     /**
-     * 当前项是否已经选中
+     * 当前点击的项是否已经选中
      * @param value
      */
     private isSelected = (value: SpecificationValueItem) => {
 
-        return this.selectedValues.some(item => {
-            return item.specification == value.specification && item.value == item.value
-        })
+        return this.selectedValues.filter((item) => item != null)
+            .filter(item => item.specificationIndex === value.specificationIndex)
+            .find(item => {
+                return item.specification === value.specification && item.value === value.value
+            }) != null;
 
     };
 
     private getSkuItem = (values: SpecificationValueItem[]) => {
-        const skuKey = values.sort((v1, v2) => {
-            return v1.specificationIndex - v2.specificationIndex;
-        }).map(item => item.value).join(DefaultSKUSelector.SPLIT_SYMBOL);
-        const skuElement = this.sku[skuKey];
-        if (skuElement == null) {
+        if (values.some(item => item == null)) {
             return null;
         }
-        // console.log("----->", skuKey, skuElement.stock);
-        return skuElement;
+        const sku = this.sku;
+        const key = values.map((item) => item.value).sort().join("");
+        return sku[key];
 
+    }
+
+    private sortSkuKey = (sku) => {
+        const newSku = {};
+        for (let key in sku) {
+            const key1 = key.split(DefaultSKUSelector.SPLIT_SYMBOL).sort().join("");
+            newSku[key1] = sku[key];
+        }
+        return newSku;
     }
 }

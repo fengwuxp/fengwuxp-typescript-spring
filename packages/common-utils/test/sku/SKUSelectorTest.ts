@@ -97,7 +97,16 @@ describe("sku select", () => {
 
         const defaultSKUSelector = new DefaultSKUSelector(sku, specificationAttrValues);
 
-        defaultSKUSelector.selected(
+        defaultSKUSelector.onClick(
+            {
+                specification: "网络",
+                value: "4G",
+                specificationIndex: 0,
+                valueIndex: 0
+            }).then((result) => {
+            logger.debug("选中结果", result);
+        });
+        defaultSKUSelector.onClick(
             {
                 specification: "网络",
                 value: "4G",
@@ -107,25 +116,34 @@ describe("sku select", () => {
             logger.debug("选中结果", result);
         });
 
-        defaultSKUSelector.selected(
-            {
-                specification: "颜色",
-                value: "黑色",
-                specificationIndex: 1,
-                valueIndex: 1
-            }).then((result) => {
-            logger.debug("选中结果==>2", result);
-        });
-
-        defaultSKUSelector.selected(
-            {
-                specification: "运营商",
-                value: "联通",
-                specificationIndex: 2,
-                valueIndex: 2
-            }).then((result) => {
-            logger.debug("选中结果==>3", result);
-        })
+        // defaultSKUSelector.selected(
+        //     {
+        //         specification: "颜色",
+        //         value: "黑色",
+        //         specificationIndex: 1,
+        //         valueIndex: 1
+        //     }).then((result) => {
+        //     logger.debug("选中结果==>2", result);
+        // });
+        //
+        // defaultSKUSelector.selected(
+        //     {
+        //         specification: "运营商",
+        //         value: "联通",
+        //         specificationIndex: 2,
+        //         valueIndex: 2
+        //     }).then((result) => {
+        //     logger.debug("选中结果==>3", result);
+        // })
+        // defaultSKUSelector.selected(
+        //     {
+        //         specification: "运营商",
+        //         value: "移动",
+        //         specificationIndex: 2,
+        //         valueIndex: 1
+        //     }).then((result) => {
+        //     logger.debug("选中结果==>2", result);
+        // });
     })
 
 });
