@@ -24,7 +24,18 @@ describe("react route config generator", () => {
 
     test("test umi route config", () => {
         const reactRouteConfigGenerator = new UmiReactRouteConfigGenerator(
-            ["/test/example/pages/**", "/test/example/views/**"], teconfig.compilerOptions);
+            ["/test/example/pages/**", "/test/example/views/**"], teconfig.compilerOptions, undefined, {
+                oneLevelOrderMap: [
+                    {
+                        pathname: "/example",
+                        name: "测试"
+                    },
+                    {
+                        pathname: "/index",
+                        name: "测2"
+                    },
+                ]
+            });
         reactRouteConfigGenerator.setRouteLevel(RouteLevel.THREE);
         reactRouteConfigGenerator.generate();
 

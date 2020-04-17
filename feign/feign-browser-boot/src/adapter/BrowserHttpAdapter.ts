@@ -80,41 +80,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
                     });
                 }, req.timeout || this.timeout);
             })
-        ])
-
-        // return new Promise((resolve, reject) => {
-        //
-        //     const p = fetch(this.buildRequest(req)).then((response: Response) => {
-        //         return this.parse(response).then((data) => {
-        //             //为了适配
-        //             response['data'] = data;
-        //             return this.resolveHttpResponse.resolve(response)
-        //         });
-        //     }).catch((response: Response) => {
-        //         const data = this.resolveHttpResponse.resolve(response);
-        //         data.data = response;
-        //         return Promise.reject(data);
-        //     });
-        //     //超时控制
-        //     const timeId = setTimeout(() => {
-        //         //丢弃请求
-        //         console.debug("web fetch adapter request timeout");
-        //         reject({
-        //             status: 502,
-        //             headers: null,
-        //             data: null,
-        //             ok: false,
-        //             statusText: `request timeout`
-        //         });
-        //     }, req.timeout || this.timeout);
-        //
-        //     p.then(resolve)
-        //         .catch(reject)
-        //         .finally(() => {
-        //             //清除定时器
-        //             clearTimeout(timeId);
-        //         });
-        // })
+        ]);
 
     };
 

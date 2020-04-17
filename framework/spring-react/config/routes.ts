@@ -4,11 +4,11 @@ import {ViewShowMode} from "fengwuxp-routing-core";
 const routes: IRoute[] =[
                 
                  {
-                               name: 'example管理',
+                               name: '测试',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
-                                path: 'example',
+                                path: '/example',
                                 routes: [
                                  
                                  {
@@ -41,6 +41,8 @@ const routes: IRoute[] =[
 },
                                               
                                               
+                                              
+                                                 hideInMenu:true,
                                               
                                               component: './example/first/edit',
                                             },
@@ -108,6 +110,8 @@ const routes: IRoute[] =[
 },
                                               
                                               
+                                              
+                                                 hideInMenu:true,
                                               
                                               component: './example/secoend/edit',
                                             },
@@ -177,7 +181,42 @@ const routes: IRoute[] =[
 
                
                  {
-                               name: '/goods/list管理',
+                               name: '测2',
+                               
+                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                
+                                path: '/index',
+                                routes: [
+                                 
+                                 {
+                                 name: '/index',
+                                 
+                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 
+                                  path: '/index',
+                                  routes: [
+                                           
+                                            {
+                                              name: '/index',
+                                              
+                                              path: '/index',
+                                              
+                                                  condition: "member.add",
+                                              
+                                              
+                                              
+                                              component: './index',
+                                            },
+                                    
+                                   ]
+                                 },
+                                  
+                              ]
+                 },
+
+               
+                 {
+                               name: '/goods/list',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
@@ -225,6 +264,8 @@ const routes: IRoute[] =[
                                               
                                               
                                               
+                                                 hideInMenu:true,
+                                              
                                               component: './goods/edit',
                                             },
                                     
@@ -250,42 +291,7 @@ const routes: IRoute[] =[
 
                
                  {
-                               name: '/index管理',
-                               
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
-                                
-                                path: '/index',
-                                routes: [
-                                 
-                                 {
-                                 name: '/index',
-                                 
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
-                                 
-                                  path: '/index',
-                                  routes: [
-                                           
-                                            {
-                                              name: '/index',
-                                              
-                                              path: '/index',
-                                              
-                                                  condition: "member.add",
-                                              
-                                              
-                                              
-                                              component: './index',
-                                            },
-                                    
-                                   ]
-                                 },
-                                  
-                              ]
-                 },
-
-               
-                 {
-                               name: '/member/list管理',
+                               name: '/member/list',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
@@ -344,7 +350,7 @@ const routes: IRoute[] =[
 
                
                  {
-                               name: '用户编辑管理',
+                               name: '用户编辑',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
@@ -370,6 +376,8 @@ const routes: IRoute[] =[
                                               
                                               
                                               
+                                                 hideInMenu:true,
+                                              
                                               component: './member/edit',
                                             },
                                     
@@ -381,7 +389,7 @@ const routes: IRoute[] =[
 
                
                  {
-                               name: '/order/list管理',
+                               name: '/order/list',
                                
                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
                                 
@@ -428,6 +436,8 @@ const routes: IRoute[] =[
 },
                                               
                                               
+                                              
+                                                 hideInMenu:true,
                                               
                                               component: './order/edit',
                                             },

@@ -12,7 +12,7 @@ import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
 import {RouteLevel, UmiCodeGeneratorOptions, UmiRoute} from "./UmiCodeGeneratorOptions";
 import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 import {isObjectExpression, isStringLiteral, ObjectProperty} from "@babel/types";
-
+import memoize from 'lodash/memoize';
 
 const DEFAULT_ORDER_MAP: Record<string, number> = {
     'list': 0,
@@ -98,16 +98,20 @@ const UMI_CODEGEN_OPTIONS: UmiCodeGeneratorOptions = {
 export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenerator {
 
 
+    // 用于排列路径在路由表中的顺序
     private orderMap: Record<string, number>;
 
 
     constructor(scanPackages: string[],
                 teConfigCompilerOptions: ts.CompilerOptions,
-                orderMap: Record<string, number> = DEFAULT_ORDER_MAP,
-                codeOptions: UmiCodeGeneratorOptions = UMI_CODEGEN_OPTIONS) {
-        super(scanPackages, teConfigCompilerOptions, codeOptions);
-        this.orderMap = orderMap;
-        this.setRouteLevel(codeOptions.routeLevel);
+                orderMap?: Record<string, number>,
+                codeOptions?: UmiCodeGeneratorOptions) {
+        super(scanPackages, teConfigCompilerOptions, {...UMI_CODEGEN_OPTIONS, ...codeOptions});
+        this.orderMap = {
+            ...orderMap,
+            ...DEFAULT_ORDER_MAP
+        };
+        this.setRouteLevel(this.codeOptions["routeLevel"]);
     }
 
 
@@ -131,7 +135,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
         // hideInMenu
         routeConfigs.forEach((item) => {
-            if (item.pathname.endsWith('detail')) {
+            if (item.pathname.endsWith('detail') || item.pathname.endsWith('edit')) {
                 item['hideInMenu'] = true;
             }
         })
@@ -221,7 +225,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 margeRouteMap.set(key, {
                     redirect: umiRoute.redirect,
                     name: umiRoute.name,
-                    path: umiRoute.path,
+                    path: this.fixPathPrefix(umiRoute.path),
                     title: umiRoute.title,
                     icon: this.getIcon(null),
                     routes: [
@@ -238,7 +242,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 val = {
                     redirect: prefix,
                     name: prefix,
-                    path: prefix,
+                    path: this.fixPathPrefix(prefix),
                     title: prefix,
                     icon: this.getIcon(null),
                     routes: []
@@ -254,7 +258,30 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             result.push(this.getUmiRoute(key, routes))
         }
 
-        return result;
+        const {oneLevelOrderMap} = this.codeOptions as UmiCodeGeneratorOptions;
+        if (oneLevelOrderMap == null) {
+            return result;
+        }
+        const findRouteOrder = memoize((route) => {
+            let index = oneLevelOrderMap.findIndex((item) => {
+                const isEq = item.pathname === route.path;
+                if (isEq) {
+                    route.name = item.name
+                }
+                return isEq
+            });
+            if (index < 0) {
+                // 如果未参与排序，则排在后面
+                index = 999999;
+            }
+            return index;
+        }, (route) => {
+            return route;
+        });
+
+        return result.sort((route1, route2) => {
+            return findRouteOrder(route1) - findRouteOrder(route2);
+        });
     };
 
 
@@ -287,12 +314,13 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
             routes: sortRoutes,
             name: this.getRouteName(first) || '',
             title: first.title || '',
-            path: key.startsWith("/") ? key : `/${key}`,
+            path: this.fixPathPrefix(key),
             redirect: first.pathname,
             icon
         };
 
     };
+
 
     private getIcon = (icon) => {
         if (icon == null) {

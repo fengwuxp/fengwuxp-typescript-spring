@@ -91,7 +91,7 @@ export const DEFAULT_CODEGEN_OPTIONS: CodeGeneratorOptions = {
     templateList: DEFAULT_TEMPLATE_LIST,
     templateFileDir: path.resolve(__dirname, "../../template"),
     routeBasePath: "/",
-    excludeFiles: DEFAULT_EXCLUDE
+    excludeFiles: DEFAULT_EXCLUDE,
 };
 
 /**
@@ -178,7 +178,11 @@ export default class ReactRouteConfigGenerator {
     constructor(scanPackages: string[],
                 // ts config compiler options
                 teConfigCompilerOptions: CompilerOptions,
-                codeOptions: CodeGeneratorOptions = DEFAULT_CODEGEN_OPTIONS) {
+                codeOptions: CodeGeneratorOptions) {
+
+        if (codeOptions == null) {
+            codeOptions = DEFAULT_CODEGEN_OPTIONS;
+        }
         codeOptions.aliasBasePath = path.join(projectBasePath, teConfigCompilerOptions.baseUrl);
         codeOptions.aliasConfiguration = teConfigCompilerOptions.paths;
         this.scanPackages = scanPackages;
@@ -415,7 +419,7 @@ export default class ReactRouteConfigGenerator {
         const {codeOptions: {filenameTransformPathname}, scanPackages} = this;
 
         if (!StringUtils.hasText(springReactRouteConfig.pathname)) {
-            //没有pathname 默认使用 文件名称+文件名 "/member/input" 然后全小写;
+            //没有pathname 默认使用 文件名称+文件名  然后驼峰转下划线全小写;
             const resolver = filenameTransformPathname || defaultFilePathTransformStrategy;
             springReactRouteConfig.pathname = resolver(scanPackages, filepath);
         }
@@ -506,6 +510,10 @@ export default class ReactRouteConfigGenerator {
             return -1;
         });
     };
+
+    protected fixPathPrefix = (pathname: string) => {
+        return pathname.startsWith("/") ? pathname : `/${pathname}`;
+    }
 
     /**
      * @param file

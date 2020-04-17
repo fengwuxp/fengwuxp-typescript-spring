@@ -24,7 +24,7 @@ export const contentTransferEncodingName = 'Content-Transfer-Encoding';
 export const FEIGN_CLINE_META_KEY = "FEIGN";
 
 /**
- * match shaped like example '1{xxx}2ll3' string
+ *
  */
 export const matchUrlPathVariable = /\{\w*\}/;
 

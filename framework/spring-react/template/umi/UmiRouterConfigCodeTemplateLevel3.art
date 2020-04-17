@@ -4,7 +4,7 @@ import {ViewShowMode} from "fengwuxp-routing-core";
 const routes: IRoute[] =[
                 {{each routes route index }}
                  {
-                               name: '{{route.name}}管理',
+                               name: '{{route.name}}',
                                {{if route.icon!=null}}
                                 icon: {{route.icon}},
                                 {{/if}}

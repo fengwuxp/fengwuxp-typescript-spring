@@ -52,6 +52,7 @@
     "fengwuxp-spring-context": "^1.0.0",
     "fengwuxp-spring-core": "^1.0.0",
     "jest": "25.1.0",
+    "lodash": "^4.17.15",
     "ts-jest": "25.2.0",
     "typescript": "^3.7.2"
   },

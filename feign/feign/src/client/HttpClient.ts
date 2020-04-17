@@ -1,7 +1,7 @@
 import {HttpResponse} from "./HttpResponse";
 import {HttpAdapter} from "../adapter/HttpAdapter";
 import {HttpRequest} from "./HttpRequest";
-import {InterceptingHttpAccessor} from "./InterceptingHttpAccessor";
+import {HttpClientInterceptorAccessor} from "./HttpClientInterceptorAccessor";
 
 /**
  * http request body
@@ -13,7 +13,7 @@ export type HttpRequestBody = string | Record<string, any>;
  * Provides basic http request capabilities
  * Extend from {@see HttpAdapter }
  */
-export interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, InterceptingHttpAccessor {
+export interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, HttpClientInterceptorAccessor {
 
 
     /**

@@ -9,6 +9,9 @@ import {HttpRequest} from "./HttpRequest";
  */
 export interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
 
+    /**
+     * Intercept before http request, you can change the requested information
+     */
     interceptor: ClientHttpRequestInterceptorFunction<T>;
 }
 
