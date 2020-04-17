@@ -10,12 +10,12 @@ import {Settings} from '@ant-design/pro-layout/es/defaultSettings'
 import {MenuDataItem} from '@ant-design/pro-layout/es/typings'
 import SettingDrawer from '@ant-design/pro-layout/es/SettingDrawer/index'
 import AntdIcon from '@ant-design/icons/lib/components/AntdIcon';
-import Link from 'umi/link';
 import defaultSettings from '../../config/defaultSettings';
 import logo from '../assets/logo.svg';
 import SvgIcon from '@/components/icon/SvgIcon';
 import AppRouter from "@/AppRouter";
 import RightContent from "@/components/globalheader/RightContent";
+import { Link } from 'umi';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {

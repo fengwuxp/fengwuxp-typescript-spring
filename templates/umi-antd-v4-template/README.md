@@ -1,5 +1,7 @@
 
 - [bootcdn](https://www.bootcdn.cn/)
+- [umijs3.0](https://umijs.org/zh-CN/docs/getting-started)
+- [next-ap](https://github.com/umijs/next-app/tree/011ui)
 
 #### 基于umijs、ant design v4的模板
 
@@ -18,7 +20,7 @@
   简单模式：由本地路由配置决定
   宽松模式：菜单数据根据当前登陆用户从服务端获取，并和本地路由做比较和过滤
   严格模式：菜单和路由数据都由服务端获取
-  
+
   默认我们使用宽松模式
 
 ```

@@ -135,7 +135,12 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
         // hideInMenu
         routeConfigs.forEach((item) => {
-            if (item.pathname.endsWith('detail') || item.pathname.endsWith('edit')) {
+            const pathname = item.pathname;
+            const needHideInMenu = pathname.endsWith('detail')
+                || pathname.endsWith('edit')
+                || pathname.endsWith('update')
+                || pathname.indexOf("/update") >= 0;
+            if (needHideInMenu) {
                 item['hideInMenu'] = true;
             }
         })

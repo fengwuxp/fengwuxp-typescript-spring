@@ -31,6 +31,9 @@
     "paths": {
       "@/*": [
         "./src/*"
+      ],
+      "@@/*": [
+        "./src/.umi/*"
       ]
     }
   },
@@ -42,10 +45,13 @@
   "exclude": [
     "node_modules",
     "build",
+    "dist",
     "scripts",
-    "acceptance-tests",
+    "src/.umi/*",
     "webpack",
     "jest",
+    "acceptance-tests",
+    "webpack",
     "tslint:latest",
     "tslint-config-prettier",
     "example",
