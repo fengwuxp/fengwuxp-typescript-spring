@@ -3,6 +3,7 @@ import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor"
 import {HttpResponse} from "../client/HttpResponse";
 import {UnifiedFailureToast} from "./FeignUIToast";
 import {HttpStatus} from "../constant/http/HttpStatus";
+import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
 
 /**
  * unified transform failure toast
@@ -10,11 +11,20 @@ import {HttpStatus} from "../constant/http/HttpStatus";
 export default class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions>
     implements FeignClientExecutorInterceptor<T> {
 
+    /**
+     * @deprecated
+     * {@see AuthenticationBroadcaster}
+     */
     private static IS_TO_AUTHENTICATION_VIEW: boolean = false;
 
     protected unifiedFailureToast: UnifiedFailureToast;
 
-    // jump authentication view
+
+    /**
+     * jump authentication view
+     * @deprecated
+     * {@see AuthenticationBroadcaster}
+     */
     protected toAuthenticationViewHandle: Function;
 
     constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle: Function = function () {
@@ -28,15 +38,7 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
         if (options.useUnifiedTransformResponse === false) {
             return response;
         }
-        if (response.statusCode === HttpStatus.UNAUTHORIZED) {
-            if (!UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW) {
-                UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = true;
-                this.toAuthenticationViewHandle();
-                setTimeout(() => {
-                    UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = false
-                }, 20 * 1000);
-            }
-        }
+        this.tryHandleUnAuthorized(response);
 
         this.tryToast(options, response);
         return Promise.reject(response);
@@ -54,5 +56,32 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
         this.unifiedFailureToast(response);
     }
 
+    private tryHandleUnAuthorized(response: HttpResponse<any>) {
+
+
+        if (response.statusCode !== HttpStatus.UNAUTHORIZED) {
+           return;
+        }
+
+        const feignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
+        const getAuthenticationBroadcaster = feignConfiguration.getAuthenticationBroadcaster;
+        if (getAuthenticationBroadcaster != null) {
+            const authenticationBroadcaster = getAuthenticationBroadcaster();
+            const authenticationStrategy = feignConfiguration.getAuthenticationStrategy();
+            if (typeof authenticationStrategy.clearCache != null) {
+                authenticationStrategy.clearCache()
+            }
+            authenticationBroadcaster.sendUnAuthorizedEvent();
+            return;
+        }
+
+        if (!UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW) {
+            UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = true;
+            this.toAuthenticationViewHandle();
+            setTimeout(() => {
+                UnifiedFailureToastExecutorInterceptor.IS_TO_AUTHENTICATION_VIEW = false
+            }, 20 * 1000);
+        }
+    }
 
 }

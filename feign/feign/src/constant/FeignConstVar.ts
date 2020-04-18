@@ -1,3 +1,5 @@
+import {HttpStatus} from "./http/HttpStatus";
+
 /**
  * default api module name
  */
@@ -39,3 +41,13 @@ export const grabUrlPathVariable = /\{(.+?)\}/g;
  * {@see DefaultFeignClientExecutor}
  */
 export const REQUEST_ID_HEADER_NAME = 'Ts-Feign-Request-Id';
+
+
+/**
+ * mock unauthorized response
+ */
+export const UNAUTHORIZED_RESPONSE = {
+    ok: false,
+    statusCode: HttpStatus.UNAUTHORIZED,
+    statusText: null,
+};

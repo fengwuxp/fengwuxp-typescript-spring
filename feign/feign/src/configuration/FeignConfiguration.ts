@@ -9,6 +9,7 @@ import {FeignClientExecutor} from "../FeignClientExecutor";
 import {HttpRequest} from "../client/HttpRequest";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {FeignRequestContextOptions} from '../FeignRequestOptions';
+import {AuthenticationBroadcaster, AuthenticationStrategy} from '../client/AuthenticationStrategy';
 
 /**
  * feign configuration
@@ -35,6 +36,10 @@ export interface FeignConfiguration {
     getRequestHeaderResolver?: () => RequestHeaderResolver;
 
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
+
+    getAuthenticationStrategy?: () => AuthenticationStrategy;
+
+    getAuthenticationBroadcaster?: () => AuthenticationBroadcaster;
 
     getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
 

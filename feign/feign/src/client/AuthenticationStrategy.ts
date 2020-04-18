@@ -1,7 +1,6 @@
 import {HttpRequest} from "./HttpRequest";
 
 
-
 /**
  * marked authentication strategy cache support
  *
@@ -14,13 +13,20 @@ export interface CacheCapableAuthenticationStrategy {
      * enable cache support
      * if value is 'true',use {@link CacheAuthenticationStrategy} wrapper
      */
-    readonly enableCache?: boolean;
+    readonly enableCache: boolean;
+
+    /**
+     * clear cache
+     * if send send unauthorized event,need clear cache
+     * {@link AuthenticationBroadcaster#sendUnAuthorizedEvent}
+     */
+    clearCache: () => void;
 }
 
 /**
  * authentication strategy
  */
-export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends CacheCapableAuthenticationStrategy{
+export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends Partial<CacheCapableAuthenticationStrategy> {
 
     /**
      * get authorization header names
@@ -37,13 +43,14 @@ export interface AuthenticationStrategy<T extends AuthenticationToken = Authenti
 }
 
 
-
-
 // never refresh token flag
 export const NEVER_REFRESH_FLAG = -1;
 
 export interface AuthenticationToken {
 
+    /**
+     * authorization info
+     */
     authorization: string;
 
     /**
@@ -52,4 +59,22 @@ export interface AuthenticationToken {
      */
     expireDate: number;
 
+}
+
+/**
+ * use broadcast event handle authentication
+ * {@see HttpStatus.UNAUTHORIZED}
+ */
+export interface AuthenticationBroadcaster {
+
+    /**
+     * send unauthorized event
+     */
+    sendUnAuthorizedEvent: () => void;
+
+    /**
+     * receive authorized success event
+     * @param handle
+     */
+    receiveAuthorizedEvent: (handle: () => void) => void
 }

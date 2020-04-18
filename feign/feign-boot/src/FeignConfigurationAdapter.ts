@@ -4,7 +4,9 @@ import {
     HttpMediaType,
     HttpRequest,
     FeignUIToast,
-    RequestURLResolver
+    RequestURLResolver,
+    AuthenticationBroadcaster,
+    AuthenticationStrategy
 } from "fengwuxp-typescript-feign";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
@@ -44,6 +46,10 @@ export interface FeignConfigurationAdapter {
      * api signature
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
+
+    authenticationStrategy?: () => AuthenticationStrategy;
+
+    authenticationBroadcaster?: () => AuthenticationBroadcaster;
 
     /**
      * url 解析策略

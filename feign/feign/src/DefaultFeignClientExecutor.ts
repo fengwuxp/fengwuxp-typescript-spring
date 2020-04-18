@@ -16,7 +16,8 @@ import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/Serialize
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 import {appendRequestContextId, removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
-
+import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} from "./client/AuthenticationStrategy";
+import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
 
 /**
  * default feign client executor
@@ -34,6 +35,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
     // api signature strategy
     protected apiSignatureStrategy: ApiSignatureStrategy;
 
+    // authentication strategy
+    protected authenticationStrategy: AuthenticationStrategy;
+
+    protected authenticationBroadcaster: AuthenticationBroadcaster;
+
     // rest template
     protected restTemplate: RestOperations;
 
@@ -48,39 +54,17 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
 
     constructor(apiService: T) {
-        this.apiService = apiService;
-        const configuration = apiService.feignConfiguration();
-        const {
-            getRestTemplate,
-            getApiSignatureStrategy,
-            getRequestHeaderResolver,
-            getRequestURLResolver,
-            getFeignClientExecutorInterceptors,
-            getDefaultFeignRequestContextOptions,
-            getDefaultHttpHeaders
-        } = configuration;
-
-        this.restTemplate = getRestTemplate();
-        this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
-        if (getApiSignatureStrategy) {
-            this.apiSignatureStrategy = getApiSignatureStrategy();
-        }
-        if (getRequestURLResolver) {
-            this.requestURLResolver = getRequestURLResolver();
-        }
-        if (getRequestHeaderResolver) {
-            this.requestHeaderResolver = getRequestHeaderResolver();
-        }
-        if (getDefaultFeignRequestContextOptions) {
-            this.defaultRequestContextOptions = getDefaultFeignRequestContextOptions();
-        }
-
-        if (getDefaultHttpHeaders) {
-            this.defaultHeaders = getDefaultHttpHeaders();
-        }
+        this.init(apiService);
     }
 
+
     invoke = async (methodName: string, ...args): Promise<any> => {
+
+        try {
+            await this.tryCheckAuthorizedStatus(methodName);
+        } catch (e) {
+            return Promise.reject(e);
+        }
 
         const {
             apiSignatureStrategy,
@@ -89,15 +73,18 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             requestURLResolver,
             requestHeaderResolver,
             defaultRequestContextOptions,
-            defaultHeaders
+            defaultHeaders,
         } = this;
+
 
         //original parameter
         const originalParameter = args[0] || {};
 
         const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
+
         //requestMapping
         const {requestMapping, signature, retryOptions, validateSchemaOptions} = feignMethodConfig;
+
         if (validateSchemaOptions != null) {
             try {
                 // request data validate
@@ -191,6 +178,49 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     };
 
+    // init feign client executor
+    private init(apiService: T) {
+        this.apiService = apiService;
+        const configuration = apiService.feignConfiguration();
+        const {
+            getRestTemplate,
+            getApiSignatureStrategy,
+            getRequestHeaderResolver,
+            getRequestURLResolver,
+            getFeignClientExecutorInterceptors,
+            getDefaultFeignRequestContextOptions,
+            getDefaultHttpHeaders,
+            getAuthenticationStrategy,
+            getAuthenticationBroadcaster
+        } = configuration;
+
+        this.restTemplate = getRestTemplate();
+        this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();
+        if (getApiSignatureStrategy) {
+            this.apiSignatureStrategy = getApiSignatureStrategy();
+        }
+        if (getRequestURLResolver) {
+            this.requestURLResolver = getRequestURLResolver();
+        }
+        if (getRequestHeaderResolver) {
+            this.requestHeaderResolver = getRequestHeaderResolver();
+        }
+        if (getDefaultFeignRequestContextOptions) {
+            this.defaultRequestContextOptions = getDefaultFeignRequestContextOptions();
+        }
+
+        if (getAuthenticationStrategy) {
+            this.authenticationStrategy = getAuthenticationStrategy();
+        }
+        if (getAuthenticationBroadcaster) {
+            this.authenticationBroadcaster = getAuthenticationBroadcaster();
+        }
+
+        if (getDefaultHttpHeaders) {
+            this.defaultHeaders = getDefaultHttpHeaders();
+        }
+    }
+
 
     private preHandle = async (options: FeignRequestBaseOptions, url: string, requestMapping: RequestMappingOptions) => {
 
@@ -275,6 +305,48 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             return handle;
         }
         return handle;
+    }
+
+
+    /**
+     * try check authorized status
+     * @param methodName
+     */
+    private tryCheckAuthorizedStatus = async (methodName: string) => {
+
+        const {
+            apiService,
+            authenticationStrategy,
+            authenticationBroadcaster
+        } = this;
+        const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
+        //requestMapping
+        const {requestMapping} = feignMethodConfig;
+        // need certification
+        if (requestMapping.needCertification !== true) {
+            return;
+        }
+        if (authenticationStrategy == null) {
+            return;
+        }
+        let result: AuthenticationToken;
+        try {
+            result = await authenticationStrategy.getAuthorization(null);
+        } catch (e) {
+        }
+        const noneLogin = result == null || result.expireDate <= new Date().getTime() - 5 * 1000;
+        if (noneLogin) {
+            // not login
+            if (authenticationBroadcaster != null) {
+                if (typeof authenticationStrategy.clearCache != null) {
+                    authenticationStrategy.clearCache()
+                }
+                // send event
+                authenticationBroadcaster.sendUnAuthorizedEvent();
+            }
+
+            return Promise.reject(UNAUTHORIZED_RESPONSE);
+        }
     }
 
 

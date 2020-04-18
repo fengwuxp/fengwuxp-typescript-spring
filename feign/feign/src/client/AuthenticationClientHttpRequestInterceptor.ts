@@ -1,16 +1,10 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
-import {HttpStatus} from "../constant/http/HttpStatus";
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
+import { UNAUTHORIZED_RESPONSE } from '../constant/FeignConstVar';
 
-
-const UNAUTHORIZED_RESPONSE = {
-    ok: false,
-    statusCode: HttpStatus.UNAUTHORIZED,
-    statusText: null,
-};
 
 
 /**

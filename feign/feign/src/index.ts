@@ -32,8 +32,10 @@ export {
     AuthenticationToken,
     AuthenticationStrategy,
     CacheCapableAuthenticationStrategy,
+    AuthenticationBroadcaster,
     NEVER_REFRESH_FLAG
 } from "./client/AuthenticationStrategy";
+export {default as DebounceAuthenticationBroadcaster} from "./client/DebounceAuthenticationBroadcaster";
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
 export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";

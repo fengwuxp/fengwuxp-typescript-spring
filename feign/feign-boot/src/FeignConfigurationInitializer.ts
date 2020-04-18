@@ -46,6 +46,8 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
             return new RestTemplate(this.getHttpClient());
         };
 
+        getAuthenticationStrategy = feignConfigurationAdapter.authenticationStrategy;
+        getAuthenticationBroadcaster = feignConfigurationAdapter.authenticationBroadcaster;
         getRequestURLResolver = feignConfigurationAdapter.requestURLResolver;
         getDefaultHttpHeaders = feignConfigurationAdapter.getDefaultHttpHeaders;
     }
