@@ -1,14 +1,26 @@
 import {ExpectAction, SelectResult, SKU, SKUItemValue, SKUSelector, SpecificationValueItem} from "./SKUSelector";
+import SimplePathMatcher from "../match/SimplePathMatcher";
+import StringUtils from "../string/StringUtils";
 
+
+// 规格属性的库存权重
+enum ShortageWeight {
+    DISABLE,
+
+    ACTIVE
+}
 
 export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> implements SKUSelector<T> {
 
 
     // 分割 SKUItemKey的符号
-    public static SPLIT_SYMBOL: string = "|";
+    public static SPLIT_SYMBOL: string = "/";
 
     // sku 集合
     private sku: SKU<T> = null;
+
+    // 无库存的sku集合
+    private inventoryShortageSku: SKU<T> = null;
 
     // 规格属性列表
     private specificationAttrValues: SpecificationValueItem[][];
@@ -19,17 +31,21 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
     // 无效的规格属性值
     private invalidValues: SpecificationValueItem[][];
 
+    // 使用路径匹配来匹配将会被选中的规格商品
+    private pathMatcher;
+
 
     constructor(sku: SKU<T>, specificationAttrValues: SpecificationValueItem[][]) {
-        this.sku = this.sortSkuKey(sku);
         this.specificationAttrValues = specificationAttrValues;
+        this.initSku(sku);
         // 初始化
-        this.selectedValues = specificationAttrValues.map(item => null);
-        this.invalidValues = [];
+        this.clear();
+        this.pathMatcher = new SimplePathMatcher(DefaultSKUSelector.SPLIT_SYMBOL);
     }
 
     clear = () => {
-        this.selectedValues = [];
+        this.selectedValues = this.specificationAttrValues.map(item => null)
+        this.invalidValues = [];
     };
 
     remove = (value: SpecificationValueItem): Promise<SelectResult<T>> => {
@@ -79,22 +95,25 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
      */
     private actionItem = (value: SpecificationValueItem, action: ExpectAction): Promise<SelectResult<T>> => {
 
-        const {selectedValues, specificationAttrValues} = this;
-        if (ExpectAction.SELECTED === action) {
+        const {selectedValues} = this;
+        const isSelected = ExpectAction.SELECTED === action;
+        if (isSelected) {
             // 选中
             selectedValues[value.specificationIndex] = value;
         } else if (ExpectAction.REMOVE === action) {
             // 移除
             selectedValues[value.specificationIndex] = null;
         }
-        this.permutationsSpecification(selectedValues, specificationAttrValues);
+        this.markInventorySkuGoods(value, isSelected);
         const sku = selectedValues.includes(null) ? null : this.getSkuItem(selectedValues);
         const isInventoryShortage = sku == null ? false : this.isInventoryShortage(sku);
-        if (isInventoryShortage) {
-            this.invalidValues = [];
+        if (isInventoryShortage || selectedValues.filter(item => item != null).length === 0) {
+            // 选中的数据无库存
+            this.clear();
+
         }
         return Promise.resolve({
-            sku,
+            sku: isInventoryShortage ? null : sku,
             // 如果选中的没有库存 移除所有选中
             selected: isInventoryShortage ? [] : selectedValues/*.filter(item => item != null)*/,
             invalid: this.invalidValues
@@ -102,129 +121,126 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
 
     };
 
-
     /**
-     * 排列组合 规格值
-     * @param selectedValues 以选中的规格属性
-     * @param values         所有的规格属性
+     * 标记无效的sku goods
+     * @param current
+     * @param isSelected
      */
-    private permutationsSpecification = (selectedValues: SpecificationValueItem[], values: SpecificationValueItem[][]) => {
+    private markInventorySkuGoods = (current: SpecificationValueItem, isSelected: boolean) => {
+        const matchAllSkuGoods = this.matchAllInventoryShortageSkuGoods();
+        // const selectedValues = this.selectedValues;
+        console.log("=====none stock sku goods===>", matchAllSkuGoods.map((item) => `${item.key} ==> ${item.value.stock}`));
+        // console.log("=====has stock sku goods===>", matchAllSkuGoods.filter(item => !this.isInventoryShortage(item.value)).map((item)=>`${item.key} ==> ${item.value.stock}`));
+        /**
+         * 第一位：规格属性的索引
+         * 第二位: 规格值权重值，有库存+1，没有库存-1
+         */
+        const specificationValueWeight: Record<string, number> = {};
+        matchAllSkuGoods.forEach(({key, value}) => {
+            const values = key.split(DefaultSKUSelector.SPLIT_SYMBOL);
+            values.filter((item) => StringUtils.hasText(item))
+                .forEach((key2, index) => {
+                    const name = `${key2}_${index}`;
+                    specificationValueWeight[name] = ShortageWeight.DISABLE;
+                });
+        });
 
-        // 过滤出null的列，进行排列
-        const items: SpecificationValueItem[] = [];
-        const indexs = selectedValues.map((item, index) => {
-            const notNull = item != null;
-            if (notNull) {
-                items.push(item);
+        // console.log("=====specificationValueWeight===>", specificationValueWeight);
+
+        const specificationAttrValues = this.specificationAttrValues;
+        const invalidValues: Array<Set<SpecificationValueItem>> = specificationAttrValues.map(() => new Set<SpecificationValueItem>());
+        for (let key in specificationValueWeight) {
+            const [name, index] = key.split("_")
+            // 需要禁用
+            const valueItem = specificationAttrValues[index].find(item => item.value === name);
+            if (valueItem != null && !this.isSelected(valueItem)) {
+                invalidValues[index].add(valueItem);
             }
-            return notNull ? -1 : index;
-        }).filter(index => index >= 0);
-
-        if (indexs.length === 0) {
-            // 全部选中
-        } else {
-            const permutations = this.permutations(items, values.filter((item, index) => indexs.includes(index)));
-            this.markDisabled(permutations);
         }
+        this.invalidValues = invalidValues.map((items) => Array.from(items));
 
-
-    };
+    }
 
 
     /**
-     * 排列组合
-     * @param selectedValues   选中的的值
-     * @param otherValues      未选中的值
+     * 匹配出所有和单前选中的无效商品
      */
-    private permutations = (selectedValues: SpecificationValueItem[],
-                            otherValues: SpecificationValueItem[][]): SpecificationValueItem[][] => {
+    private matchAllInventoryShortageSkuGoods = (): Array<{ key: string, value: T }> => {
+        // let length = this.selectedValues.length
+        const selectedValues = this.selectedValues
+            .filter((item) => {
+                return item != null;
+            });
 
-        // 得到全部的排列组合
-        // return otherValues.reduce((prev, currentValue) => {
+        const matchSkuGoods = selectedValues.map(this.matchInventoryShortageSkuGoods)
+            .flatMap((items) => [...items]);
+        // 过滤掉重复数据
+        const marked: Record<string, boolean> = {}
+        return matchSkuGoods.filter((item) => {
+            if (!marked[item.key]) {
+                marked[item.key] = true;
+                return true;
+            }
+            return false;
+        })
+
+    }
+
+    /**
+     * 匹配商品
+     * @param value
+     */
+    private matchInventoryShortageSkuGoods = (value: SpecificationValueItem): Array<{ key: string, value: T }> => {
+        const pattern = this.getAntPath(value);
+        const result = [];
+        for (let path in this.inventoryShortageSku) {
+            if (!this.pathMatcher.match(pattern, path)) {
+                continue;
+            }
+            result.push({
+                key: path,
+                value: this.sku[path]
+            });
+        }
+        return result;
+    }
+
+
+    /**
+     * 获取ant 风格的路径
+     * @param item
+     */
+    private getAntPath = (item: SpecificationValueItem) => {
+        const strings = [
+            DefaultSKUSelector.SPLIT_SYMBOL,
+            "**",
+            item.value,
+            DefaultSKUSelector.SPLIT_SYMBOL,
+            "**",
+        ]
+        return strings.join("/");
+        // if (values.length === 1) {
         //
-        //     return this.allPermutations(currentValue, prev);
-        // }, selectedValues as any);
+        // } else {
+        //     let prev = null;
+        //     const key = values.map((item) => {
+        //         let result = null;
+        //         if (item == null) {
+        //             if (prev == null) {
+        //                 return null;
+        //             } else {
+        //                 return "**";
+        //             }
+        //         } else {
+        //             result = item.value;
+        //         }
+        //         prev = item;
+        //         return result;
+        //     }).filter(item => item != null).join(DefaultSKUSelector.SPLIT_SYMBOL)
+        //     return `/${key}`;
+        // }
 
-        const temp: Array<SpecificationValueItem[] | SpecificationValueItem> = otherValues.reduce((previousValue, currentValue) => {
-            return this.allPermutations(previousValue, currentValue);
-        }, otherValues.pop() as any);
-
-        if (Array.isArray(temp[0])) {
-            return this.allPermutations(selectedValues, temp) as SpecificationValueItem[][];
-        } else {
-            return this.allPermutations([selectedValues], temp) as SpecificationValueItem[][];
-        }
-    };
-
-
-    /**
-     * 全排列2 个数组
-     * @param v1
-     * @param v2
-     */
-    protected allPermutations = (v1: Array<SpecificationValueItem[] | SpecificationValueItem>, v2: Array<SpecificationValueItem[] | SpecificationValueItem>): Array<SpecificationValueItem[] | SpecificationValueItem> => {
-
-        return v1.map((i1) => {
-
-            return v2.map((i2) => {
-                if (Array.isArray(i2)) {
-                    return [i1, ...i2]
-                }
-                if (Array.isArray(i1)) {
-                    return [...i1, i2]
-                } else {
-                    return [i1, i2]
-                }
-            })
-        }).flatMap(items => [...items]) as Array<SpecificationValueItem[] | SpecificationValueItem>;
-    };
-
-
-    /**
-     * 标记为不可用，将不可选中的加入无效的列表中
-     * @param values
-     */
-    protected markDisabled = (values: SpecificationValueItem[][]) => {
-        const markMaps: Map<SpecificationValueItem, number[]/*库存是否失效*/> = new Map();
-        values.forEach((items) => {
-            const skuItem = this.getSkuItem(items);
-            if (skuItem == null) {
-                // throw new Error(`sku not found ${values}`);
-                return null;
-            }
-            // 判断是库存是否不足
-            const isInventoryShortage = this.isInventoryShortage(skuItem);
-            // 设置标记
-            items.forEach((item) => {
-                let number = markMaps.get(item) || [];
-                if (isInventoryShortage) {
-                    number.push(-1)
-                } else {
-                    number.push(1);
-                }
-                markMaps.set(item, number);
-            })
-        });
-
-        const invalidValues = this.specificationAttrValues.map(item => []);
-        const selectedValues = this.selectedValues;
-        // const specificationAttrValues = this.specificationAttrValues;
-        markMaps.forEach((value, key) => {
-            if (!value.includes(1)) {
-                // 所有的排列都没有库存了
-                const indexOf = selectedValues.indexOf(key);
-                if (indexOf >= 0) {
-                    // selectedValues[indexOf] = null;
-                } else {
-                    // invalidValues.add(key);
-                    invalidValues[key.specificationIndex].push(key);
-                }
-            }
-        });
-
-        this.invalidValues = invalidValues;
-
-    };
+    }
 
 
     /**
@@ -248,9 +264,9 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
 
         return this.selectedValues.filter((item) => item != null)
             .filter(item => item.specificationIndex === value.specificationIndex)
-            .find(item => {
+            .some(item => {
                 return item.specification === value.specification && item.value === value.value
-            }) != null;
+            });
 
     };
 
@@ -259,17 +275,64 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
             return null;
         }
         const sku = this.sku;
-        const key = values.map((item) => item.value).sort().join("");
+        const key = this.getKey(values.map((item) => item.value));
         return sku[key];
 
     }
 
-    private sortSkuKey = (sku) => {
+    private initSku = (sku: SKU<T>) => {
+
         const newSku = {};
+        const inventoryShortageSku = {};
+
         for (let key in sku) {
-            const key1 = key.split(DefaultSKUSelector.SPLIT_SYMBOL).sort().join("");
-            newSku[key1] = sku[key];
+            const key1 = this.getKey(key.split(DefaultSKUSelector.SPLIT_SYMBOL));
+            const element = sku[key];
+            newSku[key1] = element;
+            if (this.isInventoryShortage(element)) {
+                inventoryShortageSku[key1] = element;
+            }
         }
-        return newSku;
+        // 处理所有的排序组合
+        const specificationAttrValues = this.specificationAttrValues;
+        const keys: string[][] = specificationAttrValues.reduce((prev, current, index) => {
+            if (index == 0) {
+                return prev;
+            }
+            return this.fullPermutations(prev, current);
+        }, specificationAttrValues[0].map((item) => [item.value]));
+
+
+        // 合并所有的排列组合
+        keys.map(this.getKey).forEach((key) => {
+            if (newSku[key] == null) {
+                const item = {
+                    stock: -1
+                };
+                // @ts-ignore
+                newSku[key] = item
+                inventoryShortageSku[key] = item;
+            }
+        });
+        // console.log("===sku===>", sku);
+        // console.log("===sku===>", Object.keys(sku).length);
+        this.sku = newSku;
+        this.inventoryShortageSku = inventoryShortageSku;
+    }
+
+    private fullPermutations = (items1: string[][], items2: SpecificationValueItem[]): string[][] => {
+        const items = [];
+        items1.forEach(item => {
+            items2.forEach((item2) => {
+                items.push([...item, item2.value])
+            })
+        })
+        return items
+    }
+
+
+    private getKey = (strings: string[]) => {
+
+        return `${DefaultSKUSelector.SPLIT_SYMBOL}${strings/*.sort()*/.join(DefaultSKUSelector.SPLIT_SYMBOL)}${DefaultSKUSelector.SPLIT_SYMBOL}`
     }
 }

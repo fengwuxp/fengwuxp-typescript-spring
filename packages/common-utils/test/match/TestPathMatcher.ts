@@ -62,5 +62,53 @@ describe("test path match", () => {
         // match('/app/**/user/login', ['http://117.50.43.50:52001/app/v1.0/user/login','http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh','/abc/path']);
         match('/app/**/user/authCode', ['http://117.50.43.50:52001/app/v1.0/user/authCode', 'http://abc.d/app/1.0.0/user/login', '/abc/path1/hhh', '/abc/path']);
     })
+
+    test("simple path matcher 2", () => {
+        const pathMatcher = new SimplePathMatcher();
+
+        function match(pattern, paths: string[]) {
+
+            logger.debug(pattern, paths.map((path) => {
+                const match = pathMatcher.match(pattern, path);
+                if (match) {
+                    return path
+                }
+                return null
+            }).filter(item => item != null));
+        }
+
+        const paths = [
+            "/白色/联通/4G/64",
+            "/白色/移动/4G/64",
+            "/白色/电信/4G/64",
+            "/白色/联通/5G/32",
+            "/白色/移动/5G/32",
+            "/白色/电信/5G/32",
+
+            "/金色/联通/4G/64",
+            "/金色/移动/4G/64",
+            "/金色/电信/4G/64",
+            "/金色/联通/5G/32",
+            "/金色/移动/5G/32",
+            "/金色/电信/5G/32",
+
+            "/银白色/联通/4G/64",
+            "/银白色/移动/4G/64",
+            "/银白色/电信/4G/64",
+            "/银白色/联通/5G/32",
+            "/银白色/移动/5G/32",
+            "/银白色/电信/5G/32",
+        ];
+        match('/白色/**', paths);
+        match('/银白色/**', paths);
+        match('/银白色/**/4G', paths);
+        match('/**/联通/**', paths);
+        match('/**/电信/**', paths);
+        match('/**/5G/**', paths);
+        match('/**/5G/64', paths);
+        match('/**/5G/32', paths);
+        match('/金色/**/5G/32', paths);
+        match('/金色/**/5G/**', paths);
+    })
 });
 
