@@ -3,6 +3,7 @@ import {FeignOptions} from "./annotations/Feign";
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
 export {RequestMapping} from "./annotations/mapping/RequestMapping";
+export {setDefaultNeedCertification} from "./annotations/mapping/Mapping";
 export {GetMapping} from "./annotations/mapping/GetMapping";
 export {PostMapping} from "./annotations/mapping/PostMapping";
 export {PatchMapping} from "./annotations/mapping/PatchMapping";

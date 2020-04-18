@@ -68,7 +68,7 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
         if (getAuthenticationBroadcaster != null) {
             const authenticationBroadcaster = getAuthenticationBroadcaster();
             const authenticationStrategy = feignConfiguration.getAuthenticationStrategy();
-            if (typeof authenticationStrategy.clearCache != null) {
+            if (authenticationStrategy.clearCache != null) {
                 authenticationStrategy.clearCache()
             }
             authenticationBroadcaster.sendUnAuthorizedEvent();

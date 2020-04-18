@@ -338,7 +338,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (noneLogin) {
             // not login
             if (authenticationBroadcaster != null) {
-                if (typeof authenticationStrategy.clearCache != null) {
+                if (authenticationStrategy.clearCache != null) {
                     authenticationStrategy.clearCache()
                 }
                 // send event
