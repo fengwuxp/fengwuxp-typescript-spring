@@ -127,30 +127,15 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
      * @param isSelected
      */
     private markInventorySkuGoods = (current: SpecificationValueItem, isSelected: boolean) => {
-        const matchAllSkuGoods = this.matchAllInventoryShortageSkuGoods();
-        // const selectedValues = this.selectedValues;
-        console.log("=====none stock sku goods===>", matchAllSkuGoods.map((item) => `${item.key} ==> ${item.value.stock}`));
-        // console.log("=====has stock sku goods===>", matchAllSkuGoods.filter(item => !this.isInventoryShortage(item.value)).map((item)=>`${item.key} ==> ${item.value.stock}`));
-        /**
-         * 第一位：规格属性的索引
-         * 第二位: 规格值权重值，有库存+1，没有库存-1
-         */
-        const specificationValueWeight: Record<string, number> = {};
-        matchAllSkuGoods.forEach(({key, value}) => {
-            const values = key.split(DefaultSKUSelector.SPLIT_SYMBOL);
-            values.filter((item) => StringUtils.hasText(item))
-                .forEach((key2, index) => {
-                    const name = `${key2}_${index}`;
-                    specificationValueWeight[name] = ShortageWeight.DISABLE;
-                });
-        });
-
-        // console.log("=====specificationValueWeight===>", specificationValueWeight);
-
+        const specificationValueWeight = this.matchSkuSpecificationValueWeight();
+        console.log("=====specificationValueWeight===>", specificationValueWeight);
         const specificationAttrValues = this.specificationAttrValues;
         const invalidValues: Array<Set<SpecificationValueItem>> = specificationAttrValues.map(() => new Set<SpecificationValueItem>());
         for (let key in specificationValueWeight) {
-            const [name, index] = key.split("_")
+            if (specificationValueWeight[key] >= 0) {
+                continue;
+            }
+            const [name, index] = key.split("_");
             // 需要禁用
             const valueItem = specificationAttrValues[index].find(item => item.value === name);
             if (valueItem != null && !this.isSelected(valueItem)) {
@@ -163,44 +148,125 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
 
 
     /**
-     * 匹配出所有和单前选中的无效商品
+     * 获取到所有sku 规格属性的权重，
      */
-    private matchAllInventoryShortageSkuGoods = (): Array<{ key: string, value: T }> => {
+    private matchSkuSpecificationValueWeight = (): Record<string, number> => {
         // let length = this.selectedValues.length
         const selectedValues = this.selectedValues
             .filter((item) => {
                 return item != null;
             });
 
-        const matchSkuGoods = selectedValues.map(this.matchInventoryShortageSkuGoods)
-            .flatMap((items) => [...items]);
-        // 过滤掉重复数据
-        const marked: Record<string, boolean> = {}
-        return matchSkuGoods.filter((item) => {
-            if (!marked[item.key]) {
-                marked[item.key] = true;
-                return true;
-            }
-            return false;
-        })
+
+        // 合并相同没有库存的sku 记录，并将权重设置为-1
+
+        const skuGoodsWeight = {};
+
+        const matchSkuGoods: Array<{ key: string, value: T }>[] = selectedValues.map(this.matchSkuGoods);
+
+
+        // 查找一定有库存的路径
+        const stockSkuGoods: Array<{ key: string, value: T }> = this.filterSkuGoodsByStock(matchSkuGoods, true);
+
+        // 查找一定没有库存的路径
+        const noneStockSkuGoods: Array<{ key: string, value: T }> = this.filterSkuGoodsByStock(matchSkuGoods, false);
+
+        noneStockSkuGoods.forEach(({key, value}) => {
+            skuGoodsWeight[key] = value;
+            skuGoodsWeight[key].weight = -1;
+        });
+
+        stockSkuGoods.forEach(({key, value}) => {
+            skuGoodsWeight[key] = value;
+            skuGoodsWeight[key].weight = 1;
+        });
+
+        console.log("====skuGoodsWeight===>", skuGoodsWeight);
+        return this.weightCalculation(skuGoodsWeight);
 
     }
 
     /**
-     * 匹配商品
-     * @param value
+     * 按照是否有库存过滤商品
+     * @param skuGoods
+     * @param hasStock
      */
-    private matchInventoryShortageSkuGoods = (value: SpecificationValueItem): Array<{ key: string, value: T }> => {
-        const pattern = this.getAntPath(value);
+    private filterSkuGoodsByStock = (skuGoods: Array<{ key: string, value: T }>[], hasStock: boolean) => {
+        if (skuGoods.length == 0) {
+            return [];
+        }
+        const filterCondition = (value: T) => {
+            const inventoryShortage = this.isInventoryShortage(value);
+            if (hasStock) {
+                return !inventoryShortage;
+            }
+            return inventoryShortage;
+        }
+
+        return skuGoods.reduce((prev, current, index) => {
+            if (index === 0) {
+                return prev;
+            }
+            return prev.filter(({key, value}) => {
+                return current.filter((item) => {
+                    return filterCondition(item.value);
+                }).some((item) => {
+                    return item.value === value;
+                })
+            });
+        }, skuGoods[0].filter(({value}) => {
+            return filterCondition(value);
+        }));
+    }
+
+    /**
+     * 计算{@link #matchSkuGoods}匹配出来的sku商品权重
+     * 计算规则 将sku的路径分割后，如果当前的sku商品的库存无效，则权重-1 有效则+1
+     * 默认权重为 0
+     * @param skuGoods
+     * @return 每个规格的值的权重
+     */
+    private weightCalculation = (skuGoods: Record<string, T & { weight: number }>): Record<string, number> => {
+        /**
+         * 第一位：规格属性的索引
+         * 第二位: 规格值权重值，有库存+1，没有库存-1
+         */
+        const specificationValueWeight: Record<string, number> = {};
+
+        for (let key in skuGoods) {
+            const values = key.split(DefaultSKUSelector.SPLIT_SYMBOL);
+            const skuGood: T & { weight: number } = skuGoods[key];
+            // let weight = this.isInventoryShortage(skuGood) ? -1 : 1
+            values.filter((item) => StringUtils.hasText(item))
+                .forEach((key2, index) => {
+                    const name = `${key2}_${index}`;
+                    if (specificationValueWeight[name] == null) {
+                        specificationValueWeight[name] = 0;
+                    }
+                    specificationValueWeight[name] += skuGood.weight;
+                });
+        }
+
+        return specificationValueWeight;
+    }
+
+    /**
+     * 匹配sku商品路径包含{@param item}路径的商品
+     * @param item
+     */
+    private matchSkuGoods = (item: SpecificationValueItem): Array<{ key: string, value: T }> => {
+        const pattern = this.getAntPath(item);
         const result = [];
-        for (let path in this.inventoryShortageSku) {
+        const sku = this.sku;
+        for (let path in sku) {
             if (!this.pathMatcher.match(pattern, path)) {
                 continue;
             }
+            // result[path] = sku[path]
             result.push({
                 key: path,
-                value: this.sku[path]
-            });
+                value: sku[path]
+            })
         }
         return result;
     }
@@ -219,26 +285,6 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
             "**",
         ]
         return strings.join("/");
-        // if (values.length === 1) {
-        //
-        // } else {
-        //     let prev = null;
-        //     const key = values.map((item) => {
-        //         let result = null;
-        //         if (item == null) {
-        //             if (prev == null) {
-        //                 return null;
-        //             } else {
-        //                 return "**";
-        //             }
-        //         } else {
-        //             result = item.value;
-        //         }
-        //         prev = item;
-        //         return result;
-        //     }).filter(item => item != null).join(DefaultSKUSelector.SPLIT_SYMBOL)
-        //     return `/${key}`;
-        // }
 
     }
 
@@ -315,7 +361,6 @@ export default class DefaultSKUSelector<T extends SKUItemValue = SKUItemValue> i
             }
         });
         // console.log("===sku===>", sku);
-        // console.log("===sku===>", Object.keys(sku).length);
         this.sku = newSku;
         this.inventoryShortageSku = inventoryShortageSku;
     }
