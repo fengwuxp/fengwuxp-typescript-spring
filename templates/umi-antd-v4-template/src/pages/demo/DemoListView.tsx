@@ -20,11 +20,14 @@ import {
   SchemaForm,
   Field,
   FormButtonGroup,
-  FormItemGrid,
   Submit,
   Reset,
   createFormActions,
-} from '@uform/antd/esm';
+} from '@formily/antd';
+import {
+    FormItemGrid,
+} from '@formily/antd-components'
+
 import classNames from 'classnames';
 import AppRouter from '@/AppRouter';
 import MockService from '@/feign/mock/MockService';

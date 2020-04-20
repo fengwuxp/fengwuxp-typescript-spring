@@ -1,10 +1,12 @@
 import './RegisterBrowserOpenFeign';
+import { setup } from '@formily/antd-components';
+import 'antd/dist/antd.less'
 import { Button, message, notification } from 'antd';
-
 import React from 'react';
 import { formatMessage } from 'umi';
 import defaultSettings from '../config/defaultSettings';
-
+// 注册antd的表单组件
+setup();
 const { pwa } = defaultSettings;
 // if pwa is true
 if (pwa) {

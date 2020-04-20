@@ -9,7 +9,7 @@ import {
   Submit,
   Reset,
   createFormActions,
-} from '@uform/antd/esm'
+} from '@formily/antd'
 
 import {Button, Card} from 'antd'
 

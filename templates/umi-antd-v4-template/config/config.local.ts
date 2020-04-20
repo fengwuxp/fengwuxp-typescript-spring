@@ -1,4 +1,4 @@
-import {config} from "./config";
+import config from "./config";
 import {rewriteCooke} from "./utils";
 import {defineConfig} from "umi";
 

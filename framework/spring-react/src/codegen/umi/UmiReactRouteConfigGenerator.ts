@@ -329,7 +329,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
 
     private getIcon = (icon) => {
         if (icon == null) {
-            return "require('@ant-design/icons-svg/lib/asn/SmileOutlined').default";
+            // return "require('@ant-design/icons-svg/lib/asn/SmileOutlined').default";
+            return "'smile'";
         } else {
             if (!icon.startsWith("require")) {
                 return `'${icon}'`;

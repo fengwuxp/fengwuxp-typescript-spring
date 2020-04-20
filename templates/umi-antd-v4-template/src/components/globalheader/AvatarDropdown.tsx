@@ -2,7 +2,6 @@ import {LogoutOutlined, SettingOutlined, UserOutlined} from '@ant-design/icons';
 import {Avatar, Menu, Spin} from 'antd';
 import {ClickParam} from 'antd/es/menu';
 import React from 'react';
-import {router} from 'umi';
 import HeaderDropdown from '../headerdropdown';
 import styles from './index.less';
 import {LoginUserInfo} from "@/feign/user/info/LoginUserInfo";
@@ -25,8 +24,6 @@ class AvatarDropdown extends React.Component<GlobalHeaderRightProps> {
       });
       return;
     }
-
-    router.push(`/account/${key}`);
   };
 
 

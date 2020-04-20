@@ -11,8 +11,7 @@ import {
 import {LoginViewProps} from '@/pages/user/LoginView';
 import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
 import SpringUmiAppRouter from "../.spring/SpringUmiAppRouter";
-// @ts-ignore
-import {history} from "@@/core/history";
+import { history } from 'umi';
 import UmiBrowserNavigatorAdapter from "@/UmiBrowserNavigatorAdapter";
 
 
@@ -31,8 +30,8 @@ export const upperCaseToLeftIncline: MethodNameCommandResolver = (methodName: st
 
 @AppRouterMapping({
     confirmBeforeJumping: () => routeConfirmBeforeJumping,
-    navigatorContextAdapter: () => new BrowserNavigatorContextAdapter(),
-    navigatorAdapter: () => new UmiBrowserNavigatorAdapter(history),
+    navigatorContextAdapter: () => new BrowserNavigatorContextAdapter(history),
+    navigatorAdapter: () => new UmiBrowserNavigatorAdapter(),
     methodNameCommandResolver: () => upperCaseToLeftIncline,
     pathPrefix: '/',
 })

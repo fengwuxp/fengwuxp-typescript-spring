@@ -8,9 +8,7 @@ import proxy from './proxy';
 const {REACT_APP_ENV} = process.env;
 
 
-console.log("process.env.UMI_ENV", REACT_APP_ENV);
-
-export const config = {
+export default defineConfig({
     hash: false,
     antd: {},
     locale: {
@@ -103,12 +101,12 @@ export const config = {
     manifest: {
         basePath: '/',
     },
-    externals: {
-        // "react": "window.React",
-        // "react-dom": "window.ReactDOM",
-        // "rxjs": "window.Rxjs",
-        // "antd": "window.Antd"
-    },
+    // externals: {
+    //     "react": "window.React",
+    //     "react-dom": "window.ReactDOM",
+    //     "rxjs": "window.Rxjs",
+    //     "antd": "window.Antd"
+    // },
     extraBabelPlugins: [
         // [
         //     "import",
@@ -118,8 +116,7 @@ export const config = {
         //         "style": false,
         //         camel2DashComponentName: false
         //     },
-        //     "@ant-design/icons"
+        //     "@ant-design/icons-replace"
         // ]
     ]
-};
-export default defineConfig(config);
+});
