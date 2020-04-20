@@ -8,6 +8,9 @@ interface HttpHeader {
     value: string
 }
 
+/**
+ * use match interceptor is execute
+ */
 export abstract class MappedInterceptor {
 
     protected includePatterns: string[];

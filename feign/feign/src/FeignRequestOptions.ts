@@ -37,7 +37,7 @@ export interface FeignRequestBaseOptions extends FeignRequestId {
     /**
      * external request headers
      * support '{xxx}' expression，Data can be obtained from request body or query data
-     *
+     * {@see RequestHeaderResolver}
      */
     headers?: Record<string, string>;
 
