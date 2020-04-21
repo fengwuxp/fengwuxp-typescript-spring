@@ -26,55 +26,55 @@ const USE_MODAL_CACHE: Map<string, boolean> = new Map();
  */
 const isModalRoute = (props) => {
 
-  if (history.length <= 1) {
-    // 如果是第一个页面 强制关闭
-    return false;
-  }
-  const {route, location} = props;
-  if (previousLocation == null || previousLocation === location) {
-    return false;
-  }
+    if (history.length <= 1) {
+        // 如果是第一个页面 强制关闭
+        return false;
+    }
+    const {route, location} = props;
+    if (previousLocation == null || previousLocation === location) {
+        return false;
+    }
 
-  const {query, state} = location;
-  if (state != null) {
-    const useModal = state[ENABLED_MODAL_NAME];
-    if (useModal === true) {
-      return true;
+    const {query, state} = location;
+    if (state != null && state[ENABLED_MODAL_NAME] != null) {
+        return state[ENABLED_MODAL_NAME];
     }
-    if (useModal === false) {
-      return false;
+    if (query != null && query[ENABLED_MODAL_NAME] != null) {
+        return Boolean(query[ENABLED_MODAL_NAME]);
     }
-  }
-  if (query != null && query[ENABLED_MODAL_NAME]) {
-    const useModal = query[ENABLED_MODAL_NAME];
-    if (useModal === true) {
-      return true;
+    // 期望路由的pathname
+    const pathname = location.pathname;
+    let useModal = USE_MODAL_CACHE.get(pathname);
+    if (useModal != null) {
+        return useModal;
     }
-    if (useModal === false) {
-      return false;
+    if (route.routes == null) {
+        return false;
     }
-  }
-  // 期望路由的pathname
-  const pathname = location.pathname;
-  let useModal = USE_MODAL_CACHE.get(pathname);
-  if (useModal != null) {
-    return useModal;
-  }
-  const targetRoute = route.routes.map((item) => {
-    if (pathname.startsWith(item.path)) {
-      return item.routes.map((sub) => {
-        if (pathname.startsWith(sub.path)) {
-          return sub.routes.find(route => route.path === pathname);
+
+    const targetRoute = route.routes.map((item) => {
+        if (pathname.startsWith(item.path)) {
+            if (item.routes == null) {
+                return null;
+            }
+            return item.routes.map((sub) => {
+                if (pathname.startsWith(sub.path)) {
+                    if (sub.routes == null) {
+                        return null;
+                    }
+                    return sub.routes.find(route => route.path === pathname);
+                }
+                return null;
+            }).find(item => item != null);
         }
         return null;
-      }).find(item => item != null);
+    }).find(item => item != null);
+    console.log("=====targetRoute==>", targetRoute, useModal);
+    if (targetRoute != null) {
+        useModal = targetRoute.showMode === ViewShowMode.DIALOG;
     }
-    return null;
-  }).find(item => item != null);
-  // console.log("=====targetRoute==>", targetRoute, useModal);
-  useModal = targetRoute.showMode === ViewShowMode.DIALOG;
-  USE_MODAL_CACHE.set(pathname, useModal);
-  return useModal;
+    USE_MODAL_CACHE.set(pathname, useModal);
+    return useModal;
 };
 
 
@@ -84,65 +84,69 @@ const isModalRoute = (props) => {
  * @constructor
  */
 const DefaultPrivateRoute = (props: ConditionRouteProps) => {
-  const {
-    path,
-    exact,
-    strict,
-    render,
-    location
-  } = props;
-  // console.log("=======props====>", props);
-  const isModal = isModalRoute(props);
-  useEffect(() => {
-    previousLocation = location;
-  });
-  const renderFn = (routeProps, isModal) => {
-    const isOk = SpelRouteConditionParser(USER_IS_LOGIN_CONDITION, RouteContextHolder.getRouteContext(), routeProps);
-    const pathname = location.pathname;
-    const isLoginView = pathname === "/user/login";
-    routeProps[ENABLED_MODAL_NAME] = isModal;
-    if (isOk) {
-      if (isLoginView) {
-        return <Redirect to={{
-          pathname: `/`,
-          state: {
-            from: props.location
-          }
-        }}/>
-      } else {
-        return render(routeProps);
-      }
-    } else {
-      if (isLoginView) {
-        return render(routeProps);
-      } else {
-        return <Redirect to={{
-          pathname: `/user/login`,
-          state: {
-            from: props.location
-          }
-        }}/>
-      }
-    }
 
-  };
-  return (
+    const {
+        path,
+        exact,
+        strict,
+        children,
+        location
+    } = props;
+    const isModal = isModalRoute(props);
+    useEffect(() => {
+        previousLocation = location;
+    });
+    const renderFn = (routeProps, isModal) => {
+        const isOk = SpelRouteConditionParser(USER_IS_LOGIN_CONDITION, RouteContextHolder.getRouteContext(), routeProps);
+        const pathname = location.pathname;
+        const isLoginView = pathname === "/user/login";
+        if (location.state == null) {
+            location.state = {};
+        }
+        location.state[ENABLED_MODAL_NAME] = isModal;
+        if (isOk) {
+            if (isLoginView) {
+                return <Redirect to={{
+                    pathname: `/`,
+                    state: {
+                        from: props.location
+                    }
+                }}/>
+            } else {
+                return children;
+            }
+        } else {
+            if (isLoginView) {
+                // return render(routeProps);
+                return children
+            } else {
+                return <Redirect to={{
+                    pathname: `/user/login`,
+                    state: {
+                        from: props.location
+                    }
+                }}/>
+            }
+        }
 
-    <>
-      <Switch location={isModal ? previousLocation : location}>
-        <Route path={path}
-               exact={exact}
-               strict={strict}
-               render={(routeProps) => renderFn(routeProps, false)}/>
-      </Switch>
-      {
-        isModal && <Route path={path}
-                          exact={exact}
-                          strict={strict}
-                          render={(routeProps) => renderFn(routeProps, true)}/>
-      }
-    </>
-  );
+    };
+    return (
+
+        <>
+            <Switch location={isModal ? previousLocation : location}>
+                <Route path={path}
+                       exact={exact}
+                       strict={strict}
+                       render={(routeProps) => renderFn(routeProps, false)}/>
+            </Switch>
+            {
+                isModal && <Route path={path}
+                                  exact={exact}
+                                  strict={strict}
+                                  render={(routeProps) => renderFn(routeProps, true)}/>
+            }
+        </>
+    );
 };
 
 

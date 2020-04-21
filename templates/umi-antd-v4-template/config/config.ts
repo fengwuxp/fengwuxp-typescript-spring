@@ -33,7 +33,7 @@ export default defineConfig({
                 {
                     path: '/user',
                     component: '../layouts/UserLayout',
-                    Routes: ['./src/DefaultPrivateRoute'],
+                    wrappers: ['../DefaultPrivateRoute'],
                     routes: [
                         {
                             path: '/user',
@@ -54,7 +54,7 @@ export default defineConfig({
                 {
                     path: '/',
                     component: '../layouts/BasicLayout',
-                    Routes: ['./src/DefaultPrivateRoute'],
+                    wrappers: ['../DefaultPrivateRoute'],
                     routes: routes,
                     // routes: [
                     //   {
