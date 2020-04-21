@@ -51,10 +51,10 @@ export abstract class MappedInterceptor {
     public matches = (req: HttpRequest): boolean => {
         const sources = [req.url, req.method, req.headers];
         // find first not match ,if not found, default return true
-        const isMatch = ["Url", "Method", "Headers"].some((methodName, index) => {
+        const isNotMatch = ["Url", "Method", "Headers"].some((methodName, index) => {
             return this[`matches${methodName}`](sources[index]) === false;
         });
-        return !isMatch;
+        return !isNotMatch;
     };
 
     /**
@@ -77,21 +77,24 @@ export abstract class MappedInterceptor {
      */
     public matchesMethod = (method: HttpMethod): boolean => {
         const {includeMethods, excludeMethods} = this;
-        return this.doMatch(method, includeMethods, excludeMethods, (pattern: HttpMethod, path: HttpMethod) => {
-            return pattern === path;
+        return this.doMatch(method, includeMethods, excludeMethods, (pattern: HttpMethod, matchSource: HttpMethod) => {
+            return pattern === matchSource;
         })
     };
 
     /**
      * Determine a match for the given request headers
-     * @param header
+     * @param headers
      */
-    public matchesHeaders = (header: Record<string, string>): boolean => {
-        return this.doMatch(header, this.includeHeaders, this.excludeHeaders, (pattern: HttpHeader, path: Record<string, string>) => {
+    public matchesHeaders = (headers: Record<string, string>): boolean => {
+        if (headers == null) {
+            return true;
+        }
+        return this.doMatch(headers, this.includeHeaders, this.excludeHeaders, (pattern: HttpHeader, matchSource: Record<string, string>) => {
 
             const {name, value} = pattern;
             const needMatchValue = value != null;
-            const headerValue = header[name];
+            const headerValue = matchSource[name];
 
             if (needMatchValue) {
                 return headerValue === value;
@@ -101,9 +104,16 @@ export abstract class MappedInterceptor {
     };
 
 
-    private doMatch = (path, includes: any[], excludes: any[], predicate: (pattern, path) => boolean) => {
+    /**
+     *
+     * @param matchSource  use match source
+     * @param includes
+     * @param excludes
+     * @param predicate
+     */
+    private doMatch = (matchSource, includes: any[], excludes: any[], predicate: (pattern, matchSource) => boolean) => {
         if (excludes != null) {
-            const isMatch = excludes.some((pattern) => predicate(pattern, path));
+            const isMatch = excludes.some((pattern) => predicate(pattern, matchSource));
             if (isMatch) {
                 return false;
             }
@@ -111,7 +121,7 @@ export abstract class MappedInterceptor {
         if (includes == null || includes.length === 0) {
             return true
         }
-        const isMatch = includes.some((pattern) => predicate(pattern, path));
+        const isMatch = includes.some((pattern) => predicate(pattern, matchSource));
         if (isMatch) {
             return true;
         }

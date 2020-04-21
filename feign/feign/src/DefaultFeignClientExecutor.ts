@@ -233,6 +233,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.preHandle,
                 () => options,
                 url,
+                options.headers,
                 requestMapping);
             result = await handle(result);
             index++;
@@ -251,6 +252,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.postHandle,
                 () => result,
                 url,
+                options.headers,
                 requestMapping);
             result = await handle(options, result);
             index++;
@@ -270,6 +272,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.postError,
                 () => result,
                 url,
+                options.headers,
                 requestMapping);
             try {
                 result = await handle(options, result);
@@ -287,6 +290,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                                     handle: Function,
                                     isNotHandle: Function,
                                     url: string,
+                                    headers: Record<string, string>,
                                     requestMapping: RequestMappingOptions): Function => {
         if (typeof handle != "function") {
             return isNotHandle;
@@ -296,7 +300,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             let isMatch = feignClientExecutorInterceptor.matches({
                 url,
                 method: requestMapping.method,
-                headers: requestMapping.headers,
+                headers: headers,
                 timeout: requestMapping.timeout
             });
             if (!isMatch) {
