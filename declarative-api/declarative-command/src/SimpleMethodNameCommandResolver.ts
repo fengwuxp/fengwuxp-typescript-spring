@@ -98,6 +98,7 @@ export const reduceRightCommandResolvers = (...resolvers: MethodNameCommandResol
  * @param name
  * @param commonValues        指令value集合
  * @param defaultCommand      默认指令
+ * @return [command,key]
  */
 export const tryConverterMethodNameCommandResolver = (name: string,
                                                       commonValues: Array<string>,

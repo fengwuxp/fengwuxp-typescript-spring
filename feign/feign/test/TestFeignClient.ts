@@ -84,4 +84,8 @@ export default class TestFeignClient {
     evaluateOrder: (req: {
         goods: Array<string>
     }) => Promise<void>;
+
+
+    @DeleteMapping({value: "/deleted"})
+    deleteById: (req: { ids: number[]; a: string; c: string }) => Promise<void>;
 }

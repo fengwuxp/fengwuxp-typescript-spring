@@ -31,10 +31,7 @@ export const objectResponseExtractor: ResponseExtractor<any> = <E = any>(respons
  */
 export const headResponseExtractor = (response: HttpResponse): Promise<Record<string, string>> => {
 
-    if (response.ok) {
-        return Promise.resolve(response.headers);
-    }
-    return Promise.reject(response);
+    return Promise.resolve(response.headers);
 };
 
 /**

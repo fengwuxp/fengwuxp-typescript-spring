@@ -122,8 +122,14 @@ export const queryStringify = (obj: ParsedUrlQueryInput,
                 if (value.length == 0) {
                     return;
                 }
+
+                //  调整为 a=x1&=a=x2&a=x3
+                return (value as Array<any>).map(item => {
+                    return `${ks}${item}`;
+                }).join(sep);
+
                 // key=1,2,3
-                return `${ks}${value.join(",")}`;
+                // return `${ks}${value.join(",")}`;
 
             } else {
                 return `${ks}${encodeURIComponent(stringifyPrimitive(value))}`;

@@ -689,7 +689,7 @@ interface FeignRequestBaseOptions extends FeignRequestId {
     /**
      * external request headers
      * support '{xxx}' expression，Data can be obtained from request body or query data
-     *
+     * {@see RequestHeaderResolver}
      */
     headers?: Record<string, string>;
 }
@@ -1478,6 +1478,9 @@ interface HttpHeader {
     name: string;
     value: string;
 }
+/**
+ * use match interceptor is execute
+ */
 declare abstract class MappedInterceptor {
     protected includePatterns: string[];
     protected excludePatterns: string[];
@@ -1507,9 +1510,16 @@ declare abstract class MappedInterceptor {
     matchesMethod: (method: HttpMethod) => boolean;
     /**
      * Determine a match for the given request headers
-     * @param header
+     * @param headers
      */
-    matchesHeaders: (header: Record<string, string>) => boolean;
+    matchesHeaders: (headers: Record<string, string>) => boolean;
+    /**
+     *
+     * @param matchSource  use match source
+     * @param includes
+     * @param excludes
+     * @param predicate
+     */
     private doMatch;
     private converterHeaders;
 }
