@@ -3,8 +3,7 @@ import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterce
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
-import { UNAUTHORIZED_RESPONSE } from '../constant/FeignConstVar';
-
+import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 
 
 /**
@@ -62,7 +61,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         const looseMode1 = this.looseMode;
         // need force certification
-        let forceCertification = !looseMode1;
+        let forceCertification = !looseMode1, onlyTryGetToken = false;
         // const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
@@ -71,7 +70,8 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // none certification
                 // return req;
                 if (looseMode1) {
-                    forceCertification = false
+                    forceCertification = false;
+                    onlyTryGetToken = true;
                 } else {
                     return req;
                 }
@@ -104,7 +104,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return Promise.reject('authorization is null');
         }
 
-        const needRefreshAuthorization = authorization.expireDate < new Date().getTime() + aheadOfTimes;
+        const needRefreshAuthorization = !onlyTryGetToken || authorization.expireDate < new Date().getTime() + aheadOfTimes;
         if (authorization.expireDate === NEVER_REFRESH_FLAG || !needRefreshAuthorization) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;

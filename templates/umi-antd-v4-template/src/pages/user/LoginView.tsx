@@ -3,7 +3,7 @@ import classNames from "classnames";
 import styles from "./style.less";
 import LoginFrom from './components/login';
 import UserCmdDataProvider from '../../provider/UserCmdDataProvider';
-import {Form, Checkbox, message} from 'antd';
+import {Checkbox, Form, message} from 'antd';
 import AppRouter from '@/AppRouter';
 
 const {UserName, Password, Submit} = LoginFrom;
@@ -35,6 +35,8 @@ const LoginView = (props: LoginViewProps) => {
     })
 
   };
+
+
 
   const onFinishFailed = errorInfo => {
     console.log('Failed:', errorInfo);

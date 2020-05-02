@@ -1,8 +1,7 @@
+import {ApiReq} from "oak-common";
+import {Week} from "../../../enums/Week";
 
-        import {ApiReq} from "oak-common";
-        import {Week} from "../../../enums/Week";
-
-    /**
+/**
     * 创建CreateExampleEntityReq的请求
     **/
 

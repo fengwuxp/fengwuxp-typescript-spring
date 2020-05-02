@@ -1,9 +1,9 @@
 import {
-  AppCommandStorage,
-  GetStorageCommandMethod,
-  RemoveStorageCommandMethod,
-  SetStorageCommandMethod,
-  GetStorageCommandMethodSync
+    AppCommandStorage,
+    GetStorageCommandMethod,
+    GetStorageCommandMethodSync,
+    RemoveStorageCommandMethod,
+    SetStorageCommandMethod
 } from 'fengwuxp-declarative-storage-adapter'
 import {browserAppCommandStorageFactory} from 'fengwuxp-browser-storage'
 import {LoginUserInfo} from "@/feign/user/info/LoginUserInfo";

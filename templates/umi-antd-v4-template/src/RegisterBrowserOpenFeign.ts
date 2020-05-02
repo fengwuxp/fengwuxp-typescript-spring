@@ -1,26 +1,26 @@
 import {
-  AuthenticationClientHttpRequestInterceptor,
-  AuthenticationStrategy,
-  AuthenticationToken,
-  CodecFeignClientExecutorInterceptor,
-  DateEncoder,
-  HttpMediaType,
-  HttpRequest,
-  HttpResponse,
-  NetworkClientHttpRequestInterceptor,
-  ProcessBarExecutorInterceptor,
-  ProgressBarOptions,
-  RoutingClientHttpRequestInterceptor,
-  SimpleNetworkStatusListener,
-  stringDateConverter,
-  UnifiedFailureToastExecutorInterceptor,
-  HttpStatus
+    AuthenticationClientHttpRequestInterceptor,
+    AuthenticationStrategy,
+    AuthenticationToken,
+    CodecFeignClientExecutorInterceptor,
+    DateEncoder,
+    HttpMediaType,
+    HttpRequest,
+    HttpResponse,
+    HttpStatus,
+    NetworkClientHttpRequestInterceptor,
+    ProcessBarExecutorInterceptor,
+    ProgressBarOptions,
+    RoutingClientHttpRequestInterceptor,
+    SimpleNetworkStatusListener,
+    stringDateConverter,
+    UnifiedFailureToastExecutorInterceptor
 } from 'fengwuxp-typescript-feign'
 import {
-  ClientHttpInterceptorRegistry,
-  FeignClientInterceptorRegistry,
-  FeignConfigurationAdapter,
-  feignConfigurationInitializer,
+    ClientHttpInterceptorRegistry,
+    FeignClientInterceptorRegistry,
+    FeignConfigurationAdapter,
+    feignConfigurationInitializer,
 } from 'feign-boot-stater'
 import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-browser-stater'
 

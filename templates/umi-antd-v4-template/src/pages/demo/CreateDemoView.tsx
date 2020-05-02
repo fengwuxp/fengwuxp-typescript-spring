@@ -2,14 +2,7 @@ import React from 'react';
 import {RouteView} from 'fengwuxp-routing-core';
 import {AntdRouteViewOptions} from 'fengwuxp-routing-antd';
 import {ModalProps} from 'antd/lib/modal/Modal';
-import {
-  SchemaForm,
-  Field,
-  FormButtonGroup,
-  Submit,
-  Reset,
-  createFormActions,
-} from '@formily/antd'
+import {createFormActions, Field, FormButtonGroup, Reset, SchemaForm, Submit,} from '@formily/antd'
 
 import {Button, Card} from 'antd'
 

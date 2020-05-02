@@ -1,8 +1,4 @@
-import {
-    NavigatorAdapter,
-    NavigatorDescriptorObject,
-    RouteUriVariable
-} from "fengwuxp-declarative-router-adapter";
+import {NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable} from "fengwuxp-declarative-router-adapter";
 import {history} from 'umi';
 
 

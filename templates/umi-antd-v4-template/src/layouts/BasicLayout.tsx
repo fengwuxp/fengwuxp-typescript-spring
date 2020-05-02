@@ -15,7 +15,7 @@ import logo from '../assets/logo.svg';
 import SvgIcon from '@/components/icon/SvgIcon';
 import AppRouter from "@/AppRouter";
 import RightContent from "@/components/globalheader/RightContent";
-import { Link } from 'umi';
+import {Link} from 'umi';
 
 export interface BasicLayoutProps extends ProLayoutProps {
   breadcrumbNameMap: {

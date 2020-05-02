@@ -1,8 +1,7 @@
+import {ApiQueryReq} from "oak-common";
+import {Week} from "../../../enums/Week";
 
-        import {ApiQueryReq} from "oak-common";
-        import {Week} from "../../../enums/Week";
-
-    /**
+/**
     * 查询example例子
     **/
 

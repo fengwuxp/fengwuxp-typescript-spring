@@ -2,14 +2,7 @@ import React from 'react';
 import {RouteView} from 'fengwuxp-routing-core';
 import {AntdRouteViewOptions} from 'fengwuxp-routing-antd';
 import {ModalProps} from 'antd/lib/modal/Modal';
-import {
-    SchemaForm,
-    SchemaMarkupField as Field,
-    FormButtonGroup,
-    Submit,
-    Reset,
-    createFormActions,
-} from '@formily/antd'
+import {createFormActions, FormButtonGroup, Reset, SchemaForm, SchemaMarkupField as Field, Submit,} from '@formily/antd'
 
 import {Card} from 'antd'
 import ExampleService from '@/feign/example/services/ExampleService';
@@ -46,6 +39,10 @@ export default class CreateExampleView extends React.PureComponent<CreateExample
 
     constructor(props: CreateExampleViewProps, context: any) {
         super(props, context);
+    }
+
+    componentDidMount(): void {
+
     }
 
     render = () => {

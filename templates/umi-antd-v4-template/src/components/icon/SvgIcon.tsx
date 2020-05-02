@@ -1,5 +1,5 @@
 import SVG from 'react-inlinesvg';
-import React, { CSSProperties } from 'react';
+import React, {CSSProperties} from 'react';
 
 export interface SvgIconProps {
 

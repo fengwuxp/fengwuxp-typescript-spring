@@ -1,5 +1,5 @@
 import React, {Component} from 'react';
-import {Tag, message} from 'antd';
+import {message, Tag} from 'antd';
 import {connect} from 'dva';
 import groupBy from 'lodash/groupBy';
 import moment from 'moment';

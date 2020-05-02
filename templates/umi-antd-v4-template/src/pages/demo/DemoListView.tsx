@@ -9,24 +9,15 @@ import {Key, SorterResult, TableCurrentDataSource} from 'antd/lib/table/interfac
 import {TableRowSelection} from 'antd/es/table/interface';
 import {ClickParam} from 'antd/lib/menu';
 import {
-  DownOutlined,
-  PlusOutlined,
-  UpOutlined,
-  FormOutlined,
-  DeleteOutlined,
-  SnippetsOutlined,
+    DeleteOutlined,
+    DownOutlined,
+    FormOutlined,
+    PlusOutlined,
+    SnippetsOutlined,
+    UpOutlined,
 } from '@ant-design/icons';
-import {
-  SchemaForm,
-  Field,
-  FormButtonGroup,
-  Submit,
-  Reset,
-  createFormActions,
-} from '@formily/antd';
-import {
-    FormItemGrid,
-} from '@formily/antd-components'
+import {createFormActions, Field, FormButtonGroup, Reset, SchemaForm, Submit,} from '@formily/antd';
+import {FormItemGrid,} from '@formily/antd-components'
 
 import classNames from 'classnames';
 import AppRouter from '@/AppRouter';

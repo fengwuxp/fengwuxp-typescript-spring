@@ -1,17 +1,15 @@
-import {
-    BrowserNavigatorContextAdapter,
-} from 'fengwuxp-browser-router'
+import {BrowserNavigatorContextAdapter,} from 'fengwuxp-browser-router'
 import {
     AppRouterMapping,
     NavigatorDescriptorObject,
     RouteConfirmBeforeJumping,
-    RouterCommandMethod,
     RouteMapping,
+    RouterCommandMethod,
 } from 'fengwuxp-declarative-router-adapter'
 import {LoginViewProps} from '@/pages/user/LoginView';
 import {MethodNameCommandResolver} from 'fengwuxp-declarative-command';
 import SpringUmiAppRouter from "../.spring/SpringUmiAppRouter";
-import { history } from 'umi';
+import {history} from 'umi';
 import UmiBrowserNavigatorAdapter from "@/UmiBrowserNavigatorAdapter";
 
 

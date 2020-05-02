@@ -1,8 +1,7 @@
+import {ApiReq} from "oak-common";
+import {Week} from "../../../enums/Week";
 
-        import {ApiReq} from "oak-common";
-        import {Week} from "../../../enums/Week";
-
-    /**
+/**
     * 编辑example例子
     **/
 

@@ -1,7 +1,6 @@
+import {ApiReq} from "oak-common";
 
-        import {ApiReq} from "oak-common";
-
-    /**
+/**
     * 删除example例子
     **/
 

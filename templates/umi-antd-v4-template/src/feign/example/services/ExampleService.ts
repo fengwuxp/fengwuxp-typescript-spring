@@ -1,23 +1,21 @@
 import {
-Feign,
-RequestMapping,
-PostMapping,
-DeleteMapping,
-GetMapping,
-PutMapping,
-Signature,
-HttpMediaType,
-FeignRequestOptions} from "fengwuxp-typescript-feign";
+    Feign,
+    FeignRequestOptions,
+    GetMapping,
+    HttpMediaType,
+    PostMapping,
+    PutMapping
+} from "fengwuxp-typescript-feign";
 
-        import {CreateExampleEntityReq} from "../../services/simple/req/CreateExampleEntityReq";
-        import {EditExampleEntityReq} from "../../services/simple/req/EditExampleEntityReq";
-        import {DeleteExampleEntityReq} from "../../services/simple/req/DeleteExampleEntityReq";
-        import {QueryExampleEntityReq} from "../../services/simple/req/QueryExampleEntityReq";
-        import {PageInfo} from "oak-common";
-        import {ExampleEntityInfo} from "../../services/simple/info/ExampleEntityInfo";
-        import {ExampleServiceDetailReq} from "../../req/ExampleServiceDetailReq";
+import {CreateExampleEntityReq} from "../../services/simple/req/CreateExampleEntityReq";
+import {EditExampleEntityReq} from "../../services/simple/req/EditExampleEntityReq";
+import {DeleteExampleEntityReq} from "../../services/simple/req/DeleteExampleEntityReq";
+import {QueryExampleEntityReq} from "../../services/simple/req/QueryExampleEntityReq";
+import {PageInfo} from "oak-common";
+import {ExampleEntityInfo} from "../../services/simple/info/ExampleEntityInfo";
+import {ExampleServiceDetailReq} from "../../req/ExampleServiceDetailReq";
 
-    /**
+/**
         * 接口：POST
     **/
 

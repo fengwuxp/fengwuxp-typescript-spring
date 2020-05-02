@@ -9,7 +9,7 @@ import {RouteContextHolder, RouteView} from 'fengwuxp-routing-core';
 import {AntdPageHeaderEnhancer, AntdRouteViewOptions} from 'fengwuxp-routing-antd';
 import {ReactCmdDataProviderEnhancer} from "fengwuxp-routing-react";
 import {PageHeaderWrapper} from '@ant-design/pro-layout';
-import {ANT_DESIGN_GLOBAL_EVENT_PROP_MAP, AntGlobalStateType, AntDesignGlobalEventNames} from "@/AntGlobalEventNames";
+import {ANT_DESIGN_GLOBAL_EVENT_PROP_MAP, AntDesignGlobalEventNames, AntGlobalStateType} from "@/AntGlobalEventNames";
 import {Modal} from "antd";
 import {ENABLED_MODAL_NAME} from './DefaultPrivateRoute';
 

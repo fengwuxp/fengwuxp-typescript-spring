@@ -1,7 +1,6 @@
+import {Week} from "../../../enums/Week";
 
-        import {Week} from "../../../enums/Week";
-
-    /**
+/**
     * example例子
     **/
 

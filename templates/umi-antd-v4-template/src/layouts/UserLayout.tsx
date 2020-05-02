@@ -1,7 +1,7 @@
-import {DefaultFooter, MenuDataItem, getMenuData, getPageTitle} from '@ant-design/pro-layout';
+import {DefaultFooter, getMenuData, getPageTitle, MenuDataItem} from '@ant-design/pro-layout';
 import {Helmet, HelmetProvider} from 'react-helmet-async';
 import React from 'react';
-import { Link, useIntl } from 'umi';
+import {Link, useIntl} from 'umi';
 import logo from '../assets/logo.svg';
 import styles from './UserLayout.less';
 import defaultSettings from "../../config/defaultSettings";

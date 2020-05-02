@@ -4,15 +4,14 @@ import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {mediaTypeIsEq} from "./MediaTypeUtil";
 
+const supportBodyMethods = [HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH, HttpMethod.DELETE];
+
 /**
  * request method is support request body
  * @param method
  */
 export const supportRequestBody = (method: HttpMethod | string) => {
-    if (method !== HttpMethod.POST && method !== HttpMethod.PUT && method !== HttpMethod.PATCH) {
-        return false;
-    }
-    return true;
+    return supportBodyMethods.some(item => item === method);
 };
 
 /**
