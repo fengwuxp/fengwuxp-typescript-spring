@@ -103,7 +103,7 @@ export {
 
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {default as UnifiedFailureToastExecutorInterceptor} from "./ui/UnifiedFailureToastExecutorInterceptor";
-export {RequestProgressBar} from "./ui/RequestProgressBar";
+export {RequestProgressBar, ProgressBarOptions} from "./ui/RequestProgressBar";
 export {FileUploadProgressBar} from "./ui/FileUploadProgressBar";
 export {
     default as FeignUIToastHolder, FeignUIToastInterface, FeignUIToastFunction, FeignUIToast, UnifiedFailureToast
@@ -139,7 +139,6 @@ export {
     FeignRequestOptions,
     UIOptions,
     FeignRequestContextOptions,
-    ProgressBarOptions,
     FileUploadProgressBarOptions
 } from "./FeignRequestOptions";
 export {Enum} from "./EnumInterface";

@@ -167,9 +167,14 @@ describe("test feign client", () => {
     }, 20 * 1000);
 
 
-    test("test deleted",async ()=>{
+    test("test deleted", async () => {
 
-        await  testFeignClient.deleteById({ids:[1,2,3,4],a:"22",c:"33"});
+        await testFeignClient.deleteById({ids: [1, 2, 3, 4], a: "22", c: "33"});
+    });
+
+    test("test put", async () => {
+
+        await testFeignClient.batchDistribution({name: "张三", age: 18});
     });
 });
 

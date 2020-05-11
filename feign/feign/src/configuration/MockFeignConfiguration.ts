@@ -9,7 +9,7 @@ import {HttpRequest} from "../client/HttpRequest";
 import NetworkClientHttpRequestInterceptor from "../network/NetworkClientHttpRequestInterceptor";
 import {NetworkStatus, NetworkStatusListener, NetworkType} from "../network/NetworkStatusListener";
 import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
-import {FeignRequestContextOptions, ProgressBarOptions} from "../FeignRequestOptions";
+import {FeignRequestContextOptions} from "../FeignRequestOptions";
 import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
 import DateEncoder from "../codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
@@ -21,6 +21,7 @@ import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
 import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
 import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
 import {AuthenticationToken} from "../client/AuthenticationStrategy";
+import { ProgressBarOptions } from '../ui/RequestProgressBar';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';

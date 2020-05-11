@@ -3,6 +3,7 @@ import {ResponseExtractor} from "./template/ResponseExtractor";
 import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
+import { ProgressBarOptions } from './ui/RequestProgressBar';
 
 export interface FeignRequestId {
 
@@ -44,34 +45,7 @@ export interface FeignRequestBaseOptions extends FeignRequestId {
 
 }
 
-/**
- * 请求进度条配置
- */
-export interface ProgressBarOptions {
 
-
-    /**
-     * 是否使用蒙版
-     */
-    mask?: boolean;
-
-    /**
-     * 提示的延迟时间，
-     * 单位毫秒，默认：300
-     */
-    delay?: number;
-
-    /**
-     * 进度条提示标题
-     */
-    title?: string;
-
-    /**
-     * 进度条提示图标
-     * 图标，字体图标名称或图片url
-     */
-    icon?: string;
-}
 
 export interface FileUploadProgressBarOptions extends ProgressBarOptions {
 

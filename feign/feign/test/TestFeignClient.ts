@@ -1,4 +1,4 @@
-import {Feign, FileUpload, HttpMediaType} from "../src";
+import {Feign, FileUpload, HttpMediaType, PutMapping} from "../src";
 import {RequestMapping} from "../src";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
 import {PostMapping} from "../src";
@@ -88,4 +88,7 @@ export default class TestFeignClient {
 
     @DeleteMapping({value: "/deleted"})
     deleteById: (req: { ids: number[]; a: string; c: string }) => Promise<void>;
+
+    @PutMapping({value: "/put_data_test", produces : [HttpMediaType.APPLICATION_JSON_UTF8]})
+    putDataTest: (req: { name: string; age: number }) => Promise<void>;
 }

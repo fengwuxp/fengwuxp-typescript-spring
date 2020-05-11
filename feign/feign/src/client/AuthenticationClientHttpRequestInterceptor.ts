@@ -14,7 +14,7 @@ import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest>
     implements ClientHttpRequestInterceptorInterface<T> {
 
-    /// is refreshing status
+    // is refreshing status
     protected static IS_REFRESH_TOKEN_ING = false;
 
     // protected static waitingQueue: Array<any> = [];
@@ -59,17 +59,16 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     interceptor = async (req: T) => {
 
 
-        const looseMode1 = this.looseMode;
+        const looseMode = this.looseMode;
         // need force certification
-        let forceCertification = !looseMode1, onlyTryGetToken = false;
-        // const mappingOptions = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        let forceCertification = !looseMode, onlyTryGetToken = false;
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
                 // return req;
-                if (looseMode1) {
+                if (looseMode) {
                     forceCertification = false;
                     onlyTryGetToken = true;
                 } else {
@@ -87,7 +86,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return req;
         }
 
-        const {aheadOfTimes, blockingRefreshAuthorization, looseMode, authenticationStrategy} = this;
+        const {aheadOfTimes, blockingRefreshAuthorization, authenticationStrategy} = this;
         let authorization: AuthenticationToken;
         try {
             authorization = await authenticationStrategy.getAuthorization(req);

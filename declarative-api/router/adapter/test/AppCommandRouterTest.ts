@@ -152,6 +152,7 @@ class MockAppCommandRouter extends AbstractCommandRouter {
 
 const mockAppCommandRouter = new MockAppCommandRouter({
     confirmBeforeJumping: () => {
+        logger.debug("=====mock app router==========>")
         return (object) => {
             return true;
         }

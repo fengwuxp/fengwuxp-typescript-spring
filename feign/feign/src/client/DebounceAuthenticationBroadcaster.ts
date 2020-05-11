@@ -14,9 +14,7 @@ export default class DebounceAuthenticationBroadcaster implements Authentication
     }
 
     receiveAuthorizedEvent(handle: () => void): void {
-        this.broadcaster.receiveAuthorizedEvent(() => {
-            handle();
-        });
+        this.broadcaster.receiveAuthorizedEvent(handle);
     }
 
     sendUnAuthorizedEvent = debounce(() => {

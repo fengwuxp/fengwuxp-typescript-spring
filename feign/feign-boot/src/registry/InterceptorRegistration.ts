@@ -1,6 +1,10 @@
 import {HttpMethod} from "fengwuxp-typescript-feign";
 
 
+/**
+ * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
+ * {@link MappedClientHttpRequestInterceptor}
+ */
 export abstract class InterceptorRegistration {
 
     protected includePatterns: string[] = [];

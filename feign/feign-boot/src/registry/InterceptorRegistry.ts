@@ -1,6 +1,9 @@
 import {InterceptorRegistration} from "./InterceptorRegistration";
 
-
+/**
+ * interceptor registry
+ * {@link InterceptorRegistration}
+ */
 export interface InterceptorRegistry {
 
     addInterceptor: (interceptor) => InterceptorRegistration;
