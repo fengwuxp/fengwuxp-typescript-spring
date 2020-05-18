@@ -137,13 +137,15 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         const {consumes, getHeaderByName} = this;
 
         const headers = response.headers;
-
+        if (!response.ok) {
+            // 请求失败
+            return Promise.reject(response);
+        }
 
         if (response.body == null) {
+            // 没有请求体
             if (response.ok) {
                 return Promise.resolve();
-            } else {
-                return Promise.reject();
             }
         }
 

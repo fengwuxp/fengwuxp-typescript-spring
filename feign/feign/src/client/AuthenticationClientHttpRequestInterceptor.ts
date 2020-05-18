@@ -61,7 +61,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
         const looseMode = this.looseMode;
         // need force certification
-        let forceCertification = !looseMode, onlyTryGetToken = false;
+        let forceCertification = !looseMode;
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
@@ -70,14 +70,13 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // return req;
                 if (looseMode) {
                     forceCertification = false;
-                    onlyTryGetToken = true;
                 } else {
                     return req;
                 }
-            }
-            if (mappingOptions.needCertification === true) {
+            } else if (mappingOptions.needCertification === true) {
                 // force none certification
                 forceCertification = true;
+            } else {
             }
         }
 
@@ -103,8 +102,8 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return Promise.reject('authorization is null');
         }
 
-        const needRefreshAuthorization = !onlyTryGetToken || authorization.expireDate < new Date().getTime() + aheadOfTimes;
-        if (authorization.expireDate === NEVER_REFRESH_FLAG || !needRefreshAuthorization) {
+        const authorizationIsInvalid = authorization.expireDate !== NEVER_REFRESH_FLAG && authorization.expireDate < new Date().getTime() + aheadOfTimes;
+        if (!authorizationIsInvalid) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;
         }

@@ -1,7 +1,7 @@
-import {FeignRequestOptions, ProgressBarOptions} from "../FeignRequestOptions";
+import {FeignRequestOptions} from "../FeignRequestOptions";
 import {HttpResponse} from "../client/HttpResponse";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
-import {RequestProgressBar} from "./RequestProgressBar";
+import {ProgressBarOptions, RequestProgressBar} from "./RequestProgressBar";
 
 /**
  * process bar executor
