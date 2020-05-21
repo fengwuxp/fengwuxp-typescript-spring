@@ -33,20 +33,16 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     // blocking 'authorization' refresh
     private blockingRefreshAuthorization: boolean;
 
-    // In the loose mode, it only tries to obtain the authentication information. If it does not obtain it, it does nothing.
-    private looseMode: boolean = true;
 
     /**
      *
      * @param authenticationStrategy
      * @param aheadOfTimes                default: 5 * 60 * 1000
      * @param blockingRefreshAuthorization
-     * @param looseMode                   default: true
      */
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
-                blockingRefreshAuthorization: boolean = true,
-                looseMode: boolean = true) {
+                blockingRefreshAuthorization: boolean = true,) {
         if (authenticationStrategy.enableCache) {
             this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
         } else {
@@ -54,30 +50,17 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         }
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
         this.blockingRefreshAuthorization = blockingRefreshAuthorization;
-        this.looseMode = looseMode
     }
 
     interceptor = async (req: T) => {
 
-
-        const looseMode = this.looseMode;
-        // need force certification
-        let forceCertification = !looseMode;
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
                 // return req;
-                if (looseMode) {
-                    forceCertification = false;
-                } else {
-                    return req;
-                }
-            } else if (mappingOptions.needCertification === true) {
-                // force none certification
-                forceCertification = true;
-            } else {
+                return req;
             }
         }
 
@@ -91,9 +74,6 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         try {
             authorization = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
-            if (!forceCertification) {
-                return req;
-            }
             return Promise.reject({
                 ...UNAUTHORIZED_RESPONSE,
                 data: e
@@ -118,9 +98,6 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             try {
                 authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
             } catch (e) {
-                if (!forceCertification) {
-                    return req;
-                }
                 // refresh authorization error
                 return Promise.reject({
                     ...UNAUTHORIZED_RESPONSE,
@@ -147,10 +124,10 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                     authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
                 } catch (e) {
                     // refresh authorization error
-                    error = e;
-                    if (!looseMode) {
-                        return Promise.reject(e);
-                    }
+                    return Promise.reject({
+                        ...UNAUTHORIZED_RESPONSE,
+                        data: e
+                    });
                 }
                 const waitingQueue = [...AuthenticationClientHttpRequestInterceptor.WAITING_QUEUE];
                 // console.log("---等待刷新token的队列--->", waitingQueue.length);

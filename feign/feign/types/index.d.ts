@@ -1105,15 +1105,13 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
     private aheadOfTimes;
     private authenticationStrategy;
     private blockingRefreshAuthorization;
-    private looseMode;
     /**
      *
      * @param authenticationStrategy
      * @param aheadOfTimes                default: 5 * 60 * 1000
      * @param blockingRefreshAuthorization
-     * @param looseMode                   default: true
      */
-    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean, looseMode?: boolean);
+    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean);
     interceptor: (req: T) => Promise<T>;
     /**
      * append authorization header
