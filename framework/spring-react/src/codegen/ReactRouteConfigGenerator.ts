@@ -549,6 +549,18 @@ export default class ReactRouteConfigGenerator {
                 return null;
             }
             const params: TSTypeReference[] = superTypeParameters.params as TSTypeReference[];
+            if (params == null || params.length == 0) {
+                logger.error(`组件上没有定义props 类型 ${defaultDeclaration.body}`)
+                return {
+                    name: null
+                }
+            }
+            if (params[0].typeName == null) {
+                logger.error(`组件上没有定义props 类型 ${JSON.stringify(params[0])}`);
+                return {
+                    name: null
+                };
+            }
             return {
                 name: (params[0].typeName as Identifier).name
             };

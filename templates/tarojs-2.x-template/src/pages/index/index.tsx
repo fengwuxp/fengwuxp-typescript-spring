@@ -51,6 +51,8 @@ export default class Index extends Component<IndexProps, IndexSate> {
                     y: 2
                 }
             })
+
+
             // AppRouter.member({
             //     memberId: 1
             // },{

@@ -4,6 +4,7 @@ import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from ".
 import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
+import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
 
 
 /**
@@ -39,13 +40,13 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
      *
      * @param authenticationStrategy
      * @param aheadOfTimes                default: 5 * 60 * 1000
-     * @param looseMode                   default: true
      * @param blockingRefreshAuthorization
+     * @param looseMode                   default: true
      */
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
-                looseMode: boolean = true,
-                blockingRefreshAuthorization: boolean = true) {
+                blockingRefreshAuthorization: boolean = true,
+                looseMode: boolean = true) {
         if (authenticationStrategy.enableCache) {
             this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
         } else {
@@ -98,11 +99,15 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 data: e
             });
         }
-        if (authorization == null) {
+        if (authorization == null || !StringUtils.hasText(authorization.authorization)) {
             return Promise.reject('authorization is null');
         }
-
-        const authorizationIsInvalid = authorization.expireDate !== NEVER_REFRESH_FLAG && authorization.expireDate < new Date().getTime() + aheadOfTimes;
+        const currentTimes = new Date().getTime();
+        if (authorization.expireDate <= currentTimes - 20 * 1000) {
+            //20 seconds in advance, the token is invalid and needs to be re-authenticated
+            return Promise.reject(UNAUTHORIZED_RESPONSE);
+        }
+        const authorizationIsInvalid = authorization.expireDate !== NEVER_REFRESH_FLAG && authorization.expireDate < currentTimes + aheadOfTimes;
         if (!authorizationIsInvalid) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;
