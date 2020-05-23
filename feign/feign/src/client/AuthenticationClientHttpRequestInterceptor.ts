@@ -59,7 +59,6 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         if (mappingOptions != null) {
             if (mappingOptions.needCertification === false) {
                 // none certification
-                // return req;
                 return req;
             }
         }

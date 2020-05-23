@@ -36,6 +36,7 @@ export {
     AuthenticationBroadcaster,
     NEVER_REFRESH_FLAG
 } from "./client/AuthenticationStrategy";
+export {default as CacheAuthenticationStrategy} from "./client/CacheAuthenticationStrategy"
 export {default as DebounceAuthenticationBroadcaster} from "./client/DebounceAuthenticationBroadcaster";
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
@@ -64,8 +65,10 @@ export {
     contentTransferEncodingName,
     matchUrlPathVariable,
     FEIGN_CLINE_META_KEY,
+    UNAUTHORIZED_RESPONSE,
     grabUrlPathVariable
 } from "./constant/FeignConstVar";
+export {getFeignClientMethodConfigurationByRequest} from "./context/RequestContextHolder";
 
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";

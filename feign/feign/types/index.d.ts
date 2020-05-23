@@ -1128,6 +1128,21 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest =
 }
 
 /**
+ * cache AuthenticationStrategy
+ * {@see CacheCapableAuthenticationStrategy#enableCache}
+ */
+declare class CacheAuthenticationStrategy implements AuthenticationStrategy {
+    private authenticationStrategy;
+    private cacheAuthenticationToken;
+    constructor(authenticationStrategy: AuthenticationStrategy<AuthenticationToken>);
+    appendAuthorizationHeader: (authorization: AuthenticationToken, headers: Record<string, string>) => Record<string, string>;
+    getAuthorization: (req: Readonly<HttpRequest>) => Promise<AuthenticationToken>;
+    getAuthorizationHeaderNames: () => string[];
+    refreshAuthorization: (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => Promise<AuthenticationToken>;
+    clearCache: () => void;
+}
+
+/**
  * debounce broadcaster
  */
 declare class DebounceAuthenticationBroadcaster implements AuthenticationBroadcaster {
@@ -1479,6 +1494,24 @@ declare const matchUrlPathVariable: RegExp;
  * grab shaped like example '1{abc}2ll3{efg}' string  ==> abc, efg
  */
 declare const grabUrlPathVariable: RegExp;
+/**
+ * mock unauthorized response
+ */
+declare const UNAUTHORIZED_RESPONSE: {
+    ok: boolean;
+    statusCode: HttpStatus;
+    statusText: any;
+};
+
+/**
+ * 通过请求上下文id 获取FeignClientMethodConfig
+ * @param req
+ * {@link REQUEST_NUM}
+ * {@link appendRequestContextId}
+ * {@link REQUEST_ID_HEADER_NAME}
+ * {@link FeignClientMethodConfig}
+ */
+declare const getFeignClientMethodConfigurationByRequest: (req: HttpRequest) => Readonly<FeignClientMethodConfig>;
 
 interface HttpHeader {
     name: string;
@@ -1926,4 +1959,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractFileUploadStrategy, AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationBroadcaster, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AutoFileUploadOptions, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DebounceAuthenticationBroadcaster, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestId, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, UIOptions, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchUrlPathVariable, mediaTypeIsEq, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, setDefaultNeedCertification, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractFileUploadStrategy, AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationBroadcaster, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AutoFileUploadOptions, CacheAuthenticationStrategy, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DebounceAuthenticationBroadcaster, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestId, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, UIOptions, UNAUTHORIZED_RESPONSE, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getFeignClientMethodConfigurationByRequest, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchUrlPathVariable, mediaTypeIsEq, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, setDefaultNeedCertification, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
