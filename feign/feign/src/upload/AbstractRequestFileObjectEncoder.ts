@@ -4,7 +4,6 @@ import {getFeignClientMethodConfiguration} from "../context/RequestContextHolder
 import {FileUploadStrategy} from "./FileUploadStrategy";
 import {HttpMethod} from '../constant/http/HttpMethod';
 import {AutoFileUploadOptions} from "../annotations/upload/FileUpload";
-import {FileUploadProgressBar} from "../ui/FileUploadProgressBar";
 
 
 /**
@@ -37,29 +36,21 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
         const data = request.body;
         const uploadQueue = this.getUploadQueue(data, fileUploadOptions);
         if (uploadQueue.length > 0) {
-            const fileUploadStrategy = this.fileUploadStrategy.fileUploadStrategy();
-            fileUploadStrategy.showProgressBar(request.fileUploadProgressBar);
-            await Promise.all(uploadQueue.map(async ({key, value}, index) => {
+            const fileUploadProgressBar = this.fileUploadStrategy.fileUploadProgressBar;
+            fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
+            // 上传文件
+            await Promise.all(uploadQueue.map(async ({key, isArray, value}, index) => {
                 //并发上传文件
-                const val = value[0];
-                if (val.constructor === Array) {
-                    return {
-                        key,
-                        value: await Promise.all((val as any).map((item, index) => {
-                            return this.uploadFile(item, index, request);
-                        }))
-                    }
+                const result: string[] = await Promise.all((value).map((item, index) => {
+                    return this.uploadFile(item, index, request);
+                }));
+                // 覆盖参数值，文件对象--> 远程url
+                if (isArray) {
+                    data[key] = result;
+                } else {
+                    data[key] = result.join(",");
                 }
-                return {
-                    key,
-                    value: await this.uploadFile(val, index, request)
-                }
-            })).then((values) => {
-                values.forEach(({key, value}) => {
-                    //覆盖参数值，文件对象--> 远程url
-                    data[key] = value;
-                });
-            }).finally(fileUploadStrategy.hideProgressBar);
+            })).finally(fileUploadProgressBar.hideProgressBar);
 
         }
 
@@ -68,21 +59,34 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
 
     }
 
-    protected getUploadQueue = (data: any, fileUploadOptions) => {
+    /**
+     * 获取文件上传队列
+     * @param data
+     * @param fileUploadOptions
+     */
+    protected getUploadQueue = (data: any, fileUploadOptions): Array<{
+        key: string,
+        isArray: boolean,
+        value: any[]
+    }> => {
         //找出要上传的文件对象，加入到上传的队列中
         const uploadQueue: Array<{
             key: string,
-            value: Promise<any>[]
+            isArray: boolean,
+            value: any[]
         }> = [];
 
         for (const key in data) {
             const val = data[key];
-            if (this.attrIsNeedUpload(key, val, fileUploadOptions)) {
-                uploadQueue.push({
-                    key,
-                    value: [val]
-                });
+            if (!this.attrIsNeedUpload(key, val, fileUploadOptions)) {
+                continue;
             }
+            const isArray = Array.isArray(val);
+            uploadQueue.push({
+                key,
+                isArray,
+                value: isArray ? val : [val]
+            });
         }
         return uploadQueue;
     };
@@ -93,7 +97,7 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
      * @param index
      * @param request
      */
-    protected uploadFile = (value, index: number, request: Readonly<T>): Promise<string> => this.fileUploadStrategy.upload(value,index, request).then((result) => {
+    protected uploadFile = (value, index: number, request: Readonly<T>): Promise<string> => this.fileUploadStrategy.upload(value, index, request).then((result) => {
         if (typeof result == "string") {
             return result
         } else {

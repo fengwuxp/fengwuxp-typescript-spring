@@ -24,6 +24,8 @@ export interface FileUploadStrategy<T> {
      */
     upload: (file: T, index: number, request: FeignRequestOptions) => Promise<FileUploadStrategyResult>
 
-
-    fileUploadStrategy: () => Readonly<FileUploadProgressBar>;
+    /**
+     * 文件上传 {@link FileUploadProgressBar}
+     */
+    fileUploadProgressBar: Readonly<FileUploadProgressBar>;
 }

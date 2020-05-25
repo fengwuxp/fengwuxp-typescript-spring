@@ -3,7 +3,7 @@ import {ResponseExtractor} from "./template/ResponseExtractor";
 import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
-import { ProgressBarOptions } from './ui/RequestProgressBar';
+import {ProgressBarOptions} from './ui/RequestProgressBar';
 
 export interface FeignRequestId {
 
@@ -46,11 +46,24 @@ export interface FeignRequestBaseOptions extends FeignRequestId {
 }
 
 
-
 export interface FileUploadProgressBarOptions extends ProgressBarOptions {
 
     // 文件上传进度
     // progress: number;
+}
+
+export interface FileUploadOptions {
+    // [parallel] {Number} the number of parts to be uploaded in parallel
+    //要并行上传的分片数量
+    parallel?: number;
+
+    //[partSize] {Number} the suggested size for each part
+    //每个分片的大小
+    partSize?: number;
+
+    //[timeout] {Number} Milliseconds before a request is considered to be timed out
+    //毫秒数
+    timeout?: number;
 }
 
 
@@ -155,7 +168,7 @@ export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 }
 
 
-export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
+export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions, FileUploadOptions {
 
     /**
      * enable gzip

@@ -5,16 +5,18 @@ import {FileUploadProgressBar} from "../ui/FileUploadProgressBar";
 
 export abstract class AbstractFileUploadStrategy<T> implements FileUploadStrategy<T> {
 
-    protected fileUploadProgressBar: FileUploadProgressBar;
+    private _fileUploadProgressBar: FileUploadProgressBar;
 
 
     constructor(fileUploadProgressBar: FileUploadProgressBar) {
-        this.fileUploadProgressBar = fileUploadProgressBar;
+        this._fileUploadProgressBar = fileUploadProgressBar;
     }
 
     abstract upload: (file: T, index: number, request: FeignRequestOptions) => Promise<FileUploadStrategyResult>;
 
-    fileUploadStrategy = () => this.fileUploadProgressBar;
 
+    get fileUploadProgressBar(): FileUploadProgressBar {
+        return this._fileUploadProgressBar;
+    }
 
 }
