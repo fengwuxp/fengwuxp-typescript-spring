@@ -1,4 +1,9 @@
-import {AbstractRequestFileObjectEncoder, AutoFileUploadOptions, FileUploadStrategy} from "fengwuxp-typescript-feign";
+import {
+    AbstractRequestFileObjectEncoder,
+    AutoFileUploadOptions,
+    FileUploadProgressBar,
+    FileUploadStrategy
+} from "fengwuxp-typescript-feign";
 import AlibabaCloudOssFileUploadStrategy from "./AlibabaCloudOssFileUploadStrategy";
 import {AlibabaCloudOssFactory} from '../factory/AlibabaCloudOssFactory';
 import {MultipartOptions} from "ali-oss";
@@ -11,8 +16,10 @@ const isBrowser = () => typeof window !== "undefined";
 export default class AlibabaCloudOssFileObjectEncoder extends AbstractRequestFileObjectEncoder {
 
 
-    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, multipartOptions?: MultipartOptions) {
-        super(new AlibabaCloudOssFileUploadStrategy(alibabaCloudOssFactory, multipartOptions));
+    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory,
+                fileUploadProgressBar: FileUploadProgressBar,
+                multipartOptions?: MultipartOptions) {
+        super(new AlibabaCloudOssFileUploadStrategy(alibabaCloudOssFactory, fileUploadProgressBar, multipartOptions));
     }
 
     attrIsNeedUpload = (name: string, value: any, options: AutoFileUploadOptions) => {
@@ -24,7 +31,8 @@ export default class AlibabaCloudOssFileObjectEncoder extends AbstractRequestFil
                 return true;
             }
         }
-        if (options.fields == null || options.fields.length == 0) {
+
+        if (options == null || options.fields == null || options.fields.length == 0) {
             return false;
         }
         return options.fields.includes(name);

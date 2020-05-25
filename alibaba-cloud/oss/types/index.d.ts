@@ -1,5 +1,5 @@
 import AliOssClient, { OssClientOptions, MultipartOptions, MultipartUploadResp } from 'ali-oss';
-import { AbstractRequestFileObjectEncoder, AutoFileUploadOptions, FileUploadStrategy, FileUploadProgressBar, FeignRequestOptions, FileUploadStrategyResult } from 'fengwuxp-typescript-feign';
+import { AbstractRequestFileObjectEncoder, FileUploadProgressBar, AutoFileUploadOptions, FileUploadStrategy, FeignRequestOptions, FileUploadStrategyResult } from 'fengwuxp-typescript-feign';
 
 /**
  * 授权模式
@@ -86,7 +86,7 @@ declare type AlibabaCloudOssConfigurationLoader = () => Promise<AlibabaCloudOssC
  * 基于阿里云oss 的文件上传
  */
 declare class AlibabaCloudOssFileObjectEncoder extends AbstractRequestFileObjectEncoder {
-    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, multipartOptions?: MultipartOptions);
+    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, fileUploadProgressBar: FileUploadProgressBar, multipartOptions?: MultipartOptions);
     attrIsNeedUpload: (name: string, value: any, options: AutoFileUploadOptions) => boolean;
 }
 
@@ -97,7 +97,7 @@ declare class AlibabaCloudOssFileUploadStrategy implements FileUploadStrategy<Fi
     protected alibabaCloudOssFactory: AlibabaCloudOssFactory;
     protected multipartOptions: MultipartOptions;
     private _fileUploadProgressBar;
-    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, multipartOptions?: MultipartOptions);
+    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, fileUploadProgressBar: FileUploadProgressBar, multipartOptions?: MultipartOptions);
     get fileUploadProgressBar(): Readonly<FileUploadProgressBar>;
     upload: (file: File | Blob | string, index: number, request: FeignRequestOptions) => Promise<FileUploadStrategyResult>;
     protected genUploadOssKey: (filename: string, extName?: string) => string;

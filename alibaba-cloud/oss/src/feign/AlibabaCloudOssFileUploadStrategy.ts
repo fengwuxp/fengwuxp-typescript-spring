@@ -21,11 +21,13 @@ export default class AlibabaCloudOssFileUploadStrategy implements FileUploadStra
     // 多文件上传配置
     protected multipartOptions: MultipartOptions;
 
-    private _fileUploadProgressBar: Readonly<FileUploadProgressBar>;
+    private _fileUploadProgressBar: FileUploadProgressBar;
 
     constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory,
+                fileUploadProgressBar: FileUploadProgressBar,
                 multipartOptions?: MultipartOptions) {
         this.alibabaCloudOssFactory = alibabaCloudOssFactory;
+        this._fileUploadProgressBar = fileUploadProgressBar;
         this.multipartOptions = multipartOptions || {
             parallel: 2,
             partSize: 1024 * 512
@@ -45,7 +47,7 @@ export default class AlibabaCloudOssFileUploadStrategy implements FileUploadStra
         if (file instanceof Blob) {
             file = new File([file], "");
         }
-        const response = await client.multipartUpload(this.genUploadOssKey(""), file as File, {
+        const response = await client.multipartUpload(this.genUploadOssKey(file["name"] || ""), file as File, {
             ...multipartOptions,
             progress: (percentage: number,
                        checkpoint: Checkpoint,

@@ -41,12 +41,13 @@ export default class ContractAlibabaCloudOssFactory implements AlibabaCloudOssFa
 
     factory = async (ossClientOptions: OssClientOptionalOptions | undefined): Promise<AliOssClient> => {
 
-        const cloudOssConfiguration = this._configuration;
+        let cloudOssConfiguration = this._configuration;
         //提前3分钟刷新token
         const needRefreshToken = cloudOssConfiguration == null || new Date().getTime() + this.aheadOfTimes > this.expirationTime;
         if (needRefreshToken) {
             // 刷新token
             await this.refreshStsToken();
+            cloudOssConfiguration = this._configuration;
         }
 
         const options: OssClientOptions = {
