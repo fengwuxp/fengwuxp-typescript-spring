@@ -100,7 +100,16 @@ declare class AlibabaCloudOssFileUploadStrategy implements FileUploadStrategy<Fi
     constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, fileUploadProgressBar: FileUploadProgressBar, multipartOptions?: MultipartOptions);
     get fileUploadProgressBar(): Readonly<FileUploadProgressBar>;
     upload: (file: File | Blob | string, index: number, request: FeignRequestOptions) => Promise<FileUploadStrategyResult>;
-    protected genUploadOssKey: (filename: string, extName?: string) => string;
+    /**
+     * 生成上传的文件名称
+     * @param file
+     */
+    protected genUploadOssKey: (file: File | Blob | string) => string;
+    /**
+     * 获取文件扩展名称
+     * @param file
+     */
+    protected getExtname: (file: File | Blob | string) => string;
     /**
      * 解析上传结果
      * @param resp

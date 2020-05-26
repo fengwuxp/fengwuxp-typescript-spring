@@ -38,18 +38,14 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
         if (uploadQueue.length > 0) {
             const fileUploadProgressBar = this.fileUploadStrategy.fileUploadProgressBar;
             fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
-            // 上传文件
             await Promise.all(uploadQueue.map(async ({key, isArray, value}, index) => {
                 //并发上传文件
                 const result: string[] = await Promise.all((value).map((item, index) => {
                     return this.uploadFile(item, index, request);
                 }));
                 // 覆盖参数值，文件对象--> 远程url
-                if (isArray) {
-                    data[key] = result;
-                } else {
-                    data[key] = result.join(",");
-                }
+                data[key] = result.join(",");
+
             })).finally(fileUploadProgressBar.hideProgressBar);
 
         }
@@ -78,10 +74,12 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
 
         for (const key in data) {
             const val = data[key];
-            if (!this.attrIsNeedUpload(key, val, fileUploadOptions)) {
+            const isArray = Array.isArray(val);
+            //如果是是数组 使用第一个元素去判断
+            if (!this.attrIsNeedUpload(key, isArray ? val[0] : val, fileUploadOptions)) {
                 continue;
             }
-            const isArray = Array.isArray(val);
+
             uploadQueue.push({
                 key,
                 isArray,

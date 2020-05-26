@@ -44,10 +44,10 @@ export default class AlibabaCloudOssFileUploadStrategy implements FileUploadStra
 
         const multipartOptions = this.multipartOptions;
         const client = await this.alibabaCloudOssFactory.factory();
-        if (file instanceof Blob) {
-            file = new File([file], "");
+        if (file.constructor === Blob) {
+            file = new File([file], "", {type: file['type']});
         }
-        const response = await client.multipartUpload(this.genUploadOssKey(file["name"] || ""), file as File, {
+        const response = await client.multipartUpload(this.genUploadOssKey(file), file as File, {
             ...multipartOptions,
             progress: (percentage: number,
                        checkpoint: Checkpoint,
@@ -60,18 +60,42 @@ export default class AlibabaCloudOssFileUploadStrategy implements FileUploadStra
     }
 
 
-    //生成上传的文件名称
-    protected genUploadOssKey = (filename: string, extName?: string) => {
+    /**
+     * 生成上传的文件名称
+     * @param file
+     */
+    protected genUploadOssKey = (file: File | Blob | string) => {
         //前缀/年份/月份日期/filename.xxx
         const date = new Date();
         const days = date.getDate();
-        if (!StringUtils.hasText(extName)) {
-            extName = filename.substring(filename.lastIndexOf(".") + 1, filename.length);
-        }
-        const name = `${UUIDUtil.guid(16).replace(/-/g, "")}_${date.getTime()}.${extName}`;
+        const extName = this.getExtname(file);
+        const uploadName = `${UUIDUtil.guid(16).replace(/-/g, "")}_${date.getTime()}`;
+        const name = StringUtils.hasText(extName) ? `${uploadName}.${extName}` : uploadName;
         const configuration = this.alibabaCloudOssFactory.configuration;
         return `${configuration.basePath}/${date.getFullYear()}/${date.getMonth() + 1}${days < 10 ? "0" + days : days}/${name}`;
     };
+
+    /**
+     * 获取文件扩展名称
+     * @param file
+     */
+    protected getExtname = (file: File | Blob | string) => {
+        console.log("========file===>", file);
+        let fileType: string;
+        if (typeof file === "string") {
+            try {
+                fileType = file.split(";")[0].split(":")[0];
+            } catch (e) {
+            }
+        } else {
+            fileType = file.type;
+        }
+        if (fileType == null) {
+            return null;
+        }
+        // image/png
+        return fileType.split("/")[1];
+    }
 
     /**
      * 解析上传结果

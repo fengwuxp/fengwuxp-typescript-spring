@@ -168,7 +168,7 @@ export interface FeignRequestContextOptions extends UIOptions, DataOptions {
 }
 
 
-export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions, FileUploadOptions {
+export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
 
     /**
      * enable gzip
