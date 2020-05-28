@@ -60,6 +60,7 @@ declare const reduceRightCommandResolvers: (...resolvers: MethodNameCommandResol
  * @param name
  * @param commonValues        指令value集合
  * @param defaultCommand      默认指令
+ * @return [command,key]
  */
 declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: string[], defaultCommand: string) => string[];
 

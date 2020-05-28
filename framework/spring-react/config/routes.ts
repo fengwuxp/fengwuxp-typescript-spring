@@ -1,12 +1,12 @@
-import {IRoute} from "umi-types/config";
 import {ViewShowMode} from "fengwuxp-routing-core";
+import {IRoute} from "umi";
 
 const routes: IRoute[] =[
                 
                  {
                                name: '测试',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/example',
                                 routes: [
@@ -14,7 +14,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/example/first/list',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/example/first',
                                   routes: [
@@ -83,7 +83,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/example/secoend/list',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/example/secoend',
                                   routes: [
@@ -183,7 +183,7 @@ const routes: IRoute[] =[
                  {
                                name: '测2',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/index',
                                 routes: [
@@ -191,7 +191,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/index',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/index',
                                   routes: [
@@ -218,7 +218,7 @@ const routes: IRoute[] =[
                  {
                                name: '/goods/list',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/goods',
                                 routes: [
@@ -226,7 +226,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/goods/list',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/goods',
                                   routes: [
@@ -291,9 +291,84 @@ const routes: IRoute[] =[
 
                
                  {
+                               name: '/goods_list/list',
+                               
+                                icon: 'smile',
+                                
+                                path: '/goods_list',
+                                routes: [
+                                 
+                                 {
+                                 name: '/goods_list/list',
+                                 
+                                 icon: 'smile',
+                                 
+                                  path: '/goods_list',
+                                  routes: [
+                                           
+                                            {
+                                              name: '/goods_list/list',
+                                              
+                                              path: '/goods_list/list',
+                                              
+                                              
+                                              
+                                              component: './goods_list/list',
+                                            },
+                                    
+                                            {
+                                              name: '/goods_list/input',
+                                              
+                                              path: '/goods_list/input',
+                                              
+                                                  condition: "member.add",
+                                              
+                                              
+                                              
+                                              component: './goods_list/input',
+                                            },
+                                    
+                                            {
+                                              name: '/goods_list/edit',
+                                              
+                                              path: '/goods_list/edit',
+                                              
+                                                  condition: context => {
+  return false;
+},
+                                              
+                                              
+                                              
+                                                 hideInMenu:true,
+                                              
+                                              component: './goods_list/edit',
+                                            },
+                                    
+                                            {
+                                              name: '/goods_list/detail',
+                                              
+                                              path: '/goods_list/detail',
+                                              
+                                                  condition: "member.add",
+                                              
+                                              
+                                              
+                                                 hideInMenu:true,
+                                              
+                                              component: './goods_list/detail',
+                                            },
+                                    
+                                   ]
+                                 },
+                                  
+                              ]
+                 },
+
+               
+                 {
                                name: '/member/list',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/member',
                                 routes: [
@@ -301,7 +376,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/member/list',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/member',
                                   routes: [
@@ -352,7 +427,7 @@ const routes: IRoute[] =[
                  {
                                name: '用户编辑',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/member_edit',
                                 routes: [
@@ -360,7 +435,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '用户编辑',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/member_edit',
                                   routes: [
@@ -391,7 +466,7 @@ const routes: IRoute[] =[
                  {
                                name: '/order/list',
                                
-                                icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                icon: 'smile',
                                 
                                 path: '/order',
                                 routes: [
@@ -399,7 +474,7 @@ const routes: IRoute[] =[
                                  {
                                  name: '/order/list',
                                  
-                                 icon: require('@ant-design/icons-svg/lib/asn/SmileOutlined').default,
+                                 icon: 'smile',
                                  
                                   path: '/order',
                                   routes: [

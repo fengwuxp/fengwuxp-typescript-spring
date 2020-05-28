@@ -36,7 +36,7 @@ import ArtCodegenTemplateLoader from "fengwuxp-spring-context/esnext/codegen/tem
 import {CodegenTemplateLoader} from "fengwuxp-spring-context/esnext/codegen/template/CodegenTemplateLoader";
 import {CompilerOptions} from "typescript";
 import {PathMatchFilter} from "fengwuxp-spring-core/esnext/core/type/PathMatchFilter";
-import {initialLowercase, toLineResolver} from "fengwuxp-declarative-command";
+import {initialLowercase, toHumpResolver, toLineResolver} from "fengwuxp-declarative-command";
 
 const ROUTE_VIEW_DECORATOR_PATH = "fengwuxp-routing-core";
 const ROUTE_VIEW_DECORATOR_NAME = "RouteView";
@@ -150,12 +150,19 @@ const defaultFilePathTransformStrategy = (scanPackages: string[], filepath: stri
     return `/${dir}/${pathname}`.toLowerCase();
 };
 
-// 将 '/' 转换为 大写字母
+/**
+ * 默认的将路径替换为方法名称
+ * 将 '/' 转换为 大写字母
+ * 将下划线转为驼峰
+ * @param pathname
+ */
 const defaultPathnameTransformToMethodName = (pathname: string) => {
     const methodName = pathname.replace(/\/(\w)/g, (all, letter) => {
         return letter.toUpperCase();
     });
-    return methodName.replace(methodName[0], methodName[0].toLocaleLowerCase())
+    const method = initialLowercase(methodName);
+    const s = toHumpResolver(method);
+    return s
 };
 
 /**
@@ -437,7 +444,7 @@ export default class ReactRouteConfigGenerator {
 
 
         let componentImportPath: string;
-        let {projectBasePath, outputPath} = this.codeOptions;
+        let {projectBasePath} = this.codeOptions;
 
         const nodeModulesIndex = filepath.indexOf(NODE_MODULES_DIR);
         const isNodeModules = nodeModulesIndex > 0;

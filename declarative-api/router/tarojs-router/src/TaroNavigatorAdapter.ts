@@ -44,15 +44,26 @@ export default class TaroNavigatorAdapter implements NavigatorAdapter {
 
     reLaunch = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
         setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
-        return Taro.reLaunch({
-            url: (descriptorObject as NavigatorDescriptorObject).pathname
-        })
+        if (process.env.TARO_ENV === 'h5') {
+            const url = location.href.substr(0, location.href.indexOf("/pages/")) + (descriptorObject as NavigatorDescriptorObject).pathname;
+            window.location.replace(url);
+        } else {
+            return Taro.reLaunch({
+                url: (descriptorObject as NavigatorDescriptorObject).pathname
+            })
+        }
+
     };
 
 
     replace = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {
         setNextViewState((descriptorObject as NavigatorDescriptorObject).state);
-        return Taro.redirectTo({url: (descriptorObject as NavigatorDescriptorObject).pathname})
+        if (process.env.TARO_ENV === 'h5') {
+            const url = location.href.substr(0, location.href.indexOf("/pages/")) + (descriptorObject as NavigatorDescriptorObject).pathname;
+            window.location.replace(url);
+        } else {
+            return Taro.redirectTo({url: (descriptorObject as NavigatorDescriptorObject).pathname})
+        }
     };
 
     switchTab = (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => {

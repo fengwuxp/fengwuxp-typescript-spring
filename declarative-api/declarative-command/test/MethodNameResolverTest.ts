@@ -1,5 +1,10 @@
 import * as log4js from "log4js";
-import {firstUpperCaseToLeftIncline, repeatTheFirstWord} from '../src/SimpleMethodNameCommandResolver';
+import {
+    firstUpperCaseToLeftIncline,
+    repeatTheFirstWord,
+    toHumpResolver,
+    toLineResolver
+} from '../src/SimpleMethodNameCommandResolver';
 
 
 const logger = log4js.getLogger();
@@ -14,6 +19,7 @@ describe("test method resolver", () => {
         logger.debug("firstUpperCaseToLeftIncline(\"goodsListView\")", firstUpperCaseToLeftIncline("goodsListView"));
         logger.debug("repeatTheFirstWord(\"memberIndexView\")", repeatTheFirstWord("memberIndexView"));
         logger.debug("repeatTheFirstWord(\"goodsListView\")", repeatTheFirstWord("goodsListView"));
+        logger.debug("toHumpResolver", toHumpResolver(toLineResolver("goods_listCreate")));
 
     });
 

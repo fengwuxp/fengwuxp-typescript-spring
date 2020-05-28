@@ -7,9 +7,10 @@ export const noneResolver: MethodNameCommandResolver = (methodName) => methodNam
  * 下划线转驼峰
  * @param methodName
  */
-export const toHumpResolver: MethodNameCommandResolver = (methodName: string) => methodName.replace(/\\_(\w)/g, (all, letter) => {
+export const toHumpResolver: MethodNameCommandResolver = (methodName: string) => methodName.replace(/_(\w)/g, (all, letter) => {
     return letter.toUpperCase();
 });
+
 
 /**
  * 驼峰转下划线
