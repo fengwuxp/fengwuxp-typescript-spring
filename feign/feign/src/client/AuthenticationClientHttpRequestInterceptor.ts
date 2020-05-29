@@ -81,14 +81,14 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         if (authorization == null || !StringUtils.hasText(authorization.authorization)) {
             return Promise.reject('authorization is null');
         }
-        const isNerve = authorization.expireDate === NEVER_REFRESH_FLAG;
+        const isNever = authorization.expireDate === NEVER_REFRESH_FLAG;
         const currentTimes = new Date().getTime();
-        if (authorization.expireDate <= currentTimes - 20 * 1000 && !isNerve) {
+        if (authorization.expireDate <= currentTimes - 20 * 1000 && !isNever) {
             // 20 seconds in advance, the token is invalid and needs to be re-authenticated
             return Promise.reject(UNAUTHORIZED_RESPONSE);
         }
 
-        const authorizationIsInvalid = !isNerve && authorization.expireDate < currentTimes + aheadOfTimes;
+        const authorizationIsInvalid = !isNever && authorization.expireDate < currentTimes + aheadOfTimes;
         if (!authorizationIsInvalid) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;
