@@ -726,11 +726,6 @@ interface FeignRequestBaseOptions extends FeignRequestId {
 }
 interface FileUploadProgressBarOptions extends ProgressBarOptions {
 }
-interface FileUploadOptions {
-    parallel?: number;
-    partSize?: number;
-    timeout?: number;
-}
 interface UIOptions {
     /**
      * 请求进度
@@ -812,7 +807,7 @@ interface DataOptions {
 }
 interface FeignRequestContextOptions extends UIOptions, DataOptions {
 }
-interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions, FileUploadOptions {
+interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestContextOptions {
     /**
      * enable gzip
      * default：false
