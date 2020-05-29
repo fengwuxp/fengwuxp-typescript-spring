@@ -1,5 +1,9 @@
 import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, HttpRequest, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, FeignRequestBaseOptions, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, AuthenticationBroadcaster, RequestURLResolver, FeignUIToast } from 'fengwuxp-typescript-feign';
 
+/**
+ * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
+ * {@link MappedClientHttpRequestInterceptor}
+ */
 declare abstract class InterceptorRegistration {
     protected includePatterns: string[];
     protected excludePatterns: string[];
@@ -21,6 +25,10 @@ declare abstract class InterceptorRegistration {
     abstract getInterceptor: () => any;
 }
 
+/**
+ * interceptor registry
+ * {@link InterceptorRegistration}
+ */
 interface InterceptorRegistry {
     addInterceptor: (interceptor: any) => InterceptorRegistration;
     getInterceptors: () => any[];
