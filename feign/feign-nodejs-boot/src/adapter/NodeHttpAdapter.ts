@@ -1,4 +1,3 @@
-
 import {
     CommonResolveHttpResponse, contentTypeName,
     HttpAdapter, HttpMediaType,
@@ -57,7 +56,8 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
                     reject(this.resolveHttpResponse.resolve({
                         ok: false,
                         statusText: error.message,
-                        status: error.code
+                        status: error.code,
+                        data: this.parse(response)
                     }));
                 }
             });
@@ -94,9 +94,9 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
      */
     private parse(response: any): Promise<any> {
 
-        if (!response.ok) {
-            return Promise.reject(null);
-        }
+        // if (!response.ok) {
+        //     return Promise.reject(null);
+        // }
         const {body, headers} = response;
         const responseMediaType: string = headers[contentTypeName];
 

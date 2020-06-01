@@ -155,14 +155,6 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
      */
     private parse = (response: Response): Promise<any> => {
 
-        // if (!response.ok) {
-        //     return Promise.reject(response);
-        // }
-
-        // if (response.headers==null){
-        //     TODO throw error
-        // }
-
         const headers = response.headers["map"];
         if (headers["content-length"] == 0) {
             //没有响应的内容
