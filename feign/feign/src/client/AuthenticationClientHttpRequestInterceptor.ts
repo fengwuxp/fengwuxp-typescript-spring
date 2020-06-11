@@ -5,6 +5,7 @@ import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
+import {AuthenticationType} from "../constant/AuthenticationType";
 
 
 /**
@@ -55,12 +56,15 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     interceptor = async (req: T) => {
 
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
+        let isTryAuthentication = false;
         const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
         if (mappingOptions != null) {
-            if (mappingOptions.needCertification === false) {
+            let authenticationType = mappingOptions.authenticationType;
+            if (authenticationType === AuthenticationType.NONE) {
                 // none certification
                 return req;
             }
+            isTryAuthentication = authenticationType == AuthenticationType.TRY;
         }
 
         if (!this.needAppendAuthorizationHeader(req.headers)) {
@@ -73,22 +77,37 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         try {
             authorization = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
+            if (isTryAuthentication) {
+                return req;
+            }
+
             return Promise.reject({
                 ...UNAUTHORIZED_RESPONSE,
                 data: e
             });
         }
         if (authorization == null || !StringUtils.hasText(authorization.authorization)) {
+            if (isTryAuthentication) {
+                return req;
+            }
             return Promise.reject('authorization is null');
         }
-        const isNever = authorization.expireDate === NEVER_REFRESH_FLAG;
         const currentTimes = new Date().getTime();
-        if (authorization.expireDate <= currentTimes - 20 * 1000 && !isNever) {
+        const tokenIsNever = authorization.expireDate === NEVER_REFRESH_FLAG;
+        const refreshTokenIsNever = authorization.refreshExpireDate === NEVER_REFRESH_FLAG;
+        const refreshTokenIsInvalid =
+            authorization.refreshExpireDate <= currentTimes + aheadOfTimes && !refreshTokenIsNever;
+
+        if (refreshTokenIsInvalid && !tokenIsNever) {
             // 20 seconds in advance, the token is invalid and needs to be re-authenticated
+            if (isTryAuthentication) {
+                return req;
+            }
+            // refresh token invalid ,need authorization
             return Promise.reject(UNAUTHORIZED_RESPONSE);
         }
 
-        const authorizationIsInvalid = !isNever && authorization.expireDate < currentTimes + aheadOfTimes;
+        const authorizationIsInvalid = authorization.expireDate <= currentTimes + aheadOfTimes && !tokenIsNever;
         if (!authorizationIsInvalid) {
             req.headers = this.appendAuthorizationHeader(authorization, req.headers);
             return req;

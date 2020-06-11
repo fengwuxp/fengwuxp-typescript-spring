@@ -59,6 +59,17 @@ export interface AuthenticationToken {
      */
     expireDate: number;
 
+    /**
+     * refresh token
+     */
+    refreshToken?: string;
+
+    /**
+     * refresh token expire time
+     * {@see NEVER_REFRESH_TIME}
+     */
+    refreshExpireDate?: number;
+
 }
 
 /**

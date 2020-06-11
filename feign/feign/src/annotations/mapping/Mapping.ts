@@ -45,8 +45,15 @@ export interface BaseRequestMappingOptions {
      *
      * @see AuthenticationClientHttpRequestInterceptor
      * @see DefaultFeignClientExecutor#tryCheckAuthorizedStatus
+     * @deprecated
      */
     needCertification?: boolean;
+
+    /**
+     * 接口认证类型
+     *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+     */
+    authenticationType: AuthenticationType;
 
 }
 
@@ -90,7 +97,7 @@ export function generateMapping<T extends BaseRequestMappingOptions>(method?: Ht
 
             //通过注解生成feign的代理配置
             const requestMapping: RequestMappingOptions = {
-                needCertification:DEFAULT_CERTIFICATION,
+                needCertification: DEFAULT_CERTIFICATION,
                 method,
                 ...(options as any)
             };

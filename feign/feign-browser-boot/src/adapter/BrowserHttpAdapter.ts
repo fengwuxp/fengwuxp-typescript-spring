@@ -159,7 +159,11 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             }
         }
 
-        const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
+        const responseMediaType: string = getHeaderByName(headers, contentTypeName);
+        if (responseMediaType == null) {
+            // 未知的content-type
+            return Promise.reject(null);
+        }
         const responseHeaders = {
             [contentTypeName]: responseMediaType
         };

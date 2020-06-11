@@ -67,7 +67,18 @@ function replacePrivateRegistry(packagePath: string,
 const lernaConfig = readJsonFile("./lerna.json");
 
 const packages = lernaConfig.packages;
-["components", "browsers", "packages", "types","oak"].forEach((folder) => {
+[
+    "alibaba-cloud",
+    "babel-plugins",
+    "declarative-api",
+    "dependency-management",
+    "feign",
+    "framework",
+    "log4j",
+    "packages",
+    "routing",
+    "starters"
+].forEach((folder) => {
 
     readFilDirList(`../${folder}`.replace("\*", ""));
 });

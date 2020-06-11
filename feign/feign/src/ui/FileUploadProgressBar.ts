@@ -11,7 +11,7 @@ export interface FileUploadProgressBar extends RequestProgressBar<FileUploadProg
     /**
      *
      * @param progress  upload progress
-     * @param fileIndex  Few files
+     * @param fileIndex
      */
     onUploadProgressChange:(progress:number,fileIndex:number)=>void;
 }

@@ -58,6 +58,7 @@ export {default as FeignConfigurationRegistry} from "./configuration/FeignConfig
 export {HttpMethod} from "./constant/http/HttpMethod";
 export {HttpStatus} from "./constant/http/HttpStatus";
 export {HttpMediaType} from "./constant/http/HttpMediaType";
+export {AuthenticationType} from "./constant/AuthenticationType";
 export {
     defaultApiModuleName,
     contentTypeName,
