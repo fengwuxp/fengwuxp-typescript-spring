@@ -44,13 +44,15 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
                 blockingRefreshAuthorization: boolean = true,) {
-        if (authenticationStrategy.enableCache) {
-            this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
-        } else {
-            this.authenticationStrategy = authenticationStrategy;
-        }
+        // if (authenticationStrategy.enableCache) {
+        //     this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
+        // } else {
+        //     this.authenticationStrategy = authenticationStrategy;
+        // }
+        this.authenticationStrategy = authenticationStrategy;
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
         this.blockingRefreshAuthorization = blockingRefreshAuthorization;
+        // registry.getDefaultFeignConfiguration().getAuthenticationBroadcaster().receiveAuthorizedEvent((){})
     }
 
     interceptor = async (req: T) => {

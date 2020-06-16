@@ -35,20 +35,21 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
         }
         const data = request.body;
         const uploadQueue = this.getUploadQueue(data, fileUploadOptions);
-        if (uploadQueue.length > 0) {
-            const fileUploadProgressBar = this.fileUploadStrategy.fileUploadProgressBar;
-            fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
-            await Promise.all(uploadQueue.map(async ({key, isArray, value}, index) => {
-                //并发上传文件
-                const result: string[] = await Promise.all((value).map((item, index) => {
-                    return this.uploadFile(item, index, request);
-                }));
-                // 覆盖参数值，文件对象--> 远程url
-                data[key] = result.join(",");
-
-            })).finally(fileUploadProgressBar.hideProgressBar);
-
+        if (uploadQueue.length === 0) {
+            return request;
         }
+
+        const fileUploadProgressBar = this.fileUploadStrategy.fileUploadProgressBar;
+        fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
+        await Promise.all(uploadQueue.map(async ({key, isArray, value}, index) => {
+            //并发上传文件
+            const result: string[] = await Promise.all((value).map((item, index) => {
+                return this.uploadFile(item, index, request);
+            }));
+            // 覆盖参数值，文件对象--> 远程url
+            data[key] = result.join(",");
+
+        })).finally(fileUploadProgressBar.hideProgressBar);
 
         return request;
 

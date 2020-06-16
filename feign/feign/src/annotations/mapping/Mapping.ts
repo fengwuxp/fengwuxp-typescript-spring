@@ -1,6 +1,7 @@
 import {HttpMethod} from "../../constant/http/HttpMethod";
 import {FeignClient} from "../../FeignClient";
 import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {AuthenticationType} from "../../constant/AuthenticationType";
 
 
 export interface BaseRequestMappingOptions {

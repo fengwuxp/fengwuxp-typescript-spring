@@ -36,7 +36,12 @@ export default class CacheAuthenticationStrategy implements AuthenticationStrate
     };
 
     refreshAuthorization = async (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => {
-        this.cacheAuthenticationToken = await this.authenticationStrategy.refreshAuthorization(authorization, req);
+        try {
+            this.cacheAuthenticationToken = await this.authenticationStrategy.refreshAuthorization(authorization, req);
+        } catch (e) {
+            this.clearCache();
+            return Promise.reject(e);
+        }
         return this.cacheAuthenticationToken;
     }
 
