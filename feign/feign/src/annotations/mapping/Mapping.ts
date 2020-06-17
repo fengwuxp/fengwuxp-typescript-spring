@@ -41,29 +41,17 @@ export interface BaseRequestMappingOptions {
      */
     produces?: string[];
 
-    /**
-     * 强制指定接口需要认证状态，如果未指定，则按照默认的策略进行处理
-     *
-     * @see AuthenticationClientHttpRequestInterceptor
-     * @see DefaultFeignClientExecutor#tryCheckAuthorizedStatus
-     * @deprecated
-     */
-    needCertification?: boolean;
 
     /**
      * 接口认证类型
      *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+     *  {@see DefaultFeignClientExecutor#tryCheckAuthorizedStatus}
      */
-    authenticationType: AuthenticationType;
+    authenticationType?: AuthenticationType;
 
 }
 
-let DEFAULT_CERTIFICATION = undefined;
 
-// set default needCertification
-export const setDefaultNeedCertification = (needCertification?: boolean) => {
-    DEFAULT_CERTIFICATION = needCertification;
-}
 
 export interface RequestMappingOptions extends BaseRequestMappingOptions {
 
@@ -98,7 +86,7 @@ export function generateMapping<T extends BaseRequestMappingOptions>(method?: Ht
 
             //通过注解生成feign的代理配置
             const requestMapping: RequestMappingOptions = {
-                needCertification: DEFAULT_CERTIFICATION,
+                authenticationType: AuthenticationType.FORCE,
                 method,
                 ...(options as any)
             };

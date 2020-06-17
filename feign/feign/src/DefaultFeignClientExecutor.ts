@@ -18,6 +18,7 @@ import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValid
 import {appendRequestContextId, removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
 import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} from "./client/AuthenticationStrategy";
 import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
+import {AuthenticationType} from "./constant/AuthenticationType";
 
 /**
  * default feign client executor
@@ -327,7 +328,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //requestMapping
         const {requestMapping} = feignMethodConfig;
         // need certification
-        if (requestMapping.needCertification !== true) {
+        if (requestMapping.authenticationType !== AuthenticationType.FORCE) {
             return;
         }
         if (authenticationStrategy == null) {
