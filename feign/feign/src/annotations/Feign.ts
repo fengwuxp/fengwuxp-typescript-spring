@@ -62,6 +62,9 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
      */
     return (clazz: { new(...args: any[]): {} }): any => {
 
+        /**
+         * {@link FeignConfiguration} 的实现类类型
+         */
         const feignConfigurationConstructor = options.configuration;
 
         /**
@@ -101,6 +104,8 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             readonly feignConfiguration = () => {
                 const feignConfiguration: FeignConfiguration = feignConfigurationConstructor != null ?
                     new feignConfigurationConstructor() : FeignConfigurationRegistry.getDefaultFeignConfiguration();
+
+                // TODO 某些情况下 feign configuration 未初始化
                 if (feignConfiguration == null) {
                     throw new Error("feign configuration is null or not register");
                 }

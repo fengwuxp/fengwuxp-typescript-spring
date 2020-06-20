@@ -7,10 +7,11 @@ import UnifiedFailureToastExecutorInterceptor from "../src/ui/UnifiedFailureToas
 import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
 
 
-export default class MockFeignConfigurationTest extends MockFeignConfiguration{
+export default class MockFeignConfigurationTest extends MockFeignConfiguration {
 
 
-    getFeignClientExecutorInterceptors= () =>{
+    getFeignClientExecutorInterceptors = () => {
+
 
         return [
             new ProcessBarExecutorInterceptor({
@@ -24,7 +25,8 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration{
             new CodecFeignClientExecutorInterceptor([
                 new DateEncoder(),
                 new MockRequestFileObjectEncoder({
-                    fileUploadStrategy: function () {
+                    // @ts-ignore
+                    fileUploadProgressBar: () => {
                         return {
                             hideProgressBar: function () {
                                 console.debug("fileUploadStrategy hideProgressBar")

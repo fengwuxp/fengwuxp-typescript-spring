@@ -47,7 +47,11 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
                 return this.uploadFile(item, index, request);
             }));
             // 覆盖参数值，文件对象--> 远程url
-            data[key] = result.join(",");
+            if (isArray) {
+                data[key] = result;
+            } else {
+                data[key] = result.join(",");
+            }
 
         })).finally(fileUploadProgressBar.hideProgressBar);
 

@@ -1,13 +1,18 @@
-import {Feign, FileUpload, HttpMediaType, PutMapping} from "../src";
-import {RequestMapping} from "../src";
+import {
+    AuthenticationType,
+    DeleteMapping,
+    Feign,
+    FeignRequestOptions,
+    FeignRetry,
+    FileUpload,
+    HttpMediaType,
+    HttpMethod,
+    PostMapping,
+    PutMapping,
+    RequestMapping,
+    Signature
+} from "../src";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
-import {PostMapping} from "../src";
-import {Signature} from "../src";
-import {FeignRetry} from "../src";
-import {HttpMethod} from "../src";
-import {FeignRequestOptions} from "../src";
-import {DeleteMapping} from "../src";
-import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
 import {ValidateSchema} from '../src/annotations/validator/VailidatorSchema';
 
 
@@ -27,7 +32,7 @@ export default class TestFeignClient {
 
     @GetMapping({
         // value: "/example"
-        needCertification: true
+        authenticationType: AuthenticationType.TRY
     })
     getExample: (request: {
         id: number,
