@@ -55,8 +55,8 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
                 } else {
                     reject(this.resolveHttpResponse.resolve({
                         ok: false,
-                        statusText: error.message,
-                        status: error.code,
+                        statusText: error == null ? response.statusCode : error.message,
+                        status: response.statusCode,
                         data: this.parse(response)
                     }));
                 }
@@ -94,9 +94,6 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
      */
     private parse(response: any): Promise<any> {
 
-        // if (!response.ok) {
-        //     return Promise.reject(null);
-        // }
         const {body, headers} = response;
         const responseMediaType: string = headers[contentTypeName];
 
