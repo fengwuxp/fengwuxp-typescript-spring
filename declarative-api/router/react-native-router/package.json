@@ -3,7 +3,7 @@
   "version": "1.0.1",
   "description": "declarative react native router",
   "publishConfig": {
-    "registry": "http://nexus.chennh.com/repository/npm/"
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
   },
   "repository": {
     "type": "git",
