@@ -134,7 +134,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     private parse = (response: Response): Promise<any> => {
 
 
-        const {consumes, getHeaderByName} = this;
+        const {getHeaderByName} = this;
         const headers = response.headers;
 
         if (response.body == null) {
