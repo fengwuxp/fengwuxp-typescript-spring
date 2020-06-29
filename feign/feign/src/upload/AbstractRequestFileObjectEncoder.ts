@@ -79,9 +79,16 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
 
         for (const key in data) {
             const val = data[key];
+            if (val == null) {
+                continue;
+            }
             const isArray = Array.isArray(val);
             //如果是是数组 使用第一个元素去判断
-            if (!this.attrIsNeedUpload(key, isArray ? val[0] : val, fileUploadOptions)) {
+            const value = isArray ? val[0] : val;
+            if (value == null) {
+                continue;
+            }
+            if (!this.attrIsNeedUpload(key, value, fileUploadOptions)) {
                 continue;
             }
 

@@ -14,8 +14,7 @@
     "types": [
       "node",
       "jest",
-      "react",
-      "reflect-metadata"
+      "react"
     ],
     "lib": [
       "dom",

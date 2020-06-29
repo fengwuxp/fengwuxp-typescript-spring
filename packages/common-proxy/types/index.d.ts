@@ -85,7 +85,7 @@ declare const proxyFactory: DefaultFactory;
  * @param scope
  * @param customMatch
  */
-declare const newProxyInstance: <T>(target: T, methodInterceptor: MethodInterceptor, setPropertyInterceptor?: SetPropertyInterceptor, scope?: ProxyScope, customMatch?: CustomMatchType<any>) => T;
+declare const newProxyInstance: <T>(target: T, methodInterceptor: MethodInterceptor, setPropertyInterceptor?: SetPropertyInterceptor, scope?: ProxyScope, customMatch?: CustomMatchType) => T;
 /**
  *  实例化一个代理对象并对其进行增强
  * @param target

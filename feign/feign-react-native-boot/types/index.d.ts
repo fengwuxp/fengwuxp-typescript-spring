@@ -55,7 +55,7 @@ declare class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpReque
      * @param resolveHttpResponse
      */
     constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
-    send: (req: ReactNativeHttpRequest) => Promise<HttpResponse<any>>;
+    send: (req: ReactNativeHttpRequest) => Promise<HttpResponse>;
     /**
      * build http request
      * @param {HttpRequest} request

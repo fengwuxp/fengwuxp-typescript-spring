@@ -47,7 +47,7 @@ declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
      * @param consumes  default 'application/json;charset=UTF-8'
      */
     constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType);
-    send: (req: BrowserHttpRequest) => Promise<HttpResponse<any>>;
+    send: (req: BrowserHttpRequest) => Promise<HttpResponse>;
     /**
      * build http request
      * @param {HttpRequest} request
