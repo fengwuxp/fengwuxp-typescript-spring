@@ -179,6 +179,7 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
                 value.properties.map((item: ObjectProperty) => {
                     const value = item.value;
                     if (isStringLiteral(value)) {
+                        // @ts-ignore
                         route[item.key.name] = value.value;
                     }
                 })

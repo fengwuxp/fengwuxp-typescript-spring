@@ -31,8 +31,8 @@ function readFilDirList(projectPath) {
         }
     });
 }
-var fixedVersion = '"version": "1.0.3"';
-var targetVersion = '"version": "1.0.4"';
+// const fixedVersion = '"version": "1.0.3"';
+// const targetVersion = '"version": "1.0.4"';
 /**
  * 替换发布的仓库
  * @param packagePath
@@ -43,7 +43,7 @@ function replacePrivateRegistry(packagePath, mainRegistry, otherRegister) {
     var packageJsonFilePath = path.join(packagePath, "./package.json");
     var packageJson = fs.readFileSync(packageJsonFilePath, "utf-8");
     packageJson = packageJson.replace(mainRegistry, otherRegister);
-    packageJson = packageJson.replace(fixedVersion, targetVersion);
+    // packageJson = packageJson.replace(fixedVersion, targetVersion);
     fs.writeFileSync(packageJsonFilePath, packageJson);
     //发布模块
     var npmPublishCommand = "npm publish  --loglevel=verbose";
@@ -59,12 +59,23 @@ function replacePrivateRegistry(packagePath, mainRegistry, otherRegister) {
     }
     console.log("\u53D1\u5E03\u6A21\u5757\uFF1A " + npmPublishCommand + "  cwd  " + packagePath);
     packageJson = packageJson.replace(otherRegister, mainRegistry);
-    packageJson = packageJson.replace(targetVersion, fixedVersion);
+    // packageJson = packageJson.replace(targetVersion, fixedVersion);
     fs.writeFileSync(packageJsonFilePath, packageJson);
 }
 var lernaConfig = readJsonFile("./lerna.json");
 var packages = lernaConfig.packages;
-["feign"].forEach(function (folder) {
+[
+    "alibaba-cloud",
+    "babel-plugins",
+    "declarative-api",
+    "dependency-management",
+    "feign",
+    "framework",
+    "log4j",
+    "packages",
+    "routing",
+    "starters"
+].forEach(function (folder) {
     var resolvePath = path.resolve(__dirname, ("../" + folder).replace("\*", ""));
     readFilDirList(resolvePath);
 });
