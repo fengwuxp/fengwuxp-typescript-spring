@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-declarative-command",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "declarative command",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

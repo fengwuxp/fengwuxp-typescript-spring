@@ -39,7 +39,6 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
     return newProxyInstanceEnhance<T>(navigator as any, null,
         (target, propertyKey: string, receiver) => {
 
-
             // isXX 方法
             if (propertyKey.startsWith("is")) {
                 if (propertyKey.endsWith("View")) {
@@ -55,15 +54,12 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
 
             return function (uriVariables?: RouteUriVariable, state?: RouteUriVariable | RouterCommand, routerCommand?: RouterCommand): Promise<any> | void {
 
-
-                //尝试从方法名称中解析到 指令
-                let [command, pathname] = tryConverterMethodNameCommandResolver(propertyKey, ROUTE_COMMAND_VALUES, RouterCommand.PUSH);
-                if (target[propertyKey] == null) {
-                    pathname = initialLowercase(pathname);
-                    //尝试解析路径参数
-                    pathname = methodNameCommandResolver(tryConverterPathnameVariableResolver(pathname));
-                } else {
-                    pathname = methodNameCommandResolver(propertyKey);
+                let [command, pathname] = [RouterCommand.PUSH as string, methodNameCommandResolver(propertyKey)];
+                if (pathname === propertyKey) {
+                    //尝试从方法名称中解析到 指令
+                    const result = tryConverterMethodNameCommandResolver(propertyKey, ROUTE_COMMAND_VALUES, command);
+                    command = result[0];
+                    pathname = initialLowercase(result[1]);
                 }
 
                 if (ROUTE_COMMAND_VALUES.indexOf(state) >= 0) {
