@@ -3,7 +3,7 @@ import {
     firstUpperCaseToLeftIncline,
     repeatTheFirstWord,
     toHumpResolver,
-    toLineResolver
+    toLineResolver, tryConverterMethodNameCommandResolver
 } from '../src/SimpleMethodNameCommandResolver';
 
 
@@ -20,6 +20,13 @@ describe("test method resolver", () => {
         logger.debug("repeatTheFirstWord(\"memberIndexView\")", repeatTheFirstWord("memberIndexView"));
         logger.debug("repeatTheFirstWord(\"goodsListView\")", repeatTheFirstWord("goodsListView"));
         logger.debug("toHumpResolver", toHumpResolver(toLineResolver("goods_listCreate")));
+
+    });
+
+    test("test tryConverterMethodNameCommandResolver", () => {
+        logger.debug("tourismCountryCreate", tryConverterMethodNameCommandResolver("tourismCountryCreate",["to","push"],"push"));
+        logger.debug("toTourismCountryCreate", tryConverterMethodNameCommandResolver("toTourismCountryCreate",["to","push"],"to"));
+        logger.debug("pushTourismCountryCreate", tryConverterMethodNameCommandResolver("pushTourismCountryCreate",["to","push"],"push"));
 
     });
 
