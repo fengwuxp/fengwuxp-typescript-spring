@@ -316,13 +316,20 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         sortRoutes.forEach(item => {
             item.name = this.getRouteName(item) || '';
         });
+
+        // 如果下级菜单都需要隐藏，隐藏整个二级菜单
+        const hideInMenu = sortRoutes.filter((item: any) => {
+            return item.hideInMenu != true;
+        }).length === 0 || undefined;
+
         return {
             routes: sortRoutes,
             name: this.getRouteName(first) || '',
             title: first.title || '',
             path: this.fixPathPrefix(key),
             redirect: first.pathname,
-            icon
+            icon,
+            hideInMenu: hideInMenu
         };
 
     };

@@ -8,6 +8,7 @@ const routes: IRoute[] =[
                                {{if route.icon!=null}}
                                 icon: {{route.icon}},
                                 {{/if}}
+
                                 path: '{{route.path}}',
                                 routes: [
                                  {{each route.routes secondRoute i2}}
@@ -15,6 +16,9 @@ const routes: IRoute[] =[
                                  name: '{{secondRoute.name}}',
                                  {{if secondRoute.icon!=null}}
                                  icon: {{secondRoute.icon}},
+                                 {{/if}}
+                                  {{if secondRoute.hideInMenu!=null}}
+                                   hideInMenu: {{secondRoute.hideInMenu}},
                                  {{/if}}
                                   path: '{{secondRoute.path}}',
                                   routes: [

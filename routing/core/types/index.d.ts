@@ -130,7 +130,7 @@ declare const spelRouteConditionParser: RouteConditionParser;
 declare class RouteContextHolder {
     private static ROUTE_CONTEXT_FACTORY;
     static getRouteContext: <T extends RouteContext>() => RouteContext;
-    static setRouteContextFactory: (factory: RouteContextFactory<RouteContext>) => void;
+    static setRouteContextFactory: (factory: RouteContextFactory) => void;
 }
 
 export { RouteConditionFunction, RouteConditionParser, RouteConditionType, RouteContext, RouteContextFactory, RouteContextHolder, RouteView, RouteViewEnhancer, RouteViewOptions, RouteViewType, spelRouteConditionParser as SpelRouteConditionParser, ViewShowMode };

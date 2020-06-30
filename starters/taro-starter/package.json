@@ -52,7 +52,7 @@
     "typescript": "^3.7.2"
   },
   "dependencies": {
-    "feign-boot-tarojs-stater": "1.0.0",
+    "feign-boot-tarojs-starter": "^1.0.0",
     "fengwuxp-declarative-router-adapter": "^1.0.0",
     "fengwuxp-tarojs-broadcast": "^1.0.0",
     "fengwuxp-tarojs-router": "^1.0.0",

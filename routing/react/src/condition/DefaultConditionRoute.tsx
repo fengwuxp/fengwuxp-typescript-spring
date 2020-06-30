@@ -7,9 +7,17 @@ import DialogViewRoute from "../DialogViewRoute";
 
 const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, props: RouteComponentProps<any>) => {
 
+    if (fallback == null) {
+        return <Redirect to={{
+            pathname: "/login",
+            state: {
+                from: props.location
+            }
+        }}/>
+    }
     if (typeof fallback === "string") {
         return <Redirect to={{
-            pathname: fallback == null ? "/login" : fallback.startsWith("/") ? fallback : `/${fallback}`,
+            pathname: fallback.startsWith("/") ? fallback : `/${fallback}`,
             state: {
                 from: props.location
             }
@@ -37,7 +45,7 @@ const DefaultConditionRoute: ConditionRoute = (props: ConditionRouteProps) => {
                exact={exact}
                strict={strict}
                render={(routeProps) => (
-                   SpelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props,routeProps) ? (renderView(props, routeProps)) : (
+                   SpelRouteConditionParser(condition, RouteContextHolder.getRouteContext(), props, routeProps) ? (renderView(props, routeProps)) : (
                        renderNoneAuthenticationFallback(fallback, routeProps)
                    )
                )}/>

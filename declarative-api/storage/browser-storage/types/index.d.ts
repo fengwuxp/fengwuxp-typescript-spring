@@ -16,12 +16,12 @@ declare class BrowserStorageAdapter implements StorageAdapter {
     constructor(storage?: Storage);
     clearAll: () => void;
     getKeys: () => Promise<never>;
-    getStorage: <T = string>(key: string, options?: true | GetStorageOptions | StorageUpdateStrategy) => Promise<T>;
-    removeStorage: (key: string | string[]) => Promise<string>;
-    setStorage: (key: string, data: string, options?: number | PersistenceStorageOptions) => void;
+    getStorage: <T = string>(key: string, options?: (GetStorageOptions | true | StorageUpdateStrategy)) => Promise<T>;
+    removeStorage: (key: (string | string[])) => Promise<string>;
+    setStorage: (key: string, data: string, options?: (number | PersistenceStorageOptions)) => void;
     getStorageSync: <T = any>(key: string) => any;
-    removeStorageSync: (key: string | string[]) => void;
-    setStorageSync: (key: string, data: string | number | boolean | object, options?: PersistenceStorageOptions) => void;
+    removeStorageSync: (key: (string | string[])) => void;
+    setStorageSync: (key: string, data: (object | string | boolean | number), options?: PersistenceStorageOptions) => void;
 }
 
 export { BrowserStorageAdapter, browserAppCommandStorageFactory };
