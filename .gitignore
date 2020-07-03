@@ -25,5 +25,6 @@ _src
 lib
 es
 esnext
-browser
 types/index.d.ts
+/declarative-api/webview-bridge/adapter/browser/
+/declarative-api/webview-bridge/react-native-webview-bridage/browser/
