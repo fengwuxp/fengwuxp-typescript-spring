@@ -11,7 +11,8 @@ const ListView = (props: ListViewProps) => {
     return null;
 };
 
-export default RouteView<RouteViewOptions>({
-    order:1,
-    condition: "#member!=null"
+export default RouteView<RouteViewOptions & { hideInMenu: boolean }>({
+    order: 1,
+    condition: "#member!=null",
+    hideInMenu: true
 })(ListView);

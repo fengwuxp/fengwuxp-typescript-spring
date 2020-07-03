@@ -62,6 +62,6 @@ declare const reduceRightCommandResolvers: (...resolvers: MethodNameCommandResol
  * @param defaultCommand      默认指令
  * @return [command,key]
  */
-declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: string[], defaultCommand: string) => string[];
+declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: Array<string>, defaultCommand: string) => string[];
 
 export { MethodNameCommandResolver, firstUpperCaseToLeftIncline, initialLowercase, initialUpperCase, noneResolver, reduceRightCommandResolvers, repeatTheFirstWord, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };

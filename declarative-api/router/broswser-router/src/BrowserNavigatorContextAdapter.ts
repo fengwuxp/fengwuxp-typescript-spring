@@ -34,7 +34,7 @@ export default class BrowserNavigatorContextAdapter<T extends NavigatorDescripto
 
     getCurrentPathname = () => location.hostname;
 
-    getCurrentState = <S = RouteUriVariable>() => this.history.location.state;
+    getCurrentState = <S = RouteUriVariable>() => this.history.location.state as S;
 
     getCurrentUriVariables = <S = RouteUriVariable>() => parse(location.search.substring(1)) as any;
 

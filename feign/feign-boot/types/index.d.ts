@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, HttpRequest, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, FeignRequestBaseOptions, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, AuthenticationBroadcaster, RequestURLResolver, FeignUIToast } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, AuthenticationBroadcaster, RequestURLResolver, FeignUIToast } from 'fengwuxp-typescript-feign';
 
 /**
  * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
@@ -39,23 +39,23 @@ interface InterceptorRegistry {
  */
 declare class ClientHttpInterceptorRegistration extends InterceptorRegistration {
     constructor(clientInterceptor: ClientHttpRequestInterceptor);
-    getInterceptor: () => MappedClientHttpRequestInterceptor<HttpRequest>;
+    getInterceptor: () => MappedClientHttpRequestInterceptor;
 }
 
 declare class ClientHttpInterceptorRegistry implements InterceptorRegistry {
     private clientHttpInterceptorRegistrations;
-    addInterceptor: (interceptor: ClientHttpRequestInterceptor<HttpRequest>) => ClientHttpInterceptorRegistration;
+    addInterceptor: (interceptor: ClientHttpRequestInterceptor) => ClientHttpInterceptorRegistration;
     getInterceptors: () => any[];
 }
 
 declare class FeignClientExecutorInterceptorRegistration extends InterceptorRegistration {
     constructor(feignClientExecutorInterceptor: FeignClientExecutorInterceptor);
-    getInterceptor: () => MappedFeignClientExecutorInterceptor<FeignRequestBaseOptions>;
+    getInterceptor: () => MappedFeignClientExecutorInterceptor;
 }
 
 declare class FeignClientInterceptorRegistry implements InterceptorRegistry {
     private feignClientExecutorInterceptorRegistrations;
-    addInterceptor: (interceptor: FeignClientExecutorInterceptor<FeignRequestBaseOptions>) => FeignClientExecutorInterceptorRegistration;
+    addInterceptor: (interceptor: FeignClientExecutorInterceptor) => FeignClientExecutorInterceptorRegistration;
     getInterceptors: () => any[];
 }
 

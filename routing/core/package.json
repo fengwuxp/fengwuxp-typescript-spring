@@ -31,9 +31,9 @@
     "npm:publish": "npm publish",
     "tsc:build": "rm -rf ./types && tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
-    "rollup:build": "npm run tsc:build & rollup -c &  rm -rf ./types-temp",
-    "publish:lib": "npm run rollup:build & npm run rollup:build:esnext & npm run npm:publish"
+    "rollup:build:esnext": "rm -rf ./esnext && rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build && rollup -c &&  rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build && npm run rollup:build:esnext && npm run npm:publish"
   },
   "keywords": [
     "route",
@@ -48,8 +48,8 @@
   "dependencies": {
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "fengwuxp-declarative-command": "^1.0.0",
-    "fengwuxp-spring-expression": "^1.0.0"
+    "fengwuxp-declarative-command": "^1.0.1",
+    "fengwuxp-spring-expression": "^1.0.3"
   },
   "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
 }

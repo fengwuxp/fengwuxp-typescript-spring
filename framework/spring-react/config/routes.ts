@@ -8,6 +8,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/example',
                                 routes: [
                                  
@@ -15,6 +16,9 @@ const routes: IRoute[] =[
                                  name: '/example/first/list',
                                  
                                  icon: 'smile',
+                                 
+                                  
+                                   hideInMenu: true,
                                  
                                   path: '/example/first',
                                   routes: [
@@ -27,6 +31,8 @@ const routes: IRoute[] =[
                                                   condition: "#member!=null",
                                               
                                               
+                                              
+                                                 hideInMenu:true,
                                               
                                               component: './example/first/list',
                                             },
@@ -55,6 +61,8 @@ const routes: IRoute[] =[
                                                   condition: "#member.add",
                                               
                                               
+                                              
+                                                 hideInMenu:true,
                                               
                                               component: './example/first/input',
                                             },
@@ -85,6 +93,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/example/secoend',
                                   routes: [
                                            
@@ -154,6 +163,7 @@ const routes: IRoute[] =[
                                  
                                  icon: require("react"),
                                  
+                                  
                                   path: '/example/three',
                                   routes: [
                                            
@@ -185,6 +195,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/index',
                                 routes: [
                                  
@@ -193,6 +204,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/index',
                                   routes: [
                                            
@@ -220,6 +232,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/goods',
                                 routes: [
                                  
@@ -228,6 +241,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/goods',
                                   routes: [
                                            
@@ -295,6 +309,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/goods_list',
                                 routes: [
                                  
@@ -303,6 +318,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/goods_list',
                                   routes: [
                                            
@@ -370,6 +386,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/member',
                                 routes: [
                                  
@@ -378,6 +395,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/member',
                                   routes: [
                                            
@@ -429,6 +447,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/member_edit',
                                 routes: [
                                  
@@ -436,6 +455,9 @@ const routes: IRoute[] =[
                                  name: '用户编辑',
                                  
                                  icon: 'smile',
+                                 
+                                  
+                                   hideInMenu: true,
                                  
                                   path: '/member_edit',
                                   routes: [
@@ -468,6 +490,7 @@ const routes: IRoute[] =[
                                
                                 icon: 'smile',
                                 
+
                                 path: '/order',
                                 routes: [
                                  
@@ -476,6 +499,7 @@ const routes: IRoute[] =[
                                  
                                  icon: 'smile',
                                  
+                                  
                                   path: '/order',
                                   routes: [
                                            

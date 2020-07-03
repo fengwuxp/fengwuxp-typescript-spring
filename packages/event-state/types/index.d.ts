@@ -182,7 +182,7 @@ declare class RxjsEventState<T> extends AbstractEventState<T> {
 
 declare class RxjsEventStateManager extends AbstractEventStateManager {
     constructor();
-    protected newEventState: (event: string, initInvoker: InitStateInvoker<any>) => Promise<RxjsEventState<any>>;
+    protected newEventState: (event: string, initInvoker: InitStateInvoker) => Promise<RxjsEventState<any>>;
 }
 
 declare class EventStateManagerHolder {

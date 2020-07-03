@@ -11,9 +11,7 @@
     "importHelpers": true,
     "types": [
       "node",
-      "jest",
-      "reflect-metadata",
-      "history"
+      "jest"
     ],
     "lib": [
       "dom",

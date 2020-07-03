@@ -8,18 +8,18 @@ import { History } from 'history';
  * @param navigatorContextAdapter
  * @param modulePathPrefix
  */
-declare const browserNativeAppCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(navigatorAdapter: NavigatorAdapter<NavigatorDescriptorObject>, confirmBeforeJumping?: RouteConfirmBeforeJumping, navigatorContextAdapter?: NavigatorContextAdapter<NavigatorDescriptorObject>, modulePathPrefix?: string) => T;
+declare const browserNativeAppCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(navigatorAdapter: NavigatorAdapter, confirmBeforeJumping?: RouteConfirmBeforeJumping, navigatorContextAdapter?: NavigatorContextAdapter, modulePathPrefix?: string) => T;
 
 declare class BrowserNavigatorAdapter implements NavigatorAdapter {
     private history;
     constructor(history: History);
     goBack: (num?: number, ...args: any[]) => void;
-    popAndPush: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
-    push: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
-    toView: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
-    popToTop: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
-    reLaunch: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
-    replace: (descriptorObject: string | NavigatorDescriptorObject, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    popAndPush: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    push: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    toView: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    popToTop: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    reLaunch: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
+    replace: (descriptorObject: NavigatorDescriptorObject | string, uriVariables?: RouteUriVariable, state?: RouteUriVariable) => void;
 }
 
 declare class BrowserNavigatorContextAdapter<T extends NavigatorDescriptorObject = NavigatorDescriptorObject> implements NavigatorContextAdapter<T> {
@@ -28,7 +28,7 @@ declare class BrowserNavigatorContextAdapter<T extends NavigatorDescriptorObject
     getBrowseHistory: () => never;
     getCurrentObject: () => T;
     getCurrentPathname: () => string;
-    getCurrentState: <S = RouteUriVariable>() => any;
+    getCurrentState: <S = RouteUriVariable>() => S;
     getCurrentUriVariables: <S = RouteUriVariable>() => any;
     isStackTop: () => boolean;
     isView: (pathname: string) => boolean;

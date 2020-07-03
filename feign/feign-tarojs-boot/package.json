@@ -1,6 +1,6 @@
 {
-  "name": "feign-boot-tarojs-stater",
-  "version": "1.0.5",
+  "name": "feign-boot-tarojs-starter",
+  "version": "1.0.6",
   "description": "",
   "main": "./es/index.js",
   "typings": "types/index.d.ts",

@@ -25,7 +25,7 @@ declare class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
      * @param resolveHttpResponse
      */
     constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
-    send: (req: NodeHttpRequest) => Promise<HttpResponse<any>>;
+    send: (req: NodeHttpRequest) => Promise<HttpResponse>;
     private buildOption;
     /**
      * parse response data

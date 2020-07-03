@@ -62,7 +62,7 @@ export default class FilePathScanningCandidateProgramProvider /*implements Envir
             }, false);
         }).map(resource => {
             const filepath = fileURLToPath(resource.getURL());
-            return [filepath, fs.readFileSync(filepath, "UTF-8")]
+            return [filepath, fs.readFileSync(filepath, "utf-8")]
         }).map(([filepath, sourceCodeText]) => {
             try {
                 return {

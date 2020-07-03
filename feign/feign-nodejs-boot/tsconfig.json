@@ -13,8 +13,7 @@
     "types": [
       "node",
       "jest",
-      "request",
-      "reflect-metadata"
+      "request"
     ],
     "lib": [
       "dom",

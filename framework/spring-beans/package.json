@@ -26,9 +26,9 @@
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
-    "build:tsc": "rm -rf ./esnext & tsc -p ./tsconfig.build.json",
+    "build:tsc": "rm -rf ./esnext && tsc -p ./tsconfig.build.json",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "publish:lib": "npm run build:tsc & npm run npm:publish"
+    "publish:lib": "npm run build:tsc && npm run npm:publish"
   },
   "keywords": [
     "spring",

@@ -6,9 +6,10 @@ export interface InputProps {
 
 }
 
-@RouteView({
+@RouteView<& { hideInMenu: boolean }>({
     order: 2,
-    condition: "#member.add"
+    condition: "#member.add",
+    hideInMenu: true
 })
 export default class InputView extends React.Component<InputProps> {
 

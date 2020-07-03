@@ -106,12 +106,18 @@ export const tryConverterMethodNameCommandResolver = (name: string,
                                                       defaultCommand: string): string[] => {
 
     // 找到匹配度最高的指令，如果没有 则使用默认指令
-    const [index] = commonValues.map((val, index) => {
-        return name.startsWith(val) ? [index, val.length] : [index, -1]
+    const [_,index] = commonValues.map((val, index) => {
+        const regExp = new RegExp(`^${val}[A-Z]`);
+        // 通过正则表达式
+        return regExp.test(val) ? [index, val.length] : [index, -1]
     }).reduce((pre, item) => {
         return pre[1] >= item[1] ? pre : item
     });
-    const command = index >= 0 ? commonValues[index] : defaultCommand;
 
-    return [command, name.replace(command, "")];
+    const command = index >= 0 ? commonValues[index] : defaultCommand
+
+    // 明确匹配命令，通过驼峰都方式，防止误伤
+    return [command, name.replace(new RegExp(`^${command}[A-Z]`), ($1) => {
+        return $1.replace(command, "");
+    })];
 };

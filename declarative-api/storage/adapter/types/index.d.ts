@@ -120,9 +120,9 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
     constructor(storageAdapter: StorageAdapter, prefix?: string, storageUpdateStrategy?: StorageUpdateStrategy);
     clearAll: () => void | Promise<void>;
     getKeys: () => Promise<string[]>;
-    setStorage: (key: string, data: string | number | boolean | object, options?: PersistenceStorageOptions) => void | Promise<void>;
-    getStorage: <T>(key: string, options?: true | GetStorageOptions | StorageUpdateStrategy) => Promise<any>;
-    removeStorage: (key: string | string[]) => any;
+    setStorage: (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => void | Promise<void>;
+    getStorage: <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<any>;
+    removeStorage: (key: (string | string[])) => any;
     protected genKey: (key: string) => string;
     protected getSaveItem(data: object | string | boolean | number, options: PersistenceStorageOptions): StorageItem;
     /**
@@ -140,7 +140,7 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
      * @param options
      * @param localStorageOptions
      */
-    protected updateStorageItem: (error: any, key: string, options: true | GetStorageOptions | StorageUpdateStrategy, localStorageOptions: {
+    protected updateStorageItem: (error: any, key: string, options: GetStorageOptions | true | StorageUpdateStrategy, localStorageOptions: {
         effectiveTime: number;
         lastUpdateTime: number;
     }) => Promise<any>;

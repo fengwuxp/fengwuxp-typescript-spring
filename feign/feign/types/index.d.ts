@@ -1,5 +1,4 @@
 /// <reference types="lodash" />
-/// <reference types="node" />
 import { RuleItem } from 'async-validator';
 import { Cancelable } from 'lodash';
 import { DateFormatType } from 'fengwuxp-common-utils/lib/date/DateFormatUtils';
@@ -1036,19 +1035,19 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
     protected interceptors: Array<ClientHttpRequestInterceptor<T>>;
     protected defaultProduce: HttpMediaType;
     protected constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
-    delete: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
-    get: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
-    head: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
-    patch: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
-    post: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
-    put: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse<any>>;
+    delete: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    get: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    head: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    patch: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    post: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    put: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
     /**
      * send an http request to a remote server
      * @param req
      */
     abstract send: (req: T) => Promise<HttpResponse>;
-    getInterceptors: () => ClientHttpRequestInterceptor<T>[];
-    setInterceptors: (interceptors: ClientHttpRequestInterceptor<T>[]) => void;
+    getInterceptors: () => Array<ClientHttpRequestInterceptor<T>>;
+    setInterceptors: (interceptors: Array<ClientHttpRequestInterceptor<T>>) => void;
 }
 
 /**
@@ -1063,7 +1062,7 @@ declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends Abs
      * @param interceptors
      */
     constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
-    send: (req: T) => Promise<HttpResponse<any>>;
+    send: (req: T) => Promise<HttpResponse>;
     private resolveContentType;
 }
 
@@ -1076,7 +1075,7 @@ declare class RetryHttpClient<T extends HttpRequest = HttpRequest> extends Abstr
     private countRetry;
     private retryEnd;
     constructor(httpAdapter: HttpAdapter<T>, retryOptions: HttpRetryOptions, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
-    send: (req: T) => Promise<HttpResponse<any>>;
+    send: (req: T) => Promise<HttpResponse>;
     /**
      * try retry request
      * @param request
@@ -1285,8 +1284,8 @@ declare class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpRequest> imp
      * @param maxWaitLength
      */
     constructor(maxWaitTime?: number, maxWaitLength?: number);
-    onNetworkActive: () => void | Promise<void>;
-    onNetworkClose: (request: T) => any;
+    onNetworkActive: () => (Promise<void> | void);
+    onNetworkClose: (request: T) => (Promise<any> | any);
     private addWaitItem;
     /**
      * 尝试移除无效的项
@@ -1367,8 +1366,8 @@ declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> =
 declare const registry: {
     setDefaultFeignConfiguration(configuration: FeignConfiguration): void;
     getDefaultFeignConfiguration(): FeignConfiguration;
-    setFeignClientBuilder(feignClientBuilder: FeignClientBuilder<FeignProxyClient>): void;
-    getFeignClientBuilder(): FeignClientBuilder<FeignProxyClient>;
+    setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void;
+    getFeignClientBuilder(): FeignClientBuilder;
 };
 
 /**
@@ -1607,7 +1606,7 @@ interface ResolveHttpResponse<T = any> {
 }
 
 declare class CommonResolveHttpResponse implements ResolveHttpResponse<Response> {
-    resolve: (resp: Response) => HttpResponse<any>;
+    resolve: (resp: Response) => HttpResponse;
 }
 
 /**
@@ -1646,7 +1645,7 @@ declare const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodCon
  * void response extractor
  * @param response
  */
-declare const voidResponseExtractor: (response: HttpResponse<any>) => Promise<void>;
+declare const voidResponseExtractor: (response: HttpResponse) => Promise<void>;
 /**
  * object response extractor
  * @param response
@@ -1656,12 +1655,12 @@ declare const objectResponseExtractor: ResponseExtractor<any>;
  * head response extractor
  * @param response
  */
-declare const headResponseExtractor: (response: HttpResponse<any>) => Promise<Record<string, string>>;
+declare const headResponseExtractor: (response: HttpResponse) => Promise<Record<string, string>>;
 /**
  * options method response extractor
  * @param response
  */
-declare const optionsMethodResponseExtractor: (response: HttpResponse<any>) => Promise<HttpMethod[]>;
+declare const optionsMethodResponseExtractor: (response: HttpResponse) => Promise<HttpMethod[]>;
 
 /**
  * Defines methods for expanding a URI template with variables.
@@ -1795,7 +1794,7 @@ declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptio
     protected toAuthenticationViewHandle: Function;
     constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle?: Function);
     postError: (options: T, response: HttpResponse<any>) => HttpResponse<any> | Promise<never>;
-    protected tryToast: (options: T, response: HttpResponse<any>) => void;
+    protected tryToast: (options: T, response: HttpResponse) => void;
     private tryHandleUnAuthorized;
 }
 
@@ -1854,11 +1853,11 @@ declare abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOp
      * @param data
      * @param fileUploadOptions
      */
-    protected getUploadQueue: (data: any, fileUploadOptions: any) => {
+    protected getUploadQueue: (data: any, fileUploadOptions: any) => Array<{
         key: string;
         isArray: boolean;
         value: any[];
-    }[];
+    }>;
     /**
      * 上传
      * @param value
@@ -1877,7 +1876,7 @@ declare abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOp
  * @param type1
  * @param type2
  */
-declare const mediaTypeIsEq: (type1: string, type2: string) => boolean;
+declare const mediaTypeIsEq: (type1: HttpMediaType | string, type2: HttpMediaType | string) => boolean;
 declare const responseIsJson: (headers: Record<string, string>) => boolean;
 declare const responseIsText: (headers: Record<string, string>) => boolean;
 declare const responseIsFile: (headers: Record<string, string>) => boolean;
@@ -1886,7 +1885,7 @@ declare const responseIsFile: (headers: Record<string, string>) => boolean;
  * request method is support request body
  * @param method
  */
-declare const supportRequestBody: (method: string) => boolean;
+declare const supportRequestBody: (method: HttpMethod | string) => boolean;
 /**
  * serialize http request body for content type
  *
@@ -1895,7 +1894,7 @@ declare const supportRequestBody: (method: string) => boolean;
  * @param contentType
  * @param filterNoneValue  filter none value
  */
-declare const serializeRequestBody: (method: string, body: HttpRequestBody, contentType: HttpMediaType, filterNoneValue?: boolean) => string;
+declare const serializeRequestBody: (method: string, body: HttpRequestBody | string, contentType: HttpMediaType, filterNoneValue?: boolean) => string;
 declare const filterNoneValueAndNewObject: (body: Record<string, any>) => {};
 /**
  * assemble the query string
@@ -1915,13 +1914,13 @@ declare const queryStringify: (obj: ParsedUrlQueryInput, filterNoneValue?: boole
 declare const invokeFunctionInterface: <T, I>(handle: T | I) => I;
 
 declare class AsyncClientRequestDataValidator implements ClientRequestDataValidator {
-    validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: false | ValidateInvokeOptions) => Promise<T>;
+    validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: ValidateInvokeOptions | false) => Promise<T>;
 }
 
 declare class ClientRequestDataValidatorHolder {
     private static clientRequestDataValidator;
     static setClientRequestDataValidator: (clientRequestDataValidator: ClientRequestDataValidator) => void;
-    static validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: false | ValidateInvokeOptions) => Promise<T>;
+    static validate: <T>(requestData: T, descriptor: Partial<{ [key in keyof T]: RuleItem; }>, options?: ValidateInvokeOptions | false) => Promise<T>;
 }
 
 declare class DefaultFeignClientBuilder implements FeignClientBuilderInterface {

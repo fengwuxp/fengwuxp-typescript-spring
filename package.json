@@ -30,11 +30,12 @@
   },
   "devDependencies": {
     "@types/node": "^12.6.8",
-    "lerna": "^3.6.0"
+    "lerna": "^3.22.1"
   },
   "dependencies": {
     "@tarojs/components-qa": "^2.0.7",
     "pretty-format": "^25.1.0",
-    "typescript": "^3.6.4"
+    "rollup": "^2.18.1",
+    "typescript": "^3.9.5"
   }
 }

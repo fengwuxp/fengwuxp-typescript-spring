@@ -27,9 +27,9 @@
   "scripts": {
     "yarn:install": "yarn install",
     "npm:publish": "npm publish",
-    "build:tsc": "rm -rf ./esnext & tsc -p ./tsconfig.build.json",
+    "build:tsc": "rm -rf ./esnext && tsc -p ./tsconfig.build.json",
     "test": "jest --config ./jest.config.js --verbose=true",
-    "publish:lib": "npm run build:tsc & npm run npm:publish"
+    "publish:lib": "npm run build:tsc && npm run npm:publish"
   },
   "keywords": [
     "spring",
@@ -46,11 +46,11 @@
     "core-js": "^3.4.1",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "fengwuxp-declarative-command": "^1.0.0",
+    "fengwuxp-declarative-command": "^1.0.1",
     "fengwuxp-library-starter": "^1.0.0",
     "fengwuxp-routing-core": "^1.0.0",
-    "fengwuxp-spring-context": "^1.0.0",
-    "fengwuxp-spring-core": "^1.0.0",
+    "fengwuxp-spring-context": "^1.0.3",
+    "fengwuxp-spring-core": "^1.0.3",
     "jest": "25.1.0",
     "lodash": "^4.17.15",
     "ts-jest": "25.2.0",

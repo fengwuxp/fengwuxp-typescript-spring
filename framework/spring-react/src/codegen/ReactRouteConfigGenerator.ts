@@ -584,6 +584,7 @@ export default class ReactRouteConfigGenerator {
         }
 
         if (isVariableDeclaration(defaultDeclaration)) {
+            // @ts-ignore
             const variableDeclarator = defaultDeclaration.declarations[0];
             const initNode = variableDeclarator.init;
             if (isArrowFunctionExpression(initNode)) {
