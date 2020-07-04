@@ -374,6 +374,18 @@ const routes: IRoute[] =[
                                               component: './goods_list/detail',
                                             },
                                     
+                                            {
+                                              name: '/goods_list/close',
+                                              
+                                              path: '/goods_list/close',
+                                              
+                                                  condition: "member.add",
+                                              
+                                              
+                                              
+                                              component: './goods_list/CloseGoodsView',
+                                            },
+                                    
                                    ]
                                  },
                                   

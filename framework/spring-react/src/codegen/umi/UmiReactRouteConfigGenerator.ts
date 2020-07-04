@@ -21,6 +21,7 @@ const DEFAULT_ORDER_MAP: Record<string, number> = {
     'edit': 2,
     'detail': 3,
     'lookup': 4,
+    'close': 4,
 };
 
 const VIEW_PATH_NAMES = [
@@ -31,6 +32,8 @@ const VIEW_PATH_NAMES = [
     "Detail",
     "Show",
     "Lookup",
+    "Close",
+    // "Open"
 ];
 
 // 默认视图目录
