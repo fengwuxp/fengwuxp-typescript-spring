@@ -86,7 +86,8 @@ declare type AlibabaCloudOssConfigurationLoader = () => Promise<AlibabaCloudOssC
  * 基于阿里云oss 的文件上传
  */
 declare class AlibabaCloudOssFileObjectEncoder extends AbstractRequestFileObjectEncoder {
-    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, fileUploadProgressBar: FileUploadProgressBar, multipartOptions?: MultipartOptions);
+    private enabledSupportBase64;
+    constructor(alibabaCloudOssFactory: AlibabaCloudOssFactory, fileUploadProgressBar: FileUploadProgressBar, multipartOptions?: MultipartOptions, enabledSupportBase64?: boolean);
     attrIsNeedUpload: (name: string, value: any, options: AutoFileUploadOptions) => boolean;
 }
 

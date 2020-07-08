@@ -422,6 +422,22 @@ const routes: IRoute[] =[
                                             },
                                     
                                             {
+                                              name: '用户编辑',
+                                              
+                                              path: '/member/edit',
+                                              
+                                                  condition: context => {
+  return false;
+},
+                                              
+                                              
+                                              
+                                                 hideInMenu:true,
+                                              
+                                              component: './member/edit',
+                                            },
+                                    
+                                            {
                                               name: '详情',
                                               
                                               path: '/member/detail',
@@ -435,37 +451,10 @@ const routes: IRoute[] =[
                                               component: './member/detail',
                                             },
                                     
-                                   ]
-                                 },
-                                  
-                              ]
-                 },
-
-               
-                 {
-                               name: '用户编辑',
-                               
-                                icon: 'smile',
-                                
-
-                                path: '/member_edit',
-                                routes: [
-                                 
-                                 {
-                                 name: '用户编辑',
-                                 
-                                 icon: 'smile',
-                                 
-                                  
-                                   hideInMenu: true,
-                                 
-                                  path: '/member_edit',
-                                  routes: [
-                                           
                                             {
-                                              name: '用户编辑',
+                                              name: '用户禁用',
                                               
-                                              path: '/member_edit',
+                                              path: '/member/close',
                                               
                                                   condition: context => {
   return false;
@@ -473,9 +462,7 @@ const routes: IRoute[] =[
                                               
                                               
                                               
-                                                 hideInMenu:true,
-                                              
-                                              component: './member/edit',
+                                              component: './member/close',
                                             },
                                     
                                    ]

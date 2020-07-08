@@ -80,7 +80,7 @@ export default class AlibabaCloudOssFileUploadStrategy implements FileUploadStra
      * @param file
      */
     protected getExtname = (file: File | Blob | string) => {
-        console.log("========file===>", file);
+        // console.log("========file===>", file);
         let fileType: string;
         if (typeof file === "string") {
             try {

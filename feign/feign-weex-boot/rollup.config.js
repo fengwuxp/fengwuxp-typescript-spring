@@ -22,7 +22,10 @@ const getConfig = (isProd) => {
         external: [
             "@abraham/reflection",
             "fengwuxp-common-proxy",
-            "fengwuxp-common-utils"
+            "fengwuxp-common-utils",
+            "fengwuxp-typescript-feign",
+            "feign-boot-starter",
+            "@react-native-community/netinfo"
         ],
         output: [
             {

@@ -24,7 +24,7 @@ const getConfig = (isProd) => {
             "fengwuxp-common-proxy",
             "fengwuxp-common-utils",
             "fengwuxp-typescript-feign",
-            "feign-boot-stater"
+            "feign-boot-starter"
         ],
         output: [
             {

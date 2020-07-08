@@ -28,6 +28,7 @@ describe("test method resolver", () => {
         logger.debug("toTourismCountryCreate", tryConverterMethodNameCommandResolver("toTourismCountryCreate",["to","push"],"to"));
         logger.debug("pushTourismCountryCreate", tryConverterMethodNameCommandResolver("pushTourismCountryCreate",["to","push"],"push"));
 
+
     });
 
 

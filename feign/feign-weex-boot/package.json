@@ -1,7 +1,7 @@
 {
-  "name": "feign-weex-boot-stater",
-  "version": "1.0.3",
-  "description": "",
+  "name": "feign-weex-boot-starter",
+  "version": "1.0.6",
+  "description": "feign weex starter",
   "main": "lib/index.js",
   "module": "es/index.js",
   "typings": "types/index.d.ts",

@@ -7,13 +7,13 @@ export interface EditProps {
 }
 
 @RouteView({
-    name: "用户编辑",
-    pathname: "/member/edit",
+    name: "用户禁用",
+    pathname: "/member/close",
     condition: (context) => {
 
         return false;
     }
 })
-export default class EditView extends React.Component<EditProps> {
+export default class CloseView extends React.Component<EditProps> {
 
 }

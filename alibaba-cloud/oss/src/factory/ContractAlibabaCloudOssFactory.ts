@@ -6,6 +6,7 @@ import {
 import AliOssClient, {OssClientOptions} from "ali-oss";
 import {AlibabaCloudOssConfiguration} from "./AlibabaCloudOssConfiguration";
 import {AliCloudAuthorizationMode} from "../AliCloudAuthorizationMode";
+import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 
 /**
  * 遵循约定 oos factory
@@ -42,12 +43,20 @@ export default class ContractAlibabaCloudOssFactory implements AlibabaCloudOssFa
     factory = async (ossClientOptions: OssClientOptionalOptions | undefined): Promise<AliOssClient> => {
 
         let cloudOssConfiguration = this._configuration;
-        //提前3分钟刷新token
+        const noneStsToken = ossClientOptions == null || ossClientOptions.stsToken == null;
+        // 提前刷新 sts token
         const needRefreshToken = cloudOssConfiguration == null || new Date().getTime() + this.aheadOfTimes > this.expirationTime;
-        if (needRefreshToken) {
+        if (needRefreshToken && noneStsToken) {
             // 刷新token
             await this.refreshStsToken();
             cloudOssConfiguration = this._configuration;
+        }
+
+        if (this.isStsAuthorizationMode(cloudOssConfiguration) && noneStsToken) {
+            if (cloudOssConfiguration.sts == null || !StringUtils.hasText(cloudOssConfiguration.sts.securityToken)) {
+                // 刷新sts token
+                await this.refreshStsToken();
+            }
         }
 
         const options: OssClientOptions = {
@@ -60,6 +69,7 @@ export default class ContractAlibabaCloudOssFactory implements AlibabaCloudOssFa
             timeout: 60 * 1000,
             ...ossClientOptions,
         };
+
         return new AliOssClient(options, {});
 
     }
@@ -77,7 +87,7 @@ export default class ContractAlibabaCloudOssFactory implements AlibabaCloudOssFa
         this._configuration = cloudOssConfiguration;
     }
 
-    private isStsAuthorizationMode(cloudOssConfiguration: AlibabaCloudOssConfiguration) {
+    private isStsAuthorizationMode = (cloudOssConfiguration: AlibabaCloudOssConfiguration) => {
         return cloudOssConfiguration.authorizationMode === AliCloudAuthorizationMode.STS;
     }
 
