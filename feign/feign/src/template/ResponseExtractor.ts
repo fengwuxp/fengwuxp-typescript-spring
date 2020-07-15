@@ -14,11 +14,19 @@ export interface ResponseExtractorInterface<T = any> {
     extractData: ResponseExtractorFunction<T>;
 }
 
+
+/**
+ * Judge whether the business is successfully processed and capture the data results of business response
+ */
+export type BusinessResponseExtractorFunction<T=any> = (response: HttpResponse) => Promise<T>;
+
 /**
  * Extract data from the given {@code HttpResponse} and return it.
  * @param response the HTTP response
  * @return the extracted data
  */
-export type ResponseExtractorFunction<T = any> = (response: HttpResponse) => T | Promise<T> | null | undefined;
+export type ResponseExtractorFunction<T = any> = (response: HttpResponse, businessAssert?: BusinessResponseExtractorFunction<T>) => T | Promise<T> | null | undefined;
 
 export  type ResponseExtractor<T = any> = ResponseExtractorFunction<T> | ResponseExtractorInterface<T>
+
+

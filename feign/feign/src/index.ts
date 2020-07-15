@@ -96,7 +96,9 @@ export {DefaultUriTemplateHandler, defaultUriTemplateFunctionHandler} from "./te
 export {
     ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseErrorHandler
 } from "./template/ResponseErrorHandler";
-export {ResponseExtractor, ResponseExtractorInterface, ResponseExtractorFunction} from "./template/ResponseExtractor";
+export {
+    ResponseExtractor, ResponseExtractorInterface, BusinessResponseExtractorFunction, ResponseExtractorFunction
+} from "./template/ResponseExtractor";
 export {RestOperations, UriVariable, QueryParamType} from "./template/RestOperations";
 export {default as RestTemplate} from "./template/RestTemplate";
 

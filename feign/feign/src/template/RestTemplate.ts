@@ -1,8 +1,9 @@
 import {RestOperations, UriVariable} from "./RestOperations";
 import {HttpResponse} from "../client/HttpResponse";
 import {HttpMethod} from "../constant/http/HttpMethod";
-import {ResponseExtractor, ResponseExtractorInterface} from "./ResponseExtractor";
+import {BusinessResponseExtractorFunction, ResponseExtractor, ResponseExtractorInterface} from "./ResponseExtractor";
 import {
+    DEFAULT_BUSINESS_EXTRACTOR,
     headResponseExtractor,
     objectResponseExtractor,
     optionsMethodResponseExtractor,
@@ -27,9 +28,11 @@ export default class RestTemplate implements RestOperations {
 
     private _responseErrorHandler: ResponseErrorHandler;
 
+    private businessResponseExtractor: BusinessResponseExtractorFunction;
 
-    constructor(httpClient: HttpClient) {
+    constructor(httpClient: HttpClient, businessResponseExtractor?: BusinessResponseExtractorFunction) {
         this.httpClient = httpClient;
+        this.businessResponseExtractor = businessResponseExtractor || DEFAULT_BUSINESS_EXTRACTOR;
     }
 
     delete = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<void> => {
@@ -84,7 +87,7 @@ export default class RestTemplate implements RestOperations {
 
 
         // handle url and query params
-        const {_uriTemplateHandler, _responseErrorHandler,} = this;
+        const {_uriTemplateHandler, _responseErrorHandler, businessResponseExtractor} = this;
 
         //handling path parameters in the request body, if any
         let realUrl = replacePathVariableValue(url, requestBody);
@@ -116,7 +119,7 @@ export default class RestTemplate implements RestOperations {
         }
 
         if (responseExtractor) {
-            return invokeFunctionInterface<ResponseExtractor<E>, ResponseExtractorInterface<E>>(responseExtractor).extractData(httpResponse);
+            return invokeFunctionInterface<ResponseExtractor<E>, ResponseExtractorInterface<E>>(responseExtractor).extractData(httpResponse, businessResponseExtractor);
         }
 
         return httpResponse;

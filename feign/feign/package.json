@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-typescript-feign",
-  "version": "1.0.6",
+  "version": "1.0.7",
   "description": "typescript feign",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

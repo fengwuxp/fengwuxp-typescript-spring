@@ -1,6 +1,6 @@
 import {HttpResponse} from "../client/HttpResponse";
 import {HttpMethod} from "../constant/http/HttpMethod";
-import {ResponseExtractor} from "./ResponseExtractor";
+import {BusinessResponseExtractorFunction, ResponseExtractor} from "./ResponseExtractor";
 
 
 /**
@@ -14,13 +14,24 @@ export const voidResponseExtractor = (response: HttpResponse): Promise<void> => 
     return Promise.reject(response);
 };
 
+
+/**
+ * default business response extractor
+ *
+ * @param response
+ * @constructor
+ */
+export const DEFAULT_BUSINESS_EXTRACTOR: BusinessResponseExtractorFunction = (response) => Promise.resolve(response.data);
+
 /**
  * object response extractor
  * @param response
+ * @param businessResponseExtractor
  */
-export const objectResponseExtractor: ResponseExtractor<any> = <E = any>(response: HttpResponse): Promise<E> => {
+export const objectResponseExtractor: ResponseExtractor<any> = <E = any>(response: HttpResponse,
+                                                                         businessResponseExtractor: BusinessResponseExtractorFunction = DEFAULT_BUSINESS_EXTRACTOR): Promise<E> => {
     if (response.ok) {
-        return Promise.resolve(response.data);
+        return businessResponseExtractor(response);
     }
     return Promise.reject(response);
 };
@@ -34,12 +45,12 @@ export const headResponseExtractor = (response: HttpResponse): Promise<Record<st
     return Promise.resolve(response.headers);
 };
 
+
 /**
  * options method response extractor
  * @param response
  */
 export const optionsMethodResponseExtractor = (response: HttpResponse): Promise<HttpMethod[]> => {
-
 
     if (response.ok) {
         const methods: HttpMethod[] = response.headers["Access-Control-Allow-Methods"].split(",") as HttpMethod[];
