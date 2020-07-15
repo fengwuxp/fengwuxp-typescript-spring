@@ -32,6 +32,11 @@ interface WeexHttpRequest extends HttpRequest {
     }) => void;
 }
 
+declare enum WeexResponseType {
+    JSON = "json",
+    TEXT = "text"
+}
+declare type GenResponseTypeFunction = (request: WeexHttpRequest) => WeexResponseType;
 /**
  * 基于weex http adapter
  *
@@ -40,12 +45,14 @@ interface WeexHttpRequest extends HttpRequest {
 declare class WeexHttpAdapter implements HttpAdapter<WeexHttpRequest> {
     private timeout;
     private resolveHttpResponse;
+    private genResponseType;
     /**
      *
      * @param timeout  default 5000ms
+     * @param genResponseType  default return {@link WeexResponseType.JSON}
      * @param resolveHttpResponse
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>);
+    constructor(timeout?: number, genResponseType?: GenResponseTypeFunction, resolveHttpResponse?: ResolveHttpResponse<any>);
     send: (request: WeexHttpRequest) => Promise<HttpResponse>;
     private buildRequest;
 }

@@ -1,10 +1,12 @@
 import {
     CommonResolveHttpResponse,
+    contentTypeName,
     HttpAdapter,
+    HttpMediaType,
     HttpMethod,
     HttpResponse,
     ResolveHttpResponse,
-    responseIsJson
+    serializeRequestBody
 } from "fengwuxp-typescript-feign";
 import {WeexHttpRequest} from './WeexHttpRequest';
 
@@ -18,6 +20,8 @@ enum WeexResponseType {
     TEXT = 'text'
 }
 
+export type GenResponseTypeFunction = (request: WeexHttpRequest) => WeexResponseType;
+
 /**
  * 基于weex http adapter
  *
@@ -29,22 +33,23 @@ export default class WeexHttpAdapter implements HttpAdapter<WeexHttpRequest> {
 
     private resolveHttpResponse: ResolveHttpResponse;
 
+    private genResponseType: GenResponseTypeFunction;
+
     /**
      *
      * @param timeout  default 5000ms
+     * @param genResponseType  default return {@link WeexResponseType.JSON}
      * @param resolveHttpResponse
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>) {
+    constructor(timeout?: number, genResponseType?: GenResponseTypeFunction, resolveHttpResponse?: ResolveHttpResponse<any>) {
         this.timeout = timeout || 5 * 1000;
+        this.genResponseType = (request) => WeexResponseType.JSON;
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
     }
 
     send = (request: WeexHttpRequest): Promise<HttpResponse> => {
-        //TODO 进行请求
         //返回统一的数据结果
-
         const req = this.buildRequest(request);
-
         return new Promise<HttpResponse>((resolve, reject) => {
             stream.fetch(req, (resp) => {
                 //解析数据
@@ -83,18 +88,22 @@ export default class WeexHttpAdapter implements HttpAdapter<WeexHttpRequest> {
         headers = headers || {};
 
 
-        const type = responseIsJson(headers) ? WeexResponseType.JSON : WeexResponseType.TEXT;
+        let contentType = headers[contentTypeName];
+        if (contentType == HttpMediaType.APPLICATION_JSON_UTF8) {
+            contentType = HttpMediaType.APPLICATION_JSON;
+        }
+
         return {
             //请求方法get post
             method: HttpMethod[method],
             //请求url
             url,
             //响应类型, json,text 或是 jsonp {在原生实现中其实与 json 相同)
-            type,
+            type: this.genResponseType(reqParams),
             //headers HTTP 请求头
             headers,
             //参数仅支持 string 类型的参数，请勿直接传递 JSON，必须先将其转为字符串。GET请求不支持 body 方式传递参数，请使用 url 传参。
-            body: body == null ? body : JSON.stringify(body),
+            body: serializeRequestBody(method, body, contentType as any, true),
             timeout
         };
     }

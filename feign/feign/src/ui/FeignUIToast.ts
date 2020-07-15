@@ -34,3 +34,4 @@ export default class FeignUIToastHolder {
         return FeignUIToastHolder.feignUIToast;
     }
 }
+
