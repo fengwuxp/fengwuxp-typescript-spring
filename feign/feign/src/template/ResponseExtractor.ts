@@ -17,8 +17,10 @@ export interface ResponseExtractorInterface<T = any> {
 
 /**
  * Judge whether the business is successfully processed and capture the data results of business response
+ * @param response the HTTP response
+ * @return the extracted data
  */
-export type BusinessResponseExtractorFunction<T=any> = (response: HttpResponse) => Promise<T>;
+export type BusinessResponseExtractorFunction<T = any> = (response: HttpResponse) => Promise<T>;
 
 /**
  * Extract data from the given {@code HttpResponse} and return it.

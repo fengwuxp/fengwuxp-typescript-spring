@@ -43,7 +43,8 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
 
 
         getRestTemplate = () => {
-            return new RestTemplate(this.getHttpClient());
+            return new RestTemplate(this.getHttpClient(),
+                feignConfigurationAdapter.getBusinessResponseExtractor == null ? undefined : feignConfigurationAdapter.getBusinessResponseExtractor());
         };
 
         getAuthenticationStrategy = feignConfigurationAdapter.authenticationStrategy;

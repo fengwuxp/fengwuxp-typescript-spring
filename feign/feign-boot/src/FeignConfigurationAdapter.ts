@@ -6,7 +6,7 @@ import {
     FeignUIToast,
     RequestURLResolver,
     AuthenticationBroadcaster,
-    AuthenticationStrategy
+    AuthenticationStrategy, BusinessResponseExtractorFunction
 } from "fengwuxp-typescript-feign";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
@@ -61,6 +61,7 @@ export interface FeignConfigurationAdapter {
 
     /**
      * feign ui toast
+     * {@link FeignUIToast}
      */
     feignUIToast?: () => FeignUIToast;
 
@@ -68,5 +69,10 @@ export interface FeignConfigurationAdapter {
      * get default request headers
      */
     getDefaultHttpHeaders?: () => Record<string, string>;
+
+    /**
+     * get {@link BusinessResponseExtractorFunction}
+     */
+    getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
 
 }
