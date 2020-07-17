@@ -25,9 +25,9 @@ export type BusinessResponseExtractorFunction<T = any> = (response: HttpResponse
 /**
  * Extract data from the given {@code HttpResponse} and return it.
  * @param response the HTTP response
- * @return the extracted data
+ * @return  if request business handle success return business data , else return {@link Promise#reject}
  */
-export type ResponseExtractorFunction<T = any> = (response: HttpResponse, businessAssert?: BusinessResponseExtractorFunction<T>) => T | Promise<T> | null | undefined;
+export type ResponseExtractorFunction<T = any> = (response: HttpResponse, businessAssert?: BusinessResponseExtractorFunction<T>) => T | Promise<T> | null | undefined | void;
 
 export  type ResponseExtractor<T = any> = ResponseExtractorFunction<T> | ResponseExtractorInterface<T>
 
