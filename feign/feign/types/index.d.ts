@@ -382,16 +382,18 @@ interface ResponseExtractorInterface<T = any> {
     extractData: ResponseExtractorFunction<T>;
 }
 /**
- * Judge whether the business is successfully processed and capture the data results of business response
- */
-declare type BusinessResponseExtractorFunction<T = any> = (response: HttpResponse) => Promise<T>;
-/**
  * Extract data from the given {@code HttpResponse} and return it.
  * @param response the HTTP response
  * @return the extracted data
  */
-declare type ResponseExtractorFunction<T = any> = (response: HttpResponse, businessAssert?: BusinessResponseExtractorFunction<T>) => T | Promise<T> | null | undefined;
+declare type ResponseExtractorFunction<T = any> = (response: HttpResponse, businessAssert?: BusinessResponseExtractorFunction) => T | Promise<T> | null | undefined;
 declare type ResponseExtractor<T = any> = ResponseExtractorFunction<T> | ResponseExtractorInterface<T>;
+/**
+ * Judge whether the business is successfully processed and capture the data results of business response
+ * @param response Body the HTTP response
+ * @return  if request business handle success return business data , else return {@link Promise#reject}
+ */
+declare type BusinessResponseExtractorFunction<B = any, T = any> = (responseBody: B) => T | Promise<T> | null | undefined | void;
 
 /**
  * Interface specifying a basic set of RESTful operations.
@@ -1653,7 +1655,7 @@ declare const voidResponseExtractor: (response: HttpResponse) => Promise<void>;
 /**
  * object response extractor
  * @param response
- * @param assertBusinessError
+ * @param businessResponseExtractor
  */
 declare const objectResponseExtractor: ResponseExtractor<any>;
 /**

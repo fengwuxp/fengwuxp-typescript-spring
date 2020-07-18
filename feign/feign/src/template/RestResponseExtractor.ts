@@ -18,20 +18,24 @@ export const voidResponseExtractor = (response: HttpResponse): Promise<void> => 
 /**
  * default business response extractor
  *
- * @param response
+ * @param responseBody
  * @constructor
  */
-export const DEFAULT_BUSINESS_EXTRACTOR: BusinessResponseExtractorFunction = (response) => Promise.resolve(response.data);
+export const DEFAULT_BUSINESS_EXTRACTOR: BusinessResponseExtractorFunction = (responseBody) => Promise.resolve(responseBody);
 
 /**
  * object response extractor
  * @param response
  * @param businessResponseExtractor
  */
-export const objectResponseExtractor: ResponseExtractor<any> = <E = any>(response: HttpResponse,
-                                                                         businessResponseExtractor: BusinessResponseExtractorFunction = DEFAULT_BUSINESS_EXTRACTOR): Promise<E> => {
+export const objectResponseExtractor: ResponseExtractor = <E = any>(response: HttpResponse,
+                                                                    businessResponseExtractor: BusinessResponseExtractorFunction = DEFAULT_BUSINESS_EXTRACTOR): Promise<E> => {
     if (response.ok) {
-        return businessResponseExtractor(response);
+        if (response.data == null) {
+            // none responseBody
+            return Promise.resolve(undefined);
+        }
+        return businessResponseExtractor(response.data);
     }
     return Promise.reject(response);
 };
