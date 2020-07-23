@@ -56,6 +56,10 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
         this.unifiedFailureToast(response);
     }
 
+    /**
+     * try send unauthorized event
+     * @param response
+     */
     private tryHandleUnAuthorized(response: HttpResponse<any>) {
 
 

@@ -35,7 +35,10 @@ export const objectResponseExtractor: ResponseExtractor = <E = any>(response: Ht
             // none responseBody
             return Promise.resolve(undefined);
         }
-        return businessResponseExtractor(response.data);
+        return businessResponseExtractor(response.data).catch((data) => {
+            response.data = data;
+            return Promise.reject(response);
+        });
     }
     return Promise.reject(response);
 };

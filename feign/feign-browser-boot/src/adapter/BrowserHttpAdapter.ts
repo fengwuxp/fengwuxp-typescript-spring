@@ -49,7 +49,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType) {
         this.timeout = timeout || 5 * 1000;
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
-        this.consumes = consumes || HttpMediaType.APPLICATION_JSON_UTF8;
+        this.consumes = consumes;
     }
 
     send = (req: BrowserHttpRequest): Promise<HttpResponse> => {
@@ -134,7 +134,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     private parse = (response: Response): Promise<any> => {
 
 
-        const {getHeaderByName} = this;
+        const {getHeaderByName, consumes} = this;
         const headers = response.headers;
 
         if (response.body == null) {
@@ -159,10 +159,10 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             }
         }
 
-        const responseMediaType: string = getHeaderByName(headers, contentTypeName);
+        const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
         if (responseMediaType == null) {
             // 未知的content-type
-            return Promise.reject(null);
+            return Promise.resolve(response);
         }
         const responseHeaders = {
             [contentTypeName]: responseMediaType

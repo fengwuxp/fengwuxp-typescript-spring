@@ -1657,7 +1657,7 @@ declare const voidResponseExtractor: (response: HttpResponse) => Promise<void>;
  * @param response
  * @param businessResponseExtractor
  */
-declare const objectResponseExtractor: ResponseExtractor<any>;
+declare const objectResponseExtractor: ResponseExtractor;
 /**
  * head response extractor
  * @param response
@@ -1803,6 +1803,10 @@ declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptio
     constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle?: Function);
     postError: (options: T, response: HttpResponse<any>) => HttpResponse<any> | Promise<never>;
     protected tryToast: (options: T, response: HttpResponse) => void;
+    /**
+     * try send unauthorized event
+     * @param response
+     */
     private tryHandleUnAuthorized;
 }
 
