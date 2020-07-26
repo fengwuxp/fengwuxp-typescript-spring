@@ -96,25 +96,16 @@ export const reduceRightCommandResolvers = (...resolvers: MethodNameCommandResol
  *   pushIndex ==> [push,index]
  *   pushGoodsDetail ==> [push,goods_detail]
  *   clearUserInfo ==> [clear,user_info]
- * @param name
- * @param commonValues        指令value集合
+ * @param name  带指令的名称
  * @param defaultCommand      默认指令
  * @return [command,key]
  */
 export const tryConverterMethodNameCommandResolver = (name: string,
-                                                      commonValues: Array<string>,
                                                       defaultCommand: string): string[] => {
 
-    // 找到匹配度最高的指令，如果没有 则使用默认指令
-    const [_,index] = commonValues.map((val, index) => {
-        const regExp = new RegExp(`^${val}[A-Z]`);
-        // 通过正则表达式
-        return regExp.test(val) ? [index, val.length] : [index, -1]
-    }).reduce((pre, item) => {
-        return pre[1] >= item[1] ? pre : item
-    });
-
-    const command = index >= 0 ? commonValues[index] : defaultCommand
+    // 按照大写字符分隔字符串
+    const [cmd] = name.split(/(?=[A-Z])/);
+    const command = cmd === defaultCommand ? defaultCommand : cmd;
 
     // 明确匹配命令，通过驼峰都方式，防止误伤
     return [command, name.replace(new RegExp(`^${command}[A-Z]`), ($1) => {

@@ -57,11 +57,10 @@ declare const reduceRightCommandResolvers: (...resolvers: MethodNameCommandResol
  *   pushIndex ==> [push,index]
  *   pushGoodsDetail ==> [push,goods_detail]
  *   clearUserInfo ==> [clear,user_info]
- * @param name
- * @param commonValues        指令value集合
+ * @param name  带指令的名称
  * @param defaultCommand      默认指令
  * @return [command,key]
  */
-declare const tryConverterMethodNameCommandResolver: (name: string, commonValues: Array<string>, defaultCommand: string) => string[];
+declare const tryConverterMethodNameCommandResolver: (name: string, defaultCommand: string) => string[];
 
 export { MethodNameCommandResolver, firstUpperCaseToLeftIncline, initialLowercase, initialUpperCase, noneResolver, reduceRightCommandResolvers, repeatTheFirstWord, toHumpResolver, toLineResolver, toLocaleUpperCaseResolver, toUpperCaseResolver, tryConverterMethodNameCommandResolver };

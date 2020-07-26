@@ -1,14 +1,9 @@
 import {AppCommandRouter, RouteUriVariable} from "./AppCommandRouter";
 import {newProxyInstanceEnhance} from "fengwuxp-common-proxy";
-import {NavigatorAdapter} from "./NavigatorAdapter";
 import {RouterCommand} from "./RouterCommand";
 import {RouterCommandConfiguration} from "./RouterCommandConfiguration";
-import {
-    tryConverterPathnameVariableResolver
-} from "./PathnameMethodNameCommandResolver";
 import DefaultWrapperNavigatorAdapter from "./DefaultWrapperNavigatorAdapter";
 import {tryConverterMethodNameCommandResolver} from "fengwuxp-declarative-command";
-import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
 
 
 const ROUTE_COMMAND_VALUES = Object.keys(RouterCommand).map((key) => {
@@ -57,7 +52,7 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
                 let [command, pathname] = [RouterCommand.PUSH as string, methodNameCommandResolver(propertyKey)];
                 if (pathname === propertyKey) {
                     //尝试从方法名称中解析到 指令
-                    const result = tryConverterMethodNameCommandResolver(propertyKey, ROUTE_COMMAND_VALUES, command);
+                    const result = tryConverterMethodNameCommandResolver(propertyKey, command);
                     command = result[0];
                     pathname = initialLowercase(result[1]);
                 }

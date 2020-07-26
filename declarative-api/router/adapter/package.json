@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-declarative-router-adapter",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "description": "declarative router adapter",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

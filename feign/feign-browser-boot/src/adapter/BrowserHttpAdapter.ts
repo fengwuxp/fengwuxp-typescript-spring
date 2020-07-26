@@ -72,7 +72,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
                     //丢弃请求
                     console.debug("web fetch adapter request timeout");
                     reject({
-                        status: HttpStatus.GATEWAY_TIMEOUT,
+                        statusCode: HttpStatus.GATEWAY_TIMEOUT,
                         headers: null,
                         data: null,
                         ok: false,
