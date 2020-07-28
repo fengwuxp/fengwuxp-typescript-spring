@@ -24,16 +24,17 @@ describe("test method resolver", () => {
     });
 
     test("test tryConverterMethodNameCommandResolver", () => {
-        logger.debug("tourismCountryCreate", tryConverterMethodNameCommandResolver("tourismCountryCreate", "push"));
-        logger.debug("toTourismCountryCreate", tryConverterMethodNameCommandResolver("toTourismCountryCreate", "to"));
-        logger.debug("pushTourismCountryCreate", tryConverterMethodNameCommandResolver("pushTourismCountryCreate", "push"));
+        logger.debug("tourismCountryCreate", tryConverterMethodNameCommandResolver("tourismCountryCreate",["to","push"], "push"));
+        logger.debug("toTourismCountryCreate", tryConverterMethodNameCommandResolver("toTourismCountryCreate", ["to","push"],"to"));
+        logger.debug("pushTourismCountryCreate", tryConverterMethodNameCommandResolver("pushTourismCountryCreate", ["to","push"],"push"));
+        logger.debug("popAndPushTourismCountryCreate", tryConverterMethodNameCommandResolver("popAndPushTourismCountryCreate", ["to","push","popAndPush"],"push"));
 
 
     });
 
 
     test("test tryConverterMethodNameCommandResolver 3", () => {
-        logger.debug("get set test", tryConverterMethodNameCommandResolver("setTestAbc", "get"));
+        logger.debug("get set test", tryConverterMethodNameCommandResolver("setTestAbc",["set","get","remove"], "get"));
 
     });
 });

@@ -52,7 +52,7 @@ export const appCommandRouterFactory = <T extends AppCommandRouter>(configuratio
                 let [command, pathname] = [RouterCommand.PUSH as string, methodNameCommandResolver(propertyKey)];
                 if (pathname === propertyKey) {
                     //尝试从方法名称中解析到 指令
-                    const result = tryConverterMethodNameCommandResolver(propertyKey, command);
+                    const result = tryConverterMethodNameCommandResolver(propertyKey, ROUTE_COMMAND_VALUES, command);
                     command = result[0];
                     pathname = initialLowercase(result[1]);
                 }

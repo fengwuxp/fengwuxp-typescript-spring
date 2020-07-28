@@ -97,15 +97,26 @@ export const reduceRightCommandResolvers = (...resolvers: MethodNameCommandResol
  *   pushGoodsDetail ==> [push,goods_detail]
  *   clearUserInfo ==> [clear,user_info]
  * @param name  带指令的名称
+ * @param commonValues  指令列表
  * @param defaultCommand      默认指令
  * @return [command,key]
  */
 export const tryConverterMethodNameCommandResolver = (name: string,
+                                                      commonValues: Array<string>,
                                                       defaultCommand: string): string[] => {
 
-    // 按照大写字符分隔字符串
-    const [cmd] = name.split(/(?=[A-Z])/);
-    const command = cmd === defaultCommand ? defaultCommand : cmd;
+    // // 按照大写字符分隔字符串
+    // const [cmd] = name.split(/(?=[A-Z])/);
+    // const command = cmd === defaultCommand ? defaultCommand : cmd;
+
+    const command = commonValues.filter((value) => {
+        return new RegExp(`^${value}[A-Z]{1,2}`).test(name);
+    }).reduce((prev, val) => {
+        if (prev == null) {
+            return val;
+        }
+        return prev.length > val.length ? prev : val;
+    }, null) || defaultCommand;
 
     // 明确匹配命令，通过驼峰都方式，防止误伤
     return [command, name.replace(new RegExp(`^${command}[A-Z]`), ($1) => {

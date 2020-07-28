@@ -11,9 +11,9 @@ import {
 import {EventBroadcastCommand} from "./EventBroadcastCommand";
 
 
-// const EVENT_BROADCAST_COMMAND_VALUES = Object.keys(EventBroadcastCommand).map((key) => {
-//     return EventBroadcastCommand[key]
-// });
+const EVENT_BROADCAST_COMMAND_VALUES = Object.keys(EventBroadcastCommand).map((key) => {
+    return EventBroadcastCommand[key]
+});
 const initialLowercase = (str: string) => {
     return str.replace(str[0], str[0].toLocaleLowerCase());
 };
@@ -35,7 +35,7 @@ export const appCommandBroadcasterFactory = <T extends AppCommandBroadcaster>(co
             return function (...args: any[]): any {
 
                 //尝试从方法名称中解析到 指令 事件类型
-                let [command, eventType] = tryConverterMethodNameCommandResolver(propertyKey, EventBroadcastCommand.EMIT);
+                let [command, eventType] = tryConverterMethodNameCommandResolver(propertyKey, EVENT_BROADCAST_COMMAND_VALUES, EventBroadcastCommand.EMIT);
                 eventType = methodNameCommandResolver(eventType);
 
                 switch (command) {

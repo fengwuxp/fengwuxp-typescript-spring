@@ -13,9 +13,9 @@ import {StorageCommand} from "./StorageCommand";
 import {DefaultWrapperStorageSyncAdapter} from "./DefaultWrapperStorageSyncAdapter";
 
 
-// const STORAGE_COMMAND_VALUES = Object.keys(StorageCommand).map((key) => {
-//     return StorageCommand[key]
-// });
+const STORAGE_COMMAND_VALUES = Object.keys(StorageCommand).map((key) => {
+    return StorageCommand[key]
+});
 
 
 const SYNC_METHOD_SUFFIX = "Sync";
@@ -50,7 +50,7 @@ export const appCommandStorageFactory = <T extends AppCommandStorage,
                 if (isSyncMethod) {
                     propertyKey = propertyKey.substring(0, propertyKey.length - 4);
                 }
-                let [command, storageKey] = tryConverterMethodNameCommandResolver(propertyKey, StorageCommand.GET);
+                let [command, storageKey] = tryConverterMethodNameCommandResolver(propertyKey, STORAGE_COMMAND_VALUES, StorageCommand.GET);
                 storageKey = storageKey.replace(storageKey[0], storageKey[0].toLocaleLowerCase());
                 storageKey = methodNameCommandResolver(storageKey);
                 switch (command) {
