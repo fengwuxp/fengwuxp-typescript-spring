@@ -3,9 +3,20 @@
 #### spring typescript 版本
 - 目录结构说明
 ```
--boot                      spring-boot
--framework                 spring-framework
--packages                  通用的模块
+- alibaba-cloud                           阿里云相关，例如：oss
+- babel-plugins                           babel插件
+- declarative-api                         指令式api（声明式），例如：路由、存储、事件广播
+- dependency-management                   管理一些常见的衣领
+- feign                                   feign代理
+- framework                               参考spring思路的一些代码生成（为完成），以及spel的实现 
+- log4j                                   日志
+- packages                                通用的工具、代理等实现
+- routing                                 页面路由相关的抽象和实现
+- spring-security
+- starters                                启动器
+- templates                               一些项目模板
+- websocket                               websocket的抽象
+
 ```
 - 实现目标
 ```

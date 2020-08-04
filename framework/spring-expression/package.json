@@ -37,6 +37,8 @@
     "typescript"
   ],
   "devDependencies": {
+    "@types/node": "^12.12.53",
+    "@types/jest": "^24.9.1",
     "fengwuxp-library-starter": "^1.0.0",
     "typescript": "^3.7.2",
     "spel2js": "^0.2.7"

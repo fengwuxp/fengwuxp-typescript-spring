@@ -36,6 +36,9 @@
     "fetch"
   ],
   "devDependencies": {
+    "@types/node": "^12.12.53",
+    "@types/jest": "^24.9.1",
+    "@types/lodash": "^4.14.149",
     "fengwuxp-library-starter": "^1.0.0",
     "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",

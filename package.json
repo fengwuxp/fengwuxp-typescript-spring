@@ -17,7 +17,6 @@
   "homepage": "https://github.com/fengwuxp/wuxp_common_ts_module#readme",
   "scripts": {
     "publish": "node ./scripts/publish.js",
-    "publish:chnh": "node scripts/publish_to_chnh.js",
     "publish:npm": "node scripts/publish_to_npm.js",
     "unpublish:npm": "node scripts/un_publish_to_npm.js",
     "publish:oak:to_js": "node scripts/publish_to_oak.js",

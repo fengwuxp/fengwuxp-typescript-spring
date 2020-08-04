@@ -36,6 +36,19 @@
     "typescript"
   ],
   "dependencies": {
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-declarative-command": "^1.0.1",
+    "fengwuxp-library-starter": "^1.0.0",
+    "fengwuxp-routing-core": "^1.0.0",
+    "fengwuxp-spring-context": "^1.0.3",
+    "fengwuxp-spring-core": "^1.0.3"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.53",
+    "@types/jest": "^24.9.1",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
     "@babel/preset-env": "^7.8.4",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
@@ -44,22 +57,11 @@
     "@babel/types": "^7.0.0",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "core-js": "^3.4.1",
-    "fengwuxp-common-proxy": "^1.0.0",
-    "fengwuxp-common-utils": "^1.0.0",
-    "fengwuxp-declarative-command": "^1.0.1",
-    "fengwuxp-library-starter": "^1.0.0",
-    "fengwuxp-routing-core": "^1.0.0",
-    "fengwuxp-spring-context": "^1.0.3",
-    "fengwuxp-spring-core": "^1.0.3",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "jest": "25.1.0",
     "lodash": "^4.17.15",
     "ts-jest": "25.2.0",
     "typescript": "^3.7.2"
-  },
-  "devDependencies": {
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0"
   }
 }

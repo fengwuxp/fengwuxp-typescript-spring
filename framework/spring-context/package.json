@@ -35,6 +35,11 @@
     "typescript"
   ],
   "dependencies": {
+
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.53",
+    "@types/jest": "^24.9.1",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "@babel/template": "^7.0.0",
@@ -48,6 +53,5 @@
     "fengwuxp-spring-beans": "^1.0.3",
     "fengwuxp-spring-core": "^1.0.0",
     "typescript": "^3.7.2"
-  },
-  "devDependencies": {}
+  }
 }

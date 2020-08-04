@@ -35,6 +35,12 @@
     "typescript"
   ],
   "dependencies": {
+    "xregexp": "^4.2.4",
+    "xregexp-quotemeta": "^1.0.4"
+  },
+  "devDependencies": {
+    "@types/node": "^12.12.53",
+    "@types/jest": "^24.9.1",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "@babel/template": "^7.0.0",
@@ -44,9 +50,6 @@
     "fengwuxp-common-utils": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
     "ts-node": "^8.6.2",
-    "typescript": "^3.7.2",
-    "xregexp": "^4.2.4",
-    "xregexp-quotemeta": "^1.0.4"
-  },
-  "devDependencies": {}
+    "typescript": "^3.7.2"
+  }
 }
