@@ -18,9 +18,10 @@
   "license": "ISC",
   "scripts": {
     "test": "jest --config ./jest.config.js --verbose=false",
-    "build:ts": "rm -rf ./lib && node ./scripts/build.js",
+    "npm:publish": "npm publish",
+    "build:ts": "rm -rf ./lib && tsc",
     "yarn:install": "yarn install",
-    "npm:publish": "npm run test &&  npm run build:ts && npm publish"
+    "publish:lib": "npm run test &&  npm run build:ts && npm publish"
   },
   "devDependencies": {
     "@types/lodash": "^4.14.144",

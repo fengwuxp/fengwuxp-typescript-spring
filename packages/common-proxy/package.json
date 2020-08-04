@@ -38,6 +38,7 @@
     "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
-    "core-js": "^3.4.1"
+    "core-js": "^3.4.1",
+    "tslib": "^2.0.0"
   }
 }
