@@ -37,7 +37,7 @@ export default class RestTemplate implements RestOperations {
 
     delete = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<void> => {
 
-        return this.execute(url, HttpMethod.DELETE, uriVariables, null, voidResponseExtractor, headers);
+        return this.execute(url, HttpMethod.DELETE, uriVariables, null, objectResponseExtractor, headers);
     };
 
     getForEntity = <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<HttpResponse<E>> => {

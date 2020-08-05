@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-typescript-feign",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "typescript feign",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
@@ -42,17 +42,17 @@
   "devDependencies": {
     "@types/node": "^12.12.53",
     "@types/jest": "^24.9.1",
-    "@types/lodash": "^4.14.149",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
     "typescript": "^3.7.2",
-    "lodash": "^4.17.15",
     "rollup-plugin-dts": "^1.2.1",
     "rollup-plugin-typescript2": "^0.26.0"
   },
   "dependencies": {
+    "@types/lodash": "^4.14.149",
+    "lodash": "^4.17.15",
     "@abraham/reflection": "^0.7.0",
     "async-validator": "^3.2.2",
     "es5-shim": "^4.5.9",

@@ -29,11 +29,11 @@ export const DEFAULT_BUSINESS_EXTRACTOR: BusinessResponseExtractorFunction = (re
  * @param businessResponseExtractor
  */
 export const objectResponseExtractor: ResponseExtractor = <E = any>(response: HttpResponse,
-                                                                    businessResponseExtractor: BusinessResponseExtractorFunction = DEFAULT_BUSINESS_EXTRACTOR): Promise<E> => {
+                                                                    businessResponseExtractor: BusinessResponseExtractorFunction = DEFAULT_BUSINESS_EXTRACTOR): Promise<E | void> => {
     if (response.ok) {
         if (response.data == null) {
             // none responseBody
-            return Promise.resolve(undefined);
+            return Promise.resolve();
         }
         return businessResponseExtractor(response.data).catch((data) => {
             response.data = data;
@@ -79,7 +79,7 @@ export const restResponseExtractor = (method: HttpMethod) => {
         case HttpMethod.PATCH:
             return objectResponseExtractor;
         case HttpMethod.DELETE:
-            return voidResponseExtractor;
+            return objectResponseExtractor;
         case HttpMethod.OPTIONS:
             return optionsMethodResponseExtractor;
         case HttpMethod.HEAD:
