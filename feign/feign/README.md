@@ -1,4 +1,22 @@
-#### 通用的fetch请求工具，支持浏览器，weex 微信小程序 ,react-native
+#### 设计
+```
+  1；通过自定义装饰器和动态代理实现。
+  2：通过抽象HttpAdapter解耦不同的js运行环境，通过RestTemplate规范请求。
+  3：通过拦截器增强在请求时由于业务或者场景需要的动态需求。
+  4：通过签名策略加强接口安全信息
+  5：通过接口模块路由映射,支持项目中访问不同域名（业务模块）的接口
+```
+
+#### 功能
+- 支持所有的js环境 (不同环境需要实现不同的适配器，参见:src/adapter/HttpAdapter.ts)
+- 提供拦截器能力
+- 支持网络检查
+- 支持统一请求和响应处理（通过拦截器实现）
+- 支持鉴权（src/client/AuthenticationClientHttpRequestInterceptor.ts）
+- 支持项目中访问不同的模块或第三方的接口 （src/client/RoutingClientHttpRequestInterceptor.ts）
+- 支持接口签名 (src/signature/ApiSignatureStrategy.ts)
+- 支持文件上传（src/upload）
+- 支持数据装换（src/codec/CodecFeignClientExecutorInterceptor.ts）
 
 #### 思路
           1：请求统一由client发出
@@ -11,9 +29,6 @@
 #### 配置
 - 配置将会被缓存，以保证实现了FeignConfiguration接口的类中的方法只会被调用一次，同一个FeignConfiguration的子类只会被实例化一次
 
-#### 扩展自定义环境下的适配器
-      
-      只需要实现对应环境的FetchAdapter接口就可以了
       
 #### 支持数据混淆
 - 请求数据混淆
@@ -22,7 +37,7 @@
 #### 提交前验证
 - [async-validator](https://github.com/yiminghe/async-validator) 
 
-##### 使用方式
+##### 使用方式 (参见 test)
 
           1: http adpater
                不同的平台的的http请求工具
