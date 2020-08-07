@@ -1,7 +1,4 @@
-export type SKUItemKey = string;
-
-export interface SKUItemValue {
-
+export interface Sku {
     id: string | number;
 
     // 价格
@@ -10,104 +7,65 @@ export interface SKUItemValue {
     // 库存
     stock: number;
 
+    // 主图
+    mainImage: string;
+
     // 是否启用
     enabled?: boolean;
+
+    // sku 属性列表
+    attributes: SkuAttribute[];
 }
 
-export type SKU<V extends SKUItemValue> = Record<SKUItemKey, V>
+export interface SkuAttribute {
 
-// 规格值
-export type SpecificationValueItem = {
+    // sku 属性名称
+    name: string;
 
-    // 规格名称
-    specification: string;
-
-    // 规格值
+    // sku 属性值
     value: string;
-
-    // 规格属性的排序
-    specificationIndex?: number;
-
-    // 规格值的排序
-    valueIndex?: number;
 }
 
-export type SelectResult<V extends SKUItemValue> = {
+export type SelectResult<T extends Sku> = {
 
     /**
      * 选中的sku
      */
-    sku?: V;
+    sku?: T;
 
     /**
-     * 选中的规格属性值
+     * 选中的规格属性
      */
-    selected: Array<SpecificationValueItem>;
+    selected: Array<SkuAttribute>;
 
     /*
-    * 无效的规格属性值
+    * 激活的的规格属性
     * */
-    invalid: Array<SpecificationValueItem[]>;
+    active: Array<SkuAttribute[]>;
+};
+
+export interface SkuAttributeValue {
+    name: string;
+    values: string[];
 }
 
-export enum ExpectAction {
-    // 选中
-    SELECTED,
+export interface SKUSelector<T extends Sku = Sku> {
 
-    // 移除
-    REMOVE,
 
-    // 禁用
-    DISABLED
+    /**
+     * 设置默认选中的sku
+     * @param sku
+     */
+    setSelectedSku: (sku: T | number) => Promise<SelectResult<T>>;
+
+    /**
+     * 选中sku属性
+     * @param attribute
+     */
+    onSelected: (attribute: SkuAttribute) => Promise<SelectResult<T>>;
+
+    /**
+     * 获取sku 属性列表
+     */
+    getSkuAttributeValues: () => Array<SkuAttributeValue>;
 }
-
-/**
- * sku 选择器
- */
-export interface SKUSelector<V extends SKUItemValue = SKUItemValue> {
-
-    /**
-     * 选中一个规格
-     * @param    value   规格值
-     * @return   当前选中的规格值以及和当前选中规格组合库存不足的规格
-     */
-    selected: (value: SpecificationValueItem) => Promise<SelectResult<V>>;
-
-    /**
-     * 移除一个规格的选中
-     * @param    value   规格值
-     * @return   当前选中的规格值以及和当前选中规格组合库存不足的规格
-     */
-    remove: (value: SpecificationValueItem) => Promise<SelectResult<V>>;
-
-    /**
-     * 点击一个规格
-     * @param value 规格值
-     * @return   当前选中的规格值以及和当前选中规格组合库存不足的规格
-     */
-    onClick: (value: SpecificationValueItem) => Promise<SelectResult<V>>;
-
-    /**
-     * 选中一个规格商品
-     * @param values
-     */
-    selectedSku: (values: SpecificationValueItem[]) => Promise<SelectResult<V>>;
-
-    /**
-     * 随机选中一个
-     *  @return
-     */
-    randomSelectedSku: () => Promise<SelectResult<V>>
-
-    /**
-     * 移除所有选中，并还原初始状态
-     */
-    clear: () => void;
-}
-
-
-
-
-
-
-

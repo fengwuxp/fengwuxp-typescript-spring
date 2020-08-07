@@ -9,7 +9,7 @@
 
 #### 功能
 - 支持所有的js环境 (不同环境需要实现不同的适配器，参见:src/adapter/HttpAdapter.ts)
-- 提供拦截器能力
+- 提供拦截器能力(AOP)
 - 支持网络检查
 - 支持统一请求和响应处理（通过拦截器实现）
 - 支持鉴权（src/client/AuthenticationClientHttpRequestInterceptor.ts）
