@@ -39,11 +39,12 @@
     "@types/react": "^16.9.13",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2"
-  },
-  "dependencies": {
+    "typescript": "^3.7.2",
     "@tarojs/taro": "^2.0.0-beta.14",
     "feign-boot-stater": "^1.0.0",
     "fengwuxp-typescript-feign": "^1.0.0"
+  },
+  "dependencies": {
+
   }
 }
