@@ -1,6 +1,6 @@
 /// <reference types="lodash" />
 import { RuleItem } from 'async-validator';
-import { Cancelable } from 'lodash';
+import { DebouncedFunc } from 'lodash';
 import { DateFormatType } from 'fengwuxp-common-utils/lib/date/DateFormatUtils';
 import { PathMatcher } from 'fengwuxp-common-utils/lib/match/PathMatcher';
 import { ParsedUrlQueryInput } from 'querystring';
@@ -1172,7 +1172,7 @@ declare class DebounceAuthenticationBroadcaster implements AuthenticationBroadca
     private broadcaster;
     constructor(broadcaster: AuthenticationBroadcaster);
     receiveAuthorizedEvent(handle: () => void): void;
-    sendUnAuthorizedEvent: (() => void) & Cancelable;
+    sendUnAuthorizedEvent: DebouncedFunc<() => void>;
 }
 
 /**
