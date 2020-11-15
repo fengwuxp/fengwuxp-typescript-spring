@@ -118,7 +118,6 @@ export {AbstractRequestFileObjectEncoder} from "./upload/AbstractRequestFileObje
 export {
     FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface
 } from "./upload/FileUploadStrategy"
-// export {AbstractFileUploadStrategy} from "./upload/AbstractFileUploadStrategy"
 
 export {mediaTypeIsEq, responseIsJson, responseIsFile, responseIsText} from "./utils/MediaTypeUtil";
 export {

@@ -1,18 +1,21 @@
 import FilePathScanningCandidateProgramProvider
     from "fengwuxp-spring-context/esnext/context/annotation/FilePathScanningCandidateProgramProvider";
-import DefaultExportTypeFilter from "fengwuxp-spring-core/esnext/babel/type/DefaultExportTypeFilter";
 import {
-    ArgumentPlaceholder,
-    CallExpression, Expression,
+    CallExpression,
     File,
     Identifier,
     isArrowFunctionExpression,
     isCallExpression,
     isClassDeclaration,
     isDecorator,
-    isIdentifier, isMemberExpression, isStringLiteral,
-    isVariableDeclaration, JSXNamespacedName,
-    ObjectExpression, ObjectMethod, ObjectProperty, SpreadElement,
+    isIdentifier,
+    isMemberExpression,
+    isStringLiteral,
+    isVariableDeclaration,
+    ObjectExpression,
+    ObjectMethod,
+    ObjectProperty,
+    SpreadElement,
     TSTypeAnnotation,
     TSTypeParameterInstantiation,
     TSTypeReference
@@ -126,8 +129,6 @@ export const getSimplePathname = (scanPackages: string[], filepath: string): str
     if (dir == null) {
         return [filename];
     }
-
-
     return [dir, filename];
 };
 
@@ -161,8 +162,7 @@ const defaultPathnameTransformToMethodName = (pathname: string) => {
         return letter.toUpperCase();
     });
     const method = initialLowercase(methodName);
-    const s = toHumpResolver(method);
-    return s
+    return toHumpResolver(method)
 };
 
 /**
@@ -302,7 +302,6 @@ export default class ReactRouteConfigGenerator {
                 parentRoute = routes.find((route) => {
                     return route.component === parentImportPath;
                 });
-
             }
             if (parentRoute == null) {
                 logger.error("路由配置未找到父页面 ", subRoute)
@@ -597,7 +596,6 @@ export default class ReactRouteConfigGenerator {
                             name: tSTypeReference.typeName.name
                         }
                     }
-
                 }
             }
         }

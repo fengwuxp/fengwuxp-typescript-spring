@@ -1,5 +1,4 @@
 import {CodeGeneratorOptions} from "../CodeGeneratorOptions";
-import {GenerateSpringReactRouteOptions} from "../GenerateSpringReactRouteOptions";
 
 
 export enum RouteLevel {
