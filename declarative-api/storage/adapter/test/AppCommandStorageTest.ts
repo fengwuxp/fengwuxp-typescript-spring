@@ -35,6 +35,7 @@ describe("test  app command storage factory", () => {
 
 
     const mockAppStorage = appCommandStorageFactory<MockAppCommandStorage>({
+
         methodNameCommandResolver: function () {
             return reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver);
         },
@@ -92,12 +93,12 @@ describe("test  app command storage factory", () => {
         },
         storageUpdateStrategy: function () {
             return (key): Promise<any> => {
-                console.log("刷新数据");
+                logger.debug("刷新数据", key);
                 return Promise.resolve(1);
             };
         }
 
-    });
+    }, "MOCK_");
 
 
     test("test mock app storage", async () => {

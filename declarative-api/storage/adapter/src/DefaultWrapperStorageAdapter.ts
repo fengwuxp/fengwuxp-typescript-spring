@@ -62,10 +62,10 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
 
 
     getStorage = <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => {
-
+        const reelKey = this.genKey(key);
         // 如果存在配置项，则进行验证，例如过期时间
         // 尝试使用更新策略，自动更新数据
-        return this.storageAdapter.getStorage<T>(key).then((data) => {
+        return this.storageAdapter.getStorage<T>(reelKey).then((data) => {
             if (data == null) {
                 // data is null or undefined
                 return Promise.reject();
@@ -85,9 +85,9 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
             if (this.isItEffective(localStorageOptions)) {
                 return result;
             }
-            return this.updateStorageItem(StorageStatus.INVALID, key, options, localStorageOptions);
+            return this.updateStorageItem(StorageStatus.INVALID, reelKey, options, localStorageOptions);
         }).catch((e) => {
-            return this.updateStorageItem(e, key, options, undefined);
+            return this.updateStorageItem(e, reelKey, options, undefined);
         })
     };
 
