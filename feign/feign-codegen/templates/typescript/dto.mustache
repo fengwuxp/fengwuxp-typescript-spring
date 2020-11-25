@@ -1,0 +1,15 @@
+/* tslint:disable */
+{{#dependencies}}
+import { {{name}} } from "{{&fullname}}";
+{{/dependencies}}
+/**
+ * {{desc}}
+ **/
+export interface {{name}} {
+
+{{#fields}}
+   {{>memberDesc}}
+   {{name}}{{^required}}?{{/required}}: {{&typeDefinition}};
+
+{{/fields}}
+}

@@ -1,6 +1,6 @@
 import * as log4js from "log4js";
-import {SKU, SKUItemValue, SpecificationValueItem} from "../../src/sku/SKUSelector";
 import DefaultSKUSelector from "../../src/sku/DefaultSKUSelector";
+import {Sku} from "../../src/sku/SKUSelector";
 
 
 const logger = log4js.getLogger();
@@ -8,126 +8,117 @@ logger.level = 'debug';
 
 describe("sku select", () => {
 
-    const sku: SKU<SKUItemValue> = {
-        '4G/白色/电信': {id: 1, price: 2, stock: 0},
-        '4G/黑色/电信': {id: 1, price: 2, stock: 10},
-        '4G/金色/电信': {id: 1, price: 2, stock: 10},
-
-        '4G/白色/移动': {id: 1, price: 2, stock: 0},
-        '4G/黑色/移动': {id: 1, price: 2, stock: 10},
-        '4G/金色/移动': {id: 1, price: 2, stock: 0},
-
-        '4G/白色/联通': {id: 1, price: 2, stock: 0},
-        '4G/黑色/联通': {id: 1, price: 2, stock: 0},
-        '4G/金色/联通': {id: 1, price: 2, stock: 10},
-
-        '5G/白色/电信': {id: 1, price: 2, stock: 10},
-        '5G/黑色/电信': {id: 1, price: 2, stock: 10},
-        '5G/金色/电信': {id: 1, price: 2, stock: 10},
-
-        '5G/白色/移动': {id: 1, price: 2, stock: 10},
-        '5G/黑色/移动': {id: 1, price: 2, stock: 10},
-        '5G/金色/移动': {id: 1, price: 2, stock: 10},
-
-        // '5G/白色/联通': {id: 1, price: 2, stock: 10},
-        // '5G/黑色/联通': {id: 1, price: 2, stock: 10},
-        // '5G/金色/联通': {id: 1, price: 2, stock: 10},
-    };
-
-    const specificationAttrValues: SpecificationValueItem[][] = [
-        [
-            {
-                specification: "网络",
-                value: "4G",
-                specificationIndex: 0,
-                valueIndex: 0
-            },
-            {
-                specification: "网络",
-                value: "5G",
-                specificationIndex: 0,
-                valueIndex: 1
-            },
-        ],
-        [
-            {
-                specification: "颜色",
-                value: "白色",
-                specificationIndex: 1,
-                valueIndex: 0
-            },
-            {
-                specification: "颜色",
-                value: "黑色",
-                specificationIndex: 1,
-                valueIndex: 1
-            },
-            {
-                specification: "颜色",
-                value: "金色",
-                specificationIndex: 1,
-                valueIndex: 2
-            },
-        ],
-        [
-            {
-                specification: "运营商",
-                value: "电信",
-                specificationIndex: 2,
-                valueIndex: 0
-            },
-            {
-                specification: "运营商",
-                value: "移动",
-                specificationIndex: 2,
-                valueIndex: 1
-            },
-            {
-                specification: "运营商",
-                value: "联通",
-                specificationIndex: 2,
-                valueIndex: 2
-            }
-
-        ]
+    const sku: Sku[] = [
+        {
+            id: 1,
+            enabled: true,
+            mainImage: "",
+            price: 1,
+            stock: 10,
+            attributes: [
+                {
+                    name: "颜色",
+                    value: "白色"
+                },
+                {
+                    name: "内存",
+                    value: "4G"
+                },
+                {
+                    name: "运营商",
+                    value: "电信"
+                }
+            ]
+        },
+        {
+            id: 2,
+            enabled: true,
+            mainImage: "",
+            price: 2,
+            stock: 1,
+            attributes: [
+                {
+                    name: "颜色",
+                    value: "黑色"
+                },
+                {
+                    name: "内存",
+                    value: "4G"
+                },
+                {
+                    name: "运营商",
+                    value: "电信"
+                }
+            ]
+        },
+        {
+            id: 3,
+            enabled: true,
+            mainImage: "",
+            price: 3,
+            stock: 3,
+            attributes: [
+                {
+                    name: "颜色",
+                    value: "银色"
+                },
+                {
+                    name: "内存",
+                    value: "4G"
+                },
+                {
+                    name: "运营商",
+                    value: "电信"
+                }
+            ]
+        }
     ];
+
 
     test("test default sku selector", async () => {
 
 
-        const defaultSKUSelector = new DefaultSKUSelector(sku, specificationAttrValues);
-
-        await defaultSKUSelector.onClick(
+        const defaultSKUSelector = new DefaultSKUSelector(sku, [
             {
-                specification: "网络",
-                value: "4G",
-                specificationIndex: 0,
-                valueIndex: 0
-            }).then((result) => {
+                name: "颜色",
+                values: ["白色", "黑色", "银色"]
+            },
+            {
+                name: "内存",
+                values: ["4G", "6G", "8G"]
+            },
+            {
+                name: "运营商",
+                values: ["电信", "移动", "联通"]
+            }
+        ]);
+
+        await defaultSKUSelector.onSelected(
+            {
+                name: "颜色",
+                value: "银色"
+            }
+        ).then((result) => {
             logger.debug("选中结果", result);
         });
 
 
-        await defaultSKUSelector.selected(
+        await defaultSKUSelector.onSelected(
             {
-                specification: "颜色",
-                value: "金色",
-                specificationIndex: 1,
-                valueIndex: 2
+                name: "内存",
+                value: "4G"
             }).then((result) => {
             logger.debug("选中结果==>2", result);
         });
 
-        await defaultSKUSelector.selected(
+        await defaultSKUSelector.onSelected(
             {
-                specification: "运营商",
-                value: "电信",
-                specificationIndex: 2,
-                valueIndex: 0
+                name: "运营商",
+                value: "电信"
             }).then((result) => {
             logger.debug("选中结果==>3", result);
         });
-    },10 * 1000)
+    }, 10 * 1000)
 
 });
 

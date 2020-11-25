@@ -1,13 +1,7 @@
 import * as log4js from "log4js";
 import TestFeignClient from "./TestFeignClient";
 import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationRegistry";
-import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
-import ClientRequestDataValidatorHolder from "../src/validator/ClientRequestDataValidatorHolder";
 import ExampleFeignClient from "./ExampleFeignClient";
-import CodecFeignClientExecutorInterceptor from "../src/codec/CodecFeignClientExecutorInterceptor";
-import DateEncoder from "../src/codec/DateEncoder";
-import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
-import {FeignRequestOptions, FileUploadProgressBarOptions} from "../src";
 import MockFeignConfigurationTest from "./MockFeignConfigurationTest";
 
 

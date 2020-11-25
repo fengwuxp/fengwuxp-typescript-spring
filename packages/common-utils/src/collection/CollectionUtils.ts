@@ -38,5 +38,12 @@ export function indexOfToArray<T, K extends keyof T, E extends T = T>(list: Arra
             return value[equalsKey] == obj[equalsKey];
         }
     })
+}
 
+/**
+ * 数组是否为 empty
+ * @param array
+ */
+export const isEmpty = (array: Array<any>): boolean => {
+    return array == null || array.length == 0;
 }

@@ -1,0 +1,38 @@
+{
+  "compilerOptions": {
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "resolveJsonModule": true,
+    "downlevelIteration": true,
+    "module": "esnext",
+    "target": "esnext",
+    "sourceMap": false,
+    "baseUrl": "./src",
+    "importHelpers": true,
+    "types": [
+      "node",
+      "jest"
+    ],
+    "lib": [
+      "esnext",
+      "es6",
+      "es7",
+      "es2018",
+      "es2018.promise"
+    ]
+  },
+  "include": [
+    "./src/**/*",
+    "./test/**/*",
+    "./types/**/*.d.ts",
+    "node_modules/**/*/types/**/*.d.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.spec.ts"
+  ]
+}
