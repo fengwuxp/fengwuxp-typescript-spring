@@ -2,14 +2,18 @@
 {{#dependencies}}
 import { {{name}} } from "{{&fullname}}";
 {{/dependencies}}
+
 /**
  * {{desc}}
  **/
 export interface {{name}} {
 
 {{#fields}}
-   {{>memberDesc}}
-   {{name}}{{^required}}?{{/required}}: {{&typeDefinition}};
-
+   {{#if desc }}
+   /**
+    * {{desc}}
+    **/
+   {{/if}}
+   {{name}}{{^required}}?{{/required}}: {{&filedType.genericName}};
 {{/fields}}
 }

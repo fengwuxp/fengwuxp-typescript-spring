@@ -41,6 +41,22 @@ export interface TypeDefinition extends CodeGenBaseDefinition {
      * 完整名称 {@link #package}+{@link TypeDefinition#name}
      */
     fullname?: string;
+
+    /**
+     * 类型变量
+     */
+    typeVariables?: TypeDefinition[];
+
+    /**
+     * 带泛型的名称，默认为name
+     * {@link TypeDefinition#name}
+     */
+    genericName: string;
+
+    /***
+     * 泛型描述
+     */
+    genericDescription?: string;
 }
 
 /**
@@ -52,6 +68,16 @@ export interface MethodDefinition extends CodeGenBaseDefinition {
      * 注解、元数据描述
      */
     annotations?: AnnotationDefinition[];
+
+    /**
+     * 返回值
+     */
+    returnType: TypeDefinition;
+
+    /**
+     * 参数
+     */
+    params?: Array<{ name: string, parameterType: TypeDefinition }>;
 }
 
 /**
@@ -66,9 +92,9 @@ export interface FiledDefinition extends CodeGenBaseDefinition {
     required?: boolean;
 
     /**
-     * 类型描述
+     * 字段类型
      */
-    typeDefinition: string;
+    filedType: TypeDefinition;
 
     /**
      * 注解、元数据描述
@@ -76,4 +102,5 @@ export interface FiledDefinition extends CodeGenBaseDefinition {
     annotations?: AnnotationDefinition[];
 
 }
+
 

@@ -6,7 +6,11 @@
 export enum {{name}} {
 
 {{#fields}}
-   {{>memberDesc}}
+    {{#if desc }}
+    /**
+     * {{desc}}
+     **/
+    {{/if}}
    {{name}} = "{{name}}",
 {{/fields}}
 }

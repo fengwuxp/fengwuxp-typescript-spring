@@ -3,59 +3,45 @@ import {TypeDefinition} from 'model/TypeDefinition';
 import FileTemplateLoader, {TemplateLoader} from "./TemplateLoader";
 import {TemplateFileName, TemplateType} from "../enums/TemplateType";
 import {ClassDefinitionType} from "../enums/ClassDefinitionType";
-import {LanguageDescription} from "../model/LanguageDescription";
-import Mustache from "mustache";
+import {LanguageDescription, NONE} from "../model/LanguageDescription";
+import Handlebars, {HelperOptions} from "handlebars";
 import {isEmpty} from "fengwuxp-common-utils/lib/collection/CollectionUtils";
 import * as log4js from "log4js";
 
-const logger = log4js.getLogger("MustacheTemplateBuildStrategy");
+const logger = log4js.getLogger("HbsTemplateBuildStrategy");
+
 
 /**
- * 生成注释的模板
- **/
-const descTemplate = `
-{{#desc}}
- /**
-  * {{desc}}
-  **/
- {{/desc}}
-`
-
-/**
- * https://github.com/janl/mustache.js
+ * https://github.com/handlebars-lang/handlebars.js
  */
-export default class MustacheTemplateBuildStrategy<T extends TypeDefinition = TypeDefinition> implements TemplateBuildStrategy<T> {
+export default class HbsTemplateBuildStrategy<T extends TypeDefinition = TypeDefinition> implements TemplateBuildStrategy<T> {
 
     private templateLoader: TemplateLoader;
 
     private outputStrategy: TemplateOutputStrategy<T>;
 
+    private partialsGenerator: (data: T, loader: TemplateLoader) => { [name: string]: HandlebarsTemplateDelegate };
 
     constructor(language: LanguageDescription,
                 outputStrategy: TemplateOutputStrategy<T>,
-                templateLoader: TemplateLoader = new FileTemplateLoader(TemplateType.MUSTACHE, language)) {
+                partialsGenerator?: (data: T, loader: TemplateLoader) => { [name: string]: HandlebarsTemplateDelegate },
+                templateLoader: TemplateLoader = new FileTemplateLoader(TemplateType.HBS, language)) {
         this.outputStrategy = outputStrategy;
         this.templateLoader = templateLoader;
+        this.partialsGenerator = partialsGenerator;
     }
 
     build = (data: T): void => {
-        const {templateLoader, outputStrategy, getTemplateName, getComments} = this;
+        const {templateLoader, outputStrategy, partialsGenerator, getTemplateName} = this;
         const templateName = getTemplateName(data);
         const template = templateLoader.load(templateName);
         if (template == null) {
             logger.warn("未找到数据：{}对应的模板文件", data);
         }
-        // let partials = {fieldDesc: descTemplate};
-        let index = -1;
-        const comments = getComments(data);
-        const result = Mustache.render(template, data, (name) => {
-            index++;
-            if (name === "memberDesc") {
-                // 渲染成员（成员方法或成员变量）注释
-                return Mustache.render(descTemplate, {desc: comments[index]});
-            }
-            return "";
-        });
+        const templateDelegate = Handlebars.compile(template);
+        const result = templateDelegate(data, {
+            partials: partialsGenerator(data, new FileTemplateLoader(TemplateType.HBS, NONE))
+        })
         outputStrategy.output(data, templateName, result)
     }
 
@@ -71,21 +57,6 @@ export default class MustacheTemplateBuildStrategy<T extends TypeDefinition = Ty
             return TemplateFileName.FEIGN_CLIENT;
         }
         return null;
-    }
-
-    private getComments = (data: T) => {
-        const {fields, methods} = data;
-        if (isEmpty(methods) && !isEmpty(fields)) {
-            return fields.map(field => {
-                return field.desc;
-            });
-        }
-        if (isEmpty(fields) && !isEmpty(methods)) {
-            return methods.map(field => {
-                return field.desc;
-            });
-        }
-        return [];
     }
 
 }

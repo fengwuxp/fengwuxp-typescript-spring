@@ -1,0 +1,36 @@
+/* tslint:disable */
+import {
+Feign,
+RequestMapping,
+PostMapping,
+DeleteMapping,
+GetMapping,
+PutMapping,
+Signature,
+HttpMediaType,
+AuthenticationType,
+FeignRequestOptions} from "fengwuxp-typescript-feign";
+{{#dependencies}}
+    import { {{name}} } from "{{&fullname}}";
+{{/dependencies}}
+
+/**
+* {{desc}}
+**/
+class {{name}}{
+
+{{#methods}}
+    {{#if desc }}
+        /**
+        * {{desc}}
+        **/
+    {{/if}}
+    {{#annotations}}
+        @{{name}}({ {{#each namedArguments}}{{#if @this }}{{@key}}: {{&@this}},{{/if}}{{/each}} })
+    {{/annotations}}
+    {{name}}:({{#if params }}{{#params}}req: {{parameterType.name}}{{/params}}{{else}}req?: undefined | null{{/if}}, option?: FeignRequestOptions) => Promise<{{&returnType.genericName}}>;
+
+{{/methods}}
+}
+
+export default new {{name}}()

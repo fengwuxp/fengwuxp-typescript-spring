@@ -1,4 +1,4 @@
-export interface OpenApiParser<T> {
+export interface OpenApiParser<T = any> {
 
     parse: () => Promise<T>
 }

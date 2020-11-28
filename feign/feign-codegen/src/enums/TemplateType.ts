@@ -10,5 +10,7 @@ export enum TemplateFileName {
 
 export enum TemplateType {
 
-    MUSTACHE = "mustache"
+    // MUSTACHE = "mustache",
+
+    HBS="hbs"
 }

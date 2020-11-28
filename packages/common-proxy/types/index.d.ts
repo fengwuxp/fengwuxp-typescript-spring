@@ -32,7 +32,8 @@ declare const enum ProxyScope {
     PROPERTY = 2,
     /**
      * 仅处理属性的get
-     */
+     *
+    ONLY_GET,
     /**
      * 仅处理属性set
      */

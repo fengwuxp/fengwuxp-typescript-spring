@@ -1,3 +1,6 @@
+/**
+ * 语言描述
+ */
 export interface LanguageDescription {
 
     /**
@@ -25,4 +28,5 @@ const createLanguageDescription = (name: string, extension: string, templateDir:
     }
 }
 
+export const NONE = createLanguageDescription("", "")
 export const TYPESCRIPT = createLanguageDescription("typescript", "ts")
