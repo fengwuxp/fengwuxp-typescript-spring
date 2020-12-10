@@ -4,7 +4,7 @@ import FileTemplateLoader, {TemplateLoader} from "./TemplateLoader";
 import {TemplateFileName, TemplateType} from "../enums/TemplateType";
 import {ClassDefinitionType} from "../enums/ClassDefinitionType";
 import {LanguageDescription, NONE} from "../model/LanguageDescription";
-import Handlebars, {HelperOptions} from "handlebars";
+import Handlebars from "handlebars";
 import {isEmpty} from "fengwuxp-common-utils/lib/collection/CollectionUtils";
 import * as log4js from "log4js";
 

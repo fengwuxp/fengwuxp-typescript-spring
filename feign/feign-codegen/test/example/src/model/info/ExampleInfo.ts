@@ -3,7 +3,7 @@
 /**
  * 
  **/
-export interface QueryExampleReq {
+export interface ExampleInfo {
 
    age?: number;
 }

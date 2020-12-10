@@ -1,8 +1,9 @@
 import {TypeDefinition} from "../model/TypeDefinition";
-import {createTypeDefinition} from "../util/TypeDefinitionUtil";
+import {createTypeDefinition} from "../util/TypeDefinitionUtils";
 
 
 export const VOID: TypeDefinition = createTypeDefinition("void");
+
 export const NUMBER: TypeDefinition = createTypeDefinition("number");
 
 export const BOOLEAN: TypeDefinition = createTypeDefinition("boolean");

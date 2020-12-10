@@ -1,4 +1,3 @@
-import Mustache from "mustache";
 import Handlebars from "handlebars";
 import * as path from "path";
 import * as fs from "fs";
@@ -12,25 +11,24 @@ import SimpleTemplateOutputStrategy from "../src/template/SimpleTemplateOutputSt
 import {TemplateLoader} from "../src/template/TemplateLoader";
 import {isEmpty} from "fengwuxp-common-utils/lib/collection/CollectionUtils";
 import {NUMBER, STRING, VOID} from '../src/language/TypescriptTypeDefinition';
-import {createTypeDefinition} from "../src/util/TypeDefinitionUtil";
-import {AuthenticationType, HttpMethod} from "../../feign/src";
+import {createTypeDefinition} from "../src/util/TypeDefinitionUtils";
+import {OUTPUT_DIR_TAG} from '../src/constant/ConstantVariables';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
-describe("test mustache template", () => {
 
-    test("remote api swagger3", async () => {
+describe("test hbs template", () => {
+
+    test("hbs simple", async () => {
         const view = {
             title: "Joe",
             calc: function () {
                 return 2 + 4;
             }
         };
-
-        const result = Mustache.render("{{title}} spends {{calc}}", view);
-        logger.debug(result);
         const templateDelegate = Handlebars.compile("{{title}} spends {{calc}}");
-        logger.debug(templateDelegate(view))
+        logger.debug(templateDelegate(view));
+
     });
 
     const outputDir = path.resolve(__dirname, "example/src");
@@ -52,7 +50,7 @@ describe("test mustache template", () => {
     const templateBuildStrategy: TemplateBuildStrategy<TypeDefinition> = new HbsTemplateBuildStrategy(TYPESCRIPT,
         new SimpleTemplateOutputStrategy(outputDir, TYPESCRIPT),
         (data, loader: TemplateLoader) => {
-            const descTemplate = loader.load("desc");
+            const descTemplate = "";
             return {
                 memberDesc: Handlebars.compile(descTemplate)
             }
@@ -61,7 +59,7 @@ describe("test mustache template", () => {
         type: ClassDefinitionType.ENUM,
         name: "Sex",
         desc: "性别",
-        package: "src/enums/",
+        package: "../enums/",
         fields: [
             {
                 name: "MAN",
@@ -78,14 +76,16 @@ describe("test mustache template", () => {
         ]
     });
     const dtos: TypeDefinition[] = [
-
         createTypeDefinition("ExampleReq", {
             type: ClassDefinitionType.CLASS,
             name: "ExampleReq",
-            genericName: "",
+            package: "../model/req/",
             desc: "这是一个样例描述",
             dependencies: [
                 Sex
+            ],
+            tags: [
+                `${OUTPUT_DIR_TAG}req`
             ],
             fields: [
                 {
@@ -121,6 +121,16 @@ describe("test mustache template", () => {
         Sex
     ]
 
+    const codegen = (definition: TypeDefinition) => {
+        templateBuildStrategy.build(definition);
+        const typeDefinitions = definition.dependencies;
+        if (typeDefinitions == null) {
+            return
+        }
+        typeDefinitions.forEach((value, index, array) => {
+            codegen(value);
+        })
+    }
 
     test("dto object codegen", () => {
 
@@ -132,7 +142,11 @@ describe("test mustache template", () => {
 
     test("feign client  codegen", () => {
 
-        const ExampleReq = createTypeDefinition("QueryExampleReq", {
+        const ExampleInfo = createTypeDefinition("ExampleInfo", {
+            package: "../model/info/",
+            tags: [
+                `${OUTPUT_DIR_TAG}info`
+            ],
             fields: [
                 {
                     name: "age",
@@ -143,19 +157,28 @@ describe("test mustache template", () => {
         const exampleClients: TypeDefinition[] = [
             createTypeDefinition("ExampleFeignClient", {
                 dependencies: [
-                    ExampleReq
+                    ExampleInfo,
+                    ...dtos
+                ],
+                annotations: [
+                    {
+                        name: "Feign",
+                        namedArguments: {
+                            value: "'/example'"
+                        },
+                        positionArguments: ["/example"]
+                    }
                 ],
                 methods: [
                     {
                         name: "queryExample",
                         desc: "查询测试",
-                        returnType: NUMBER,
+                        returnType: ExampleInfo,
                         annotations: [
                             {
                                 name: "GetMapping",
                                 namedArguments: {
                                     value: "'/query_example'",
-                                    method: "HttpMethod.GET",
                                     authenticationType: "AuthenticationType.TRY",
                                 },
                                 positionArguments: ["/query_example"]
@@ -171,7 +194,6 @@ describe("test mustache template", () => {
                                 name: "PostMapping",
                                 namedArguments: {
                                     value: "'/post_example'",
-                                    method: "HttpMethod.POST",
                                     authenticationType: "AuthenticationType.TRY",
                                 },
                                 positionArguments: ["/query_example"]
@@ -180,7 +202,7 @@ describe("test mustache template", () => {
                         params: [
                             {
                                 name: "req",
-                                parameterType: ExampleReq
+                                parameterType: dtos[0]
                             }
                         ]
                     }
@@ -189,11 +211,9 @@ describe("test mustache template", () => {
         ]
 
         exampleClients.forEach((value) => {
-            value.dependencies.forEach((dto) => {
-                templateBuildStrategy.build(dto);
-            });
-            templateBuildStrategy.build(value);
+            codegen(value);
         });
-        // fs.rmdirSync(outputDir, {recursive: true});
+
+        fs.rmdirSync(outputDir, {recursive: true});
     })
 })

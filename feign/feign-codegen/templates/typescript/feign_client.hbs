@@ -17,6 +17,9 @@ FeignRequestOptions} from "fengwuxp-typescript-feign";
 /**
 * {{desc}}
 **/
+{{#annotations}}
+    @{{name}}({ {{#each namedArguments}}{{#if @this }}{{@key}}: {{&@this}},{{/if}}{{/each}} })
+{{/annotations}}
 class {{name}}{
 
 {{#methods}}

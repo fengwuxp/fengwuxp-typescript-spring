@@ -57,6 +57,7 @@ export interface TypeDefinition extends CodeGenBaseDefinition {
      * 泛型描述
      */
     genericDescription?: string;
+
 }
 
 /**

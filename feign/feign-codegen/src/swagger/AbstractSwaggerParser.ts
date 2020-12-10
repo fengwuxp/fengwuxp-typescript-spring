@@ -1,42 +1,51 @@
-import {OpenApiParser} from "../OpenApiParser";
 import SwaggerParser from "@apidevtools/swagger-parser";
 import {OpenAPI, OpenAPIV2, OpenAPIV3} from "openapi-types";
 import {TypeDefinition} from "../model/TypeDefinition";
-import {SwaggerApiVersion} from "../enums/SwaggerApiVersion";
+import {OpenApiVersion} from "../enums/OpenApiVersion";
+import {OpenApiCodegenOptions} from "../OpenApiCodegenOptions";
+import {SwaggerOpenApiParser} from './SwaggerOpenApiSupport';
 
 
-export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefinition> implements OpenApiParser<T[]> {
+export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefinition> implements SwaggerOpenApiParser<T>{
 
     protected api: string | OpenAPI.Document;
 
-    protected options: SwaggerParser.Options;
+    protected swaggerOptions: SwaggerParser.Options;
 
-    protected version: SwaggerApiVersion;
+    protected version: OpenApiVersion;
+
+    protected codegenOptions: OpenApiCodegenOptions
 
 
-    constructor(api: string | OpenAPI.Document, version: number = SwaggerApiVersion.V3, options: SwaggerParser.Options = {
+    constructor(api: string | OpenAPI.Document, swaggerOptions: SwaggerParser.Options = {
         parse: {
             json: true
         }
     }) {
         this.api = api;
-        this.options = options;
-        this.version = version;
+        this.swaggerOptions = swaggerOptions;
     }
 
     parse = async (): Promise<T[]> => {
-        const {api, options} = this;
-        const document = await SwaggerParser.validate(api, options);
+        const {api, swaggerOptions} = this;
+        const document = await SwaggerParser.validate(api, swaggerOptions);
+        if (document['openapi'] != null) {
+            this.version = OpenApiVersion.V3;
+        }
         const definitions = this.isV3() ? this.transformV3(document as OpenAPIV3.Document) : this.transformV2(document as OpenAPIV2.Document);
         return Promise.resolve(definitions);
     }
 
     protected isV3 = () => {
-        return SwaggerApiVersion.V3 === this.version;
+        return OpenApiVersion.V3 === this.version;
     }
 
     protected abstract transformV2: (document: OpenAPIV2.Document) => T[];
     protected abstract transformV3: (document: OpenAPIV3.Document) => T[];
+
+    setOpenApiCodegenOptions = (options: OpenApiCodegenOptions): void => {
+        this.codegenOptions = options;
+    }
 
 
 }

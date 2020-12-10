@@ -4,6 +4,7 @@ import * as fs from "fs";
 import {TypeDefinition} from "../model/TypeDefinition";
 import {TemplateFileName} from '../enums/TemplateType';
 import {LanguageDescription} from '../model/LanguageDescription';
+import {OUTPUT_DIR_TAG} from '../constant/ConstantVariables';
 
 
 export default class SimpleTemplateOutputStrategy<T extends TypeDefinition = TypeDefinition> implements TemplateOutputStrategy<T> {
@@ -30,7 +31,17 @@ export default class SimpleTemplateOutputStrategy<T extends TypeDefinition = Typ
 
     output = (renderData: T, templateName: string, renderResult: string): string => {
         const {outputDir, language} = this
-        const output = SimpleTemplateOutputStrategy.TEMPLATE_OUTPUT_MAP[templateName];
+        let output = SimpleTemplateOutputStrategy.TEMPLATE_OUTPUT_MAP[templateName];
+        const tags = renderData.tags;
+        if (tags != null) {
+            const outputTag: string = tags.filter(value => {
+                return value.startsWith(OUTPUT_DIR_TAG);
+            })[0];
+            if (outputTag != null) {
+                const values = outputTag.split("@");
+                output = `${output}/${values[1]}`;
+            }
+        }
 
         const outputTargetDir = path.resolve(outputDir, output);
         if (!fs.existsSync(outputTargetDir)) {
