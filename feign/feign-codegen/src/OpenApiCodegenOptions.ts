@@ -1,4 +1,5 @@
 import {Language} from './enums/Language';
+import {TypeDefinition} from "./model/TypeDefinition";
 
 /**
  * 代码生成的配置
@@ -17,6 +18,19 @@ export interface OpenApiCodegenOptions {
      * @param uri 请求路径
      */
     getFeignClientName: (tageName: string, tageDesc: string, uri: string) => string;
+
+    /**
+     * 用于标记识别统一响应对象
+     * @param typeDefinition
+     * @see #unifiedResponseObjectFields
+     */
+    markUnifiedResponseObject?: (typeDefinition: TypeDefinition) => boolean;
+
+    /**
+     * 统一响应对象的字段列表，用于识别统一响应对象
+     * @see #markUnifiedResponseObject
+     */
+    unifiedResponseObjectFields?: string[];
 }
 
 
