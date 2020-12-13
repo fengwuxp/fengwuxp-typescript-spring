@@ -39,7 +39,7 @@ export default class HbsTemplateBuildStrategy<T extends TypeDefinition = TypeDef
             logger.warn("未找到数据：{}对应的模板文件", data);
         }
         const templateDelegate = Handlebars.compile(template);
-        const result = templateDelegate(data, {
+        const result = templateDelegate(data, typeof partialsGenerator === "function" && {
             partials: partialsGenerator(data, new FileTemplateLoader(TemplateType.HBS, NONE))
         })
         outputStrategy.output(data, templateName, result)

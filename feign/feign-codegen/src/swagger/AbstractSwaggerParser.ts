@@ -2,11 +2,11 @@ import SwaggerParser from "@apidevtools/swagger-parser";
 import {OpenAPI, OpenAPIV2, OpenAPIV3} from "openapi-types";
 import {TypeDefinition} from "../model/TypeDefinition";
 import {OpenApiVersion} from "../enums/OpenApiVersion";
-import {OpenApiCodegenOptions} from "../OpenApiCodegenOptions";
+import {OpenApiCodegenOptions, OpenApiParseOptions} from "../OpenApiCodegenOptions";
 import {SwaggerOpenApiParser} from './SwaggerOpenApiSupport';
 
 
-export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefinition> implements SwaggerOpenApiParser<T>{
+export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefinition> implements SwaggerOpenApiParser<T> {
 
     protected api: string | OpenAPI.Document;
 
@@ -14,7 +14,7 @@ export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefin
 
     protected version: OpenApiVersion;
 
-    protected codegenOptions: OpenApiCodegenOptions
+    protected parseOptions: OpenApiParseOptions
 
 
     constructor(api: string | OpenAPI.Document, swaggerOptions: SwaggerParser.Options = {
@@ -43,8 +43,8 @@ export abstract class AbstractSwaggerParser<T extends TypeDefinition = TypeDefin
     protected abstract transformV2: (document: OpenAPIV2.Document) => T[];
     protected abstract transformV3: (document: OpenAPIV3.Document) => T[];
 
-    setOpenApiCodegenOptions = (options: OpenApiCodegenOptions): void => {
-        this.codegenOptions = options;
+    setOpenApiParseOptions = (options: OpenApiParseOptions): void => {
+        this.parseOptions = options
     }
 
 

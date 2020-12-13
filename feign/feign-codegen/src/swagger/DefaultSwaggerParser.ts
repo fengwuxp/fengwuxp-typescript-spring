@@ -36,7 +36,7 @@ export default class DefaultSwaggerParser extends AbstractSwaggerParser {
     protected transformV3 = (document: OpenAPIV3.Document): TypeDefinition[] => {
         const {paths, tags} = document;
         const apis = this.groupPathsByTag(paths);
-        const {getFeignClientName, output} = this.codegenOptions;
+        const {getFeignClientName, output} = this.parseOptions;
         const swagger3TypeTransformer: SwaggerTypeTransformer = getSwaggerTypeTransformer(output.language);
         return Object.keys(apis).map((tagName) => {
             const apiMethods = apis[tagName];

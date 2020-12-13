@@ -7,9 +7,19 @@ import {TypeDefinition} from "./model/TypeDefinition";
 export interface OpenApiCodegenOptions {
 
     /**
-     * 输出的配置
+     * api 接口文档地址
      */
-    output: OutputOptions;
+    apiUrl: string;
+
+    /**
+     * 认证信息
+     */
+    authentication?: any;
+
+    /**
+     * 输出的配置，可以输出多种语言的sdk
+     */
+    output: OutputOptions | Array<OutputOptions>;
 
     /**
      * 用于转换将标签装换为FeignClient的名称
@@ -73,8 +83,21 @@ export interface OutputOptions {
 
 }
 
-
 export interface CodegenOptions {
 
 
 }
+
+export type OpenApiParseOptions = Exclude<OpenApiCodegenOptions, "output"> & {
+
+    output: OutputOptions
+};
+
+export interface OpenApiParseOptionsAware {
+
+    setOpenApiParseOptions: (options:OpenApiParseOptions) => void;
+}
+
+
+
+

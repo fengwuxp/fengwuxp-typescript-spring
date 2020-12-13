@@ -1,6 +1,8 @@
 /**
  * 语言描述
  */
+import {Language} from "../enums/Language";
+
 export interface LanguageDescription {
 
     /**
@@ -30,4 +32,14 @@ const createLanguageDescription = (name: string, extension: string, templateDir:
 
 export const NONE = createLanguageDescription("", "")
 
-export const TYPESCRIPT = createLanguageDescription("typescript", "ts")
+export const TYPESCRIPT = createLanguageDescription("typescript", "ts");
+
+export const getLanguageDescription = (language: Language) => {
+
+    switch (language) {
+        case Language.TYPESCRIPT:
+            return TYPESCRIPT;
+        default:
+            return NONE
+    }
+}

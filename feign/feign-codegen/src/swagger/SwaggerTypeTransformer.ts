@@ -29,7 +29,12 @@ export interface ApiMethodItem {
     tags: string[];
 }
 
+/**
+ * 基于swagger文档的语言转换者，用于将文档描述转换为对应语言的类型描述，最终输出用于模板生成的对象
+ * {@link TypeDefinition }
+ */
 export interface SwaggerTypeTransformer extends LanguageTypeTransformer<ApiMethodItem[]> {
+
 }
 
 type SwaggerTypeTransformerRecord = Record<OpenApiVersion, SwaggerTypeTransformer>;
@@ -45,6 +50,6 @@ export const registerSwaggerTypeTransformer = (language: Language, transformer: 
     transformerRecords[transformer.getOpenApiVersion()] = transformer;
 }
 
-export const getSwaggerTypeTransformer = (language: Language, version: OpenApiVersion = OpenApiVersion.V3):SwaggerTypeTransformer => {
+export const getSwaggerTypeTransformer = (language: Language, version: OpenApiVersion = OpenApiVersion.V3): SwaggerTypeTransformer => {
     return (TYPE_TRANSFORMER_CACHE.get(language) || {})[version];
 }

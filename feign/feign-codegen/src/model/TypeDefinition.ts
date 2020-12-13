@@ -58,6 +58,18 @@ export interface TypeDefinition extends CodeGenBaseDefinition {
      */
     genericDescription?: string;
 
+    /**
+     * 是否需要生成
+     * 默认：true
+     */
+    needCodegen?: boolean;
+
+    /**
+     * 是否需要导入
+     * 默认：true
+     */
+    needImport?: boolean;
+
 }
 
 /**
