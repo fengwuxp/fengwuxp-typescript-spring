@@ -4,7 +4,7 @@ import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {mediaTypeIsEq} from "./MediaTypeUtil";
 
-const supportBodyMethods = [HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH, HttpMethod.DELETE];
+const supportBodyMethods = [HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH];
 
 /**
  * request method is support request body
