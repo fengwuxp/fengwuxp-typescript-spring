@@ -6,14 +6,15 @@ import {HttpMethod} from "fengwuxp-typescript-feign";
 import {DEFAULT_TYPE_DEFINITION_TAG} from '../constant/ConstantVariables';
 import {ApiMethodItem, getSwaggerTypeTransformer, SwaggerTypeTransformer} from "./SwaggerTypeTransformer";
 import {getUrlPrefix} from "../util/ApiUtils";
+import {Swagger3ExtraProps} from "./v3/language/AbstractSwagger3TypeTransformer";
+import {nameMatchUnifiedResponseObject} from "../OpenApiCodegenOptions";
 
 
 const HTTP_METHODS = [HttpMethod.GET, HttpMethod.PUT, HttpMethod.POST, HttpMethod.DELETE, HttpMethod.TRACE, HttpMethod.PATCH, HttpMethod.PATCH, HttpMethod.HEAD];
 
 export default class DefaultSwaggerParser extends AbstractSwaggerParser {
 
-    constructor(api: string | OpenAPI.Document,
-                options: SwaggerParser.Options = {parse: {json: true}}) {
+    constructor(api: string | OpenAPI.Document, options: SwaggerParser.Options = {parse: {json: true}}) {
         super(api, options);
     }
 
@@ -34,9 +35,14 @@ export default class DefaultSwaggerParser extends AbstractSwaggerParser {
      * @return 用于生成FeignClient的类型描述
      */
     protected transformV3 = (document: OpenAPIV3.Document): TypeDefinition[] => {
-        const {paths, tags} = document;
+        const {paths, tags, components} = document;
         const apis = this.groupPathsByTag(paths);
-        const {getFeignClientName, output} = this.parseOptions;
+        const {
+            getFeignClientName,
+            output,
+            matchGenericObjects,
+            genericObjectFields
+        } = this.parseOptions;
         const swagger3TypeTransformer: SwaggerTypeTransformer = getSwaggerTypeTransformer(output.language);
         return Object.keys(apis).map((tagName) => {
             const apiMethods = apis[tagName];
@@ -44,10 +50,30 @@ export default class DefaultSwaggerParser extends AbstractSwaggerParser {
                 return tag.name === tagName;
             }) || {name: tagName, description: tagName};
             const urlPrefix = getUrlPrefix(apiMethods.map(item => item.uri));
-            return swagger3TypeTransformer.transform(apiMethods, {
+
+            const extraProps: Swagger3ExtraProps = {
                 tag: tagObject,
-                feignClientName: getFeignClientName(tagObject.name, tagObject.description, urlPrefix)
-            });
+                feignClientName: getFeignClientName(tagObject.name, tagObject.description, urlPrefix),
+                swaggerComponents: components,
+                matchUnifiedResponseObject: (typeFields: Array<{ name: string; type?: string }>): any => {
+                    if (matchGenericObjects != null) {
+                        return matchGenericObjects.reduce((prev, fn) => {
+                            if (prev == null) {
+                                return fn(typeFields);
+                            }
+                            return prev;
+                        }, null);
+                    }
+
+                    return genericObjectFields.reduce((prev, unifiedResponseObjectFields) => {
+                        if (prev == null) {
+                            return nameMatchUnifiedResponseObject(typeFields, unifiedResponseObjectFields) as any;
+                        }
+                        return prev;
+                    }, null);
+                }
+            }
+            return swagger3TypeTransformer.transform(apiMethods, extraProps);
         });
     }
 

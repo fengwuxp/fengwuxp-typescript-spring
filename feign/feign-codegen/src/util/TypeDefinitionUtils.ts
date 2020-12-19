@@ -48,7 +48,6 @@ export const createTypeDefinition = (name: string, options: Partial<TypeDefiniti
                 return true;
             }
         }
-
         return element;
     }, (object, property, value, receiver) => {
         object[property] = value;

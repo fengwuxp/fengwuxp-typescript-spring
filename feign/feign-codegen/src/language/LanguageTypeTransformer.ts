@@ -3,7 +3,6 @@ import {OpenApiVersion} from "../enums/OpenApiVersion";
 
 
 export type ExtraProps = {
-
     feignClientName: string;
     tag: any;
 } & Record<string, any>

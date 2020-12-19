@@ -1,5 +1,29 @@
 import {Language} from './enums/Language';
-import {TypeDefinition} from "./model/TypeDefinition";
+import equal from "fast-deep-equal";
+
+export type MatchUnifiedResponseObjectFunc = (fields: Array<{ name: string; type?: string }>) => GenericObjectFieldsType | null | undefined;
+
+type GenericObjectFieldsType = {
+
+    fields: string[];
+
+    // 统一响应，默认：false
+    unifiedResponse?: boolean,
+
+    // 默认data
+    dataKey?: string;
+
+    /**
+     * 带泛型的名称，默认为name
+     * {@link TypeDefinition#name}
+     */
+    genericName?: string;
+
+    /***
+     * 泛型描述
+     */
+    genericDescription?: string;
+};
 
 /**
  * 代码生成的配置
@@ -7,7 +31,7 @@ import {TypeDefinition} from "./model/TypeDefinition";
 export interface OpenApiCodegenOptions {
 
     /**
-     * api 接口文档地址
+     * api 接口文档内容地址
      */
     apiUrl: string;
 
@@ -29,20 +53,46 @@ export interface OpenApiCodegenOptions {
      */
     getFeignClientName: (tageName: string, tageDesc: string, uri: string) => string;
 
-    /**
-     * 用于标记识别统一响应对象
-     * @param typeDefinition
-     * @see #unifiedResponseObjectFields
-     */
-    markUnifiedResponseObject?: (typeDefinition: TypeDefinition) => boolean;
+    // /**
+    //  * 用于标记识别统一响应对象
+    //  * @param fields
+    //  * @see #unifiedResponseObjectFields
+    //  * @return data key
+    //  */
+    // matchUnifiedResponseObject?: MatchUnifiedResponseObjectFunc;
+    //
+    // /**
+    //  * 统一响应对象的字段列表，用于识别统一响应对象
+    //  * @see #matchUnifiedResponseObject
+    //  */
+    // unifiedResponseObjectFields?: GenericObjectFieldsType;
 
     /**
-     * 统一响应对象的字段列表，用于识别统一响应对象
-     * @see #markUnifiedResponseObject
+     * 用于标记识别其他的泛型响应对象
+     * @param fields
+     * @see #genericObjectFields
+     * @return data key
      */
-    unifiedResponseObjectFields?: string[];
+    matchGenericObjects?: MatchUnifiedResponseObjectFunc[];
+
+    /**
+     * 泛型响应对象的字段列表，用于识别泛型响应对象
+     * @see #matchUnifiedResponseObject
+     */
+    genericObjectFields?: GenericObjectFieldsType[];
 }
 
+export const nameMatchUnifiedResponseObject = (typeFields: Array<{ name: string; type?: string }>, markObject: GenericObjectFieldsType): string | GenericObjectFieldsType => {
+    const names = typeFields.map(item => item.name);
+    const {fields, dataKey} = markObject;
+    if (fields.length === names.length && equal(names.sort(), fields.sort())) {
+        return {
+            ...markObject,
+            dataKey: dataKey || "data"
+        }
+    }
+    return undefined;
+}
 
 export interface OutputOptions {
 
@@ -95,7 +145,7 @@ export type OpenApiParseOptions = Exclude<OpenApiCodegenOptions, "output"> & {
 
 export interface OpenApiParseOptionsAware {
 
-    setOpenApiParseOptions: (options:OpenApiParseOptions) => void;
+    setOpenApiParseOptions: (options: OpenApiParseOptions) => void;
 }
 
 

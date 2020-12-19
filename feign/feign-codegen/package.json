@@ -57,6 +57,7 @@
     "async-validator": "^3.2.2",
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
+    "fast-deep-equal": "^3.1.3",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.1",
     "fengwuxp-declarative-command": "^1.0.3",

@@ -16,3 +16,5 @@ export const swaggerConfigurer:OpenApiConfigurer = () => {
     // 注册语言转换转者
     registerSwaggerTypeTransformer(Language.TYPESCRIPT, new TypescriptSwagger3TypeTransformer());
 }
+
+

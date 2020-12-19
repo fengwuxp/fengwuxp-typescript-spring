@@ -1,7 +1,7 @@
 /**
  * 类定义的类型
  */
-export enum ClassDefinitionType{
+export enum ClassDefinitionType {
 
     /**
      * 类
@@ -22,4 +22,24 @@ export enum ClassDefinitionType{
      * 注解
      */
     ANNOTATION
+}
+
+export enum OpenApiClassType {
+
+    OBJECT = 'object',
+
+    ARRAY = 'array',
+
+    ENUM = 'enum',
+
+    BOOLEAN = "boolean",
+
+    NUMBER = 'number',
+
+    INTEGER = 'integer',
+
+    STRING = 'string',
+
+    DATE = 'date',
+
 }

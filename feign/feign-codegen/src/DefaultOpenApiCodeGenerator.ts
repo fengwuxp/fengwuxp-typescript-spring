@@ -52,14 +52,25 @@ export default class DefaultOpenApiCodeGenerator implements OpenApiCodeGenerator
         try {
             typeDefinitions = await openApiParser.parse()
         } catch (e) {
-            logger.error("解析open api 文档失败：" + e);
+            logger.error("解析open api 文档失败：", e);
             return;
         }
-        while (true) {
-            typeDefinitions = typeDefinitions.map((typedDefinition) => {
-                templateBuildStrategy.build(typedDefinition);
-                return typedDefinition.dependencies;
-            }).flatMap(items => [...items])
+        let genCount = 0;
+        while (genCount++ <= 5 ) {
+            logger.info(`开始第${genCount}次生成`);
+            typeDefinitions = typeDefinitions
+                .filter(item => item != null)
+                .filter(item => item.needCodegen)
+                .map((typedDefinition) => {
+                    const dependencies = typedDefinition.dependencies || [];
+                    typedDefinition.dependencies = dependencies
+                        .filter(item => item != null)
+                        .filter(item => {
+                            return item.needImport;
+                        })
+                    templateBuildStrategy.build(typedDefinition);
+                    return dependencies;
+                }).flatMap(items => [...items])
                 .filter(item => item != null)
                 .filter(item => item.needCodegen);
             if (typeDefinitions.length == 0) {

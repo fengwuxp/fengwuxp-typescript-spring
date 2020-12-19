@@ -13,15 +13,16 @@ describe("test swagger api parser", () => {
     test("remote api swagger3 parse", async () => {
         const apiUrl = "http://39.100.124.196:47001/api/v3/api-docs"
         const openApiParser: OpenApiParser<TypeDefinition[]> = new DefaultSwaggerParser(apiUrl);
-        openApiParser.setOpenApiCodegenOptions({
-            getFeignClientName(tageName: string, tageDesc: string, uri: string): string {
+        openApiParser.setOpenApiParseOptions({
+            apiUrl,
+            getFeignClientName: (tageName: string, tageDesc: string, uri: string): string => {
                 let humpResolver = toHumpResolver(uri.replace("/v1/", "")
                     .replace(/\//g, "_"));
                 if (humpResolver.trim().length == 0) {
                     humpResolver = "Default";
                 }
                 const className = initialUpperCase(humpResolver)
-                    .replace(/_/g,"")+ "FeignClient";
+                    .replace(/_/g, "") + "FeignClient";
                 logger.debug(tageName, tageDesc, uri, className);
                 return className;
             },
