@@ -1,7 +1,7 @@
 import {ApiMethodItem} from "../../SwaggerTypeTransformer";
 import {MethodDefinition, TypeDefinition} from "../../../model/TypeDefinition";
 import {OpenAPIV3} from "openapi-types";
-import {VOID, BOOLEAN, NUMBER, STRING, DATE} from "../../../language/TypescriptTypeDefinition";
+import {BOOLEAN, DATE, NUMBER, STRING, VOID} from "../../../language/TypescriptTypeDefinition";
 import {AbstractSwagger3TypeTransformer, Swagger3ExtraProps} from "./AbstractSwagger3TypeTransformer";
 import {OpenApiClassType} from "../../../enums/ClassDefinitionType";
 
