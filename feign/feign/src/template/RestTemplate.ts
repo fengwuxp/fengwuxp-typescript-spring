@@ -6,8 +6,7 @@ import {
     DEFAULT_BUSINESS_EXTRACTOR,
     headResponseExtractor,
     objectResponseExtractor,
-    optionsMethodResponseExtractor,
-    voidResponseExtractor
+    optionsMethodResponseExtractor
 } from "./RestResponseExtractor";
 import {HttpClient} from "../client/HttpClient";
 import {UriTemplateHandler, UriTemplateHandlerInterface} from "./UriTemplateHandler";

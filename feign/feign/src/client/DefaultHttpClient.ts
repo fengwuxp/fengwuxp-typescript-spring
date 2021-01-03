@@ -12,6 +12,7 @@ import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpR
 
 /**
  * default http client
+ * Provides support for common HTTP method requests
  * Retry if needed {@see RetryHttpClient}
  */
 export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {

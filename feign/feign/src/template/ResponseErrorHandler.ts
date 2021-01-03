@@ -15,9 +15,6 @@ export interface ResponseErrorHandlerInterFace<T extends HttpRequest = HttpReque
      * @param response the response to inspect
      * @return {@code true} if the response has an error; {@code false} otherwise
      */
-    // hasError: (response: HttpResponse) => boolean | Promise<boolean>;
-
-
     handleError: ResponseErrorHandlerFunction<T,E>;
 }
 
