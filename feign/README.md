@@ -153,23 +153,23 @@ export default class ExampleFeignClient {
 }
 
 ```
-- [FeignClientExecutorInterceptor](./feign/src/FeignClientExecutorInterceptor.ts) 在代理的FeignClient中，分别在请求前、
-请求后、请求出错是进行执行
   
 #### 拦截器
 ##### ClientHttpRequestInterceptor
-- [ClientHttpRequestInterceptor](./feign/src/client/ClientHttpRequestInterceptor.ts) HttClient中执行想拦截器，仅支持在请求之前调用
-- [NetworkClientHttpRequestInterceptor](./feign/src/network/NetworkClientHttpRequestInterceptor.ts) 用于检查网络状态
-- [AuthenticationClientHttpRequestInterceptor](./feign/src/client/AuthenticationClientHttpRequestInterceptor.ts) 用于在请求之前，组装用户认证信息到请求中
-- [RoutingClientHttpRequestInterceptor](./feign/src/client/RoutingClientHttpRequestInterceptor.ts) 路由请求到不同的地址，例如：
+- [ClientHttpRequestInterceptor](./feign/src/client/ClientHttpRequestInterceptor.ts) HttClient中执行的拦截器，仅支持在请求之前调用
+- [NetworkClientHttpRequestInterceptor](./feign/src/network/NetworkClientHttpRequestInterceptor.ts) 用于在请求前检查网络状态
+- [AuthenticationClientHttpRequestInterceptor](./feign/src/client/AuthenticationClientHttpRequestInterceptor.ts) 用于在请求之前，将用户认证信息追加到请求中
+- [RoutingClientHttpRequestInterceptor](./feign/src/client/RoutingClientHttpRequestInterceptor.ts) 将请求路由到不同的地址，例如：
 ```
   实例化一个 RoutingClientHttpRequestInterceptor：
+  
   new RoutingClientHttpRequestInterceptor({memberModule:"http://test.a.b.com/member"})
   let url='@memberModule/find_member  
   通过替换 @memberModule，得到： 'http://test.a.b.com/member/find_member'
   而@memberModule可以通过@Feign({value:"memberModule"})拼接到url中
   
   RoutingClientHttpRequestInterceptor也支持默认策略例如：
+ 
   new RoutingClientHttpRequestInterceptor("http://test.a.b.com/member")
   let url='@default/find_member  
   通过替换 @default，得到： 'http://test.a.b.com/member/find_member'，
@@ -177,7 +177,7 @@ export default class ExampleFeignClient {
 ```
 
 ##### FeignClientExecutorInterceptor
-- [FeignClientExecutorInterceptor](./feign/src/FeignClientExecutorInterceptor.ts) 
+- [FeignClientExecutorInterceptor](./feign/src/FeignClientExecutorInterceptor.ts) 在代理的FeignClient中，分别在请求前、 请求后、请求出错时执行
 - [ProcessBarExecutorInterceptor](./feign/src/ui/ProcessBarExecutorInterceptor.ts) 请求进度条的支持
 - [CodecFeignClientExecutorInterceptor](./feign/src/codec/CodecFeignClientExecutorInterceptor.ts) 在请求之前和响应后对数据进行编解码
 - [UnifiedFailureToastExecutorInterceptor](./feign/src/ui/UnifiedFailureToastExecutorInterceptor.ts) 统一错误提示处理，包括对401的特殊处理，例如：跳转到登录页面
@@ -241,6 +241,8 @@ export default class ExampleFeignClient {
 ```
  DataObfuscation 只是标记了需要混淆的字段，具体的实现需要使用自行实现，可以使用拦截器进行支持
 
+#### 事件广播
+- [AuthenticationBroadcaster](./feign/src/client/AuthenticationStrategy.ts)认证相关的事件广播者，在接收到401响应后广播认证失效事件
 
 #### 集成的配置示例，通过 boot-starter
 ```typescript
