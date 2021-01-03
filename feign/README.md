@@ -242,8 +242,7 @@ export default class ExampleFeignClient {
  DataObfuscation 只是标记了需要混淆的字段，具体的实现需要使用自行实现，可以使用拦截器进行支持
 
 
-#### 集成的配置示例
-- 限制：这个配置需要最先导入，这是由于Feign初始化的问题
+#### 集成的配置示例，通过 boot-starter
 ```typescript
 import {
     AuthenticationClientHttpRequestInterceptor,
@@ -405,8 +404,8 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
  * 注册feign 代理
  */
 feignConfigurationInitializer(new BrowserFeignConfigurationAdapter());
-
 ```
+- feignConfigurationInitializer会把配置设置到执行上下文中，由于程序会在请求时异步的获取配置，建议在程序中尽早的执行该方法，减少请求时等待配置的获取时间
 
 #### typescript feign 实现
 
