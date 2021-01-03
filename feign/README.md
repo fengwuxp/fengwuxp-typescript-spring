@@ -408,6 +408,7 @@ class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
 feignConfigurationInitializer(new BrowserFeignConfigurationAdapter());
 ```
 - feignConfigurationInitializer会把配置设置到执行上下文中，由于程序会在请求时异步的获取配置，建议在程序中尽早的执行该方法，减少请求时等待配置的获取时间
+- 参考示例项目[RegisterBrowserOpenFeign](https://github.com/fengwuxp/fengwuxp-typescript-spring/blob/master/templates/umi-antd-v4-template/src/RegisterBrowserOpenFeign.ts)
 
 #### typescript feign 实现
 
@@ -423,12 +424,9 @@ feignConfigurationInitializer(new BrowserFeignConfigurationAdapter());
 - [feign-react-native-boot](./feign-react-native-boot)       提供react-native的初始化配置
 
 #### feign 集成
-
 - [如何高效的给后端系统发起http请求](https://blog.csdn.net/u014739462/article/details/86758900)
--
-项目配置，参考[RegisterBrowserOpenFeign](https://github.com/fengwuxp/fengwuxp-typescript-spring/blob/master/templates/umi-antd-v4-template/src/RegisterBrowserOpenFeign.ts)
+- [通过生成Api sdk提升开发体验和效率](https://blog.csdn.net/u014739462/article/details/112061021)
 - [通过java（基于spring）代码生成 feign sdk](https://github.com/fengwuxp/common-codegen)
-
 #### 其他语言实现
 
 - [fengwuxp_dart_feign](https://github.com/fengwuxp/fengwuxp_dart_feign)
