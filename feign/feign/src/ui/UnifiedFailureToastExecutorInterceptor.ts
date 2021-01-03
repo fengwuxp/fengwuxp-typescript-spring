@@ -60,14 +60,14 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
      * try send unauthorized event
      * @param response
      */
-    private tryHandleUnAuthorized(response: HttpResponse<any>) {
+    protected tryHandleUnAuthorized = async (response: HttpResponse<any>) => {
 
 
         if (response.statusCode !== HttpStatus.UNAUTHORIZED) {
-           return;
+            return;
         }
 
-        const feignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
+        const feignConfiguration = await FeignConfigurationRegistry.getDefaultFeignConfiguration();
         const getAuthenticationBroadcaster = feignConfiguration.getAuthenticationBroadcaster;
         if (getAuthenticationBroadcaster != null) {
             const authenticationBroadcaster = getAuthenticationBroadcaster();

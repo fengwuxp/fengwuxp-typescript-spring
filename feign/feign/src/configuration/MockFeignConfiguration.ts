@@ -21,7 +21,7 @@ import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
 import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
 import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
 import {AuthenticationToken} from "../client/AuthenticationStrategy";
-import { ProgressBarOptions } from '../ui/RequestProgressBar';
+import {ProgressBarOptions} from '../ui/RequestProgressBar';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';

@@ -25,7 +25,7 @@ import {AuthenticationType} from "./constant/AuthenticationType";
  */
 export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
 
-    protected apiService: T;
+    protected readonly apiService: T;
 
     // request url resolver
     protected requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
@@ -53,14 +53,21 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
     // default request headers
     protected defaultHeaders: Record<string, string>;
 
+    /**
+     * 是否已经初始化
+     * @protected
+     */
+    protected initialized: boolean = false;
+
 
     constructor(apiService: T) {
-        this.init(apiService);
+        this.apiService = apiService;
     }
 
 
     invoke = async (methodName: string, ...args): Promise<any> => {
-
+        // 初始化
+        await this.init(this.apiService);
         try {
             await this.tryCheckAuthorizedStatus(methodName);
         } catch (e) {
@@ -76,7 +83,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             defaultRequestContextOptions,
             defaultHeaders,
         } = this;
-
 
         //original parameter
         const originalParameter = args[0] || {};
@@ -179,10 +185,15 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     };
 
-    // init feign client executor
-    private init(apiService: T) {
-        this.apiService = apiService;
-        const configuration = apiService.feignConfiguration();
+    /**
+     *  init feign client executor
+     * @param apiService
+     */
+    private init = async (apiService: T) => {
+        if (this.initialized) {
+            return;
+        }
+        const configuration = await apiService.feignConfiguration();
         const {
             getRestTemplate,
             getApiSignatureStrategy,
@@ -220,6 +231,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (getDefaultHttpHeaders) {
             this.defaultHeaders = getDefaultHttpHeaders();
         }
+        this.initialized = true;
     }
 
 

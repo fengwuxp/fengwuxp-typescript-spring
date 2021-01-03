@@ -1,7 +1,6 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
-import CacheAuthenticationStrategy from "./CacheAuthenticationStrategy";
 import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';

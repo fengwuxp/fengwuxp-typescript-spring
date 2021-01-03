@@ -52,17 +52,33 @@ export const configurationFactory = memoize(factory, (feignConfigurationConstruc
     return feignConfigurationConstructor;
 });
 
+
+/**
+ * 等待获取配置队列
+ */
+let WAIT_GET_CONFIGURATION_QUEUE: Array<(configuration: FeignConfiguration) => void> = [];
+
 const registry = {
 
 
     setDefaultFeignConfiguration(configuration: FeignConfiguration) {
-
         DEFAULT_CONFIGURATION = memorizationConfiguration(configuration);
+        if (WAIT_GET_CONFIGURATION_QUEUE.length > 0) {
+            WAIT_GET_CONFIGURATION_QUEUE.forEach(fn => {
+                fn(DEFAULT_CONFIGURATION);
+            });
+            // clear
+            WAIT_GET_CONFIGURATION_QUEUE = [];
+        }
     },
 
-    getDefaultFeignConfiguration(): FeignConfiguration {
-        // console.log("get default configuration", DEFAULT_CONFIGURATION);
-        return DEFAULT_CONFIGURATION;
+    getDefaultFeignConfiguration(): Promise<FeignConfiguration> {
+        if (DEFAULT_CONFIGURATION != null) {
+            return Promise.resolve(DEFAULT_CONFIGURATION);
+        }
+        return new Promise<FeignConfiguration>(resolve => {
+            WAIT_GET_CONFIGURATION_QUEUE.push(resolve)
+        });
     },
 
     setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void {

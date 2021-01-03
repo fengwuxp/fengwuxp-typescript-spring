@@ -1,6 +1,6 @@
 import {FeignConfiguration, FeignConfigurationConstructor} from "../configuration/FeignConfiguration";
 import {defaultApiModuleName, FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
-import FeignConfigurationRegistry, {configurationFactory} from "../configuration/FeignConfigurationRegistry";
+import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {FeignProxyClient} from "../support/FeignProxyClient";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
@@ -72,8 +72,8 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
          */
         return class extends clazz implements FeignProxyClient {
 
-            private _serviceName: string;
-            private _feignOptions: FeignMemberOptions;
+            private readonly _serviceName: string;
+            private readonly _feignOptions: FeignMemberOptions;
 
             constructor() {
                 super();
@@ -88,8 +88,8 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                 this._serviceName = feignOptions.value || clazz.name;
                 this._feignOptions = feignOptions;
                 //build feign client instance
-                const feignClientBuilder: FeignClientBuilder<FeignProxyClient> = FeignConfigurationRegistry.getFeignClientBuilder();
-                return invokeFunctionInterface<FeignClientBuilder<FeignProxyClient>, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
+                const feignClientBuilder: FeignClientBuilder = FeignConfigurationRegistry.getFeignClientBuilder();
+                return invokeFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
             }
 
 
@@ -101,9 +101,9 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                 return this._feignOptions;
             };
 
-            readonly feignConfiguration = () => {
+            readonly feignConfiguration = async () => {
                 const feignConfiguration: FeignConfiguration = feignConfigurationConstructor != null ?
-                    new feignConfigurationConstructor() : FeignConfigurationRegistry.getDefaultFeignConfiguration();
+                    new feignConfigurationConstructor() : await FeignConfigurationRegistry.getDefaultFeignConfiguration();
 
                 // TODO 某些情况下 feign configuration 未初始化
                 if (feignConfiguration == null) {
@@ -122,7 +122,6 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
                 return getFeignClientMethodConfig(clazz, serviceMethod);
             };
-
 
         }
     }

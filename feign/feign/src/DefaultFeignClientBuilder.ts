@@ -22,8 +22,8 @@ export const defaultFeignClientBuilder: FeignClientBuilderFunction = <T extends 
 
     return newProxyInstance<T>(
         client, (target: T, serviceMethod: string, receiver: any) => {
-            return (...args) => {
-                const feignConfiguration = target.feignConfiguration();
+            return async (...args) => {
+                const feignConfiguration = await target.feignConfiguration();
                 const feignClientExecutor = feignConfiguration.getFeignClientExecutor(client);
                 // different proxy service executors can be returned according to different strategies
                 return feignClientExecutor.invoke(serviceMethod, ...args);

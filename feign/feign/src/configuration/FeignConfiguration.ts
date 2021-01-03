@@ -53,10 +53,6 @@ export interface FeignConfiguration {
      */
     getDefaultHttpHeaders?: () => Record<string, string>
 
-    // /**
-    //  *get feign UI toast
-    //  */
-    // getFeignUIToast?: () => FeignUIToast;
 }
 
 

@@ -12,7 +12,7 @@ logger.level = 'debug';
 describe("test feign client", () => {
 
     const mockFeignConfiguration = new MockFeignConfigurationTest();
-    FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+
 
     const testFeignClient = new TestFeignClient();
     const exampleFeignClient = new ExampleFeignClient();
@@ -27,13 +27,17 @@ describe("test feign client", () => {
     test("test feign client", async () => {
 
         try {
-
+            sleep(200).then(()=>{
+                logger.info("异步设置设置配置")
+                FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+            })
             const result = await exampleFeignClient.findMember({
                 name: "张三",
                 userName: "1",
                 memberId: 12,
                 time: new Date()
             });
+
             // const result = await ClientRequestDataValidatorHolder.validate({
             //     name: "张三",
             //     userName: "1",
@@ -59,6 +63,10 @@ describe("test feign client", () => {
     test("test get example", async () => {
 
         try {
+            sleep(200).then(()=>{
+                logger.info("异步设置设置配置")
+                FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+            })
             const result = await testFeignClient.getExample({
                 id: 1,
                 date: new Date(),
@@ -73,6 +81,10 @@ describe("test feign client", () => {
     test("test retry", async () => {
 
         try {
+            sleep(200).then(()=>{
+                logger.info("异步设置设置配置")
+                FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+            })
             const result = await testFeignClient.testQuery({
                 id: 1,
                 date: new Date(),
@@ -113,7 +125,10 @@ describe("test feign client", () => {
     };
 
     test("test network status change", async () => {
-
+        sleep(200).then(()=>{
+            logger.info("异步设置设置配置")
+            FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+        })
         try {
             const queue = await sendRequestEvent(100);
             console.log("-------->", queue.length);
@@ -148,7 +163,10 @@ describe("test feign client", () => {
     }, 10 * 1000)
 
     test("test auto upload file ", async () => {
-
+        sleep(200).then(()=>{
+            logger.info("异步设置设置配置")
+            FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+        })
         await testFeignClient.evaluateOrder({
             goods: [
                 "A",
@@ -162,12 +180,18 @@ describe("test feign client", () => {
 
 
     test("test deleted", async () => {
-
+        sleep(200).then(()=>{
+            logger.info("异步设置设置配置")
+            FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+        })
         await testFeignClient.deleteById({ids: [1, 2, 3, 4], a: "22", c: "33"});
     });
 
     test("test put", async () => {
-
+        // sleep(200).then(()=>{
+        //     logger.info("异步设置设置配置")
+        //     FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
+        // })
         // await testFeignClient.batchDistribution({name: "张三", age: 18});
     });
 });
