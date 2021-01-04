@@ -44,7 +44,12 @@ export default class TestFeignClient {
     @RequestMapping({
         value: "/testQuery",
         method: HttpMethod.POST,
-        headers: {}
+        headers: {
+            test: 1,
+            test2: [2, 3],
+            test3: false
+        },
+        params: ["a=2"]
     })
     @FeignRetry({
         retries: 5,
@@ -57,6 +62,11 @@ export default class TestFeignClient {
     @PostMapping({
         value: "find_member/{name}",
         headers: {myHeader: "tk_{memberId}"},
+        params: {
+            a: 2,
+            c: ["2", 3],
+            h: false
+        },
         produces: [HttpMediaType.APPLICATION_JSON_UTF8]
     })
     @ValidateSchema<FindMemberRequest>({
@@ -94,6 +104,6 @@ export default class TestFeignClient {
     @DeleteMapping({value: "/deleted"})
     deleteById: (req: { ids: number[]; a: string; c: string }) => Promise<void>;
 
-    @PutMapping({value: "/put_data_test", produces : [HttpMediaType.APPLICATION_JSON_UTF8]})
+    @PutMapping({value: "/put_data_test", produces: [HttpMediaType.APPLICATION_JSON_UTF8]})
     putDataTest: (req: { name: string; age: number }) => Promise<void>;
 }

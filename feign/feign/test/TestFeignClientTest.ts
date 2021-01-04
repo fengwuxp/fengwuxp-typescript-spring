@@ -88,7 +88,7 @@ describe("test feign client", () => {
             const result = await testFeignClient.testQuery({
                 id: 1,
                 date: new Date(),
-                test: "1"
+                queryPage: "1"
             });
             console.log("http result", result);
         } catch (e) {

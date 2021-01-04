@@ -16,11 +16,10 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
 
     const apiServiceConfig = apiService.getFeignMethodConfig(methodName);
     const requestMapping = apiServiceConfig.requestMapping;
-
     if (requestMapping == null) {
         return headers;
     }
-    let newHeaders = {
+    const newHeaders = {
         ...headers
     };
     const configHeaders = requestMapping.headers;
@@ -28,8 +27,17 @@ export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: F
 
     //marge headers
     for (const key in configHeaders) {
-        const headerValue: string = configHeaders[key];
-        newHeaders[key] = replacePathVariableValue(headerValue, data);
+        const headerValue = configHeaders[key];
+        if (headerValue == null) {
+            continue;
+        } else if (typeof headerValue === "string") {
+            newHeaders[key] = replacePathVariableValue(headerValue, data);
+        } else if (Array.isArray(headerValue)) {
+            newHeaders[key] = headerValue.join(";");
+        } else {
+            newHeaders[key] = headerValue + "";
+        }
+
     }
     if (produces != null) {
         newHeaders[contentTypeName] = produces[0];

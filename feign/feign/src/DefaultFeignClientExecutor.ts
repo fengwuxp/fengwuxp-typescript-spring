@@ -19,6 +19,7 @@ import {appendRequestContextId, removeRequestContext, setRequestContext} from ".
 import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} from "./client/AuthenticationStrategy";
 import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
 import {AuthenticationType} from "./constant/AuthenticationType";
+import {parse} from "querystring";
 
 /**
  * default feign client executor
@@ -115,9 +116,27 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         //resolver headers
         let headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, requestBody);
         const requestSupportRequestBody = supportRequestBody(requestMapping.method);
-        const queryParams = requestSupportRequestBody ? feignRequestOptions.queryParams : requestBody;
+        let queryParams = requestSupportRequestBody ? feignRequestOptions.queryParams : requestBody;
         if (queryParams && requestSupportRequestBody) {
             headers = requestHeaderResolver(apiService, methodName, feignRequestOptions.headers, queryParams);
+        }
+        let defaultQueryParams = requestMapping.params;
+        if (Array.isArray(defaultQueryParams)) {
+            defaultQueryParams = defaultQueryParams.map((queryString) => {
+                return parse(queryString);
+            }).reduce((previousValue, currentValue) => {
+                return {
+                    ...previousValue,
+                    ...currentValue
+                }
+            }, {});
+        }
+        if (defaultQueryParams != null) {
+            // 合并默认参数
+            queryParams = {
+                ...defaultQueryParams,
+                ...(queryParams || {})
+            };
         }
         feignRequestOptions.queryParams = queryParams;
         feignRequestOptions.body = requestSupportRequestBody ? requestBody : null;

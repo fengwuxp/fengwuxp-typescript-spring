@@ -4,6 +4,14 @@ import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenera
 import {AuthenticationType} from "../../constant/AuthenticationType";
 
 
+export type MappingHeaderType = Array<boolean | string | number | Date>;
+
+/**
+ * query params type
+ */
+export type MappingHeaders = Record<string, boolean | number | string | Date | MappingHeaderType>;
+
+
 export interface BaseRequestMappingOptions {
     /**
      * 请求的uri地址
@@ -17,7 +25,12 @@ export interface BaseRequestMappingOptions {
      * 1：固定值，例如 {myHeader:"1234"}
      * 2：将参数中的某些字段当做请求头，例如：{token:"{token}"}
      */
-    headers?: Record<string, string>;
+    headers?: MappingHeaders;
+
+    /**
+     * 默认的查询参数
+     */
+    params?: MappingHeaders | string[];
 
     /**
      * 超时时间，
@@ -50,7 +63,6 @@ export interface BaseRequestMappingOptions {
     authenticationType?: AuthenticationType;
 
 }
-
 
 
 export interface RequestMappingOptions extends BaseRequestMappingOptions {

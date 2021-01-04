@@ -38,11 +38,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
 
     send = (req: T): Promise<HttpResponse> => {
         const retryOptions = this.retryOptions;
-
-        console.log("retry client request", req, retryOptions);
-
         const _maxTimeout = retryOptions.maxTimeout;
-
         return new Promise<HttpResponse>((resolve, reject) => {
 
             const retries = retryOptions.retries;
