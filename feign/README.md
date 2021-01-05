@@ -83,12 +83,15 @@ export interface HttpAdapter<T extends HttpRequest = HttpRequest> {
 ，并通过装饰器返回一个代理的FeignClient实现  
 - [RequestMapping](./feign/src/annotations/mapping/RequestMapping.ts)
   用于开发者定义http请求的细节，url\请求方法\Content-Type等，有多个重载的实现，例如：[GetMapping](./feign/src/annotations/mapping/GetMapping.ts)
-- [RequestMappingOptions](./feign/src/annotations/mapping/Mapping.ts) ,示例如下
+- [RequestMappingOptions](./feign/src/annotations/mapping/Mapping.ts) ，支持配置url、请求方法、请求头、默认参数，content-type等,示例如下
 ```
    @PostMapping({
        value: "find_member/{name}",
-       // 从参数中的memberId 替换掉占位符{memberId}
-       headers: {myHeader: "tk_{memberId}"},
+       // 从参数中的memberId 替换掉占位符{memberId}，支持设置默认值
+       headers: {myHeader: "tk_{memberId}", defaultValue: "{name:faker}"},
+       // params: ["test=k"]
+       // 设置默认的查询参数或者表单参数
+       params: {test: 'k'},
        produces: [HttpMediaType.APPLICATION_JSON_UTF8]
    })
    findMember: (

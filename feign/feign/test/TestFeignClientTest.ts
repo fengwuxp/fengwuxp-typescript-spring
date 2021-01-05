@@ -27,7 +27,7 @@ describe("test feign client", () => {
     test("test feign client", async () => {
 
         try {
-            sleep(200).then(()=>{
+            sleep(200).then(() => {
                 logger.info("异步设置设置配置")
                 FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
             })
@@ -63,14 +63,14 @@ describe("test feign client", () => {
     test("test get example", async () => {
 
         try {
-            sleep(200).then(()=>{
+            sleep(200).then(() => {
                 logger.info("异步设置设置配置")
                 FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
             })
             const result = await testFeignClient.getExample({
                 id: 1,
                 date: new Date(),
-                test: "1"
+                // test: "1"
             });
             console.log("http result", result);
         } catch (e) {
@@ -81,14 +81,15 @@ describe("test feign client", () => {
     test("test retry", async () => {
 
         try {
-            sleep(200).then(()=>{
+            sleep(200).then(() => {
                 logger.info("异步设置设置配置")
                 FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
             })
             const result = await testFeignClient.testQuery({
                 id: 1,
                 date: new Date(),
-                queryPage: "1"
+                queryPage: "1",
+                a: "hhh"
             });
             console.log("http result", result);
         } catch (e) {
@@ -125,7 +126,7 @@ describe("test feign client", () => {
     };
 
     test("test network status change", async () => {
-        sleep(200).then(()=>{
+        sleep(200).then(() => {
             logger.info("异步设置设置配置")
             FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
         })
@@ -163,7 +164,7 @@ describe("test feign client", () => {
     }, 10 * 1000)
 
     test("test auto upload file ", async () => {
-        sleep(200).then(()=>{
+        sleep(200).then(() => {
             logger.info("异步设置设置配置")
             FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
         })
@@ -184,7 +185,7 @@ describe("test feign client", () => {
 
 
     test("test deleted", async () => {
-        sleep(200).then(()=>{
+        sleep(200).then(() => {
             logger.info("异步设置设置配置")
             FeignConfigurationRegistry.setDefaultFeignConfiguration(mockFeignConfiguration);
         })

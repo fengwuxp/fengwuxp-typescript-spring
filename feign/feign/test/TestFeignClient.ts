@@ -32,22 +32,25 @@ export default class TestFeignClient {
 
     @GetMapping({
         // value: "/example"
-        authenticationType: AuthenticationType.TRY
+        authenticationType: AuthenticationType.TRY,
+        // params: ["test=k"]
+        params: {test: 'k'}
     })
     getExample: (request: {
         id: number,
-        test: string,
+        test?: string,
         date: Date
     }, options?: FeignRequestOptions) => Promise<any>;
 
     @Signature({fields: []})
     @RequestMapping({
-        value: "/testQuery",
+        value: "/testQuery/{idV:100}",
         method: HttpMethod.POST,
         headers: {
             test: 1,
             test2: [2, 3],
-            test3: false
+            test3: false,
+            defaultValue: "{name:faker}"
         },
         params: ["a=2"]
     })
