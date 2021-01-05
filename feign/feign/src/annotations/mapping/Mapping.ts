@@ -21,9 +21,10 @@ export interface BaseRequestMappingOptions {
 
 
     /**
-     * 自定义请求头，支持2中写法
+     * 自定义请求头，支持命名占位符，且命名占位符支持默认值
+     *
      * 1：固定值，例如 {myHeader:"1234"}
-     * 2：将参数中的某些字段当做请求头，例如：{token:"{token}"}
+     * 2：将参数中的某些字段当做请求头，例如：{token:"{token:defaultValue}"}
      */
     headers?: MappingHeaders;
 

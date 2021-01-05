@@ -25,10 +25,6 @@ export const contentTransferEncodingName = 'Content-Transfer-Encoding';
  */
 export const FEIGN_CLINE_META_KEY = "FEIGN";
 
-/**
- *
- */
-export const matchUrlPathVariable = /\{\w*\}/;
 
 /**
  * grab shaped like example '1{abc}2ll3{efg}' string  ==> abc, efg

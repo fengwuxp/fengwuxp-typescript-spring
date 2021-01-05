@@ -69,12 +69,15 @@ export interface HttpAdapter<T extends HttpRequest = HttpRequest> {
 - [ResponseErrorHandler](./feign/src/template/ResponseErrorHandler.ts) 请求错误处理
 
 #### 基于装饰器增强
-- 命名占位符（模板命名参数）
+- 命名占位符（模板命名参数），支持默认值设置
 ```
    使用大括号标记的模板内容，用于运行时使用参数进行动态替换，例如：
    模板：find_member/{id} 
    参数：{id:1}
    resulut：find_member/1
+   
+   默认值设置，例如：a_{name:defaultName} ==>{name:null} ==> a_defaultValue
+   使用':'分隔默认值
 ```
 - [Feign](./feign/src/annotations/Feign.ts) 标记一个类为http的请求Client 参考[spring cloud openfeign](https://github.com/spring-cloud/spring-cloud-openfeign)
 ，并通过装饰器返回一个代理的FeignClient实现  
