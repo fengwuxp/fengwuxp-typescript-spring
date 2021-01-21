@@ -1,6 +1,6 @@
 {
   "name": "feign-boot-starter",
-  "version": "1.0.7",
+  "version": "1.0.10",
   "description": "",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -38,7 +38,7 @@
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
-    "fengwuxp-typescript-feign": "^1.0.7",
+    "fengwuxp-typescript-feign": "^1.0.10",
     "typescript": "^3.7.2"
   },
   "dependencies": {}

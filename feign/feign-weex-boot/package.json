@@ -1,6 +1,6 @@
 {
   "name": "feign-weex-boot-starter",
-  "version": "1.0.6",
+  "version": "1.0.10",
   "description": "feign weex starter",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -39,7 +39,8 @@
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1",
-    "fengwuxp-typescript-feign": "^1.0.0"
+    "feign-boot-stater": "^1.0.10",
+    "fengwuxp-typescript-feign": "^1.0.10"
   },
   "dependencies": {
 

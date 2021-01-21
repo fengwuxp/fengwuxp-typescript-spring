@@ -1,8 +1,6 @@
 import * as os from 'os';
-import * as  path from "path";
 import resolve from 'rollup-plugin-node-resolve';
 import common from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import typescript from 'rollup-plugin-typescript2';
 import json from 'rollup-plugin-json';
