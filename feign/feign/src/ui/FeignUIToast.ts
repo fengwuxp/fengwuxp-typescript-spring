@@ -1,10 +1,6 @@
 import {HttpResponse} from "../client/HttpResponse";
-import {invokeFunctionInterface} from "..";
+import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 
-// /**
-//  * handle network failure toast
-//  */
-// export type NotNetworkToast = () => void;
 
 /**
  * unified failure toast

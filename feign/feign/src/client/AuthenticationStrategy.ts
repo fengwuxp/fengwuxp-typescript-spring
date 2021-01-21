@@ -1,4 +1,5 @@
 import {HttpRequest} from "./HttpRequest";
+import {AuthenticationType} from "../constant/AuthenticationType";
 
 
 /**
@@ -40,6 +41,10 @@ export interface AuthenticationStrategy<T extends AuthenticationToken = Authenti
 
     appendAuthorizationHeader: (authorization: T, headers: Record<string, string>) => Record<string, string>;
 
+    /**
+     * get default AuthenticationType
+     */
+    getDefaultAuthenticationType?: () => AuthenticationType;
 }
 
 

@@ -26,13 +26,15 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     }> = [];
 
     // Refresh tokens 5 minutes in advance by default
-    private aheadOfTimes: number;
+    private readonly aheadOfTimes: number;
 
     private authenticationStrategy: AuthenticationStrategy;
 
     // blocking 'authorization' refresh
-    private blockingRefreshAuthorization: boolean;
+    private readonly blockingRefreshAuthorization: boolean;
 
+    // default AuthenticationType
+    private defaultAuthenticationType: AuthenticationType;
 
     /**
      *
@@ -42,25 +44,19 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
      */
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
-                blockingRefreshAuthorization: boolean = true,) {
-        // if (authenticationStrategy.enableCache) {
-        //     this.authenticationStrategy = new CacheAuthenticationStrategy(authenticationStrategy);
-        // } else {
-        //     this.authenticationStrategy = authenticationStrategy;
-        // }
-        this.authenticationStrategy = authenticationStrategy;
+                blockingRefreshAuthorization: boolean = true) {
         this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
         this.blockingRefreshAuthorization = blockingRefreshAuthorization;
-        // registry.getDefaultFeignConfiguration().getAuthenticationBroadcaster().receiveAuthorizedEvent((){})
+        this.setAuthenticationStrategy(authenticationStrategy);
     }
 
     interceptor = async (req: T) => {
 
         const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
         let isTryAuthentication = false;
-        const mappingOptions = feignClientMethodConfigurationByRequest == null ? null : feignClientMethodConfigurationByRequest.requestMapping;
+        const mappingOptions = feignClientMethodConfigurationByRequest?.requestMapping;
         if (mappingOptions != null) {
-            let authenticationType = mappingOptions.authenticationType;
+            const authenticationType = this.getAuthenticationType(mappingOptions.authenticationType, this.defaultAuthenticationType);
             if (authenticationType === AuthenticationType.NONE) {
                 // none certification
                 return req;
@@ -74,30 +70,29 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         }
 
         const {aheadOfTimes, blockingRefreshAuthorization, authenticationStrategy} = this;
-        let authorization: AuthenticationToken;
+        let authenticationToken: AuthenticationToken;
         try {
-            authorization = await authenticationStrategy.getAuthorization(req);
+            authenticationToken = await authenticationStrategy.getAuthorization(req);
         } catch (e) {
             if (isTryAuthentication) {
                 return req;
             }
-
             return Promise.reject({
                 ...UNAUTHORIZED_RESPONSE,
                 data: e
             });
         }
-        if (authorization == null || !StringUtils.hasText(authorization.authorization)) {
+        if (authenticationToken == null || !StringUtils.hasText(authenticationToken.authorization)) {
             if (isTryAuthentication) {
                 return req;
             }
-            return Promise.reject('authorization is null');
+            return Promise.reject('authorization is null [feign client mock return]');
         }
         const currentTimes = new Date().getTime();
-        const tokenIsNever = authorization.expireDate === NEVER_REFRESH_FLAG;
-        const refreshTokenIsNever = authorization.refreshExpireDate === NEVER_REFRESH_FLAG;
+        const tokenIsNever = authenticationToken.expireDate === NEVER_REFRESH_FLAG;
+        const refreshTokenIsNever = authenticationToken.refreshExpireDate === NEVER_REFRESH_FLAG;
         const refreshTokenIsInvalid =
-            authorization.refreshExpireDate <= currentTimes + aheadOfTimes && !refreshTokenIsNever;
+            authenticationToken.refreshExpireDate <= currentTimes + aheadOfTimes && !refreshTokenIsNever;
 
         if (refreshTokenIsInvalid && !tokenIsNever) {
             // 20 seconds in advance, the token is invalid and needs to be re-authenticated
@@ -108,16 +103,16 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
             return Promise.reject(UNAUTHORIZED_RESPONSE);
         }
 
-        const authorizationIsInvalid = authorization.expireDate <= currentTimes + aheadOfTimes && !tokenIsNever;
+        const authorizationIsInvalid = authenticationToken.expireDate <= currentTimes + aheadOfTimes && !tokenIsNever;
         if (!authorizationIsInvalid) {
-            req.headers = this.appendAuthorizationHeader(authorization, req.headers);
+            req.headers = this.appendAuthorizationHeader(authenticationToken, req.headers);
             return req;
         }
 
         if (!blockingRefreshAuthorization) {
             // Concurrent refresh
             try {
-                authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
+                authenticationToken = await authenticationStrategy.refreshAuthorization(authenticationToken, req);
             } catch (e) {
                 // refresh authorization error
                 return Promise.reject({
@@ -142,7 +137,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                 // need refresh token
                 let error;
                 try {
-                    authorization = await authenticationStrategy.refreshAuthorization(authorization, req);
+                    authenticationToken = await authenticationStrategy.refreshAuthorization(authenticationToken, req);
                 } catch (e) {
                     // refresh authorization error
                     return Promise.reject({
@@ -159,14 +154,14 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
                     if (error) {
                         reject(error);
                     } else {
-                        request.headers = this.appendAuthorizationHeader(authorization, request.headers);
+                        request.headers = this.appendAuthorizationHeader(authenticationToken, request.headers);
                         resolve(request);
                     }
                 });
             }
         }
 
-        req.headers = this.appendAuthorizationHeader(authorization, req.headers);
+        req.headers = this.appendAuthorizationHeader(authenticationToken, req.headers);
         return req;
 
     };
@@ -197,7 +192,16 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         return count !== headerNames.length;
     };
 
-    public setAuthenticationStrategy = (authenticationStrategy: AuthenticationStrategy<AuthenticationToken>) => {
-        this.authenticationStrategy = authenticationStrategy;
+    private getAuthenticationType = (input: AuthenticationType, defaultType: AuthenticationType = AuthenticationType.FORCE) => {
+        return input == null ? defaultType : input;
     }
+
+    public setAuthenticationStrategy = (authenticationStrategy: AuthenticationStrategy) => {
+        this.authenticationStrategy = authenticationStrategy;
+        // default force
+        const defaultAuthenticationType = authenticationStrategy.getDefaultAuthenticationType?.();
+        this.defaultAuthenticationType = this.getAuthenticationType(defaultAuthenticationType);
+    }
+
+
 }

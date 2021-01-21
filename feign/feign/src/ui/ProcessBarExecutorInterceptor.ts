@@ -47,7 +47,7 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         this.preventJitter = this.progressBarOptions.delay >= 100;
     }
 
-    postHandle = <E = HttpResponse<any>>(options: T, response: E) => {
+    postHandle = <E = HttpResponse>(options: T, response: E) => {
 
         if (!this.needShowProcessBar(options)) {
             //不使用进度条
@@ -94,7 +94,7 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         return options;
     };
 
-    postError = async (options: T, response: HttpResponse<any>) => {
+    postError = async (options: T, response: HttpResponse) => {
         return this.postHandle(options, response);
     };
 

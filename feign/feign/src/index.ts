@@ -63,7 +63,6 @@ export {
     contentTypeName,
     contentLengthName,
     contentTransferEncodingName,
-    matchUrlPathVariable,
     FEIGN_CLINE_META_KEY,
     UNAUTHORIZED_RESPONSE,
     grabUrlPathVariable
@@ -106,6 +105,8 @@ export {
     UriTemplateHandler, UriTemplateHandlerInterface, UriTemplateHandlerFunction
 } from "./template/UriTemplateHandler";
 
+export {RequestTracer} from "./trace/RequestTracer";
+export {default as TraceRequestExecutorInterceptor} from "./trace/TraceRequestExecutorInterceptor";
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {default as UnifiedFailureToastExecutorInterceptor} from "./ui/UnifiedFailureToastExecutorInterceptor";
 export {RequestProgressBar, ProgressBarOptions} from "./ui/RequestProgressBar";

@@ -12,7 +12,7 @@ export default class CacheAuthenticationStrategy implements AuthenticationStrate
 
     private cacheAuthenticationToken: AuthenticationToken;
 
-    constructor(authenticationStrategy: AuthenticationStrategy<AuthenticationToken>) {
+    constructor(authenticationStrategy: AuthenticationStrategy) {
         this.authenticationStrategy = authenticationStrategy;
     }
 

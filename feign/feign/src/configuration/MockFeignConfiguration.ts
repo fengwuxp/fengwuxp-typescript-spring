@@ -22,6 +22,7 @@ import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
 import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
 import {AuthenticationToken} from "../client/AuthenticationStrategy";
 import {ProgressBarOptions} from '../ui/RequestProgressBar';
+import TraceRequestExecutorInterceptor from "../trace/TraceRequestExecutorInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -119,7 +120,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                     const _newAuthenticationToken = {
                         ...authenticationToken
                     };
-                    _newAuthenticationToken.authorization =Math.round(1) + '';// "refresh-token";
+                    _newAuthenticationToken.authorization = Math.round(1) + '';// "refresh-token";
                     _newAuthenticationToken.expireDate = new Date().getTime() + 60 * 60 * 1000;
                     authorization = _newAuthenticationToken;
                     return new Promise((resolve, reject) => {
@@ -134,7 +135,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 },
                 getAuthorizationHeaderNames: () => {
                     return ["Authorization"]
-                }
+                },
             })
         ];
         httpClient.setInterceptors(interceptors);
@@ -160,6 +161,11 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
             new UnifiedFailureToastExecutorInterceptor((response) => {
                 console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
+            }),
+            new TraceRequestExecutorInterceptor({
+                onSuccess: (options, response) => {
+                    logger.info("请求参数：", options, response);
+                }
             })
         ]
     };

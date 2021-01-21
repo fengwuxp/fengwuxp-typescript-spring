@@ -1,9 +1,9 @@
 import * as os from 'os';
-import resolve from 'rollup-plugin-node-resolve';
-import common from 'rollup-plugin-commonjs';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
 import {terser} from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
 import typescript from 'rollup-plugin-typescript2';
-import json from 'rollup-plugin-json';
 import filesize from "rollup-plugin-filesize";
 import includePaths from "rollup-plugin-includepaths";
 import analyze from "rollup-plugin-analyzer";
@@ -46,17 +46,18 @@ const getConfig = (isProd) => {
         ],
         plugins: [
             typescript({
+                target: "esnext",
                 tsconfig: "./tsconfig.lib.json",
                 tsconfigOverride: {
                     compilerOptions: {
-                        module: "esnext",
+                        target: "esnext",
                         declaration: false
                     }
                 }
             }),
             json(),
             resolve(),
-            common({
+            commonjs({
                 // 包括
                 include: [
                     // 'node_modules/**'
@@ -75,12 +76,10 @@ const getConfig = (isProd) => {
             //压缩代码
             isProd && terser({
                 output: {
-                    comments: false
+                    comments: false,
+                    source_map: true
                 },
-                include: [/^.+\.js$/],
-                exclude: ['node_modules/**'],
-                numWorkers: cpuNums,
-                sourcemap: true
+                numWorkers: cpuNums
             }),
 
         ],

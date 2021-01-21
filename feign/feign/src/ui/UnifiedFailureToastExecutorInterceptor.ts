@@ -34,7 +34,7 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
     }
 
 
-    postError = (options: T, response: HttpResponse<any>) => {
+    postError = (options: T, response: HttpResponse) => {
         if (options.useUnifiedTransformResponse === false) {
             return response;
         }
@@ -60,7 +60,7 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
      * try send unauthorized event
      * @param response
      */
-    protected tryHandleUnAuthorized = async (response: HttpResponse<any>) => {
+    protected tryHandleUnAuthorized = async (response: HttpResponse) => {
 
 
         if (response.statusCode !== HttpStatus.UNAUTHORIZED) {

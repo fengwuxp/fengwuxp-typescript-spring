@@ -5,6 +5,7 @@ import CodecFeignClientExecutorInterceptor from "../src/codec/CodecFeignClientEx
 import DateEncoder from "../src/codec/DateEncoder";
 import UnifiedFailureToastExecutorInterceptor from "../src/ui/UnifiedFailureToastExecutorInterceptor";
 import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
+import TraceRequestExecutorInterceptor from "../src/trace/TraceRequestExecutorInterceptor";
 
 
 export default class MockFeignConfigurationTest extends MockFeignConfiguration {
@@ -50,6 +51,17 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
 
             new UnifiedFailureToastExecutorInterceptor((response) => {
                 console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
+            }),
+            new TraceRequestExecutorInterceptor({
+                onRequest: (options) => {
+                    console.info("请求参数：", options);
+                },
+                onSuccess: (options, response) => {
+                    console.info("请求成功：", options, response);
+                },
+                onError: (options, response) => {
+                    console.error("请求失败：", options, response);
+                },
             })
         ]
     }
