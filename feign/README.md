@@ -334,6 +334,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
 
     /**
      * 获取本地缓存的鉴权对象
+     * 注意：如果没有token Primose的状态应该为Rejected
      * @param req
      */
     public getAuthorization = (req: Readonly<HttpRequest>) => {
@@ -341,10 +342,7 @@ class AppAuthenticationStrategy implements AuthenticationStrategy {
         return AppStorage.getUserInfo().then(userInfo => ({
             authorization: userInfo.token,
             expireDate: userInfo.tokenExpired,
-        })).catch(e => ({
-            authorization: null,
-            expireDate: -1
-        }))
+        }));
     };
 
     /**

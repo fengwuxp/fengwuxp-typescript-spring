@@ -3,7 +3,11 @@ import {UriVariable} from "./RestOperations";
 import {queryStringify} from "../utils/SerializeRequestBodyUtil";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
 
-
+/**
+ * @see UriTemplateHandlerFunction
+ * @param uriTemplate url
+ * @param uriVariables url params
+ */
 export const defaultUriTemplateFunctionHandler: UriTemplateHandlerFunction = (uriTemplate: string, uriVariables: UriVariable) => {
 
     if (uriVariables == null) {
@@ -27,9 +31,5 @@ export const defaultUriTemplateFunctionHandler: UriTemplateHandlerFunction = (ur
 };
 
 export class DefaultUriTemplateHandler implements UriTemplateHandlerInterface {
-
-
     expand = defaultUriTemplateFunctionHandler;
-
-
 }

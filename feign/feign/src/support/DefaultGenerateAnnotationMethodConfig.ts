@@ -2,7 +2,6 @@ import {FeignProxyClient} from "./FeignProxyClient";
 import {FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import {GenerateAnnotationMethodConfig} from "./GenerateAnnotationMethodConfig";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
-import {FeignClient} from "../FeignClient";
 import Reflect from "../ReflectMetadata";
 import {getFeignClientMethodConfig} from "../annotations/Feign";
 
@@ -12,8 +11,7 @@ import {getFeignClientMethodConfig} from "../annotations/Feign";
  * @param methodName
  * @param options
  */
-export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConfig<FeignClient,
-    FeignClientMethodConfig> = (targetService: FeignProxyClient,
+export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient,
                                 methodName: string,
                                 options: FeignClientMethodConfig) => {
 

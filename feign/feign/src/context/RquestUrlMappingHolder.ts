@@ -7,7 +7,8 @@ const ROUTE_MAPPING: Record<string, string> = {};
 
 /**
  * 路由缓存
- * @key  url
+ * @key  module name
+ * @value real url
  */
 const ROUTE_CACHE: Map<string, string> = new Map<string, string>();
 
@@ -21,7 +22,8 @@ const routing = (url: string, routeMapping: Record<string, string>) => {
         //uri
         return normalizeUrl(url);
     }
-    if (!/^(@)/.test(url)) {
+    // if (!/^(@)/.test(url)) {
+    if (!url.startsWith("@")) {
         throw  new Error(`illegal routing url -> ${url}`);
     }
     let realUrl = ROUTE_CACHE.get(url);
@@ -50,14 +52,13 @@ const normalizeUrl = (url: string): string => {
         if (/^(?!\/)/g.test(p1)) {
             return `${p1}/`;
         }
-
         return '/';
     });
 };
 
 /**
  * routing url
- * @param url
+ * @param url  example: @default/api/xxx
  */
 export const parseRequestUrl = (url: string) => {
 

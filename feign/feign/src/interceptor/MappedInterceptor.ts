@@ -95,7 +95,6 @@ export abstract class MappedInterceptor {
             const {name, value} = pattern;
             const needMatchValue = value != null;
             const headerValue = matchSource[name];
-
             if (needMatchValue) {
                 return headerValue === value;
             }
@@ -121,12 +120,9 @@ export abstract class MappedInterceptor {
         if (includes == null || includes.length === 0) {
             return true
         }
-        const isMatch = includes.some((pattern) => predicate(pattern, matchSource));
-        if (isMatch) {
-            return true;
-        }
+        return includes.some((pattern) => predicate(pattern, matchSource));
 
-        return false;
+
     };
 
     private converterHeaders = (headers: string[][]) => {
