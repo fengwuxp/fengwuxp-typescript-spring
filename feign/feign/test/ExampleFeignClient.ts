@@ -1,13 +1,15 @@
-import {Feign, HttpMediaType} from "../src";
-import {RequestMapping} from "../src";
+import {
+    DeleteMapping,
+    Feign,
+    FeignRequestOptions,
+    FeignRetry,
+    HttpMediaType,
+    HttpMethod,
+    PostMapping,
+    RequestMapping,
+    Signature
+} from "../src";
 import {GetMapping} from "../src/annotations/mapping/GetMapping";
-import {PostMapping} from "../src";
-import {Signature} from "../src";
-import {FeignRetry} from "../src";
-import {HttpMethod} from "../src";
-import {FeignRequestOptions} from "../src";
-import {DeleteMapping} from "../src";
-import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
 import {ValidateSchema} from '../src/annotations/validator/VailidatorSchema';
 
 

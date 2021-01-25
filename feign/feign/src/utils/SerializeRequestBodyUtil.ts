@@ -27,9 +27,6 @@ export const serializeRequestBody = (method: string,
                                      contentType: HttpMediaType,
                                      filterNoneValue: boolean = false): string => {
 
-    if (!supportRequestBody(method)) {
-        return body as any
-    }
     if (body == null || contentType == null) {
         return body as any
     }

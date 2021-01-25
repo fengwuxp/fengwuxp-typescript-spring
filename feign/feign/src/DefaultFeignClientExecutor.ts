@@ -20,6 +20,7 @@ import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} 
 import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
 import {AuthenticationType} from "./constant/AuthenticationType";
 import {parse} from "querystring";
+import {getNextRequestId} from "./client/HttpRequest";
 
 /**
  * default feign client executor
@@ -157,7 +158,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // set mapping options
-        const requestId = appendRequestContextId(feignRequestOptions);
+        const requestId = getNextRequestId();
+        feignRequestOptions.requestId = requestId;
+        appendRequestContextId(feignRequestOptions.headers, requestId);
         setRequestContext(requestId, feignMethodConfig);
 
         // pre handle
@@ -175,9 +178,11 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                             queryParams,
                             req.body,
                             feignRequestOptions.responseExtractor,
-                            req.headers);
+                            // keep requestId use trace
+                            appendRequestContextId(req.headers, req.requestId));
                     }
                 }, retryOptions).send({
+                    requestId: feignRequestOptions.requestId,
                     url: requestURL,
                     method: requestMapping.method,
                     body: feignRequestOptions.body,
@@ -313,7 +318,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             }
             index++;
         }
-
+        removeRequestContext(options.requestId);
         return Promise.reject(result);
     };
 

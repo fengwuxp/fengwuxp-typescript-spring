@@ -1,4 +1,4 @@
-import {MockFeignConfiguration} from "../src/configuration/MockFeignConfiguration";
+import {MockFeignConfiguration} from "./mock/MockFeignConfiguration";
 import ProcessBarExecutorInterceptor from "../src/ui/ProcessBarExecutorInterceptor";
 import {FeignRequestOptions, FileUploadProgressBarOptions, ProgressBarOptions} from "../src";
 import CodecFeignClientExecutorInterceptor from "../src/codec/CodecFeignClientExecutorInterceptor";
@@ -6,9 +6,12 @@ import DateEncoder from "../src/codec/DateEncoder";
 import UnifiedFailureToastExecutorInterceptor from "../src/ui/UnifiedFailureToastExecutorInterceptor";
 import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
 import TraceRequestExecutorInterceptor from "../src/trace/TraceRequestExecutorInterceptor";
-import MockHttpAdapter from "../src/adapter/mock/MockHttpAdapter";
+import MockHttpAdapter from "./mock/MockHttpAdapter";
 import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../src/constant/FeignConstVar";
+import * as log4js from "log4js";
 
+const logger = log4js.getLogger();
+logger.level = 'debug';
 
 export default class MockFeignConfigurationTest extends MockFeignConfiguration {
 
@@ -25,10 +28,10 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
         return [
             new ProcessBarExecutorInterceptor({
                 showProgressBar: (progressBarOptions?: ProgressBarOptions) => {
-                    console.log("showProgressBar", progressBarOptions);
+                    logger.log("[ProcessBarExecutorInterceptor]showProgressBar", progressBarOptions);
                 },
                 hideProgressBar: () => {
-                    console.log("hideProgressBar");
+                    logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
                 }
             }),
             new CodecFeignClientExecutorInterceptor([
@@ -38,13 +41,13 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
                     fileUploadProgressBar: () => {
                         return {
                             hideProgressBar: function () {
-                                console.debug("fileUploadStrategy hideProgressBar")
+                                logger.debug("[fileUploadProgressBar]] hideProgressBar")
                             },
                             onUploadProgressChange: function (progress: number, fileIndex: number) {
-                                console.debug("onUploadProgressChange", progress, fileIndex);
+                                logger.debug("[fileUploadProgressBar] onUploadProgressChange", progress, fileIndex);
                             },
                             showProgressBar: function (progressBarOptions: FileUploadProgressBarOptions) {
-                                console.debug("fileUploadStrategy showProgressBar", progressBarOptions)
+                                logger.debug("[fileUploadProgressBar] showProgressBar", progressBarOptions)
                             }
 
                         };
@@ -58,17 +61,17 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
             ], []),
 
             new UnifiedFailureToastExecutorInterceptor((response) => {
-                console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
+                logger.log("[UnifiedTransformDataExecutorInterceptor] failure toast", response);
             }),
             new TraceRequestExecutorInterceptor({
                 onRequest: (options) => {
-                    console.info("请求参数：", options);
+                    logger.info("[TraceRequestExecutorInterceptor]请求参数：", options);
                 },
                 onSuccess: (options, response) => {
-                    console.info("请求成功：", options, response);
+                    logger.info("[TraceRequestExecutorInterceptor]请求成功：", options, response);
                 },
                 onError: (options, response) => {
-                    console.error("请求失败：", options, response);
+                    logger.error("[TraceRequestExecutorInterceptor]请求失败：", options, response);
                 },
             })
         ]

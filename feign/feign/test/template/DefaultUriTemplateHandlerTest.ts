@@ -1,12 +1,9 @@
 import * as log4js from "log4js";
 import {
     defaultUriTemplateFunctionHandler,
-    DefaultUriTemplateHandler
-} from "../../src";
-import {invokeFunctionInterface} from "../../src";
-import {
+    DefaultUriTemplateHandler,
+    invokeFunctionInterface,
     UriTemplateHandler,
-    UriTemplateHandlerFunction,
     UriTemplateHandlerInterface
 } from "../../src";
 

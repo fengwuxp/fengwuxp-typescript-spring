@@ -14,6 +14,7 @@ import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
 import {ResponseErrorHandler, ResponseErrorHandlerInterFace} from "./ResponseErrorHandler";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
+import {removeRequestContextId} from "../context/RequestContextHolder";
 
 /**
  *  http rest template
@@ -93,8 +94,10 @@ export default class RestTemplate implements RestOperations {
         realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler).expand(realUrl, uriVariables);
 
         let httpResponse;
+        const requestId = removeRequestContextId(headers);
         try {
             httpResponse = await this.httpClient.send({
+                requestId,
                 url: realUrl,
                 method,
                 body: requestBody,
@@ -105,12 +108,12 @@ export default class RestTemplate implements RestOperations {
             if (_responseErrorHandler) {
                 return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
                     {
+                        requestId,
                         url: realUrl,
                         method,
                         headers,
                         body: requestBody
-                    },
-                    error);
+                    }, error);
             }
 
             return Promise.reject(error);

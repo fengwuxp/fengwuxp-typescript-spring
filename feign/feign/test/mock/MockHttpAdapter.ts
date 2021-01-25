@@ -1,11 +1,14 @@
-import {HttpAdapter} from "../HttpAdapter";
-import {HttpRequest} from "../../client/HttpRequest";
-import {HttpResponse} from "../../client/HttpResponse";
-import {ResolveHttpResponse} from "../../resolve/ResolveHttpResponse";
-import CommonResolveHttpResponse from "../../resolve/CommonResolveHttpResponse";
-import {contentTypeName, HttpMediaType, HttpMethod, mediaTypeIsEq} from "../..";
-import {HttpStatus} from "../../constant/http/HttpStatus";
+import {HttpAdapter} from "../../src/adapter/HttpAdapter";
+import {HttpRequest} from "../../src/client/HttpRequest";
+import {HttpResponse} from "../../src/client/HttpResponse";
+import {ResolveHttpResponse} from "../../src/resolve/ResolveHttpResponse";
+import CommonResolveHttpResponse from "../../src/resolve/CommonResolveHttpResponse";
+import {contentTypeName, HttpMediaType, HttpMethod, mediaTypeIsEq} from "../../src";
+import {HttpStatus} from "../../src/constant/http/HttpStatus";
+import * as log4js from "log4js";
 
+const logger = log4js.getLogger();
+logger.level = 'debug';
 
 export type MockDataType = (options: HttpRequest) => Promise<any> | any;
 
@@ -35,7 +38,7 @@ export default class MockHttpAdapter implements HttpAdapter {
     }
 
     send = async (req: HttpRequest): Promise<HttpResponse> => {
-        console.log("mock http adapter", req);
+        logger.debug("[MockHttpAdapter] send ", req);
         const {url, method, headers} = req;
         if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type

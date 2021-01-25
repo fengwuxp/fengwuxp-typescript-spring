@@ -1,7 +1,7 @@
 import {HttpResponse} from "./HttpResponse";
 import {HttpRequest} from "./HttpRequest";
 import {HttpAdapter} from "../adapter/HttpAdapter";
-import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
+import {serializeRequestBody, supportRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
@@ -9,7 +9,6 @@ import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpStatus} from "../constant/http/HttpStatus";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
-import {removeRequestContextId} from "../context/RequestContextHolder";
 
 /**
  * default http client
@@ -63,24 +62,24 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
                 });
             }
         }
-
-        const contentType = this.resolveContentType(httpRequest);
-        httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType as HttpMediaType, false);
-        removeRequestContextId(httpRequest);
+        if (supportRequestBody(req.method)) {
+            const contentType = this.resolveContentType(httpRequest);
+            httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType, false);
+        }
         return this.httpAdapter.send(httpRequest);
     };
 
-    private resolveContentType = (requestData: T) => {
+    private resolveContentType = (httpRequest: T): HttpMediaType => {
 
-        let headers = requestData.headers;
+        let headers = httpRequest.headers;
         let contentType = this.defaultProduce;
         if (headers == null) {
             headers = {};
+            httpRequest.headers = headers;
         } else {
             contentType = headers[contentTypeName] as HttpMediaType || contentType;
         }
         headers[contentTypeName] = contentType;
-        requestData.headers = headers;
         return contentType;
     }
 

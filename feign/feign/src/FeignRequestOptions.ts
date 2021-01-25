@@ -4,17 +4,8 @@ import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
 import {ProgressBarOptions} from './ui/RequestProgressBar';
-import {SupportSerializableBody} from "./client/HttpRequest";
+import {RequestTrace, SupportSerializableBody} from "./client/HttpRequest";
 
-export interface FeignRequestId {
-
-    /**
-     * 单次http请求的id，用于贯穿整个http请求的过程
-     * 在这个过程中可以通过该id获取到请求的上下文内容
-     * {@see HttpRequestGenerator}
-     */
-    requestId?: Readonly<string>;
-}
 
 /**
  * Used by the feign client to pass data during the request process and the interceptor
@@ -23,7 +14,7 @@ export interface FeignRequestId {
  * {@see FeignClientExecutorInterceptor#preHandle}
  * {@see RestTemplate#execute}
  */
-export interface FeignRequestBaseOptions extends FeignRequestId {
+export interface FeignRequestBaseOptions extends RequestTrace {
 
 
     /**

@@ -1,7 +1,7 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
-import {getFeignClientMethodConfigurationByRequest} from "../context/RequestContextHolder";
+import {getFeignClientMethodConfigurationByRequest,} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
 import {AuthenticationType} from "../constant/AuthenticationType";
@@ -13,7 +13,7 @@ import {RequestAuthenticationType} from "../annotations/mapping/Mapping";
  *
  *  Support blocking 'authorization' refresh
  */
-export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest>
+export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest>
     implements ClientHttpRequestInterceptorInterface<T> {
 
     // is refreshing status

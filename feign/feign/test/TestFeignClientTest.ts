@@ -69,12 +69,21 @@ describe("test feign client", () => {
             })
             const result = await testFeignClient.getExample({
                 id: 1,
-                date: new Date(),
-                // test: "1"
+                date: new Date()
             });
             console.log("http result", result);
+
         } catch (e) {
             logger.error(e)
+        }
+        try {
+            const result2 = await testFeignClient.getExample({
+                id: 2,
+                date: new Date()
+            });
+            console.log("http result2", result2);
+        } catch (e) {
+            logger.error("error2",e)
         }
     }, 40 * 1000);
 

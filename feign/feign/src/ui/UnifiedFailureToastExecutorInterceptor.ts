@@ -39,7 +39,6 @@ export default class UnifiedFailureToastExecutorInterceptor<T extends FeignReque
             return response;
         }
         this.tryHandleUnAuthorized(response);
-
         this.tryToast(options, response);
         return Promise.reject(response);
     };

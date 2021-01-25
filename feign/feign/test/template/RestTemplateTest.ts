@@ -1,7 +1,7 @@
 import * as log4js from "log4js";
 import RestTemplate from "../../src/template/RestTemplate";
 import DefaultHttpClient from "../../src/client/DefaultHttpClient";
-import MockHttpAdapter from "../../src/adapter/mock/MockHttpAdapter";
+import MockHttpAdapter from "../mock/MockHttpAdapter";
 import {HttpMediaType} from "../../src/constant/http/HttpMediaType";
 
 

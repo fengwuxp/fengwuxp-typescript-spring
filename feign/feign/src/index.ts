@@ -148,7 +148,6 @@ export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuil
 export {FeignClientExecutor} from "./FeignClientExecutor";
 export {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 export {
-    FeignRequestId,
     FeignRequestBaseOptions,
     FeignRequestOptions,
     UIOptions,

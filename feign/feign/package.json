@@ -48,6 +48,7 @@
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
     "fengwuxp-library-starter": "^1.0.0",
+    "fengwuxp-rollup-dependency": "^1.0.0",
     "rollup": "2.37.1",
     "rollup-plugin-analyzer": "4.0.0",
     "rollup-plugin-dts": "^2.0.1",

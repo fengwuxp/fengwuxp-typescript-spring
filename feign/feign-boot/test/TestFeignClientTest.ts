@@ -7,7 +7,7 @@ import {
     NetworkClientHttpRequestInterceptor, NetworkStatus, ProcessBarExecutorInterceptor,
     RoutingClientHttpRequestInterceptor,
 } from "fengwuxp-typescript-feign";
-import MockHttpAdapter from "../../feign/src/adapter/mock/MockHttpAdapter";
+import MockHttpAdapter from "../../feign/test/mock/MockHttpAdapter";
 import {ProgressBarOptions} from "../../feign/src/FeignRequestOptions";
 
 

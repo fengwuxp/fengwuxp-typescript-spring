@@ -1,29 +1,29 @@
-import {FeignConfiguration} from "./FeignConfiguration";
-import DefaultFeignClientExecutor from "../DefaultFeignClientExecutor";
-import {FeignProxyClient} from "../support/FeignProxyClient";
-import DefaultHttpClient from "../client/DefaultHttpClient";
-import RestTemplate from "../template/RestTemplate";
-import MockHttpAdapter from "../adapter/mock/MockHttpAdapter";
-import RoutingClientHttpRequestInterceptor from "../client/RoutingClientHttpRequestInterceptor";
-import {HttpRequest} from "../client/HttpRequest";
-import NetworkClientHttpRequestInterceptor from "../network/NetworkClientHttpRequestInterceptor";
-import {NetworkStatus, NetworkStatusListener, NetworkType} from "../network/NetworkStatusListener";
-import ProcessBarExecutorInterceptor from "../ui/ProcessBarExecutorInterceptor";
-import {FeignRequestContextOptions} from "../FeignRequestOptions";
-import CodecFeignClientExecutorInterceptor from "../codec/CodecFeignClientExecutorInterceptor";
-import DateEncoder from "../codec/DateEncoder";
-import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
+import {FeignConfiguration} from "../../src/configuration/FeignConfiguration";
+import DefaultFeignClientExecutor from "../../src/DefaultFeignClientExecutor";
+import {FeignProxyClient} from "../../src/support/FeignProxyClient";
+import DefaultHttpClient from "../../src/client/DefaultHttpClient";
+import RestTemplate from "../../src/template/RestTemplate";
+import MockHttpAdapter from "./MockHttpAdapter";
+import RoutingClientHttpRequestInterceptor from "../../src/client/RoutingClientHttpRequestInterceptor";
+import {HttpRequest} from "../../src/client/HttpRequest";
+import NetworkClientHttpRequestInterceptor from "../../src/network/NetworkClientHttpRequestInterceptor";
+import {NetworkStatus, NetworkStatusListener, NetworkType} from "../../src/network/NetworkStatusListener";
+import ProcessBarExecutorInterceptor from "../../src/ui/ProcessBarExecutorInterceptor";
+import {FeignRequestContextOptions} from "../../src/FeignRequestOptions";
+import CodecFeignClientExecutorInterceptor from "../../src/codec/CodecFeignClientExecutorInterceptor";
+import DateEncoder from "../../src/codec/DateEncoder";
+import {FeignClientExecutorInterceptor} from "../../src/FeignClientExecutorInterceptor";
 
+import UnifiedFailureToastExecutorInterceptor from "../../src/ui/UnifiedFailureToastExecutorInterceptor";
+import AuthenticationClientHttpRequestInterceptor from "../../src/client/AuthenticationClientHttpRequestInterceptor";
+import {ApiSignatureStrategy} from '../../src/signature/ApiSignatureStrategy';
+import {RequestHeaderResolver} from '../../src/resolve/header/RequestHeaderResolver';
+import {simpleRequestURLResolver} from '../../src/resolve/url/SimpleRequestURLResolver';
+import {AuthenticationToken} from "../../src/client/AuthenticationStrategy";
+import {ProgressBarOptions} from '../../src/ui/RequestProgressBar';
+import TraceRequestExecutorInterceptor from "../../src/trace/TraceRequestExecutorInterceptor";
+import ApiPermissionProbeInterceptor from "../../src/client/ApiPermissionProbeInterceptor";
 import * as log4js from "log4js";
-import UnifiedFailureToastExecutorInterceptor from "../ui/UnifiedFailureToastExecutorInterceptor";
-import AuthenticationClientHttpRequestInterceptor from "../client/AuthenticationClientHttpRequestInterceptor";
-import {ApiSignatureStrategy} from '../signature/ApiSignatureStrategy';
-import {RequestHeaderResolver} from '../resolve/header/RequestHeaderResolver';
-import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver';
-import {AuthenticationToken} from "../client/AuthenticationStrategy";
-import {ProgressBarOptions} from '../ui/RequestProgressBar';
-import TraceRequestExecutorInterceptor from "../trace/TraceRequestExecutorInterceptor";
-import ApiPermissionProbeInterceptor from "../client/ApiPermissionProbeInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -39,7 +39,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
     protected baseUrl: string = "http://test.ab.com/api/";
 
     constructor() {
-        // this.baseUrl = baseUrl;
+
     }
 
     getApiSignatureStrategy: () => ApiSignatureStrategy;
@@ -49,8 +49,6 @@ export class MockFeignConfiguration implements FeignConfiguration {
     getRequestHeaderResolver: () => RequestHeaderResolver;
 
     getRequestURLResolver = () => simpleRequestURLResolver
-
-
 
 
     getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client: T) => {
@@ -77,7 +75,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 onChange = (callback: (networkStatus: NetworkStatus) => void): void => {
 
                     this.onMockNetworkChangeEvent((networkStatus) => {
-                        logger.debug("网络状态变化", networkStatus);
+                        logger.debug("[NetworkClientHttpRequestInterceptor]网络状态变化", networkStatus);
                         callback(networkStatus);
                     })
 
@@ -92,7 +90,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
                 private mockNetworkState = () => {
                     const b = true;//new Date().getTime() % 3 === 0;
-                    logger.debug("----网络状态--->", b ? "可用" : "不可用");
+                    logger.debug("[NetworkClientHttpRequestInterceptor]----网络状态--->", b ? "可用" : "不可用");
                     if (b) {
                         return {
                             isConnected: true,
@@ -120,7 +118,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 },
                 refreshAuthorization: (authorization, req) => {
                     ++refreshTokenCount;
-                    console.log("--refresh token->", refreshTokenCount, authenticationToken);
+                    logger.log("[AuthenticationStrategy]--refresh token->", refreshTokenCount, authenticationToken);
                     const _newAuthenticationToken = {
                         ...authenticationToken
                     };
@@ -153,10 +151,10 @@ export class MockFeignConfiguration implements FeignConfiguration {
         return [
             new ProcessBarExecutorInterceptor({
                 showProgressBar: (progressBarOptions?: ProgressBarOptions) => {
-                    console.log("showProgressBar", progressBarOptions);
+                    logger.log("[ProcessBarExecutorInterceptor]showProgressBar", progressBarOptions);
                 },
                 hideProgressBar: () => {
-                    console.log("hideProgressBar");
+                    logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
                 }
             }),
             new CodecFeignClientExecutorInterceptor([
@@ -164,11 +162,11 @@ export class MockFeignConfiguration implements FeignConfiguration {
             ], []),
 
             new UnifiedFailureToastExecutorInterceptor((response) => {
-                console.log("-----UnifiedTransformDataExecutorInterceptor-->", response);
+                logger.log("[UnifiedTransformDataExecutorInterceptor]", response);
             }),
             new TraceRequestExecutorInterceptor({
                 onSuccess: (options, response) => {
-                    logger.info("请求参数：", options, response);
+                    logger.info("[TraceRequestExecutorInterceptor]请求参数：", options, response);
                 }
             })
         ]
@@ -177,7 +175,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getFeignUIToast = () => {
         return (message: string) => {
-            logger.info("--ui toast--->", message);
+            logger.info("[getFeignUIToast]ui toast", message);
         }
     };
 
