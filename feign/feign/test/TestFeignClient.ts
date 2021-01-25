@@ -31,8 +31,8 @@ export default class TestFeignClient {
 
 
     @GetMapping({
-        // value: "/example"
-        authenticationType: AuthenticationType.TRY,
+        value: "/example",
+        // authenticationType: AuthenticationType.TRY,
         // params: ["test=k"]
         params: {test: 'k'}
     })
@@ -46,6 +46,7 @@ export default class TestFeignClient {
     @RequestMapping({
         value: "/testQuery/{idV:100}",
         method: HttpMethod.POST,
+        authenticationType: AuthenticationType.TRY,
         headers: {
             test: 1,
             test2: [2, 3],

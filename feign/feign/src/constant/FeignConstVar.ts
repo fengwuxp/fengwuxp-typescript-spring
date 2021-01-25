@@ -47,3 +47,8 @@ export const UNAUTHORIZED_RESPONSE = {
     statusCode: HttpStatus.UNAUTHORIZED,
     statusText: null,
 };
+
+/**
+ * 用于获取接口权限类型的请求头
+ */
+export const REQUEST_AUTHENTICATION_TYPE_HEADER_NAME = 'X-Api-Authentication-Type'

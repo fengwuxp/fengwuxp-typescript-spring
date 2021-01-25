@@ -1,6 +1,8 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
 
 
+export type SupportSerializableBody = any;
+
 /**
  * The payload object used to make the HTTP request
  * {@see HttpAdapter}
@@ -16,7 +18,7 @@ export interface HttpRequest {
     /**
      * request body
      */
-    body?: any;
+    body?: SupportSerializableBody;
 
     /**
      * http request method

@@ -4,6 +4,7 @@ import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
 import {ProgressBarOptions} from './ui/RequestProgressBar';
+import {SupportSerializableBody} from "./client/HttpRequest";
 
 export interface FeignRequestId {
 
@@ -33,7 +34,7 @@ export interface FeignRequestBaseOptions extends FeignRequestId {
     /**
      * request body
      */
-    body?: any;
+    body?: SupportSerializableBody;
 
     /**
      * external request headers
@@ -183,12 +184,9 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignReque
 
 }
 
-// export interface FeignRetryRequestOptions extends FeignRequestOptions {
-//     /**
-//      * retry request options
-//      */
-//     retryOptions?: HttpRetryOptions;
-//
-// }
+export interface ClientRequestContext {
+
+}
+
 
 

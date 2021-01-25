@@ -14,8 +14,6 @@ let DEFAULT_CONFIGURATION: FeignConfiguration = null;
 let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
 
 
-memoize.Cache = WeakMap;
-
 // ignore memorization method names
 const ignoreMethodNames = ["getFeignClientExecutor"];
 

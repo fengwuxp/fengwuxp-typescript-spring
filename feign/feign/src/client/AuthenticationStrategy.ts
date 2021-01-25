@@ -1,5 +1,5 @@
 import {HttpRequest} from "./HttpRequest";
-import {AuthenticationType} from "../constant/AuthenticationType";
+import {MappingHeaders, RequestAuthenticationType} from "../annotations/mapping/Mapping";
 
 
 /**
@@ -44,7 +44,7 @@ export interface AuthenticationStrategy<T extends AuthenticationToken = Authenti
     /**
      * get default AuthenticationType
      */
-    getDefaultAuthenticationType?: () => AuthenticationType;
+    getDefaultAuthenticationType?: () => RequestAuthenticationType;
 }
 
 
@@ -94,3 +94,22 @@ export interface AuthenticationBroadcaster {
      */
     receiveAuthorizedEvent: (handle: () => void) => void
 }
+
+
+/**
+ * @param url 接口请求路径
+ */
+export type ApiPermissionProbeStrategyFunction = (url: string) => Promise<MappingHeaders>
+
+export interface ApiPermissionProbeStrategyInterface {
+
+    probe: ApiPermissionProbeStrategyFunction;
+}
+
+
+/**
+ * api permission probe
+ * {@see ApiPermissionProbeInterceptor}
+ * {@see HeadMapping}
+ */
+export type ApiPermissionProbeStrategy = ApiPermissionProbeStrategyInterface | ApiPermissionProbeStrategyFunction;

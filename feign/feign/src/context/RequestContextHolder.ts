@@ -57,6 +57,16 @@ export const appendRequestContextId = (feignRequestOptions: FeignRequestOptions)
 };
 
 /**
+ * 移除请求上下文 id
+ * @param req
+ */
+export const removeRequestContextId = (req: HttpRequest) => {
+    if (req.headers != null) {
+        delete req.headers[REQUEST_ID_HEADER_NAME];
+    }
+}
+
+/**
  * 通过请求上下文id 获取FeignClientMethodConfig
  * @param req
  * {@link REQUEST_NUM}

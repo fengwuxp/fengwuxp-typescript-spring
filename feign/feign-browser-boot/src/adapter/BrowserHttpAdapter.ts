@@ -87,7 +87,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
 
     /**
      * build http request
-     * @param {HttpRequest} request
+     * @param {BrowserHttpRequest} request
      * @return {Request}
      */
     private buildRequest(request: BrowserHttpRequest): RequestInfo {

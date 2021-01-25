@@ -1,4 +1,7 @@
+import memoize from "lodash/memoize";
 import {FeignOptions} from "./annotations/Feign";
+// 设置缓存的类型
+memoize.Cache = WeakMap;
 
 export {HttpAdapter} from "./adapter/HttpAdapter";
 
@@ -29,10 +32,16 @@ export {
     default as AuthenticationClientHttpRequestInterceptor
 } from "./client/AuthenticationClientHttpRequestInterceptor";
 export {
+    default as ApiPermissionProbeInterceptor
+} from "./client/ApiPermissionProbeInterceptor";
+export {
     AuthenticationToken,
     AuthenticationStrategy,
     CacheCapableAuthenticationStrategy,
     AuthenticationBroadcaster,
+    ApiPermissionProbeStrategyFunction,
+    ApiPermissionProbeStrategyInterface,
+    ApiPermissionProbeStrategy,
     NEVER_REFRESH_FLAG
 } from "./client/AuthenticationStrategy";
 export {default as CacheAuthenticationStrategy} from "./client/CacheAuthenticationStrategy"

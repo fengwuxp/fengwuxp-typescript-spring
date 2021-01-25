@@ -5,6 +5,7 @@ import {getFeignClientMethodConfigurationByRequest} from "../context/RequestCont
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
 import {AuthenticationType} from "../constant/AuthenticationType";
+import {RequestAuthenticationType} from "../annotations/mapping/Mapping";
 
 
 /**
@@ -34,7 +35,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     private readonly blockingRefreshAuthorization: boolean;
 
     // default AuthenticationType
-    private defaultAuthenticationType: AuthenticationType;
+    private defaultAuthenticationType: RequestAuthenticationType;
 
     /**
      *
@@ -52,17 +53,17 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
-        const feignClientMethodConfigurationByRequest = getFeignClientMethodConfigurationByRequest(req);
-        let isTryAuthentication = false;
-        const mappingOptions = feignClientMethodConfigurationByRequest?.requestMapping;
-        if (mappingOptions != null) {
-            const authenticationType = this.getAuthenticationType(mappingOptions.authenticationType, this.defaultAuthenticationType);
-            if (authenticationType === AuthenticationType.NONE) {
-                // none certification
-                return req;
-            }
-            isTryAuthentication = authenticationType == AuthenticationType.TRY;
+        const requestMapping = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        if (requestMapping == null) {
+            // 不存在则不处理
+            return req;
         }
+        const authenticationType = this.getAuthenticationType(requestMapping.authenticationType, this.defaultAuthenticationType);
+        if (authenticationType === AuthenticationType.NONE) {
+            // none certification
+            return req;
+        }
+        let isTryAuthentication = authenticationType == AuthenticationType.TRY;
 
         if (!this.needAppendAuthorizationHeader(req.headers)) {
             // Prevent recursion on refresh
@@ -192,7 +193,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         return count !== headerNames.length;
     };
 
-    private getAuthenticationType = (input: AuthenticationType, defaultType: AuthenticationType = AuthenticationType.FORCE) => {
+    private getAuthenticationType = (input: RequestAuthenticationType, defaultType: RequestAuthenticationType = AuthenticationType.FORCE) => {
         return input == null ? defaultType : input;
     }
 

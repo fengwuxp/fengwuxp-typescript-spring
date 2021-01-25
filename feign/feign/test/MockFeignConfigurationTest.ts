@@ -6,11 +6,19 @@ import DateEncoder from "../src/codec/DateEncoder";
 import UnifiedFailureToastExecutorInterceptor from "../src/ui/UnifiedFailureToastExecutorInterceptor";
 import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
 import TraceRequestExecutorInterceptor from "../src/trace/TraceRequestExecutorInterceptor";
+import MockHttpAdapter from "../src/adapter/mock/MockHttpAdapter";
+import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../src/constant/FeignConstVar";
 
 
 export default class MockFeignConfigurationTest extends MockFeignConfiguration {
 
-
+    getHttpAdapter = () => {
+        return new MockHttpAdapter(this.baseUrl, {
+            "HEAD /test/example": {
+                [REQUEST_AUTHENTICATION_TYPE_HEADER_NAME]: 'NONE'
+            }
+        })
+    };
     getFeignClientExecutorInterceptors = () => {
 
 

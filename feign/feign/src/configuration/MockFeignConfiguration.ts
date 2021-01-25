@@ -23,6 +23,7 @@ import {simpleRequestURLResolver} from '../resolve/url/SimpleRequestURLResolver'
 import {AuthenticationToken} from "../client/AuthenticationStrategy";
 import {ProgressBarOptions} from '../ui/RequestProgressBar';
 import TraceRequestExecutorInterceptor from "../trace/TraceRequestExecutorInterceptor";
+import ApiPermissionProbeInterceptor from "../client/ApiPermissionProbeInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -35,6 +36,12 @@ let refreshTokenCount = 0;
  */
 export class MockFeignConfiguration implements FeignConfiguration {
 
+    protected baseUrl: string = "http://test.ab.com/api/";
+
+    constructor() {
+        // this.baseUrl = baseUrl;
+    }
+
     getApiSignatureStrategy: () => ApiSignatureStrategy;
 
     getDefaultFeignRequestContextOptions: () => FeignRequestContextOptions;
@@ -43,11 +50,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getRequestURLResolver = () => simpleRequestURLResolver
 
-    private baseUrl: string = "http://test.ab.com/api/";
 
-    constructor() {
-        // this.baseUrl = baseUrl;
-    }
 
 
     getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client: T) => {
@@ -106,6 +109,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
             }),
             new RoutingClientHttpRequestInterceptor(this.baseUrl),
+            new ApiPermissionProbeInterceptor(),
             new AuthenticationClientHttpRequestInterceptor({
                 getAuthorization: (req): AuthenticationToken => {
 

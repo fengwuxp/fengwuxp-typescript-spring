@@ -2,13 +2,14 @@ import {HttpResponse} from "./HttpResponse";
 import {HttpRequest} from "./HttpRequest";
 import {HttpAdapter} from "../adapter/HttpAdapter";
 import {serializeRequestBody} from "../utils/SerializeRequestBodyUtil";
-import {contentTypeName, REQUEST_ID_HEADER_NAME} from "../constant/FeignConstVar";
+import {contentTypeName} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpStatus} from "../constant/http/HttpStatus";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
+import {removeRequestContextId} from "../context/RequestContextHolder";
 
 /**
  * default http client
@@ -31,23 +32,21 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
     }
 
     send = async (req: T): Promise<HttpResponse> => {
-
         const {interceptors} = this;
-
         const len = interceptors.length;
         let index = 0;
-        let requestData: T = req;
+        let httpRequest: T = req;
         while (index < len) {
             const interceptor = interceptors[index];
             index++;
             if (interceptor instanceof MappedClientHttpRequestInterceptor) {
-                if (!interceptor.matches(requestData)) {
+                if (!interceptor.matches(httpRequest)) {
                     continue;
                 }
             }
             const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
             try {
-                requestData = await clientHttpRequestInterceptorInterface.interceptor(requestData);
+                httpRequest = await clientHttpRequestInterceptorInterface.interceptor(httpRequest);
             } catch (e) {
                 // error ignore
                 console.error("http request interceptor handle exception", e);
@@ -65,12 +64,10 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
             }
         }
 
-        const contentType = this.resolveContentType(requestData);
-        requestData.body = serializeRequestBody(requestData.method, requestData.body, contentType as HttpMediaType, false);
-        if (requestData.headers != null) {
-            delete requestData.headers[REQUEST_ID_HEADER_NAME];
-        }
-        return this.httpAdapter.send(requestData);
+        const contentType = this.resolveContentType(httpRequest);
+        httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType as HttpMediaType, false);
+        removeRequestContextId(httpRequest);
+        return this.httpAdapter.send(httpRequest);
     };
 
     private resolveContentType = (requestData: T) => {

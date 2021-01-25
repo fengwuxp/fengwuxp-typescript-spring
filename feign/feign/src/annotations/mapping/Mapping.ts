@@ -9,8 +9,14 @@ export type MappingHeaderType = Array<boolean | string | number | Date>;
 /**
  * query params type
  */
-export type MappingHeaders = Record<string, boolean | number | string | Date | MappingHeaderType>;
+export type MappingHeaders =
+    Record<string, string>
+    | Record<string, boolean | number | string | Date | MappingHeaderType>;
 
+/**
+ *请求认证类型
+ */
+export type RequestAuthenticationType = AuthenticationType | string | number;
 
 export interface BaseRequestMappingOptions {
     /**
@@ -60,8 +66,9 @@ export interface BaseRequestMappingOptions {
      * 接口认证类型
      *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
      *  {@see DefaultFeignClientExecutor#tryCheckAuthorizedStatus}
+     *  可以通过自定义拦截器处理该字段
      */
-    authenticationType?: AuthenticationType;
+    authenticationType?: RequestAuthenticationType;
 
 }
 
@@ -99,7 +106,7 @@ export function generateMapping<T extends BaseRequestMappingOptions>(method?: Ht
 
             //通过注解生成feign的代理配置
             const requestMapping: RequestMappingOptions = {
-                authenticationType: AuthenticationType.FORCE,
+                authenticationType: AuthenticationType.DEFAULT,
                 method,
                 ...(options as any)
             };

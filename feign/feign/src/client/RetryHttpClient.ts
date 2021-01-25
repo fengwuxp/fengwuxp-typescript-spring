@@ -6,7 +6,6 @@ import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 
-
 /**
  * support retry http client
  * HttpClient with retry, need to be recreated each time you use this client
@@ -14,7 +13,7 @@ import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
 export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
 
     // retry options
-    private retryOptions: HttpRetryOptions;
+    private readonly retryOptions: HttpRetryOptions;
 
     // number of retries
     private countRetry: number = 0;
@@ -40,11 +39,9 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
         const retryOptions = this.retryOptions;
         const _maxTimeout = retryOptions.maxTimeout;
         return new Promise<HttpResponse>((resolve, reject) => {
-
             const retries = retryOptions.retries;
-            const httpClient = this.httpAdapter;
-
-            const p: Promise<HttpResponse> = httpClient.send(req).catch((response) => {
+            const httpAdapter = this.httpAdapter;
+            const p: Promise<HttpResponse> = httpAdapter.send(req).catch((response) => {
                 //try retry
                 console.log("request failure , ready to retry", response);
                 return this.tryRetry(req, response);

@@ -10,5 +10,8 @@ export enum AuthenticationType {
     // only try get authentication
     TRY,
 
-    FORCE
+    FORCE,
+
+    // default，由使用者自行处理
+    DEFAULT
 }
