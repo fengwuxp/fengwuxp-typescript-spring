@@ -1,8 +1,4 @@
-import {
-    HttpAdapter,
-    HttpResponse,
-    HttpStatus,
-} from "fengwuxp-typescript-feign";
+import {HttpAdapter, HttpResponse} from "fengwuxp-typescript-feign";
 import {TarojsHttpRequest} from "./TarojsHttpRequest";
 import Taro, {request} from "@tarojs/taro";
 

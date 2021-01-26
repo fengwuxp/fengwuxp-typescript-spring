@@ -194,7 +194,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     };
 
     private getAuthenticationType = (input: RequestAuthenticationType, defaultType: RequestAuthenticationType = AuthenticationType.FORCE) => {
-        return input == null ? defaultType : input;
+        return input ?? defaultType;
     }
 
     public setAuthenticationStrategy = (authenticationStrategy: AuthenticationStrategy) => {
