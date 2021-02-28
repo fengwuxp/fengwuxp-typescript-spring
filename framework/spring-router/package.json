@@ -1,0 +1,42 @@
+{
+  "name": "fengwuxp-spring-router",
+  "version": "1.0.5",
+  "description": "spring router",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "index.js",
+  "scripts": {
+    "yarn_i": "yarn install",
+    "npm_rest_dependencies": "rm -rf ./node_modules & npm run yarn_i",
+    "build:tsc": "rm -rf ./es && tsc",
+    "npm_publish": "npm run build:tsc && npm publish"
+  },
+  "author": "wuxp",
+  "license": "ISC",
+  "dependencies": {
+    "@types/history": "^4.7.2",
+    "@types/node": "^12.0.4",
+    "fengwuxp-spring-context": "^1.0.5",
+    "fengwuxp_common_proxy": "^1.0.5",
+    "fengwuxp_common_test": "^1.0.5",
+    "fengwuxp_common_utils": "^1.0.5",
+    "history": "^4.9.0",
+    "typescript": "^3.5.1"
+  },
+  "devDependencies": {
+    "jest": "^23.6.0",
+    "log4js": "^4.0.2",
+    "reflect-metadata": "^0.1.13",
+    "tslib": "^1.9.3"
+  },
+  "gitHead": "7f9f674005bae0a4f54232ad0b46b9bd8dcd0b78"
+}

@@ -1,0 +1,23 @@
+import {browserNativeAppCommandRouterFactory, BrowserNavigatorAdapter} from 'fengwuxp-browser-router'
+import {
+    AppCommandRouter,
+    NavigatorDescriptorObject,
+    RouteConfirmBeforeJumping,
+    RouterCommandMethod
+} from 'fengwuxp-declarative-router-adapter'
+import {createBrowserHistory} from "history";
+ {{each routes route index }}
+    {{if route.propsType!=null}}
+    import { {{route.propsType.name}} as {{route.propsType.name}}{{index}} } from "{{route.component}}";
+    {{/if}}
+ {{/each}}
+export interface AppRouterInterface extends AppCommandRouter {
+
+   {{each routes route index }}
+    {{if route.propsType!=null}}
+    "{{route.routeMethodName}}":RouterCommandMethod<Partial<{{route.propsType.name}}{{index}}>>
+    {{else}}
+     "{{route.routeMethodName}}":RouterCommandMethod;
+    {{/if}}
+    {{/each}}
+}

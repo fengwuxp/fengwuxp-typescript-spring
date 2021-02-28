@@ -1,0 +1,6 @@
+import {SpringApplicationConfiguration} from "fengwuxp-spring-context/src/configuration/SpringApplicationConfiguration";
+
+
+const springApplicationConfiguration:SpringApplicationConfiguration = {{config}}
+
+export default springApplicationConfiguration

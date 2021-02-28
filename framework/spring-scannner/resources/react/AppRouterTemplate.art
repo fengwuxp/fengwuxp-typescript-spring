@@ -1,0 +1,21 @@
+import {browserNativeAppCommandRouterFactory, BrowserNavigatorAdapter} from 'fengwuxp-browser-router'
+import {
+    AppCommandRouter,
+    NavigatorDescriptorObject,
+    RouteConfirmBeforeJumping,
+    RouterCommandMethod
+} from 'fengwuxp-declarative-router-adapter'
+import {createBrowserHistory} from "history";
+import {AppRouterInterface} from "./AppRouterInterface";
+
+const routeConfirmBeforeJumping: RouteConfirmBeforeJumping = (nextNavigator: NavigatorDescriptorObject) => {
+
+    // 判断是否需要登录
+
+    return true
+};
+
+
+export const history = createBrowserHistory({basename: "/"});
+
+export const AppRouter = browserNativeAppCommandRouterFactory<AppRouterInterface>(new BrowserNavigatorAdapter(history), routeConfirmBeforeJumping);

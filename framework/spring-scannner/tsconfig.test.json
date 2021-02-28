@@ -1,0 +1,17 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "allowSyntheticDefaultImports": true,
+    "resolveJsonModule": true,
+    "baseUrl": "./test",
+    "paths": {
+      "@test/*": [
+        "./*"
+      ],
+      "@pages/*": [
+        "./example/pages/*"
+      ]
+    }
+  }
+
+}

@@ -1,6 +1,6 @@
 import {OpenApiCodegenOptions} from '../OpenApiCodegenOptions';
 
-const ZONE_OPTIONS_KEY = "__ZONE_OPTIONS__";
+const ZONE_OPTIONS_KEY = "__ZONE__CODEGEN_OPTIONS__";
 let nameIndex = 0;
 
 export const forkAndSetOptionsToZone = (options: OpenApiCodegenOptions) => {

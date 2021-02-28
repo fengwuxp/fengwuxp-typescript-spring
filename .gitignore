@@ -22,8 +22,6 @@ coverage
 _src
 .spring
 .awcache
-lib
-es
 esnext
 types/index.d.ts
 /declarative-api/webview-bridge/adapter/browser/
