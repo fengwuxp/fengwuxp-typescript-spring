@@ -7,18 +7,17 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+    "url": "https://github.com/fengwuxp/wuxp_common_ts_module"
   },
   "bugs": {
-    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+    "url": "https://github.com/fengwuxp/wuxp_common_ts_module/issues"
   },
-  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "homepage": "https://github.com/fengwuxp/wuxp_common_ts_module#readme",
   "main": "index.js",
   "scripts": {
     "yarn_i": "yarn install",
     "npm_rest_dependencies": "rm -rf ./node_modules & npm run yarn_i",
-    "build:tsc": "rm -rf ./es && tsc",
-    "npm_publish": "npm run build:tsc && npm publish"
+    "npm_publish": "npm publish"
   },
   "author": "wuxp",
   "license": "ISC",

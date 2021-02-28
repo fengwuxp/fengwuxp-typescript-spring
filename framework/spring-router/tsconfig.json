@@ -2,36 +2,33 @@
   "compilerOptions": {
     "moduleResolution": "node",
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
+    "allowSyntheticDefaultImports": false,
+//    "compileOnSave": false,
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
-    "resolveJsonModule": true,
-    "declaration": true,
+    "module": "esnext",
     "target": "es6",
-    "module": "es6",
-    "outDir": "es",
     "sourceMap": false,
-    "strict": false,
     "baseUrl": "./src",
-    "paths": {
-    },
+    "declaration": true,
+    "importHelpers": true,
     "types": [
       "node",
       "jest"
     ],
     "lib": [
-      "esnext",
-      "dom",
       "es6",
       "es2015",
       "es2015.promise"
     ]
   },
   "include": [
-    "src/**/*",
-    "types/**/*"
+    "./src/**/*",
+    "./test/**/*",
+    "./types/**/*.d.ts"
   ],
   "exclude": [
+    "dist",
     "node_modules",
     "**/*.spec.ts"
   ]
