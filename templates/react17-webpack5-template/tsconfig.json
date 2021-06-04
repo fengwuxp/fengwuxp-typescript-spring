@@ -1,0 +1,55 @@
+{
+  "compilerOptions": {
+    "module": "esnext",
+    "target": "esnext",
+    "lib": [
+      "esnext",
+      "dom"
+    ],
+    "sourceMap": true,
+    "resolveJsonModule": true,
+    "jsx": "react",
+    "emitDeclarationOnly": true,
+    "emitDecoratorMetadata": true,
+    "allowSyntheticDefaultImports": true,
+    "moduleResolution": "node",
+    "forceConsistentCasingInFileNames": true,
+    "noImplicitReturns": true,
+    "suppressImplicitAnyIndexErrors": true,
+    "noImplicitAny": false,
+    "noUnusedLocals": true,
+    "strictNullChecks": false,
+    "experimentalDecorators": true,
+    "strict": true,
+    "declaration": true,
+    "skipLibCheck": true,
+    "typeRoots": [
+      "node_modules/@types"
+    ],
+    "baseUrl": ".",
+    "paths": {
+      "@/*": [
+        "./src/*"
+      ],
+    }
+  },
+  "include": [
+    "./src/**/*",
+    "./.spring/**/*",
+    "./test/**/*"
+  ],
+  "exclude": [
+    "node_modules",
+    "build",
+    "dist",
+    "scripts",
+    "webpack",
+    "jest",
+    "acceptance-tests",
+    "webpack",
+    "tslint:latest",
+    "tslint-config-prettier",
+    "example",
+    "_test_"
+  ]
+}

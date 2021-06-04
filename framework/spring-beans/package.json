@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-spring-beans",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "typescript spring beans",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"

@@ -19,6 +19,7 @@ const DEFAULT_ORDER_MAP: Record<string, number> = {
     'crate': 1,
     'input': 1,
     'edit': 2,
+    'update': 2,
     'detail': 3,
     'lookup': 4,
     'close': 4,
@@ -28,6 +29,7 @@ const VIEW_PATH_NAMES = [
     "Create",
     "Input",
     "Edit",
+    "Update",
     "List",
     "Detail",
     "Show",
@@ -298,8 +300,8 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         if (route.order != null) {
             return route.order;
         }
-        const pop = route.pathname.split("/").pop();
-        const order = this.orderMap[pop];
+        const pathname = route.pathname.split("/").pop();
+        const order = this.orderMap[pathname];
         if (order != null) {
             return order;
         }
@@ -314,29 +316,28 @@ export default class UmiReactRouteConfigGenerator extends ReactRouteConfigGenera
         }
 
         const sortRoutes = this.sortRoute(routes);
-        const first = sortRoutes[0];
-        const icon = this.getIcon(first.icon);
+        const firstRoute = sortRoutes[0];
+        const icon = this.getIcon(firstRoute.icon);
         sortRoutes.forEach(item => {
             item.name = this.getRouteName(item) || '';
         });
 
         // 如果下级菜单都需要隐藏，隐藏整个二级菜单
         const hideInMenu = sortRoutes.filter((item: any) => {
-            return item.hideInMenu != true;
+            return item.hideInMenu !== true;
         }).length === 0 || undefined;
 
         return {
             routes: sortRoutes,
-            name: this.getRouteName(first) || '',
-            title: first.title || '',
+            name: this.getRouteName(firstRoute) || '',
+            title: firstRoute.title || '',
             path: this.fixPathPrefix(key),
-            redirect: first.pathname,
+            redirect: firstRoute.pathname,
             icon,
             hideInMenu: hideInMenu
         };
 
     };
-
 
     private getIcon = (icon) => {
         if (icon == null) {

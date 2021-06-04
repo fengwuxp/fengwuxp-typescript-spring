@@ -22,22 +22,21 @@
   "devDependencies": {
   },
   "dependencies": {
-    "css": "^2.2.4",
-    "css-loader": "^0.28.11",
-    "less": "^3.10.3",
-    "less-loader": "^4.1.0",
-    "node-sass": "^4.11.0",
-    "sass-loader": "^7.1.0",
-    "postcss-flexbugs-fixes": "^4.1.0",
-    "postcss-import": "^12.0.1",
-    "postcss-less": "^3.1.4",
-    "postcss-loader": "^3.0.0",
-    "postcss-preset-env": "^6.6.0",
-    "postcss-scss": "^2.0.0",
+    "css": "^3.0.0",
+    "css-loader": "^5.2.6",
+    "less": "^4.1.0",
+    "less-loader": "^9.0.0",
+    "node-sass": "^6.0.0",
+    "sass-loader": "^12.0.0",
+    "postcss-flexbugs-fixes": "^5.0.0",
+    "postcss-import": "^14.0.0",
+    "postcss-less": "^4.0.0",
+    "postcss-loader": "^5.3.0",
+    "postcss-preset-env": "^6.7.0",
+    "postcss-scss": "^3.0.0",
     "precss": "^4.0.0",
-    "style-loader": "^0.23.1",
-    "stylelint": "10.0.1",
-    "svg-url-loader": "^2.3.2",
-    "url-loader": "^3.0.0"
+    "style-loader": "^2.0.0",
+    "svg-url-loader": "^7.1.0",
+    "url-loader": "^4.1.0"
   }
 }

@@ -4,7 +4,7 @@
 import {RouteContext} from "../context/RouteContext";
 
 /**
- * @return true or false  or spel表达式
+ * @return true or false  or返回 boolean 的 spel 表达式
  */
 export type RouteConditionFunction = (context: RouteContext, ...args) => boolean | string | string[];
 
@@ -13,12 +13,22 @@ export type RouteConditionType = string | string[] | boolean | RouteConditionFun
 /**
  * 页面展示模式
  */
-export enum ViewShowMode {
+export enum RouteViewMode {
 
+    /**
+     * 默认
+     */
     DEFAULT,
 
-    // 以弹窗形式显示，需要路由框架进行支持
+    /**
+     * 弹窗形式显示
+     */
     DIALOG,
+
+    /**
+     * 抽屉的形式显示
+     */
+    DRAWER
 
 }
 
@@ -26,9 +36,9 @@ export interface RouteViewOptions {
 
     /**
      * 页面展示模式
-     * 默认：{@see ViewShowMode#DEFAULT}
+     * 默认：{@see RouteViewMode#DEFAULT}
      */
-    showMode?: ViewShowMode;
+    mode?: RouteViewMode;
 
     /**
      * pathname
@@ -39,7 +49,7 @@ export interface RouteViewOptions {
     pathname?: string;
 
     /**
-     * 父路由页面
+     * 父路由组件，仅为 {@link RouteViewMode#DEFAULT} 的组件才能当做父路由、子路由组件
      * 如果是组件对象将会在编译阶段解析后移除
      * 默认：undefined
      */
@@ -62,22 +72,21 @@ export interface RouteViewOptions {
      */
     exact?: boolean;
 
-
     /**
      * 进入页面的条件，例如进行登陆检查、权限检查等
      * default true
      */
     condition?: RouteConditionType;
-
 }
 
 /**
  * 路由视图增强处理器
  */
-export type RouteViewEnhancer = (target: any, options: RouteViewOptions, /*propKey?: PropertyKey, descriptor?: PropertyDescriptor*/) => any;
+export type RouteViewEnhancer = (target: any, options: RouteViewOptions) => any;
 
 
 export interface RouteViewType {
+
     <T = {}>(options?: RouteViewOptions & T): any;
 
     /**
@@ -96,10 +105,6 @@ export interface RouteViewType {
      * @param enhancer
      */
     addEnhancer: (enhancer: RouteViewEnhancer) => RouteViewType;
-
-    // removeEnhancer: (enhancer: RouteViewEnhancer) => RouteViewType;
-
-
 }
 
 // 增强处理器列表
@@ -107,7 +112,7 @@ const ROUTE_VIEW_ENHANCERS: RouteViewEnhancer[] = [];
 
 // 默认的路由配置
 const DEFAULT_ROUTE_VIEW_OPTIONS: RouteViewOptions = {
-    showMode: ViewShowMode.DEFAULT,
+    mode: RouteViewMode.DEFAULT,
     exact: true,
     condition: true
 };
@@ -147,15 +152,15 @@ const RouteView: RouteViewType = <T = {}>(options?: RouteViewOptions & T): Funct
 
     /**
      * decorator
-     * @param  {T} target                        装饰的属性所属的类的原型，注意，不是实例后的类。如果装饰的是 T 的某个属性，这个 target 的值就是 T.prototype
+     * @param  {T} target 装饰的属性所属的类的原型，注意，不是实例后的类。如果装饰的是 T 的某个属性，这个 target 的值就是 T.prototype
      */
     return function (target: any): any {
-        const _o = {
+        const newOptions = {
             ...DEFAULT_ROUTE_VIEW_OPTIONS,
             ...options
         };
         return ROUTE_VIEW_ENHANCERS.reduceRight((previousValue, currentValue) => {
-            return currentValue(previousValue, _o, /*name, descriptor*/);
+            return currentValue(previousValue, newOptions);
         }, target);
     }
 };

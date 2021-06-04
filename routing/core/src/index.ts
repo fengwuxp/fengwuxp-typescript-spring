@@ -5,7 +5,7 @@ export {
     RouteConditionType,
     RouteViewEnhancer,
     RouteViewType,
-    ViewShowMode
+    RouteViewMode
 } from "./annotations/RouteView";
 
 export {RouteConditionParser} from "./condition/RouteConditionParser";

@@ -1,0 +1,50 @@
+{
+  "name": "fengwuxp-webpack-5.x-dependency",
+  "version": "1.0.0",
+  "description": "webpack 5.x dependency management",
+  "main": "index.js",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "scripts": {
+    "npm:publish": "npm publish"
+  },
+  "author": "wuxp",
+  "license": "ISC",
+  "devDependencies": {},
+  "dependencies": {
+    "browserslist": "^4.5.4",
+    "clean-webpack-plugin": "^0.1.18",
+    "copy-webpack-plugin": "^5.1.1",
+    "cross-env": "^5.2.0",
+    "compression-webpack-plugin": "^3.0.0",
+    "extract-text-webpack-plugin": "^4.0.0-beta.0",
+    "file-loader": "^2.0.0",
+    "handlebars-loader": "^1.7.1",
+    "happypack": "^5.0.1",
+    "hard-source-webpack-plugin": "^0.13.1",
+    "html-loader": "^0.5.5",
+    "html-webpack-plugin": "^4.0.0-beta.5",
+    "open-browser-webpack-plugin": "^0.0.5",
+    "optimize-css-assets-webpack-plugin": "^5.0.3",
+    "quick-local-ip": "^1.0.5",
+    "terser-webpack-plugin": "^1.2.2",
+    "uglifyjs-webpack-plugin": "^2.1.2",
+    "url-loader": "^1.1.2",
+    "webpack": "^4.29.6",
+    "webpack-bundle-analyzer": "^3.1.0",
+    "webpack-cleanup-plugin": "^0.5.1",
+    "webpack-cli": "^3.2.3",
+    "webpack-dev-server": "^3.2.1",
+    "webpack-merge": "^4.2.1",
+    "webpack-uglify-parallel": "^0.1.4"
+  }
+}

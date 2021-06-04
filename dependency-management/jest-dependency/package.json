@@ -22,11 +22,11 @@
   "devDependencies": {
   },
   "dependencies": {
-    "@types/jest": "^25.2.1",
-    "babel-jest": "^25.4.0",
-    "jest": "^25.4.0",
-    "log4js": "^6.2.1",
-    "ts-jest": "^25.4.0",
+    "@types/jest": "^26.0.0",
+    "babel-jest": "^27.0.0",
+    "jest": "^27.0.0",
+    "log4js": "^6.0.0",
+    "ts-jest": "^27.0.0",
     "assert": "^2.0.0"
   }
 }

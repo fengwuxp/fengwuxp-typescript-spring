@@ -17,7 +17,8 @@
   "scripts": {
     "yarn_i": "yarn install",
     "npm_rest_dependencies": "rm -rf ./node_modules & npm run yarn_i",
-    "npm_publish": "npm publish"
+    "build:tsc": "rm -rf ./esnext && tsc",
+    "npm_publish": "npm run build:tsc && npm publish"
   },
   "author": "wuxp",
   "license": "ISC",

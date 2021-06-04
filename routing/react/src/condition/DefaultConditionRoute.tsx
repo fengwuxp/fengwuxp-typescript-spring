@@ -28,7 +28,7 @@ const renderNoneAuthenticationFallback = (fallback: ConditionRouteFallbackTye, p
 };
 
 /**
- * 默认的condition的路由
+ * 默认的 condition 的路由
  * @param props
  * @constructor
  */
