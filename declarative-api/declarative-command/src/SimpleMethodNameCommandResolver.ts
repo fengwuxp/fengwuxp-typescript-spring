@@ -25,7 +25,6 @@ export const toLineResolver: MethodNameCommandResolver = (methodName: string) =>
  * @param methodName
  */
 export const toUpperCaseResolver: MethodNameCommandResolver = (methodName: string) => {
-
     return methodName.toUpperCase();
 };
 

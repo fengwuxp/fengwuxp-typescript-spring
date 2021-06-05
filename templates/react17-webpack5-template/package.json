@@ -10,30 +10,22 @@
     "test": "jest"
   },
   "dependencies": {
+    "bourbon": "^7.0.0",
+    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",
+    "fengwuxp-styles-dependency": "^1.0.0",
     "fengwuxp-typescipt-dependency": "^1.0.0",
+    "fengwuxp-webpack5-dependency": "^1.0.0",
     "inline-chunk-html-plugin": "^1.1.1"
   },
   "devDependencies": {
+    "@ant-design/icons": "^4.6.2",
     "@babel/register": "^7.13.16",
-    "@types/terser-webpack-plugin": "^5.0.3",
-    "@types/webpack-bundle-analyzer": "^4.4.0",
-    "@types/webpack-dev-server": "^3.11.4",
-    "@types/webpack-env": "^1.16.0",
-    "@types/webpack-manifest-plugin": "^3.0.4",
-    "copy-webpack-plugin": "^9.0.0",
-    "cross-env": "^7.0.0",
-    "html-webpack-plugin": "^5.3.1",
-    "http-proxy-middleware": "^2.0.0",
-    "terser-webpack-plugin": "^5.1.2",
-    "url-loader": "^4.1.1",
-    "webpack": "^5.38.0",
-    "webpack-bundle-analyzer": "^4.4.2",
-    "webpack-cli": "^4.7.0",
-    "webpack-dev-server": "^3.11.2",
-    "webpack-manifest-plugin": "^3.1.1"
+    "antd": "^4.16.1",
+    "babel-plugin-import": "^1.13.3",
+    "typed-css-modules-webpack-plugin": "^0.2.0"
   },
   "sideEffects": false,
   "jest": {
