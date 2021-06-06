@@ -36,7 +36,8 @@
   "include": [
     "./src/**/*",
     "./.spring/**/*",
-    "./test/**/*"
+    "./test/**/*",
+    "./typings.d.ts"
   ],
   "exclude": [
     "node_modules",

@@ -19,7 +19,7 @@ const InlineChunkHtmlPlugin = require("inline-chunk-html-plugin");
  * Webpack configuration.
  *
  * @see https://webpack.js.org/configuration/
- * @param {Record<string, boolean> | undefined} envName
+ * @param {Record<string, boolean> | undefined} env
  * @param {{ mode: "production" | "development" }} options
  * @returns {import("webpack").Configuration}
  */
@@ -76,17 +76,18 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
                 ),
             }),
             new MiniCssExtractPlugin({
-                filename: "./css/[name].[contenthash:8].css",
-                chunkFilename: "./css/[name].[contenthash:8].css",
+                filename: isEnvDevelopment ? "./css/[name].css" : "./css/[name].[contenthash:8].css",
+                chunkFilename: isEnvDevelopment ? "./css/[name].css" : "./css/[name].[contenthash:8].css",
             }),
             new webpack.DefinePlugin({
                 "process.env.APP_NAME": JSON.stringify("React App"),
                 "process.env.APP_ORIGIN": JSON.stringify("http://localhost:3000"),
             }),
             new WebpackManifestPlugin({fileName: "assets.json", publicPath: "/"}),
-            new TypedCssModulesPlugin({
-                globPattern: 'src/**/*.less',
-            })
+            // new TypedCssModulesPlugin({
+            //     globPattern: 'src/**/*.module.less',
+            //     camelCase: true
+            // })
         ],
 
     }
@@ -160,7 +161,7 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
     return webpackConfiguration;
 }
 
-function getModule() {
+const getModule = () => {
     return {
         rules: [
             {
@@ -171,24 +172,31 @@ function getModule() {
                     babelrc: true,
                     cacheDirectory: ".cache/babel-loader",
                     cacheCompression: false,
-                    compact: false, // isEnvProduction,
+                    compact: false,
                     sourceType: "unambiguous",
                 },
             },
             /*-----------style----------*/
             {
                 test: /\.css$/,
+                sideEffects: true,
                 use: [
                     miniCssExtractLoader,
                     cssModuleLoader,
                     PostCssLoader
                 ]
-
             },
             lessLoader(),
             scssLoader(),
             {
-                test: /\.(png|jpg|jpeg|svg|gif)/,
+                test: /\.svg$/,
+                use: [
+                    '@svgr/webpack',
+                    "url-loader"
+                ],
+            },
+            {
+                test: /\.(png|jpg|jpeg|gif)/,
                 use: [
                     {
                         loader: "url-loader",
@@ -199,7 +207,7 @@ function getModule() {
                 ]
             },
             {
-                test: /\.(woff|woff2|svg|ttf|eot)$/,
+                test: /\.(woff|woff2|ttf|eot)$/,
                 use: [
                     {
                         loader: 'file-loader',
@@ -223,4 +231,3 @@ function getModule() {
         ],
     };
 }
-

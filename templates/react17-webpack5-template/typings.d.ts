@@ -12,6 +12,7 @@ declare module '*.bmp';
 declare module '*.tiff';
 declare module 'omit.js';
 
+
 // google analytics interface
 interface GAFieldsObject {
     eventCategory: string;
@@ -20,6 +21,7 @@ interface GAFieldsObject {
     eventValue?: number;
     nonInteraction?: boolean;
 }
+
 interface Window {
     ga: (
         command: 'send',

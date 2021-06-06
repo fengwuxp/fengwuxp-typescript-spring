@@ -23,11 +23,15 @@
   "devDependencies": {
     "@ant-design/icons": "^4.6.2",
     "@babel/register": "^7.13.16",
+    "@svgr/webpack": "^5.5.0",
     "antd": "^4.16.1",
     "babel-plugin-import": "^1.13.3",
     "typed-css-modules-webpack-plugin": "^0.2.0"
   },
-  "sideEffects": false,
+  "sideEffects": [
+    "*.css",
+    "*.less"
+  ],
   "jest": {
     "cacheDirectory": ".cache/jest",
     "testPathIgnorePatterns": [

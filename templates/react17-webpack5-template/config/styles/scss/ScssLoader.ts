@@ -6,7 +6,7 @@ import {miniCssExtractLoader} from "../minicss";
 export const scssLoader = () => {
     return {
         test: /\.s[c|a]ss$/,
-        // ident: "css-loader",
+        sideEffects: true,
         use: [
             miniCssExtractLoader,
             scssModuleLoader,

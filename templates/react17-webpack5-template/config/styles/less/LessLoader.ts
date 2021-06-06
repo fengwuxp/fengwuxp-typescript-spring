@@ -10,8 +10,9 @@ export const lessLoader = () => {
     const themeVariables = getThemeConfig();
     return {
         test: /\.less$/,
+        sideEffects: true,
         use: [
-            miniCssExtractLoader,
+            miniCssExtractLoader(),
             lessModuleLoader,
             PostCssLoader,
             {
