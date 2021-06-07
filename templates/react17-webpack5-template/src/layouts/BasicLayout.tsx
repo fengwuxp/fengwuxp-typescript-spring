@@ -14,7 +14,8 @@ export interface BasicLayoutProps {
 }
 
 const BasicLayout = (props) => {
-    console.log("styles", styles);
+    console.log("props", props);
+    const {children} = props;
     return <Layout>
         <Header className="header flex-view flex-row">
             <i className={styles.basicLayoutHeaderLogo}>
@@ -32,10 +33,9 @@ const BasicLayout = (props) => {
                     mode="inline"
                     defaultSelectedKeys={['1']}
                     defaultOpenKeys={['sub1']}
-                    style={{height: '100%', borderRight: 0}}
-                >
-                    <SubMenu key="sub1" icon={<UserOutlined/>} title="subnav 1">
-                        <Menu.Item key="1">option1</Menu.Item>
+                    style={{height: '100%', borderRight: 0}}>
+                    <SubMenu key="sub1" icon={<UserOutlined/>} title="dmeo">
+                        <Menu.Item key="1" onKeyPress={() => {}}>demo list</Menu.Item>
                         <Menu.Item key="2">option2</Menu.Item>
                         <Menu.Item key="3">option3</Menu.Item>
                         <Menu.Item key="4">option4</Menu.Item>
@@ -66,9 +66,8 @@ const BasicLayout = (props) => {
                         padding: 24,
                         margin: 0,
                         minHeight: 280,
-                    }}
-                >
-                    Content
+                    }}>
+                    {children}
                 </Content>
             </Layout>
         </Layout>

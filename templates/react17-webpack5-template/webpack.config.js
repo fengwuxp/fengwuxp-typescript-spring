@@ -1,5 +1,13 @@
-
-require("@babel/register")({extensions: [".ts"], cache: false});
+require("@babel/register")({
+    extensions: [".ts"],
+    // only: [
+    //     // File paths that **do not** return true are not compiled
+    //     function (filepath) {
+    //         return filepath.indexOf("/config/") > 0;
+    //     },
+    // ],
+    cache: false
+});
 const {generateWebpackConfig} = require("./config/webpack.base");
 
 /**
@@ -11,5 +19,5 @@ const {generateWebpackConfig} = require("./config/webpack.base");
  * @returns {import("webpack").Configuration}
  */
 module.exports = function config(env, options) {
-  return generateWebpackConfig(env, options);
+    return generateWebpackConfig(env, options);
 };

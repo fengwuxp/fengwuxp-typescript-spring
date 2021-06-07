@@ -3,7 +3,7 @@ import React, {CSSProperties} from 'react';
 
 export interface SvgIconProps {
 
-    // defuatl: current font size
+    // default: current font size
     size?: number;
 
     // default: currentColor

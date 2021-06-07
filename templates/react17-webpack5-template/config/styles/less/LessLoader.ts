@@ -1,13 +1,13 @@
 import {lessModuleLoader} from "../CssModuleLoader";
 import PostCssLoader from "../postcss/PostCssLoader";
-import {getThemeConfig} from "../theme/ThemeConfig";
+import {loadThemeConfig} from "../theme/ThemeConfigLoader";
 import {genHappyPackLoaderString} from "../../happypack/GetHappyPackPluginConfig";
 import {miniCssExtractLoader} from "../minicss";
 
 
 export const lessLoader = () => {
 
-    const themeVariables = getThemeConfig();
+    const themeVariables = loadThemeConfig();
     return {
         test: /\.less$/,
         sideEffects: true,
