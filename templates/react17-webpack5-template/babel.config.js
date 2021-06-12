@@ -59,7 +59,13 @@ module.exports = {
             {
                 libraryName: "@ant-design/icons",
                 camel2DashComponentName: false,
-                libraryDirectory: "lib/icons"
+                libraryDirectory: "lib/icons",
+                // custom: function (name, file) {
+                //     if (name === "Icon") {
+                //         return `@ant-design/icons/es/${name}`;
+                //     }
+                //     return `@ant-design/icons/es/icons/${name}`
+                // }
             },
             "@ant-design/icons"
         ],

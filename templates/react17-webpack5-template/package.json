@@ -7,26 +7,31 @@
   "scripts": {
     "start": "webpack serve --mode=development",
     "build": "webpack --mode=production",
-    "test": "jest"
+    "test": "jest",
+    "i18n-dts-generate": "simple-i18n-dts"
   },
   "dependencies": {
-    "bourbon": "^7.0.0",
-    "case-sensitive-paths-webpack-plugin": "^2.4.0",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",
     "fengwuxp-styles-dependency": "^1.0.0",
     "fengwuxp-typescipt-dependency": "^1.0.0",
-    "fengwuxp-webpack5-dependency": "^1.0.0",
-    "inline-chunk-html-plugin": "^1.1.1"
+    "fengwuxp-webpack5-dependency": "^1.0.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.6.2",
-    "@babel/register": "^7.13.16",
-    "@svgr/webpack": "^5.5.0",
     "antd": "^4.16.1",
-    "babel-plugin-import": "^1.13.3",
-    "typed-css-modules-webpack-plugin": "^0.2.0"
+    "i18next": "^20.3.1",
+    "i18next-browser-languagedetector": "^6.1.1",
+    "i18next-http-backend": "^1.2.6",
+    "react-i18next": "^11.10.0",
+    "i18next-chained-backend": "^3.0.2",
+    "i18next-resources-to-backend": "^1.0.0",
+    "simple-i18n-dts": "^0.3.1"
+  },
+  "simple-i18n-dts": {
+    "model": "./public/locales/zh-cn.json",
+    "outputDir": "./src/typings/locales"
   },
   "sideEffects": [
     "*.css",

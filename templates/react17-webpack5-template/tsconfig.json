@@ -37,6 +37,7 @@
     "./src/**/*",
     "./.spring/**/*",
     "./test/**/*",
+    "./typings/**/*",
     "./typings.d.ts"
   ],
   "exclude": [

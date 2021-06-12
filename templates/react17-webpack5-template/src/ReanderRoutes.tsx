@@ -1,8 +1,8 @@
 import {RouteConfig} from "react-router-config";
 import {Route, Switch} from "react-router-dom";
 import React from "react";
-import DefaultPrivateRoute from "@/componetns/route/DefaultPrivateRoute";
-import {AppRouterAuthenticator} from "@/componetns/route/PrivateRoute";
+import DefaultPrivateRoute from "@/components/route/DefaultPrivateRoute";
+import {AppRouterAuthenticator} from "@/components/route/PrivateRoute";
 
 const RouteWithSubRoutes = (route) => {
     return (

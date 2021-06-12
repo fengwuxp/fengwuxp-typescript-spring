@@ -2,7 +2,7 @@ import {Breadcrumb, Layout, Menu} from 'antd';
 import {LaptopOutlined, NotificationOutlined, UserOutlined} from '@ant-design/icons';
 import React from 'react';
 import Logo from '@/assets/logo.svg';
-import SvgIcon from "@/componetns/icon/SvgIcon";
+import SvgIcon from "@/components/icon/SvgIcon";
 import styles from './basic.layout.module.less';
 import './basic.layout.less';
 
@@ -36,7 +36,7 @@ const BasicLayout = (props) => {
                     style={{height: '100%', borderRight: 0}}>
                     <SubMenu key="sub1" icon={<UserOutlined/>} title="dmeo">
                         <Menu.Item key="1" onKeyPress={() => {}}>demo list</Menu.Item>
-                        <Menu.Item key="2">option2</Menu.Item>
+                        <Menu.Item key="2" onKeyPress={() => {}}>i18n demo</Menu.Item>
                         <Menu.Item key="3">option3</Menu.Item>
                         <Menu.Item key="4">option4</Menu.Item>
                     </SubMenu>
