@@ -1,8 +1,7 @@
-import {RouteConfig} from "react-router-config";
 import {Route, Switch} from "react-router-dom";
 import React from "react";
 import DefaultPrivateRoute from "@/components/route/DefaultPrivateRoute";
-import {AppRouterAuthenticator} from "@/components/route/PrivateRoute";
+import {AppRouterAuthenticator, AuthenticatedRouteConfig} from "@/components/route/PrivateRoute";
 
 const RouteWithSubRoutes = (route) => {
     return (
@@ -20,25 +19,25 @@ const RouteWithSubRoutes = (route) => {
 }
 /**
  * 渲染routes
- * @param routes
+ * @param routeConfigs
  * @param authenticator
  */
-export const renderAppRoutes = (
-    routes: RouteConfig[],
-    authenticator: AppRouterAuthenticator<any>) => {
+export const renderAppRoutes = (routeConfigs: AuthenticatedRouteConfig[], authenticator: AppRouterAuthenticator<any>) => {
 
     return <Switch>
-        {routes.map((route, index) => {
-            const {requiredAuthentication, key, path, exact, strict, component} = route;
-            return requiredAuthentication ?
-                <DefaultPrivateRoute
+        {routeConfigs.map((route) => {
+            const {routes, requiredAuthentication, key, path, exact, strict, component} = route;
+            if (routes?.length > 0) {
+                return <RouteWithSubRoutes {...route} authenticator={authenticator} key={key ?? path}/>;
+            }
+            return requiredAuthentication ? <DefaultPrivateRoute
                     authenticator={authenticator}
                     component={component}
                     path={path}
                     exact={exact}
                     strict={strict}
-                    key={key ?? path}/> :
-                <RouteWithSubRoutes {...route} authenticator={authenticator} key={key ?? path}/>
+                    key={key ?? path}/>
+                : <Route {...route}/>
         })}
     </Switch>
 }

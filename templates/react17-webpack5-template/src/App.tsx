@@ -1,6 +1,6 @@
 import React from "react";
 import {Action, createBrowserHistory, Location} from "history";
-import {BrowserRouter} from "react-router-dom";
+import {Router} from "react-router-dom";
 import {routes} from "@/views/routes";
 import {renderAppRoutes} from "@/ReanderRoutes";
 
@@ -15,7 +15,7 @@ history.listen((location: Location, action: Action) => {
 
 const App = (pops) => {
 
-    return <BrowserRouter basename={"/"}>
+    return <Router history={history}>
         {
             renderAppRoutes(routes, {
                 authorization: (args): Promise<any> => {
@@ -28,7 +28,7 @@ const App = (pops) => {
                 }
             })
         }
-    </BrowserRouter>
+    </Router>
 }
 
 export default App;

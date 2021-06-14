@@ -6,7 +6,7 @@
   "main": "index.js",
   "scripts": {
     "start": "webpack serve --mode=development",
-    "build": "webpack --mode=production",
+    "build": "rimraf ./dist && webpack --mode=production",
     "test": "jest",
     "i18n-dts-generate": "simple-i18n-dts"
   },
@@ -23,10 +23,11 @@
     "antd": "^4.16.1",
     "i18next": "^20.3.1",
     "i18next-browser-languagedetector": "^6.1.1",
-    "i18next-http-backend": "^1.2.6",
-    "react-i18next": "^11.10.0",
     "i18next-chained-backend": "^3.0.2",
+    "i18next-http-backend": "^1.2.6",
     "i18next-resources-to-backend": "^1.0.0",
+    "react-i18next": "^11.10.0",
+    "rimraf": "^3.0.2",
     "simple-i18n-dts": "^0.3.1"
   },
   "simple-i18n-dts": {

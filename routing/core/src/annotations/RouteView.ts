@@ -28,7 +28,12 @@ export enum RouteViewMode {
     /**
      * 抽屉的形式显示
      */
-    DRAWER
+    DRAWER,
+
+    /**
+     * popup 形式
+     */
+    POPUP
 
 }
 

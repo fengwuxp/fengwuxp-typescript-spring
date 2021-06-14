@@ -16,12 +16,12 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
     }, []);
 
     if (authenticated == null) {
-        // TODO 等到登录状态
+        // TODO 等待登录状态
         return <div>loading</div>;
     }
     if (!authenticated) {
         return <Redirect to={{
-            pathname: authenticator?.authenticationView() ?? "/login",
+            pathname: typeof authenticator.authenticationView == "function" ? authenticator.authenticationView() : "/login",
             state: {from: props.location}
         }}/>
     }

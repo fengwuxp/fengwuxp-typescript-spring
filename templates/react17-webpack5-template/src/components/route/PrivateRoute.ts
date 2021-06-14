@@ -1,5 +1,6 @@
 import {RouteProps} from "react-router";
 import * as React from "react";
+import {RouteConfig} from "react-router-config";
 
 export interface AppRouterAuthenticator<T> {
 
@@ -18,7 +19,7 @@ export interface AppRouterAuthenticator<T> {
     /**
      * 获取登录页面
      */
-    authenticationView?: () =>string;
+    authenticationView?: () => string;
 }
 
 /**
@@ -37,3 +38,14 @@ export interface PrivateRouteProps extends RouteProps {
  * 私有路由的定义
  */
 export type PrivateRoute<T = any> = React.ComponentType<T>;
+
+
+export interface AuthenticatedRouteConfig extends RouteConfig {
+
+    /**
+     * 路由是否需要鉴权，默认：false
+     */
+    requiredAuthentication?: boolean;
+
+    routes?: AuthenticatedRouteConfig[];
+}

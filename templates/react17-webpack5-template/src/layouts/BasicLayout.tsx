@@ -15,7 +15,7 @@ export interface BasicLayoutProps {
 
 const BasicLayout = (props) => {
     console.log("props", props);
-    const {children} = props;
+    const {children, history} = props;
     return <Layout>
         <Header className="header flex-view flex-row">
             <i className={styles.basicLayoutHeaderLogo}>
@@ -35,8 +35,12 @@ const BasicLayout = (props) => {
                     defaultOpenKeys={['sub1']}
                     style={{height: '100%', borderRight: 0}}>
                     <SubMenu key="sub1" icon={<UserOutlined/>} title="dmeo">
-                        <Menu.Item key="1" onKeyPress={() => {}}>demo list</Menu.Item>
-                        <Menu.Item key="2" onKeyPress={() => {}}>i18n demo</Menu.Item>
+                        <Menu.Item key="1" onClick={() => {
+                            history.push("/demo/list")
+                        }}>demo list</Menu.Item>
+                        <Menu.Item key="2" onClick={() => {
+                            history.push("/i18n")
+                        }}>i18n demo</Menu.Item>
                         <Menu.Item key="3">option3</Menu.Item>
                         <Menu.Item key="4">option4</Menu.Item>
                     </SubMenu>

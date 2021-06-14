@@ -1,8 +1,13 @@
-import {RouteConfig} from "react-router-config";
 import AsyncLoading from "@/components/loading/AsyncLoading";
+import {AuthenticatedRouteConfig} from "@/components/route/PrivateRoute";
 
-export const routes: Array<RouteConfig> = [
+export const routes: Array<AuthenticatedRouteConfig> = [
 
+    {
+        path: '/login',
+        exact: false,
+        component: AsyncLoading(() => import('@/views/LoginView')),
+    },
     {
         path: '/',
         exact: false,
@@ -15,7 +20,6 @@ export const routes: Array<RouteConfig> = [
                 component: AsyncLoading(() => import("@/views/demo/DemoListView"))
             },
             {
-                requiredAuthentication: false,
                 path: "/i18n",
                 exact: true,
                 component: AsyncLoading(() => import("@/views/i18n/ExampleView"))
