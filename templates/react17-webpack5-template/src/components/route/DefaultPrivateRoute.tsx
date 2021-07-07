@@ -9,7 +9,7 @@ import {PrivateRoute, PrivateRouteProps} from "./PrivateRoute";
  * @constructor
  */
 const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
-    const {authenticator, path, component, exact, strict} = props;
+    const {authenticator, extraProps, component, ...routeProps} = props;
     const [authenticated, setAuthenticated] = useState(null);
     useEffect(() => {
         authenticator.isAuthenticated().then(setAuthenticated);
@@ -20,15 +20,18 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
         return <div>loading</div>;
     }
     if (!authenticated) {
+        // console.log("Redirect", routeProps);
         return <Redirect to={{
             pathname: typeof authenticator.authenticationView == "function" ? authenticator.authenticationView() : "/login",
             state: {from: props.location}
         }}/>
     }
-    return <Route path={path}
-                  exact={exact ?? true}
-                  strict={strict ?? true}
-                  component={component}/>;
-};
+    return <Route {...routeProps}
+                  exact={routeProps.exact ?? true}
+                  strict={routeProps.strict ?? true}
+                  render={renderProps => {
+                      return <props.component {...renderProps} {...extraProps}/>;
+                  }}/>
+}
 
 export default DefaultPrivateRoute;

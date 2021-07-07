@@ -26,11 +26,14 @@ export interface AppRouterAuthenticator<T> {
  * private route props
  */
 export interface PrivateRouteProps extends RouteProps {
-
     /**
      * 鉴权者
      */
     authenticator: AppRouterAuthenticator<any>;
+
+    extraProps?: {
+        [propName: string]: any
+    };
 }
 
 

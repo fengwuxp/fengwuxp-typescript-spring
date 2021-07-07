@@ -24,7 +24,7 @@ const App = (pops) => {
                     });
                 },
                 isAuthenticated: (): Promise<boolean> => {
-                    return Promise.resolve(true);
+                    return Promise.resolve(false);
                 }
             })
         }
