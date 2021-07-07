@@ -2,23 +2,21 @@ import AsyncLoading from "@/components/loading/AsyncLoading";
 import {AuthenticatedRouteConfig} from "@/components/route/PrivateRoute";
 
 export const routes: Array<AuthenticatedRouteConfig> = [
-
-
+    {
+        requiredAuthentication: false,
+        path: '/login',
+        exact: false,
+        component: AsyncLoading(() => import('@/views/LoginView')),
+    },
     {
         path: '/',
         exact: false,
         component: AsyncLoading(() => import('@/layouts/BasicLayout')),
         routes: [
             {
-                requiredAuthentication: false,
-                path: '/login',
-                exact: false,
-                component: AsyncLoading(() => import('@/views/LoginView')),
-            },
-            {
-                requiredAuthentication: true,
                 path: "/demo/list",
                 exact: true,
+                requiredAuthentication: true,
                 component: AsyncLoading(() => import("@/views/demo/DemoListView"))
             },
             {

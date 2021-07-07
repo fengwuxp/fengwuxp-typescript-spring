@@ -3,6 +3,10 @@ import React, {useEffect, useState} from "react";
 import {PrivateRoute, PrivateRouteProps} from "./PrivateRoute";
 
 
+function isFunction(val) {
+    return typeof val == "function";
+}
+
 /**
  * 默认的私有的路由，需要登录
  * @param props
@@ -20,18 +24,22 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
         return <div>loading</div>;
     }
     if (!authenticated) {
-        // console.log("Redirect", routeProps);
         return <Redirect to={{
-            pathname: typeof authenticator.authenticationView == "function" ? authenticator.authenticationView() : "/login",
+            pathname: isFunction(authenticator.authenticationView) ? authenticator.authenticationView() : "/login",
             state: {from: props.location}
         }}/>
+    }
+
+    const routeRenderFn = (renderComponentProps) => {
+        if (isFunction(routeProps.render)) {
+            return routeProps.render({...renderComponentProps, ...extraProps})
+        }
+        return <props.component {...renderComponentProps} {...extraProps}/>;
     }
     return <Route {...routeProps}
                   exact={routeProps.exact ?? true}
                   strict={routeProps.strict ?? true}
-                  render={renderProps => {
-                      return <props.component {...renderProps} {...extraProps}/>;
-                  }}/>
+                  render={routeRenderFn}/>
 }
 
 export default DefaultPrivateRoute;
