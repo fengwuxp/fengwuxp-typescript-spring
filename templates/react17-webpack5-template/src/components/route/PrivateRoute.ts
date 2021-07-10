@@ -14,7 +14,7 @@ export interface AppRouterAuthenticator<T> {
     /**
      * 是否已经鉴权
      */
-    isAuthenticated: () => Promise<boolean>;
+    isAuthenticated: () => Promise<void>;
 
     /**
      * 获取登录页面

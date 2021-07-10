@@ -23,8 +23,8 @@ const App = (pops) => {
                         username: "张三"
                     });
                 },
-                isAuthenticated: (): Promise<boolean> => {
-                    return Promise.resolve(false);
+                isAuthenticated: (): Promise<void> => {
+                    return Promise.resolve();
                 }
             })
         }

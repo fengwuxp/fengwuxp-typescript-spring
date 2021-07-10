@@ -16,7 +16,8 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
     const {authenticator, extraProps, component, ...routeProps} = props;
     const [authenticated, setAuthenticated] = useState(null);
     useEffect(() => {
-        authenticator.isAuthenticated().then(setAuthenticated);
+        authenticator.isAuthenticated().then(() => true).catch(() => false)
+            .then(setAuthenticated);
     }, []);
 
     if (authenticated == null) {
@@ -27,7 +28,7 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
         return <Redirect to={{
             pathname: isFunction(authenticator.authenticationView) ? authenticator.authenticationView() : "/login",
             state: {from: props.location}
-        }}/>
+        }} from={props.location.pathname}/>
     }
 
     const routeRenderFn = (renderComponentProps) => {
