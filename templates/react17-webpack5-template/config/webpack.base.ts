@@ -99,8 +99,9 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
          * @see https://webpack.js.org/configuration/dev-server/
          * @type {import("webpack-dev-server").Configuration}
          */
+        // @ts-ignore
         webpackConfiguration.devServer = {
-            contentBase: "./public",
+            contentBase: path.resolve(__dirname, "../public"),
             compress: true,
             historyApiFallback: {disableDotRule: true},
             port: 9000,

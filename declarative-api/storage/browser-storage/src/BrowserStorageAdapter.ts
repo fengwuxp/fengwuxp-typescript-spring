@@ -40,7 +40,6 @@ export default class BrowserStorageAdapter implements StorageAdapter {
     };
 
     setStorage = (key: string, data: string, options?: (number | PersistenceStorageOptions)) => {
-
         return this.setStorageSync(key, data);
     };
 

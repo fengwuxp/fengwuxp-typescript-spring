@@ -3,8 +3,8 @@ import {ProxyConfigMap} from "webpack-dev-server";
 
 export const httpProxyConfig: ProxyConfigMap = {
 
-    "local": {
-        target: "",
+    "/api": {
+        target: "http://xx.com/api",
         changeOrigin: true,
         pathRewrite: {
             "^/api": `/`

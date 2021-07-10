@@ -103,13 +103,6 @@ interface StorageCommandConfiguration {
  */
 declare const appCommandStorageFactory: <T extends AppCommandStorage, N extends StorageAdapter = StorageAdapter>(configuration: StorageCommandConfiguration, pathPrefix?: string) => T & N;
 
-interface StorageItem {
-    data: any;
-    __localStorageOptions__: {
-        effectiveTime: number;
-        lastUpdateTime: number;
-    };
-}
 /**
  * default wrapper storage adapter
  */
@@ -123,8 +116,11 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
     setStorage: (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => void | Promise<void>;
     getStorage: <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => Promise<any>;
     removeStorage: (key: (string | string[])) => any;
-    protected genKey: (key: string) => string;
-    protected getSaveItem(data: object | string | boolean | number, options: PersistenceStorageOptions): StorageItem;
+    getStorageSync: <T = any>(key: string) => any;
+    removeStorageSync: (key: (string | string[])) => any;
+    setStorageSync: (key: string, data: (object | string | boolean | number), options?: PersistenceStorageOptions) => void;
+    private genKey;
+    private static generateStorageItem;
     /**
      * 数据是否有效
      * @param expireDate
@@ -140,10 +136,8 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
      * @param options
      * @param localStorageOptions
      */
-    protected updateStorageItem: (error: any, key: string, options: GetStorageOptions | true | StorageUpdateStrategy, localStorageOptions: {
-        effectiveTime: number;
-        lastUpdateTime: number;
-    }) => Promise<any>;
+    private updateStorageItem;
+    private resolveStorageItem;
 }
 
 /**

@@ -55,9 +55,8 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
     };
 
     setStorage = (key: string, data: object | string | boolean | number, options?: PersistenceStorageOptions) => {
-        const object = this.getSaveItem(data, options);
-
-        return this.storageAdapter.setStorage(this.genKey(key), JSON.stringify(object));
+        const storageItem = DefaultWrapperStorageAdapter.generateStorageItem(data, options);
+        return this.storageAdapter.setStorage(this.genKey(key), JSON.stringify(storageItem));
     };
 
 
@@ -66,24 +65,14 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         // 如果存在配置项，则进行验证，例如过期时间
         // 尝试使用更新策略，自动更新数据
         return this.storageAdapter.getStorage<T>(reelKey).then((data) => {
-            if (data == null) {
-                // data is null or undefined
-                return Promise.reject();
-            }
-            let object: StorageItem;
-            if (typeof data === "string") {
-                object = JSON.parse(data);
-            } else {
-                object = data as any;
-            }
-            const result = object.data;
-            if (result == null) {
+            const storageItem = this.resolveStorageItem(data);
+            if (storageItem.data == null) {
                 return Promise.reject();
             }
             //数据有效
-            const localStorageOptions = object.__localStorageOptions__;
+            const localStorageOptions = storageItem.__localStorageOptions__;
             if (this.isItEffective(localStorageOptions)) {
-                return result;
+                return storageItem.data;
             }
             return this.updateStorageItem(StorageStatus.INVALID, reelKey, options, localStorageOptions);
         }).catch((e) => {
@@ -100,23 +89,51 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         }
     };
 
-    protected genKey = (key: string) => {
+    getStorageSync = <T = any>(key: string) => {
+        const storageItem = this.resolveStorageItem(this.storageAdapter.getStorageSync(key));
+        if (storageItem.data == null) {
+            return null;
+        }
+        //数据有效
+        const localStorageOptions = storageItem.__localStorageOptions__;
+        if (this.isItEffective(localStorageOptions)) {
+            return storageItem.data;
+        }
+        return null;
+    };
+
+    removeStorageSync = (key: (string | string[])) => {
+        if (Array.isArray(key)) {
+            return key.map(this.removeStorageSync);
+        } else {
+            return this.storageAdapter.removeStorageSync(this.genKey(key));
+        }
+    };
+
+    setStorageSync = (key: string, data: (object | string | boolean | number), options?: PersistenceStorageOptions) => {
+        // 保存配置项
+        const storageItem = DefaultWrapperStorageAdapter.generateStorageItem(data, options);
+        return this.storageAdapter.setStorageSync(this.genKey(key), JSON.stringify(storageItem));
+    };
+
+
+    private genKey = (key: string) => {
         if (key.startsWith(this.prefix)) {
             return key;
         }
         return `${this.prefix}${key}`
     };
 
-    protected getSaveItem(data: object | string | boolean | number, options: PersistenceStorageOptions) {
+    private static generateStorageItem(data: object | string | boolean | number, options: PersistenceStorageOptions) {
         // 保存配置项
-        const object: StorageItem = {
+        const result: StorageItem = {
             data,
             __localStorageOptions__: {
                 effectiveTime: options == null ? NEVER_EXPIRE : options.effectiveTime || NEVER_EXPIRE,
                 lastUpdateTime: new Date().getTime()
             }
         };
-        return object;
+        return result;
     }
 
     /**
@@ -137,13 +154,13 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
      * @param options
      * @param localStorageOptions
      */
-    protected updateStorageItem = (error,
-                                   key: string,
-                                   options: GetStorageOptions | true | StorageUpdateStrategy,
-                                   localStorageOptions: {
-                                       effectiveTime: number,
-                                       lastUpdateTime: number
-                                   }) => {
+    private updateStorageItem = (error,
+                                 key: string,
+                                 options: GetStorageOptions | true | StorageUpdateStrategy,
+                                 localStorageOptions: {
+                                     effectiveTime: number,
+                                     lastUpdateTime: number
+                                 }) => {
         if (options == null) {
             return Promise.reject(error);
         }
@@ -183,5 +200,18 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         });
     }
 
-
+    private resolveStorageItem = (data): StorageItem => {
+        if (data == null) {
+            // data is null or undefined
+            return {
+                data: null,
+                __localStorageOptions__: null
+            };
+        }
+        if (typeof data === "string") {
+            return JSON.parse(data);
+        } else {
+            return data as StorageItem;
+        }
+    }
 }

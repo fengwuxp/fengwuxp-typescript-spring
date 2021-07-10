@@ -10,7 +10,6 @@ import {
     tryConverterMethodNameCommandResolver
 } from "fengwuxp-declarative-command";
 import {StorageCommand} from "./StorageCommand";
-import {DefaultWrapperStorageSyncAdapter} from "./DefaultWrapperStorageSyncAdapter";
 
 
 const STORAGE_COMMAND_VALUES = Object.keys(StorageCommand).map((key) => {
@@ -20,6 +19,14 @@ const STORAGE_COMMAND_VALUES = Object.keys(StorageCommand).map((key) => {
 
 const SYNC_METHOD_SUFFIX = "Sync";
 
+function getMethodNameCommandResolver(configuration: StorageCommandConfiguration) {
+    return typeof configuration.methodNameCommandResolver == "function" ? configuration.methodNameCommandResolver() : reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver);
+}
+
+function getStorageUpdateStrategy(configuration: StorageCommandConfiguration) {
+    return typeof configuration.storageUpdateStrategy === "function" ? configuration.storageUpdateStrategy() : undefined;
+}
+
 /**
  * app command storage factory
  * @param configuration
@@ -28,26 +35,15 @@ const SYNC_METHOD_SUFFIX = "Sync";
 export const appCommandStorageFactory = <T extends AppCommandStorage,
     N extends StorageAdapter = StorageAdapter>(configuration: StorageCommandConfiguration, pathPrefix?: string): T & N => {
 
-
-    const methodNameCommandResolver = typeof configuration.methodNameCommandResolver == "function" ? configuration.methodNameCommandResolver() : reduceRightCommandResolvers(toUpperCaseResolver, toLineResolver);
-    const adapter = configuration.storageAdapter();
-    const adapterArgs = [
-        adapter,
-        pathPrefix,
-        typeof configuration.storageUpdateStrategy !== "function" ? undefined : configuration.storageUpdateStrategy()
-    ];
-    const isSupportSync = typeof adapter.setStorageSync === "function";
-    // @ts-ignore
-    const storageAdapter: StorageAdapter = isSupportSync ? new DefaultWrapperStorageSyncAdapter(...adapterArgs) : new DefaultWrapperStorageAdapter(...adapterArgs);
+    const methodNameCommandResolver = getMethodNameCommandResolver(configuration);
+    const storageAdapter: StorageAdapter = new DefaultWrapperStorageAdapter(configuration.storageAdapter(), pathPrefix, getStorageUpdateStrategy(configuration));
 
     return newProxyInstanceEnhance<T & N>(storageAdapter as any, null,
-        (object, propertyKey: string, receiver) => {
-
-            const isSyncMethod = propertyKey.endsWith(SYNC_METHOD_SUFFIX);
-
+        (object, propertyKey: string, _) => {
+            const isCallSync = propertyKey.endsWith(SYNC_METHOD_SUFFIX);
             return function (...args: any[]) {
                 //尝试从方法名称中解析到 指令
-                if (isSyncMethod) {
+                if (isCallSync) {
                     propertyKey = propertyKey.substring(0, propertyKey.length - 4);
                 }
                 let [command, storageKey] = tryConverterMethodNameCommandResolver(propertyKey, STORAGE_COMMAND_VALUES, StorageCommand.GET);
@@ -55,12 +51,12 @@ export const appCommandStorageFactory = <T extends AppCommandStorage,
                 storageKey = methodNameCommandResolver(storageKey);
                 switch (command) {
                     case StorageCommand.GET:
-                        return isSyncMethod ? storageAdapter.getStorageSync(storageKey) : storageAdapter.getStorage(storageKey, ...args);
+                        return isCallSync ? storageAdapter.getStorageSync(storageKey) : storageAdapter.getStorage(storageKey, ...args);
                     case StorageCommand.SET:
                         // @ts-ignore
-                        return isSyncMethod ? storageAdapter.setStorageSync(storageKey, ...args) : storageAdapter.setStorage(storageKey, ...args);
+                        return isCallSync ? storageAdapter.setStorageSync(storageKey, ...args) : storageAdapter.setStorage(storageKey, ...args);
                     case StorageCommand.REMOVE:
-                        return isSyncMethod ? storageAdapter.removeStorageSync(storageKey) : storageAdapter.removeStorage(storageKey);
+                        return isCallSync ? storageAdapter.removeStorageSync(storageKey) : storageAdapter.removeStorage(storageKey);
                     case StorageCommand.CLEAR:
                         return storageAdapter.clearAll();
                     default:
