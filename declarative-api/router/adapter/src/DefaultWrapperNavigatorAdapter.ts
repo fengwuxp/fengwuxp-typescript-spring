@@ -155,13 +155,9 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
                                    _uriVariables: RouteUriVariable,
                                    _state: RouteUriVariable) => {
 
-
         const navigatorObject = this.tryHandlePathArguments(navigatorDescriptorObject);
         let {pathname, uriVariables} = navigatorObject;
         const [, queryString] = pathname.split("?");
-
-        //TODO 参数类型检查
-        // if (Array.isArray(uriVariables)){}
 
         uriVariables = {
             ...(uriVariables as object),
@@ -169,17 +165,16 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         };
         if (Object.keys(uriVariables).length === 0) {
             return navigatorObject;
-        } else {
-            if (!this.autoJoinQueryString) {
-                navigatorObject.uriVariables = uriVariables;
-                return navigatorObject
-            }
+        }
+        if (this.autoJoinQueryString) {
             return {
                 ...navigatorObject,
                 pathname: `${pathname}?${stringify(uriVariables as any)}`
             }
         }
-
+        navigatorObject.uriVariables = uriVariables;
+        navigatorObject.search=`?${stringify(uriVariables as any)}`;
+        return navigatorObject
     };
 
     /**
