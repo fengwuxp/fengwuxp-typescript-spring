@@ -17,7 +17,7 @@
 - [react-router-config](https://github.com/ReactTraining/react-router)
 - [react-router-dom](https://github.com/ReactTraining/react-router)
 - [react-loadable](https://github.com/jamiebuilds/react-loadable) 异步加载组件
-
+- [react-helmet](https://github.com/nfl/react-helmet) 动态设置htm head 的标签，例如 title
 
 #### 图标
 - [react-inlinesvg](https://github.com/gilbarbara/react-inlinesvg)

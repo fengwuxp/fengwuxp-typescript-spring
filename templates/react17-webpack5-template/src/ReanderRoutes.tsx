@@ -1,14 +1,37 @@
 import {Route, Switch} from "react-router-dom";
-import React from "react";
+import React, {useState} from "react";
 import DefaultPrivateRoute from "@/components/route/DefaultPrivateRoute";
 import {AppRouterAuthenticator, AuthenticatedRouteConfig} from "@/components/route/PrivateRoute";
+import {parse} from "querystring";
+import {Helmet} from "react-helmet"
+
+const parseQueryParameters = ({search}) => {
+    return search ? parse(search.substr(1)) ?? {} : {}
+}
+
+const RouteDocumentTitleProvider = (props) => {
+    const {name, renderRoute} = props;
+    const [title, setTitle] = useState(name || "")
+    return <>
+        <Helmet>
+            <title>{title}</title>
+        </Helmet>
+        {renderRoute(setTitle)}
+    </>
+}
 
 const renderComponent = (route: AuthenticatedRouteConfig, authenticator: AppRouterAuthenticator<any>) => {
-    const {routes, extraProps} = route;
+    const {routes, name, extraProps} = route;
     return props => {
-        return <route.component {...props} {...extraProps}>
-            {routes?.length > 0 && renderAppRoutes(routes, authenticator)}
-        </route.component>;
+        return <RouteDocumentTitleProvider name={name}
+                                          renderRoute={(onDocumentTitleChange) => {
+                                              return <route.component {...props}
+                                                                      {...extraProps}
+                                                                      {...parseQueryParameters(props.location)}
+                                                                      onDocumentTitleChange={onDocumentTitleChange}>
+                                                  {routes?.length > 0 && renderAppRoutes(routes, authenticator)}
+                                              </route.component>
+                                          }}/>
     };
 }
 
@@ -18,8 +41,9 @@ const routeChildrenRoute = (route: AuthenticatedRouteConfig, authenticator: AppR
         ...routeProps,
         render: renderComponent(route, authenticator)
     }
-    return requiredAuthentication ? <DefaultPrivateRoute {...renderProps} authenticator={authenticator}/> :
-        <Route {...renderProps}/>
+    return requiredAuthentication ?
+        <DefaultPrivateRoute key={`dpr_` + route.key} {...renderProps} authenticator={authenticator}/> :
+        <Route key={`r_` + route.key} {...renderProps}/>
 }
 /**
  * 渲染routes
@@ -30,7 +54,7 @@ export const renderAppRoutes = (routeConfigs: AuthenticatedRouteConfig[], authen
 
     return <Switch>
         {routeConfigs.map((route) => {
-            return routeChildrenRoute(route, authenticator);
+            return routeChildrenRoute(route, authenticator)
         })}
     </Switch>
 }

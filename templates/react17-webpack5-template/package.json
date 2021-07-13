@@ -16,7 +16,8 @@
     "fengwuxp-react-dependency": "^1.0.0",
     "fengwuxp-styles-dependency": "^1.0.0",
     "fengwuxp-typescipt-dependency": "^1.0.0",
-    "fengwuxp-webpack5-dependency": "^1.0.0"
+    "fengwuxp-webpack5-dependency": "^1.0.0",
+    "react-helmet": "^6.1.0"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.6.2",

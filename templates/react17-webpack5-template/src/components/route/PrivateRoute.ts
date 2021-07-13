@@ -50,5 +50,10 @@ export interface AuthenticatedRouteConfig extends RouteConfig {
      */
     requiredAuthentication?: boolean;
 
+    /**
+     * 路由名称
+     */
+    name?: string;
+
     routes?: AuthenticatedRouteConfig[];
 }
