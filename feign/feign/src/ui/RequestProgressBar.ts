@@ -1,6 +1,3 @@
-
-
-
 /**
  * 请求进度条配置
  */
@@ -30,13 +27,17 @@ export interface ProgressBarOptions {
     icon?: string;
 }
 
+export type CloseRequestProgressBarFunction = () => void;
+
 /**
  * process bar
  */
-export interface RequestProgressBar<T extends ProgressBarOptions = ProgressBarOptions> {
+export interface RequestProgressBarInterface<T extends ProgressBarOptions = ProgressBarOptions> {
 
-    showProgressBar: (progressBarOptions?: T) => void;
-
-    hideProgressBar: () => void;
-
+    showProgressBar: (progressBarOptions?: T) => CloseRequestProgressBarFunction;
 }
+
+export type RequestProgressBarFunction<T extends ProgressBarOptions = ProgressBarOptions> = (progressBarOptions?: T) => CloseRequestProgressBarFunction;
+
+
+export type RequestProgressBar = RequestProgressBarInterface | RequestProgressBarFunction;

@@ -29,9 +29,9 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
             new ProcessBarExecutorInterceptor({
                 showProgressBar: (progressBarOptions?: ProgressBarOptions) => {
                     logger.log("[ProcessBarExecutorInterceptor]showProgressBar", progressBarOptions);
-                },
-                hideProgressBar: () => {
-                    logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
+                    return () => {
+                        logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
+                    }
                 }
             }),
             new CodecFeignClientExecutorInterceptor([
@@ -40,16 +40,15 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
                     // @ts-ignore
                     fileUploadProgressBar: () => {
                         return {
-                            hideProgressBar: function () {
-                                logger.debug("[fileUploadProgressBar]] hideProgressBar")
-                            },
                             onUploadProgressChange: function (progress: number, fileIndex: number) {
                                 logger.debug("[fileUploadProgressBar] onUploadProgressChange", progress, fileIndex);
                             },
                             showProgressBar: function (progressBarOptions: FileUploadProgressBarOptions) {
                                 logger.debug("[fileUploadProgressBar] showProgressBar", progressBarOptions)
+                                return () => {
+                                    logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
+                                }
                             }
-
                         };
                     },
                     upload: function (file: any, index: number, request: FeignRequestOptions) {

@@ -1,11 +1,11 @@
-import {RequestProgressBar} from "./RequestProgressBar";
+import {RequestProgressBarInterface} from "./RequestProgressBar";
 import {FileUploadProgressBarOptions} from "../FeignRequestOptions";
 
 
 /**
  * file upload progressbar
  */
-export interface FileUploadProgressBar extends RequestProgressBar<FileUploadProgressBarOptions> {
+export interface FileUploadProgressBar extends RequestProgressBarInterface<FileUploadProgressBarOptions> {
 
 
     /**
@@ -13,5 +13,5 @@ export interface FileUploadProgressBar extends RequestProgressBar<FileUploadProg
      * @param progress  upload progress
      * @param fileIndex
      */
-    onUploadProgressChange:(progress:number,fileIndex:number)=>void;
+    onUploadProgressChange: (progress: number, fileIndex: number) => void;
 }

@@ -40,8 +40,8 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
         }
 
         const fileUploadProgressBar = this.fileUploadStrategy.fileUploadProgressBar;
-        fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
-        await Promise.all(uploadQueue.map(async ({key, isArray, value}, index) => {
+        const closeProgressBarFn = fileUploadProgressBar.showProgressBar(request.fileUploadProgressBar);
+        await Promise.all(uploadQueue.map(async ({key, isArray, value}) => {
             //并发上传文件
             const result: string[] = await Promise.all((value).map((item, index) => {
                 return this.uploadFile(item, index, request);
@@ -53,7 +53,7 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
                 data[key] = result.join(",");
             }
 
-        })).finally(fileUploadProgressBar.hideProgressBar);
+        })).finally(closeProgressBarFn);
 
         return request;
 

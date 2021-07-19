@@ -733,13 +733,15 @@ interface ProgressBarOptions {
      */
     icon?: string;
 }
+declare type CloseRequestProgressBarFunction = () => void;
 /**
  * process bar
  */
-interface RequestProgressBar<T extends ProgressBarOptions = ProgressBarOptions> {
-    showProgressBar: (progressBarOptions?: T) => void;
-    hideProgressBar: () => void;
+interface RequestProgressBarInterface<T extends ProgressBarOptions = ProgressBarOptions> {
+    showProgressBar: (progressBarOptions?: T) => CloseRequestProgressBarFunction;
 }
+declare type RequestProgressBarFunction<T extends ProgressBarOptions = ProgressBarOptions> = (progressBarOptions?: T) => CloseRequestProgressBarFunction;
+declare type RequestProgressBar = RequestProgressBarInterface | RequestProgressBarFunction;
 
 /**
  * Used by the feign client to pass data during the request process and the interceptor
@@ -1834,31 +1836,39 @@ declare class TraceRequestExecutorInterceptor<T extends FeignRequestOptions = Fe
  */
 declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
     /**
+     * 进度条的相关配置
+     */
+    private readonly progressBarOptions;
+    /**
+     * 防止抖动，在接口很快响应的时候，不显示进度条
+     */
+    private readonly preventJitter;
+    /**
+     * 进度条
+     */
+    private readonly progressBar;
+    /**
      * 进度条计数器，用于在同时发起多个请求时，
      * 统一控制加载进度条
      */
     private count;
     /**
-     * 进度条
-     */
-    protected progressBar: RequestProgressBar;
-    /**
      * 当前执行的定时器
      */
-    protected timerId: any;
+    private timerId;
     /**
-     * 进度条的相关配置
+     * 关闭 request progress bar fn
      */
-    protected progressBarOptions: ProgressBarOptions;
-    /**
-     * 防止抖动，在接口很快响应的时候，不显示进度条
-     */
-    protected preventJitter: boolean;
+    private closeRequestProgressBarFunction;
     constructor(progressBar: RequestProgressBar, progressBarOptions?: ProgressBarOptions);
     postHandle: <E = HttpResponse<any>>(options: T, response: E) => E;
     preHandle: (options: T) => Promise<T>;
     postError: (options: T, response: HttpResponse) => Promise<HttpResponse<any>>;
-    protected needShowProcessBar: (options: T) => boolean;
+    private needShowProcessBar;
+    private showProgressBar;
+    private getRequestProgressBarOptions;
+    private showRequestProgressBar;
+    private closeRequestProgressBar;
 }
 
 /**
@@ -1906,7 +1916,7 @@ declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptio
 /**
  * file upload progressbar
  */
-interface FileUploadProgressBar extends RequestProgressBar<FileUploadProgressBarOptions> {
+interface FileUploadProgressBar extends RequestProgressBarInterface<FileUploadProgressBarOptions> {
     /**
      *
      * @param progress  upload progress

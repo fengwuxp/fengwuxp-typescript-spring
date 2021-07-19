@@ -1,7 +1,13 @@
 import {FeignRequestOptions} from "../FeignRequestOptions";
 import {HttpResponse} from "../client/HttpResponse";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
-import {ProgressBarOptions, RequestProgressBar} from "./RequestProgressBar";
+import {
+    CloseRequestProgressBarFunction,
+    ProgressBarOptions,
+    RequestProgressBar,
+    RequestProgressBarInterface
+} from "./RequestProgressBar";
+import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 
 /**
  * process bar executor
@@ -10,31 +16,35 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
     implements FeignClientExecutorInterceptor<T> {
 
     /**
+     * 进度条的相关配置
+     */
+    private readonly progressBarOptions: ProgressBarOptions;
+
+    /**
+     * 防止抖动，在接口很快响应的时候，不显示进度条
+     */
+    private readonly preventJitter: boolean = true;
+
+    /**
+     * 进度条
+     */
+    private readonly progressBar: RequestProgressBar;
+
+    /**
      * 进度条计数器，用于在同时发起多个请求时，
      * 统一控制加载进度条
      */
     private count: number = 0;
 
     /**
-     * 进度条
-     */
-    protected progressBar: RequestProgressBar;
-
-
-    /**
      * 当前执行的定时器
      */
-    protected timerId;
+    private timerId;
 
     /**
-     * 进度条的相关配置
+     * 关闭 request progress bar fn
      */
-    protected progressBarOptions: ProgressBarOptions;
-
-    /**
-     * 防止抖动，在接口很快响应的时候，不显示进度条
-     */
-    protected preventJitter: boolean = true;
+    private closeRequestProgressBarFunction: CloseRequestProgressBarFunction;
 
     constructor(progressBar: RequestProgressBar, progressBarOptions?: ProgressBarOptions) {
         this.progressBar = progressBar;
@@ -45,52 +55,32 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         };
         //延迟显示的时间最少要大于等于100毫秒才会启用防止抖动的模式
         this.preventJitter = this.progressBarOptions.delay >= 100;
+        this.closeRequestProgressBarFunction = () => {
+        };
     }
 
     postHandle = <E = HttpResponse>(options: T, response: E) => {
-
-        if (!this.needShowProcessBar(options)) {
-            //不使用进度条
-            return response;
+        if (this.needShowProcessBar(options)) {
+            // 计数器减一
+            this.count--;
+            if (this.count === 0) {
+                //清除定时器
+                clearTimeout(this.timerId);
+                this.closeRequestProgressBar();
+            }
         }
-
-        const {timerId, progressBar} = this;
-        //计数器减一
-        this.count--;
-        if (this.count === 0) {
-            //清除定时器
-            clearTimeout(timerId);
-            //隐藏加载进度条
-            progressBar.hideProgressBar();
-        }
-
         return response;
     };
 
+
     preHandle = async (options: T) => {
-
-        if (!this.needShowProcessBar(options)) {
-            //不使用进度条
-            return options;
-        }
-        const {progressBar, progressBarOptions} = this;
-        if (this.count === 0) {
-            const _progressBarOptions = {
-                ...progressBarOptions,
-                ...(options.progressBarOptions || {})
-            };
-            //显示加载进度条
-            if (this.preventJitter) {
-                this.timerId = setTimeout(() => {
-                    progressBar.showProgressBar(_progressBarOptions);
-                }, _progressBarOptions.delay);
-            } else {
-                progressBar.showProgressBar(_progressBarOptions);
+        if (this.needShowProcessBar(options)) {
+            if (this.count === 0) {
+                this.showProgressBar(options);
             }
+            // 计数器加一
+            this.count++;
         }
-
-        //计数器加一
-        this.count++;
         return options;
     };
 
@@ -98,15 +88,38 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
         return this.postHandle(options, response);
     };
 
-    protected needShowProcessBar = (options: T) => {
-        if (options.useProgressBar === false) {
-            //不使用进度条
-            return false;
-        }
-        return true;
+    private needShowProcessBar = (options: T) => {
+        return options.useProgressBar !== false;
     }
 
+    private showProgressBar(options: T) {
+        // 显示加载进度条
+        if (this.preventJitter) {
+            const progressBarOptions = this.getRequestProgressBarOptions(options);
+            this.timerId = setTimeout(() => {
+                this.showRequestProgressBar(this.getRequestProgressBarOptions(options));
+            }, progressBarOptions.delay);
+        } else {
+            this.showRequestProgressBar(this.getRequestProgressBarOptions(options));
+        }
+    }
 
+    private getRequestProgressBarOptions = (options: T) => {
+        const {progressBarOptions} = this;
+        return {
+            ...progressBarOptions,
+            ...(options.progressBarOptions || {})
+        };
+    }
+
+    private showRequestProgressBar = (progressBarOptions: ProgressBarOptions) => {
+        const {progressBar} = this;
+        this.closeRequestProgressBarFunction = invokeFunctionInterface<RequestProgressBar, RequestProgressBarInterface>(progressBar).showProgressBar(progressBarOptions);
+    }
+
+    private closeRequestProgressBar = () => {
+        const {closeRequestProgressBarFunction} = this;
+        // 隐藏加载进度条
+        closeRequestProgressBarFunction();
+    }
 }
-
-

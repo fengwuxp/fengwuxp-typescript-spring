@@ -152,9 +152,9 @@ export class MockFeignConfiguration implements FeignConfiguration {
             new ProcessBarExecutorInterceptor({
                 showProgressBar: (progressBarOptions?: ProgressBarOptions) => {
                     logger.log("[ProcessBarExecutorInterceptor]showProgressBar", progressBarOptions);
-                },
-                hideProgressBar: () => {
-                    logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
+                    return () => {
+                        return logger.log("[ProcessBarExecutorInterceptor]hideProgressBar");
+                    }
                 }
             }),
             new CodecFeignClientExecutorInterceptor([
