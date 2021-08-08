@@ -1,18 +1,18 @@
 import {
     CommonResolveHttpResponse,
     contentLengthName,
+    contentTransferEncodingName,
     contentTypeName,
     HttpAdapter,
     HttpMediaType,
     HttpMethod,
     HttpResponse,
     HttpStatus,
-    mediaTypeIsEq,
+    matchMediaType,
+    ResolveHttpResponse,
+    responseIsFile,
     responseIsJson,
     responseIsText,
-    responseIsFile,
-    contentTransferEncodingName,
-    ResolveHttpResponse,
 } from "fengwuxp-typescript-feign";
 import {BrowserHttpRequest} from './BrowserHttpRequest';
 
@@ -34,7 +34,7 @@ const RequestInitAttrNames: string[] = [
  */
 export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
 
-    private timeout: number;
+    private readonly timeout: number;
 
     private consumes: HttpMediaType;
 
@@ -99,7 +99,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             mode
         } = request;
 
-        if (headers != null && mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+        if (headers != null && matchMediaType(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type
             // @see {@link https://segmentfault.com/a/1190000010205162}
             delete headers[contentTypeName];
@@ -188,15 +188,15 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         }
     };
 
-    private parseJSON(response: Response): Promise<any> {
+    private parseJSON = (response: Response): Promise<any> => {
         return response.json();
     }
 
-    private parseText(response: Response): Promise<string> {
+    private parseText = (response: Response): Promise<string> => {
         return response.text();
     }
 
-    private paresArrayBuffer(response: Response): Promise<ArrayBuffer> {
+    private paresArrayBuffer = (response: Response): Promise<ArrayBuffer> => {
         return response.arrayBuffer();
     }
 

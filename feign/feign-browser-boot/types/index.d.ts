@@ -50,7 +50,7 @@ declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
     send: (req: BrowserHttpRequest) => Promise<HttpResponse>;
     /**
      * build http request
-     * @param {HttpRequest} request
+     * @param {BrowserHttpRequest} request
      * @return {Request}
      */
     private buildRequest;

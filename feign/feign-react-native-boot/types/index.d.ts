@@ -47,8 +47,8 @@ interface ReactNativeHttpRequest extends HttpRequest {
  *  react-native http request adapter
  */
 declare class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpRequest> {
-    private timeout;
-    private resolveHttpResponse;
+    private readonly timeout;
+    private readonly resolveHttpResponse;
     /**
      *
      * @param timeout  default 5000ms
@@ -58,7 +58,7 @@ declare class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpReque
     send: (req: ReactNativeHttpRequest) => Promise<HttpResponse>;
     /**
      * build http request
-     * @param {HttpRequest} request
+     * @param {ReactNativeHttpRequest} request
      * @return {Request}
      */
     private buildRequest;
@@ -70,9 +70,7 @@ declare class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHttpReque
     private parse;
     private parseJSON;
     private parseText;
-    private paresArrayBuffer;
     private paresBlob;
-    private resolveResponseHeaders;
 }
 
 export { ReactNativeHttpAdapter, ReactNativeHttpRequest, ReactNativeNetworkStatusListener };

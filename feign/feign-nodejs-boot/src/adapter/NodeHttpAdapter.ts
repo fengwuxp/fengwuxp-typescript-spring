@@ -2,7 +2,7 @@ import {
     CommonResolveHttpResponse, contentTypeName,
     HttpAdapter, HttpMediaType,
     HttpResponse,
-    mediaTypeIsEq,
+    matchMediaType,
     ResolveHttpResponse
 } from "fengwuxp-typescript-feign";
 import {NodeHttpRequest} from "./NodeHttpRequest";
@@ -69,15 +69,15 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
 
         const {headers, body} = options;
         const contentType = headers[contentTypeName];
-        if (mediaTypeIsEq(contentType as HttpMediaType, HttpMediaType.FORM_DATA)) {
+        if (matchMediaType(contentType as HttpMediaType, HttpMediaType.FORM_DATA)) {
             return {
                 form: body
             }
-        } else if (mediaTypeIsEq(contentType as HttpMediaType, HttpMediaType.APPLICATION_JSON)) {
+        } else if (matchMediaType(contentType as HttpMediaType, HttpMediaType.APPLICATION_JSON)) {
             return {
                 body: body
             }
-        } else if (mediaTypeIsEq(contentType as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+        } else if (matchMediaType(contentType as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             return {
                 formData: body
             }
@@ -97,13 +97,13 @@ export default class NodeHttpAdapter implements HttpAdapter<NodeHttpRequest> {
         const {body, headers} = response;
         const responseMediaType: string = headers[contentTypeName];
 
-        if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
+        if (matchMediaType(responseMediaType, HttpMediaType.APPLICATION_JSON_UTF8)) {
             return body == null ? body : JSON.parse(body);
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.TEXT)) {
+        } else if (matchMediaType(responseMediaType, HttpMediaType.TEXT)) {
             return body;
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.HTML)) {
+        } else if (matchMediaType(responseMediaType, HttpMediaType.HTML)) {
             return body;
-        } else if (mediaTypeIsEq(responseMediaType, HttpMediaType.APPLICATION_STREAM)) {
+        } else if (matchMediaType(responseMediaType, HttpMediaType.APPLICATION_STREAM)) {
             return body;
         } else {
             const error = new Error(`not support： ${responseMediaType}`);
