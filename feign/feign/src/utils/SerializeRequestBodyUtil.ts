@@ -2,7 +2,7 @@ import {ParsedUrlQueryInput} from "querystring";
 import {HttpRequestBody} from "../client/HttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpMethod} from "../constant/http/HttpMethod";
-import {mediaTypeIsEq} from "./MediaTypeUtil";
+import {matchMediaType} from "./MediaTypeUtil";
 
 const supportBodyMethods = [HttpMethod.POST, HttpMethod.PUT, HttpMethod.PATCH];
 
@@ -35,11 +35,11 @@ export const serializeRequestBody = (method: string,
         return body;
     }
 
-    if (mediaTypeIsEq(contentType, HttpMediaType.FORM_DATA)) {
+    if (matchMediaType(contentType, HttpMediaType.FORM_DATA)) {
         // form data
         return queryStringify(body, filterNoneValue);
     }
-    if (mediaTypeIsEq(contentType, HttpMediaType.APPLICATION_JSON_UTF8)) {
+    if (matchMediaType(contentType, HttpMediaType.APPLICATION_JSON_UTF8)) {
         // json data
         return JSON.stringify(filterNoneValue ? body : filterNoneValueAndNewObject(body));
     }

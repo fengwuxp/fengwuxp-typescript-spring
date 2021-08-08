@@ -129,7 +129,7 @@ export {
     FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface
 } from "./upload/FileUploadStrategy"
 
-export {mediaTypeIsEq, responseIsJson, responseIsFile, responseIsText} from "./utils/MediaTypeUtil";
+export {matchMediaType, responseIsJson, responseIsFile, responseIsText} from "./utils/MediaTypeUtil";
 export {
     supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
 } from "./utils/SerializeRequestBodyUtil";

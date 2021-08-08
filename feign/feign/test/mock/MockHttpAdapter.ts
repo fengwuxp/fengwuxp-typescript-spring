@@ -3,7 +3,7 @@ import {HttpRequest} from "../../src/client/HttpRequest";
 import {HttpResponse} from "../../src/client/HttpResponse";
 import {ResolveHttpResponse} from "../../src/resolve/ResolveHttpResponse";
 import CommonResolveHttpResponse from "../../src/resolve/CommonResolveHttpResponse";
-import {contentTypeName, HttpMediaType, HttpMethod, mediaTypeIsEq} from "../../src";
+import {contentTypeName, HttpMediaType, HttpMethod, matchMediaType} from "../../src";
 import {HttpStatus} from "../../src/constant/http/HttpStatus";
 import * as log4js from "log4js";
 
@@ -40,7 +40,7 @@ export default class MockHttpAdapter implements HttpAdapter {
     send = async (req: HttpRequest): Promise<HttpResponse> => {
         logger.debug("[MockHttpAdapter] send ", req);
         const {url, method, headers} = req;
-        if (mediaTypeIsEq(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
+        if (matchMediaType(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
             // remove content-type
             // @see {@link https://segmentfault.com/a/1190000010205162}
             delete headers[contentTypeName];

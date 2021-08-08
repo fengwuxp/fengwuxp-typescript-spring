@@ -53,7 +53,7 @@ export default class DefaultSKUSelector<T extends Sku = Sku> implements SKUSelec
             // 已选中，去选
             selectedAttributes[rowIndex] = null;
         } else {
-            // 为选中，选中
+            // 未选中，选中
             rowIndex = skuValues.findIndex((item) => item.name === attribute.name);
             selectedAttributes[rowIndex] = attribute;
         }

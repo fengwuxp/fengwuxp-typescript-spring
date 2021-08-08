@@ -26,6 +26,11 @@ export enum HttpMediaType {
      */
     APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8",
 
+    /**
+     * @deprecated
+     */
+    TEXT_JSON_UTF8 = "text/json;charset=UTF-8",
+
     TEXT = "text/plain",
 
     HTML = "text/html",
