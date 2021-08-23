@@ -69,5 +69,6 @@ module.exports = {
             },
             "@ant-design/icons"
         ],
+        "dynamic-import-chunk-name"
     ]
 };

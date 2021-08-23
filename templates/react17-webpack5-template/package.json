@@ -5,8 +5,10 @@
   "author": "wuxp",
   "main": "index.js",
   "scripts": {
-    "start": "webpack serve --mode=development",
-    "build": "rimraf ./dist && webpack --mode=production",
+    "start": "cross-env profile=dev webpack serve --mode=development",
+    "build:test": "rimraf ./dist && cross-env profile=test webpack --mode=production",
+    "build": "rimraf ./dist && cross-env profile=prod webpack --mode=production",
+    "build:analyze": "rimraf ./dist && cross-env profile=prod analyze=true webpack --mode=production",
     "test": "jest",
     "i18n-dts-generate": "simple-i18n-dts"
   },
@@ -22,6 +24,7 @@
   "devDependencies": {
     "@ant-design/icons": "^4.6.2",
     "antd": "^4.16.1",
+    "babel-plugin-dynamic-import-chunk-name": "^1.0.0",
     "i18next": "^20.3.1",
     "i18next-browser-languagedetector": "^6.1.1",
     "i18next-chained-backend": "^3.0.2",

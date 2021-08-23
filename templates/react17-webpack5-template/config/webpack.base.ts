@@ -4,16 +4,32 @@ import {WebpackManifestPlugin} from "webpack-manifest-plugin";
 import {httpProxyConfig} from "./http.proxy.config";
 import {BundleAnalyzerPlugin} from "webpack-bundle-analyzer";
 import MiniCssExtractPlugin from "mini-css-extract-plugin";
+import OptimizeCssAssetsPlugin from "optimize-css-assets-webpack-plugin";
 import {miniCssExtractLoader} from "./styles/minicss";
 import {cssModuleLoader} from "./styles//CssModuleLoader";
 import PostCssLoader from "./styles//postcss/PostCssLoader";
 import {lessLoader} from "./styles//less/LessLoader";
 import {scssLoader} from "./styles//scss/ScssLoader";
+import envConfig from "./env";
 
-const {TypedCssModulesPlugin} = require('typed-css-modules-webpack-plugin');
 const HtmlWebpackPlugin = require("html-webpack-plugin");
 const TerserPlugin = require("terser-webpack-plugin");
 const InlineChunkHtmlPlugin = require("inline-chunk-html-plugin");
+
+
+const resolveProcessEvnConfig = (config) => {
+    console.log("process.env.profile", process.env.profile);
+    return Object.keys(config).map(key => {
+        return {
+            [`process.env.${key}`]: JSON.stringify(config[key])
+        }
+    }).reduce((prevValue, currentValue) => {
+        return {
+            ...currentValue,
+            ...prevValue
+        }
+    });
+}
 
 /**
  * Webpack configuration.
@@ -24,23 +40,25 @@ const InlineChunkHtmlPlugin = require("inline-chunk-html-plugin");
  * @returns {import("webpack").Configuration}
  */
 export const generateWebpackConfig = (env, options): webpack.Configuration => {
-
-    const isEnvProduction = options.mode === "production";
-    const isEnvDevelopment = options.mode === "development";
+    const webpackMode = options.mode ?? "development";
+    const isEnvProduction = webpackMode === "production";
+    const isEnvDevelopment = webpackMode === "development";
+    console.log("webpackMode", webpackMode);
 
     const webpackConfiguration: webpack.Configuration = {
         name: "app",
-        mode: "development",
+        mode: webpackMode,
         target: "web",
         bail: true,
-        entry: "./src/index.tsx",
+        entry: {
+            app: "./src/index.tsx",
+        },
         output: {
             path: path.resolve(__dirname, "../dist"),
             pathinfo: true,
             filename: "./js/[name].[contenthash:8].js",
             chunkFilename: "./js/[name].[contenthash:8].js",
-            publicPath: "/",
-            uniqueName: "app",
+            publicPath: "/"
         },
         module: getModule(),
         devtool: isEnvProduction ? "source-map" : "cheap-module-source-map",
@@ -74,20 +92,28 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
                         },
                     }
                 ),
+                favicon: path.resolve(__dirname, "../public/favicon.ico"),
+                hash: false, // 防止缓存，在引入的文件后面加hash (PWA就是要缓存，这里设置为false)
+                // 正式环境，把注册service-worker的代码加入到index.html中
+                registerServiceWorker: `<script>
+                      if ("serviceWorker" in navigator) {
+                        window.addEventListener("load", () => {
+                          navigator.serviceWorker.register("./service-worker.js");
+                        });
+                      }
+                      </script>`
             }),
             new MiniCssExtractPlugin({
                 filename: isEnvDevelopment ? "./css/[name].css" : "./css/[name].[contenthash:8].css",
                 chunkFilename: isEnvDevelopment ? "./css/[name].css" : "./css/[name].[contenthash:8].css",
             }),
-            new webpack.DefinePlugin({
-                "process.env.APP_NAME": JSON.stringify("React App"),
-                "process.env.APP_ORIGIN": JSON.stringify("http://localhost:3000"),
-            }),
+            new webpack.DefinePlugin(resolveProcessEvnConfig(envConfig[process.env.profile ?? 'dev'])),
             new WebpackManifestPlugin({fileName: "assets.json", publicPath: "/"}),
-            // new TypedCssModulesPlugin({
-            //     globPattern: 'src/**/*.module.less',
-            //     camelCase: true
-            // })
+            // https://blog.csdn.net/qinjm8888/article/details/83377352
+            new webpack.ContextReplacementPlugin(
+                /moment[/\\]locale$/,
+                /zh-cn/,
+            ),
         ],
 
     }
@@ -99,7 +125,6 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
          * @see https://webpack.js.org/configuration/dev-server/
          * @type {import("webpack-dev-server").Configuration}
          */
-        // @ts-ignore
         webpackConfiguration.devServer = {
             contentBase: path.resolve(__dirname, "../public"),
             compress: true,
@@ -131,38 +156,44 @@ export const generateWebpackConfig = (env, options): webpack.Configuration => {
                         keep_fnames: false,
                         output: {ecma: 5, comments: false, ascii_only: true},
                     },
+                    extractComments: false,
                 }),
             ],
             splitChunks: {
                 chunks: "all",
                 cacheGroups: {
-                    commons: {
+                    vendor: {
                         test: /[\\/].yarn[\\/]/,
-                        name: "vendors",
-                        chunks: "all",
+                        //引入的库是从node_modules引入，就分割库代码到当前组
+                        // test: /[\\/]node_modules[\\/]/,
+                        name: 'vendor',
+                        chunks: 'initial',
+                        priority: 2,
+                        minChunks: 2
                     },
-                    styles: {
-                        name: 'styles',
-                        type: 'css/mini-extract',
-                        chunks: 'all',
-                        enforce: true,
-                    },
-                },
+                    common: {
+                        test: /.js$/,
+                        name: 'common',
+                        chunks: 'initial',
+                        priority: 1,
+                        minChunks: 2
+                    }
+                }
             },
-            runtimeChunk: {
-                name: (entrypoint) => `runtime-${entrypoint.name}`,
-            }
         }
         webpackConfiguration.plugins.push(
             new InlineChunkHtmlPlugin(HtmlWebpackPlugin, [/runtime-.+[.]js/]),
-            new BundleAnalyzerPlugin()
+            new OptimizeCssAssetsPlugin()
         )
+    }
+    if (process.env.analyze === "true") {
+        webpackConfiguration.plugins.push(new BundleAnalyzerPlugin());
     }
 
     return webpackConfiguration;
 }
 
-const getModule = () => {
+const getModule = (): any => {
     return {
         rules: [
             {
@@ -197,11 +228,12 @@ const getModule = () => {
                 ],
             },
             {
-                test: /\.(png|jpg|jpeg|gif)/,
+                test: /\.(png|jpg|jpeg|gif|webp)/,
                 use: [
                     {
                         loader: "url-loader",
                         options: {
+                            name: 'images/[name].[hash:8].[ext]',
                             limit: 1024 * 5
                         }
                     }
