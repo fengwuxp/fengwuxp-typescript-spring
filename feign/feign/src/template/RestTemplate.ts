@@ -14,7 +14,7 @@ import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
 import {ResponseErrorHandler, ResponseErrorHandlerInterFace} from "./ResponseErrorHandler";
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
-import {removeRequestContextId} from "../context/RequestContextHolder";
+import {HttpRequestContext} from "../client/HttpRequest";
 
 /**
  *  http rest template
@@ -35,47 +35,47 @@ export default class RestTemplate implements RestOperations {
         this.businessResponseExtractor = businessResponseExtractor || DEFAULT_BUSINESS_EXTRACTOR;
     }
 
-    delete = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<void> => {
+    delete = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<void> => {
 
-        return this.execute(url, HttpMethod.DELETE, uriVariables, null, objectResponseExtractor, headers);
+        return this.execute(url, HttpMethod.DELETE, uriVariables, null, objectResponseExtractor, headers, context);
     };
 
-    getForEntity = <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<HttpResponse<E>> => {
+    getForEntity = <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<HttpResponse<E>> => {
 
-        return this.execute(url, HttpMethod.GET, uriVariables, null, null, headers);
+        return this.execute(url, HttpMethod.GET, uriVariables, null, null, headers, context);
     };
 
-    getForObject = <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<E> => {
+    getForObject = <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<E> => {
 
-        return this.execute(url, HttpMethod.GET, uriVariables, null, objectResponseExtractor, headers);
+        return this.execute(url, HttpMethod.GET, uriVariables, null, objectResponseExtractor, headers, context);
     };
 
-    headForHeaders = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<Record<string, string>> => {
-        return this.execute(url, HttpMethod.HEAD, uriVariables, null, headResponseExtractor, headers);
+    headForHeaders = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<Record<string, string>> => {
+        return this.execute(url, HttpMethod.HEAD, uriVariables, null, headResponseExtractor, headers, context);
     };
 
-    optionsForAllow = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<HttpMethod[]> => {
-        return this.execute(url, HttpMethod.OPTIONS, uriVariables, null, optionsMethodResponseExtractor, headers);
+    optionsForAllow = (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<HttpMethod[]> => {
+        return this.execute(url, HttpMethod.OPTIONS, uriVariables, null, optionsMethodResponseExtractor, headers, context);
     };
 
-    patchForObject = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<E> => {
-        return this.execute(url, HttpMethod.PATCH, uriVariables, requestBody, objectResponseExtractor, headers);
+    patchForObject = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<E> => {
+        return this.execute(url, HttpMethod.PATCH, uriVariables, requestBody, objectResponseExtractor, headers, context);
     };
 
-    postForEntity = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<HttpResponse<E>> => {
-        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, null, headers);
+    postForEntity = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<HttpResponse<E>> => {
+        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, null, headers, context);
     };
 
-    postForLocation = (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<string> => {
-        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, objectResponseExtractor, headers);
+    postForLocation = (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<string> => {
+        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, objectResponseExtractor, headers, context);
     };
 
-    postForObject = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<E> => {
-        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, objectResponseExtractor, headers);
+    postForObject = <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<E> => {
+        return this.execute(url, HttpMethod.POST, uriVariables, requestBody, objectResponseExtractor, headers, context);
     };
 
-    put = (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>): Promise<void> => {
-        return this.execute(url, HttpMethod.PUT, uriVariables, requestBody, objectResponseExtractor, headers);
+    put = (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext): Promise<void> => {
+        return this.execute(url, HttpMethod.PUT, uriVariables, requestBody, objectResponseExtractor, headers, context);
     };
 
     execute = async <E = any>(url: string,
@@ -83,7 +83,8 @@ export default class RestTemplate implements RestOperations {
                               uriVariables?: UriVariable,
                               requestBody?: any,
                               responseExtractor?: ResponseExtractor<E>,
-                              headers?: Record<string, string>): Promise<E> => {
+                              headers?: Record<string, string>,
+                              context?: HttpRequestContext): Promise<E> => {
 
 
         // handle url and query params
@@ -94,25 +95,25 @@ export default class RestTemplate implements RestOperations {
         realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler).expand(realUrl, uriVariables);
 
         let httpResponse;
-        const requestId = removeRequestContextId(headers);
+        const contextAttributes = context?.attributes ?? {};
         try {
             httpResponse = await this.httpClient.send({
-                requestId,
                 url: realUrl,
                 method,
                 body: requestBody,
-                headers
+                headers,
+                attributes: contextAttributes
             });
         } catch (error) {
             //handle error
             if (_responseErrorHandler) {
                 return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
                     {
-                        requestId,
                         url: realUrl,
                         method,
                         headers,
-                        body: requestBody
+                        body: requestBody,
+                        attributes: contextAttributes
                     }, error);
             }
 

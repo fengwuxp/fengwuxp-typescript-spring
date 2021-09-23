@@ -5,7 +5,7 @@ import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../constant/FeignConstVar
 import {RequestAuthenticationType} from "../annotations/mapping/Mapping";
 import {AuthenticationType} from "../constant/AuthenticationType";
 import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
-import {appendRequestContextId, getFeignClientMethodConfigurationByRequest,} from "../context/RequestContextHolder";
+import {getFeignClientMethodConfiguration,} from "../context/RequestContextHolder";
 
 /**
  * 用于探测API接口权限，并做处理
@@ -31,7 +31,7 @@ export default class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpR
             // 用于获取接口权限的请求，直接跳过
             return req;
         }
-        const requestMapping = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        const requestMapping = getFeignClientMethodConfiguration(req)?.requestMapping;
         if (requestMapping == null) {
             return req;
         }
@@ -66,9 +66,7 @@ export default class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpR
         return {
             probe: (url: string) => {
                 return FeignConfigurationRegistry.getDefaultFeignConfiguration().then(config => {
-                    return config.getRestTemplate().headForHeaders(url, undefined, appendRequestContextId({
-                        [REQUEST_AUTHENTICATION_TYPE_HEADER_NAME]: 'Probe'
-                    }));
+                    return config.getRestTemplate().headForHeaders(url, undefined, {});
                 })
             }
         };

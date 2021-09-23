@@ -1,7 +1,7 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
-import {getFeignClientMethodConfigurationByRequest,} from "../context/RequestContextHolder";
+import {getFeignClientMethodConfiguration,} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
 import {AuthenticationType} from "../constant/AuthenticationType";
@@ -53,7 +53,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
 
     interceptor = async (req: T) => {
 
-        const requestMapping = getFeignClientMethodConfigurationByRequest(req)?.requestMapping;
+        const requestMapping = getFeignClientMethodConfiguration(req)?.requestMapping;
         if (requestMapping == null) {
             // 不存在则不处理
             return req;

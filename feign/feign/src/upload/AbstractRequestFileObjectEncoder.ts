@@ -23,13 +23,13 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
     protected static SUPPORT_REQUEST_METHODS = [HttpMethod.POST, HttpMethod.PATCH, HttpMethod.PUT];
 
 
-    constructor(fileUploadStrategy: FileUploadStrategy<any>) {
+    protected constructor(fileUploadStrategy: FileUploadStrategy<any>) {
         this.fileUploadStrategy = fileUploadStrategy;
     }
 
     async encode(request: T): Promise<T> {
 
-        const {requestMapping, fileUploadOptions} = getFeignClientMethodConfiguration(request.requestId);
+        const {requestMapping, fileUploadOptions} = getFeignClientMethodConfiguration(request);
         if (AbstractRequestFileObjectEncoder.SUPPORT_REQUEST_METHODS.indexOf(requestMapping.method) < 0) {
             return request;
         }

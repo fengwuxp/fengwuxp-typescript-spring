@@ -1,6 +1,7 @@
 import {HttpResponse} from "../client/HttpResponse";
 import {HttpMethod} from "../constant/http/HttpMethod";
 import {ResponseExtractor} from "./ResponseExtractor";
+import {HttpRequestContext} from "../client/HttpRequest";
 
 /**
  * Interface specifying a basic set of RESTful operations.
@@ -21,7 +22,7 @@ export interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
 
     /**
      * Retrieve a representation by doing a GET on the URI template.
@@ -33,7 +34,7 @@ export interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
 
     //HEAD
 
@@ -46,7 +47,7 @@ export interface RestOperations {
      * @return all HTTP headers of that resource
      * @see {@link UriVariable}
      */
-    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<Record<string, string>>;
+    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<Record<string, string>>;
 
     //POST
 
@@ -64,7 +65,7 @@ export interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template, and returns the value of
@@ -80,7 +81,7 @@ export interface RestOperations {
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
-    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<string>;
 
     /**
      * Create a new resource by POSTing the given object to the URI template,
@@ -96,7 +97,7 @@ export interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
 
     //PUT
 
@@ -111,7 +112,7 @@ export interface RestOperations {
      * @param headers
      * @see {@link UriVariable}
      */
-    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
 
     //PATCH
 
@@ -129,7 +130,7 @@ export interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
 
     //DELETE
 
@@ -141,7 +142,7 @@ export interface RestOperations {
      * @param headers
      * @see {@link UriVariable}
      */
-    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
 
     //OPTIONS
 
@@ -154,7 +155,7 @@ export interface RestOperations {
      * @return the value of the allow header
      * @see {@link UriVariable}
      */
-    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpMethod[]>;
+    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpMethod[]>;
 
     /**
      * Execute the HTTP method to the given URL, preparing the request with the，and reading the response with a {@link ResponseExtractor}.
@@ -164,6 +165,7 @@ export interface RestOperations {
      * @param requestBody object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
      * @param headers
+     * @param context
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
     execute: <E = any>(url: string,
@@ -171,7 +173,8 @@ export interface RestOperations {
                        uriVariables?: UriVariable,
                        requestBody?: any,
                        responseExtractor?: ResponseExtractor<E>,
-                       headers?: Record<string, string>) => Promise<E>;
+                       headers?: Record<string, string>,
+                       context?: HttpRequestContext) => Promise<E>;
 }
 
 /**

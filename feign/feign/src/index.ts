@@ -76,7 +76,7 @@ export {
     UNAUTHORIZED_RESPONSE,
     grabUrlPathVariable
 } from "./constant/FeignConstVar";
-export {getFeignClientMethodConfigurationByRequest} from "./context/RequestContextHolder";
+export {getFeignClientMethodConfiguration} from "./context/RequestContextHolder";
 
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";

@@ -14,25 +14,20 @@ export const getNextRequestId: HttpRequestIdGenerator = () => `${REQUEST_NUM++}`
 
 
 /**
- * 请求追踪
+ * 请求上下文
  */
-export interface RequestTrace {
-    /**
-     * 单次http请求的id，用于贯穿整个http请求的过程
-     * 在这个过程中可以通过该id获取到请求的上下文内容
-     *
-     * 可以用于追踪请求
-     * {@see HttpRequestIdGenerator}
-     */
-    requestId?: Readonly<string>;
+export interface HttpRequestContext {
+
+    readonly attributes: object;
 }
+
 
 /**
  * The payload object used to make the HTTP request
  * {@see HttpAdapter}
  * {@see HttpClient}
  */
-export interface HttpRequest extends RequestTrace {
+export interface HttpRequest extends HttpRequestContext {
 
     /**
      * 请求url

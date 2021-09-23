@@ -15,12 +15,11 @@ import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
-import {appendRequestContextId, removeRequestContext, setRequestContext} from "./context/RequestContextHolder"
+import {setFeignClientMethodConfiguration} from "./context/RequestContextHolder"
 import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} from "./client/AuthenticationStrategy";
 import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
 import {AuthenticationType} from "./constant/AuthenticationType";
 import {parse} from "querystring";
-import {getNextRequestId} from "./client/HttpRequest";
 
 /**
  * default feign client executor
@@ -158,10 +157,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // set mapping options
-        const requestId = getNextRequestId();
-        feignRequestOptions.requestId = requestId;
-        appendRequestContextId(feignRequestOptions.headers, requestId);
-        setRequestContext(requestId, feignMethodConfig);
+        setFeignClientMethodConfiguration(feignRequestOptions, feignMethodConfig);
 
         // pre handle
         feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
@@ -177,12 +173,10 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                             req.method,
                             queryParams,
                             req.body,
-                            feignRequestOptions.responseExtractor,
-                            // keep requestId use trace
-                            appendRequestContextId(req.headers, req.requestId));
+                            feignRequestOptions.responseExtractor);
                     }
                 }, retryOptions).send({
-                    requestId: feignRequestOptions.requestId,
+                    attributes: feignRequestOptions.attributes,
                     url: requestURL,
                     method: requestMapping.method,
                     body: feignRequestOptions.body,
@@ -196,7 +190,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                     queryParams,
                     feignRequestOptions.body,
                     feignRequestOptions.responseExtractor,
-                    feignRequestOptions.headers);
+                    feignRequestOptions.headers,
+                    feignRequestOptions);
             }
         } catch (e) {
             // Non-2xx response
@@ -270,7 +265,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.preHandle,
                 () => options,
                 url,
-                options.headers,
+                options,
                 requestMapping);
             result = await handle(result);
             index++;
@@ -289,17 +284,16 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.postHandle,
                 () => result,
                 url,
-                options.headers,
+                options,
                 requestMapping);
             result = await handle(options, result);
             index++;
         }
-        removeRequestContext(options.requestId);
         return result;
     };
 
 
-    private postHandleError = async (url: string, requestMapping: RequestMappingOptions, options: FeignRequestBaseOptions, response: HttpResponse<any>) => {
+    private postHandleError = async (url: string, requestMapping: RequestMappingOptions, options: FeignRequestBaseOptions, response: HttpResponse) => {
         const {feignClientExecutorInterceptors} = this;
         let result: any = response, len = feignClientExecutorInterceptors.length, index = 0;
         while (index < len) {
@@ -309,7 +303,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignClientExecutorInterceptor.postError,
                 () => result,
                 url,
-                options.headers,
+                options,
                 requestMapping);
             try {
                 result = await handle(options, result);
@@ -318,7 +312,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             }
             index++;
         }
-        removeRequestContext(options.requestId);
         return Promise.reject(result);
     };
 
@@ -327,7 +320,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                                     handle: Function,
                                     isNotHandle: Function,
                                     url: string,
-                                    headers: Record<string, string>,
+                                    options: FeignRequestBaseOptions,
                                     requestMapping: RequestMappingOptions): Function => {
         if (typeof handle != "function") {
             return isNotHandle;
@@ -337,8 +330,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             let isMatch = feignClientExecutorInterceptor.matches({
                 url,
                 method: requestMapping.method,
-                headers: headers,
-                timeout: requestMapping.timeout
+                headers: options.headers,
+                timeout: requestMapping.timeout,
+                attributes: options.attributes
             });
             if (!isMatch) {
                 return isNotHandle;
