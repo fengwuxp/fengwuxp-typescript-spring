@@ -19,10 +19,10 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     private static DEFAULT_AUTHENTICATION_HEADER_NAMES = ["Authorization"];
 
     // is refreshing status
-    protected static IS_REFRESH_TOKEN_ING = false;
+    private refreshing = false;
 
-    // protected static waitingQueue: Array<any> = [];
-    protected static WAITING_QUEUE: Array<{
+    // wait refresh token request queue
+    private waitRequestQueue: Array<{
         resolve: (value?: any | PromiseLike<any>) => void;
         reject: (reason?: any) => void
     }> = [];
@@ -47,7 +47,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     constructor(authenticationStrategy: AuthenticationStrategy,
                 aheadOfTimes?: number,
                 synchronousRefreshAuthorization: boolean = true) {
-        this.aheadOfTimes = aheadOfTimes || 5 * 60 * 1000;
+        this.aheadOfTimes = aheadOfTimes ?? 5 * 60 * 1000;
         this.synchronousRefreshAuthorization = synchronousRefreshAuthorization;
         this.setAuthenticationStrategy(authenticationStrategy);
     }
@@ -111,49 +111,57 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         return <AuthenticationType>this.getAuthenticationType(requestMapping.authenticationType, this.defaultAuthenticationType);
     }
 
-    private requestRequiresAuthorization = (type: AuthenticationType): boolean => {
-        return type == AuthenticationType.FORCE || type == AuthenticationType.TRY;
+    private requestRequiresAuthorization = (authenticationType: AuthenticationType): boolean => {
+        return authenticationType == AuthenticationType.FORCE || authenticationType == AuthenticationType.TRY;
     }
 
     private refreshAuthenticationToken = async (req: T, refreshToken): Promise<AuthenticationToken> => {
         const {synchronousRefreshAuthorization} = this;
         if (synchronousRefreshAuthorization) {
-            // Block other requests if you are refreshing token
-            if (AuthenticationClientHttpRequestInterceptor.IS_REFRESH_TOKEN_ING) {
-                // join wait queue
-                return new Promise<AuthenticationToken>((resolve, reject) => {
-                    AuthenticationClientHttpRequestInterceptor.WAITING_QUEUE.push({
-                        resolve,
-                        reject,
-                    });
-                });
-            } else {
-                // Synchronous refresh
-                AuthenticationClientHttpRequestInterceptor.IS_REFRESH_TOKEN_ING = true;
-                // need refresh token
-                let authenticationToken, error
-                try {
-                    authenticationToken = await this.refreshAuthenticationToken0(req, refreshToken);
-                } catch (e) {
-                    error = e;
-                }
-                AuthenticationClientHttpRequestInterceptor.IS_REFRESH_TOKEN_ING = false;
-                const waitingQueue = [...AuthenticationClientHttpRequestInterceptor.WAITING_QUEUE];
-                // clear
-                AuthenticationClientHttpRequestInterceptor.WAITING_QUEUE = [];
-                waitingQueue.forEach(({reject, resolve}) => {
-                    if (error) {
-                        reject(error);
-                    } else {
-                        resolve(authenticationToken);
-                    }
-                });
-                return authenticationToken;
-            }
+            return this.syncRefreshAuthenticationToken(req, refreshToken);
         } else {
             // For asynchronous refresh, the server needs to support multiple tokens
             return this.refreshAuthenticationToken0(req, refreshToken);
         }
+    }
+
+    private syncRefreshAuthenticationToken = async (req: T, refreshToken): Promise<AuthenticationToken> => {
+        // Block other requests if you are refreshing token
+        if (this.refreshing) {
+            // join wait queue
+            return new Promise<AuthenticationToken>((resolve, reject) => {
+                this.waitRequestQueue.push({
+                    resolve,
+                    reject,
+                });
+            });
+        } else {
+            // Synchronous refresh
+            this.refreshing = true;
+            // need refresh token
+            let authenticationToken, error
+            try {
+                authenticationToken = await this.refreshAuthenticationToken0(req, refreshToken);
+            } catch (e) {
+                error = e;
+            }
+            this.completeWaitQueue(authenticationToken, error);
+            this.refreshing = false;
+            return authenticationToken;
+        }
+    }
+
+    private completeWaitQueue(authenticationToken, error) {
+        const waitRequestQueue = [...this.waitRequestQueue];
+        // clear
+        this.waitRequestQueue = [];
+        waitRequestQueue.forEach(({reject, resolve}) => {
+            if (authenticationToken != null) {
+                resolve(authenticationToken);
+            } else {
+                reject(error);
+            }
+        });
     }
 
     private refreshAuthenticationToken0 = async (req: T, refreshToken): Promise<AuthenticationToken> => {
