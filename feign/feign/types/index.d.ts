@@ -22,24 +22,17 @@ declare enum HttpMethod {
 
 declare type SupportSerializableBody = any;
 /**
- * 请求追踪
+ * 请求上下文
  */
-interface RequestTrace {
-    /**
-     * 单次http请求的id，用于贯穿整个http请求的过程
-     * 在这个过程中可以通过该id获取到请求的上下文内容
-     *
-     * 可以用于追踪请求
-     * {@see HttpRequestIdGenerator}
-     */
-    requestId?: Readonly<string>;
+interface HttpRequestContext {
+    attributes: object;
 }
 /**
  * The payload object used to make the HTTP request
  * {@see HttpAdapter}
  * {@see HttpClient}
  */
-interface HttpRequest extends RequestTrace {
+interface HttpRequest extends HttpRequestContext {
     /**
      * 请求url
      */
@@ -445,7 +438,7 @@ interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
     /**
      * Retrieve a representation by doing a GET on the URI template.
      * The response is converted and stored in an {@link HttpResponse}.
@@ -456,7 +449,7 @@ interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
     /**
      * Retrieve all headers of the resource specified by the URI template.
      * <p>URI Template variables are expanded using the given map.
@@ -466,7 +459,7 @@ interface RestOperations {
      * @return all HTTP headers of that resource
      * @see {@link UriVariable}
      */
-    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<Record<string, string>>;
+    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<Record<string, string>>;
     /**
      * Create a new resource by POSTing the given object to the URI template,
      * and returns the response as {@link HttpResponse}.
@@ -481,7 +474,7 @@ interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
     /**
      * Create a new resource by POSTing the given object to the URI template, and returns the value of
      * the {@code Location} header. This header typically indicates where the new resource is stored.
@@ -496,7 +489,7 @@ interface RestOperations {
      * @return the value for the {@code Location} header
      * @see {@link UriVariable}
      */
-    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<string>;
     /**
      * Create a new resource by POSTing the given object to the URI template,
      * and returns the representation found in the response.
@@ -511,7 +504,7 @@ interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
     /**
      * Create or update a resource by PUTting the given object to the URI.
      * <p>URI Template variables are expanded using the given URI variables, if any.
@@ -523,7 +516,7 @@ interface RestOperations {
      * @param headers
      * @see {@link UriVariable}
      */
-    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
     /**
      * Update a resource by PATCHing the given object to the URL,
      * and return the representation found in the response.
@@ -538,7 +531,7 @@ interface RestOperations {
      * @return the converted object
      * @see {@link UriVariable}
      */
-    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
     /**
      * Delete the resources at the specified URI.
      * <p>URI Template variables are expanded using the given URI variables, if any.
@@ -547,7 +540,7 @@ interface RestOperations {
      * @param headers
      * @see {@link UriVariable}
      */
-    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
+    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
     /**
      * Return the value of the Allow header for the given URI.
      * <p>URI Template variables are expanded using the given map.
@@ -557,7 +550,7 @@ interface RestOperations {
      * @return the value of the allow header
      * @see {@link UriVariable}
      */
-    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpMethod[]>;
+    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpMethod[]>;
     /**
      * Execute the HTTP method to the given URL, preparing the request with the，and reading the response with a {@link ResponseExtractor}.
      * @param url the URL
@@ -566,9 +559,10 @@ interface RestOperations {
      * @param requestBody object that prepares the request
      * @param responseExtractor object that extracts the return value from the response
      * @param headers
+     * @param context
      * @return an arbitrary object, as returned by the {@link ResponseExtractor}
      */
-    execute: <E = any>(url: string, method: HttpMethod | string, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
+    execute: <E = any>(url: string, method: HttpMethod | string, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
 }
 /**
  * uri path variable
@@ -754,7 +748,7 @@ declare type RequestProgressBar = RequestProgressBarInterface | RequestProgressB
  * {@see FeignClientExecutorInterceptor#preHandle}
  * {@see RestTemplate#execute}
  */
-interface FeignRequestBaseOptions extends RequestTrace {
+interface FeignRequestBaseOptions extends HttpRequestContext {
     /**
      * external query parameters
      */
@@ -1169,24 +1163,28 @@ declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
  *  Support blocking 'authorization' refresh
  */
 declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
+    private static DEFAULT_AUTHENTICATION_HEADER_NAMES;
     protected static IS_REFRESH_TOKEN_ING: boolean;
     protected static WAITING_QUEUE: Array<{
         resolve: (value?: any | PromiseLike<any>) => void;
         reject: (reason?: any) => void;
-        request: HttpRequest;
     }>;
     private readonly aheadOfTimes;
     private authenticationStrategy;
-    private readonly blockingRefreshAuthorization;
+    private readonly synchronousRefreshAuthorization;
     private defaultAuthenticationType;
     /**
      *
      * @param authenticationStrategy
      * @param aheadOfTimes                default: 5 * 60 * 1000
-     * @param blockingRefreshAuthorization
+     * @param synchronousRefreshAuthorization
      */
-    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, blockingRefreshAuthorization?: boolean);
+    constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, synchronousRefreshAuthorization?: boolean);
     interceptor: (req: T) => Promise<T>;
+    private getRequestAuthenticationType;
+    private requestRequiresAuthorization;
+    private refreshAuthenticationToken;
+    private refreshAuthenticationToken0;
     /**
      * append authorization header
      * @param authorization
@@ -1194,10 +1192,12 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> 
      */
     private appendAuthorizationHeader;
     /**
-     * need append authorization header
+     * exist authorization header
      * @param headers
+     * @return true 已经存在请求头了，不需要在认证了
      */
-    private needAppendAuthorizationHeader;
+    private hasAuthorizationHeader;
+    private getAuthorizationHeaderNames;
     private getAuthenticationType;
     setAuthenticationStrategy: (authenticationStrategy: AuthenticationStrategy) => void;
 }
@@ -1595,13 +1595,8 @@ declare const UNAUTHORIZED_RESPONSE: {
 
 /**
  * 通过请求上下文id 获取FeignClientMethodConfig
- * @param req
- * {@link getNextRequestId}
- * {@link appendRequestContextId}
- * {@link REQUEST_ID_HEADER_NAME}
- * {@link FeignClientMethodConfig}
  */
-declare const getFeignClientMethodConfigurationByRequest: (req: HttpRequest) => Readonly<FeignClientMethodConfig>;
+declare const getFeignClientMethodConfiguration: (context: HttpRequestContext) => Readonly<FeignClientMethodConfig>;
 
 interface HttpHeader {
     name: string;
@@ -1799,17 +1794,17 @@ declare class RestTemplate implements RestOperations {
     private _responseErrorHandler;
     private businessResponseExtractor;
     constructor(httpClient: HttpClient, businessResponseExtractor?: BusinessResponseExtractorFunction);
-    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
-    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
-    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
-    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<Record<string, string>>;
-    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpMethod[]>;
-    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
-    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<HttpResponse<E>>;
-    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<string>;
-    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<E>;
-    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>) => Promise<void>;
-    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>) => Promise<E>;
+    delete: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
+    getForEntity: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
+    getForObject: <E = any>(url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
+    headForHeaders: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<Record<string, string>>;
+    optionsForAllow: (url: string, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpMethod[]>;
+    patchForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
+    postForEntity: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<HttpResponse<E>>;
+    postForLocation: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<string>;
+    postForObject: <E = any>(url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
+    put: (url: string, requestBody: any, uriVariables?: UriVariable, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<void>;
+    execute: <E = any>(url: string, method: HttpMethod, uriVariables?: UriVariable, requestBody?: any, responseExtractor?: ResponseExtractor<E>, headers?: Record<string, string>, context?: HttpRequestContext) => Promise<E>;
     set uriTemplateHandler(uriTemplateHandler: UriTemplateHandler);
     set responseErrorHandler(responseErrorHandler: ResponseErrorHandler);
 }
@@ -1965,7 +1960,7 @@ declare abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOp
      * 支持的请求方法列表
      */
     protected static SUPPORT_REQUEST_METHODS: HttpMethod[];
-    constructor(fileUploadStrategy: FileUploadStrategy<any>);
+    protected constructor(fileUploadStrategy: FileUploadStrategy<any>);
     encode(request: T): Promise<T>;
     /**
      * 获取文件上传队列
@@ -2106,4 +2101,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationBroadcaster, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheAuthenticationStrategy, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DebounceAuthenticationBroadcaster, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getFeignClientMethodConfigurationByRequest, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationBroadcaster, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheAuthenticationStrategy, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DebounceAuthenticationBroadcaster, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };

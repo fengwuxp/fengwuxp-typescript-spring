@@ -4,7 +4,7 @@ import {QueryParamType} from "./template/RestOperations";
 import {HttpMediaType} from "./constant/http/HttpMediaType";
 import {ValidateInvokeOptions} from "./validator/ClientRequestDataValidator";
 import {ProgressBarOptions} from './ui/RequestProgressBar';
-import {HttpRequestContext, RequestTrace, SupportSerializableBody} from "./client/HttpRequest";
+import {HttpRequestContext, SupportSerializableBody} from "./client/HttpRequest";
 
 
 /**
@@ -14,7 +14,7 @@ import {HttpRequestContext, RequestTrace, SupportSerializableBody} from "./clien
  * {@see FeignClientExecutorInterceptor#preHandle}
  * {@see RestTemplate#execute}
  */
-export interface FeignRequestBaseOptions extends RequestTrace, HttpRequestContext {
+export interface FeignRequestBaseOptions extends  HttpRequestContext {
 
 
     /**

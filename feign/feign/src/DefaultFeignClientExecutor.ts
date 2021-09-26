@@ -156,6 +156,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             feignRequestOptions.responseExtractor = restResponseExtractor(requestMapping.method);
         }
 
+        // init request context
+        feignRequestOptions.attributes = {};
         // set mapping options
         setFeignClientMethodConfiguration(feignRequestOptions, feignMethodConfig);
 

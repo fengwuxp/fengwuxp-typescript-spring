@@ -18,7 +18,7 @@ export const getNextRequestId: HttpRequestIdGenerator = () => `${REQUEST_NUM++}`
  */
 export interface HttpRequestContext {
 
-    readonly attributes: object;
+    attributes: object;
 }
 
 

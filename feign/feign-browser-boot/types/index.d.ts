@@ -37,7 +37,7 @@ interface BrowserHttpRequest extends HttpRequest {
  *  browser http request adapter
  */
 declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
-    private timeout;
+    private readonly timeout;
     private consumes;
     private resolveHttpResponse;
     /**

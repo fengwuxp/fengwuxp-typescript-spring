@@ -75,7 +75,6 @@ export default class ReactNativeHttpAdapter implements HttpAdapter<ReactNativeHt
                     clearTimeout(timeId);
                 });
         })
-
     };
 
 

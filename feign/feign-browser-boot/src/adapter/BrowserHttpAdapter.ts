@@ -7,7 +7,6 @@ import {
     HttpMediaType,
     HttpMethod,
     HttpResponse,
-    HttpStatus,
     matchMediaType,
     ResolveHttpResponse,
     responseIsFile,
@@ -53,9 +52,8 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     }
 
     send = (req: BrowserHttpRequest): Promise<HttpResponse> => {
-
-        return Promise.race<HttpResponse>([
-            fetch(this.buildRequest(req)).then((response: Response) => {
+        return new Promise<HttpResponse>((resolve, reject) => {
+            const result = fetch(this.buildRequest(req)).then((response: Response) => {
                 return this.parse(response).then((data) => {
                     //为了适配
                     response['data'] = data;
@@ -65,25 +63,29 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
                 const data = this.resolveHttpResponse.resolve(response);
                 data.data = response;
                 return Promise.reject(data);
-            }),
-            new Promise<HttpResponse>((resolve, reject) => {
-                //超时控制
-                setTimeout(() => {
-                    //丢弃请求
-                    console.debug("web fetch adapter request timeout");
-                    reject({
-                        statusCode: HttpStatus.GATEWAY_TIMEOUT,
-                        headers: null,
-                        data: null,
-                        ok: false,
-                        statusText: `request timeout`
-                    });
-                }, req.timeout || this.timeout);
-            })
-        ]);
+            });
+            // 超时控制
+            const timeId = setTimeout(() => {
+                //丢弃请求
+                console.log("browser fetch adapter request timeout", req);
+                reject({
+                    status: 502,
+                    headers: null,
+                    data: null,
+                    ok: false,
+                    statusText: `request timeout`
+                });
+            }, req.timeout || this.timeout);
+
+            result.then(resolve)
+                .catch(reject)
+                .finally(() => {
+                    //清除定时器
+                    clearTimeout(timeId);
+                });
+        })
 
     };
-
 
     /**
      * build http request
