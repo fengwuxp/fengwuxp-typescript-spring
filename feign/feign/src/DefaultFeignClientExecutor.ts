@@ -7,7 +7,6 @@ import {FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions
 import {restfulRequestURLResolver} from "./resolve/url/RestFulRequestURLResolver";
 import {simpleRequestHeaderResolver} from "./resolve/header/SimpleRequestHeaderResolver";
 import {RestOperations} from "./template/RestOperations";
-import RetryHttpClient from "./client/RetryHttpClient";
 import {FeignClientExecutorInterceptor} from "./FeignClientExecutorInterceptor";
 import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClientExecutorInterceptor";
 import {RequestMappingOptions} from "./annotations/mapping/Mapping";
@@ -166,42 +165,21 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         let httpResponse: any;
         try {
-            if (retryOptions) {
-                // need retry
-                httpResponse = await new RetryHttpClient({
-                    send: (req) => {
-                        return restTemplate.execute(
-                            req.url,
-                            req.method,
-                            queryParams,
-                            req.body,
-                            feignRequestOptions.responseExtractor);
-                    }
-                }, retryOptions).send({
-                    attributes: feignRequestOptions.attributes,
-                    url: requestURL,
-                    method: requestMapping.method,
-                    body: feignRequestOptions.body,
-                    headers: feignRequestOptions.headers
-                });
-
-            } else {
-                httpResponse = await restTemplate.execute(
-                    requestURL,
-                    requestMapping.method,
-                    queryParams,
-                    feignRequestOptions.body,
-                    feignRequestOptions.responseExtractor,
-                    feignRequestOptions.headers,
-                    feignRequestOptions);
-            }
+            httpResponse = await restTemplate.execute(
+                requestURL,
+                requestMapping.method,
+                queryParams,
+                feignRequestOptions.body,
+                feignRequestOptions.responseExtractor,
+                feignRequestOptions.headers,
+                feignRequestOptions);
         } catch (e) {
-            // Non-2xx response
+            // Non 2xx response
             const result = await this.postHandleError(requestURL, requestMapping, feignRequestOptions, e as any);
             return Promise.reject(result);
         }
 
-        //post handle
+        // post handle
         return await this.postHandle(requestURL, requestMapping, feignRequestOptions, httpResponse);
 
     };

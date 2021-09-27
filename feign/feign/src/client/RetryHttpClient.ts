@@ -41,8 +41,8 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
         return new Promise<HttpResponse>((resolve, reject) => {
             const retries = retryOptions.retries;
             const httpAdapter = this.httpAdapter;
-            const p: Promise<HttpResponse> = httpAdapter.send(req).catch((response) => {
-                //try retry
+            const result: Promise<HttpResponse> = httpAdapter.send(req).catch((response) => {
+                // try retry
                 console.log("request failure , ready to retry", response);
                 return this.tryRetry(req, response);
             });
@@ -53,7 +53,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
                 reject(new Error(`retry timeout, maxTimeout=${_maxTimeout}, retry count = ${this.countRetry}`));
             }, _maxTimeout + retries * 10);
 
-            p.then(resolve)
+            result.then(resolve)
                 .catch(reject)
                 .finally(() => {
                     console.log("clear timeout", timerId);

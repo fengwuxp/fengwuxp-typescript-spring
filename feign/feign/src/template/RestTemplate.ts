@@ -15,6 +15,8 @@ import {ResponseErrorHandler, ResponseErrorHandlerInterFace} from "./ResponseErr
 import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
 import {HttpRequestContext} from "../client/HttpRequest";
+import {getRequestRetryOptions} from "../context/RequestContextHolder";
+import RetryHttpClient from "../client/RetryHttpClient";
 
 /**
  *  http rest template
@@ -22,7 +24,7 @@ import {HttpRequestContext} from "../client/HttpRequest";
 export default class RestTemplate implements RestOperations {
 
 
-    private httpClient: HttpClient;
+    private readonly httpClient: HttpClient;
 
     private _uriTemplateHandler: UriTemplateHandler = defaultUriTemplateFunctionHandler;
 
@@ -91,14 +93,21 @@ export default class RestTemplate implements RestOperations {
         const {_uriTemplateHandler, _responseErrorHandler, businessResponseExtractor} = this;
 
         //handling path parameters in the request body, if any
-        let realUrl = replacePathVariableValue(url, requestBody);
-        realUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler).expand(realUrl, uriVariables);
+        const requestUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler)
+            .expand(replacePathVariableValue(url, requestBody), uriVariables);
+
+        let httpClient = this.httpClient;
+        const requestRetryOptions = getRequestRetryOptions(context);
+        if (requestRetryOptions != null) {
+            // retry client
+            httpClient = new RetryHttpClient(httpClient, requestRetryOptions);
+        }
 
         let httpResponse;
         const contextAttributes = context?.attributes ?? {};
         try {
-            httpResponse = await this.httpClient.send({
-                url: realUrl,
+            httpResponse = await httpClient.send({
+                url: requestUrl,
                 method,
                 body: requestBody,
                 headers,
@@ -109,7 +118,7 @@ export default class RestTemplate implements RestOperations {
             if (_responseErrorHandler) {
                 return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
                     {
-                        url: realUrl,
+                        url: requestUrl,
                         method,
                         headers,
                         body: requestBody,

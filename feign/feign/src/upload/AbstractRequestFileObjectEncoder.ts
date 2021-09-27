@@ -29,7 +29,10 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
 
     async encode(request: T): Promise<T> {
 
-        const {requestMapping, fileUploadOptions} = getFeignClientMethodConfiguration(request);
+        const {requestMapping, fileUploadOptions} = getFeignClientMethodConfiguration(request) ?? {};
+        if (requestMapping == null || fileUploadOptions == null) {
+            return request;
+        }
         if (AbstractRequestFileObjectEncoder.SUPPORT_REQUEST_METHODS.indexOf(requestMapping.method) < 0) {
             return request;
         }
