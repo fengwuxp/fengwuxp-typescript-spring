@@ -14,7 +14,7 @@ import {HttpRequestContext, SupportSerializableBody} from "./client/HttpRequest"
  * {@see FeignClientExecutorInterceptor#preHandle}
  * {@see RestTemplate#execute}
  */
-export interface FeignRequestBaseOptions extends  HttpRequestContext {
+export interface FeignRequestBaseOptions extends HttpRequestContext {
 
 
     /**

@@ -104,7 +104,7 @@ export default class RestTemplate implements RestOperations {
         }
 
         let httpResponse;
-        const contextAttributes = context?.attributes ?? {};
+        const contextAttributes = context.attributes;
         try {
             httpResponse = await httpClient.send({
                 url: requestUrl,

@@ -12,7 +12,10 @@ export const setFeignClientMethodConfiguration = (context: HttpRequestContext, c
 /**
  * 通过请求上下文 获取 {@link FeignClientMethodConfig}
  */
-export const getFeignClientMethodConfiguration = (context: HttpRequestContext): Readonly<FeignClientMethodConfig> => {
+export const getFeignClientMethodConfiguration = (context: HttpRequestContext): Readonly<FeignClientMethodConfig> | null => {
+    if (context.attributes == null) {
+        return null;
+    }
     return context.attributes[REQUEST_METHOD_MIRROR_ATTRIBUTE_NAME];
 };
 
@@ -20,7 +23,7 @@ export const getFeignClientMethodConfiguration = (context: HttpRequestContext): 
 /**
  * 通过请求上下文 获取 {@link HttpRetryOptions}
  */
-export const getRequestRetryOptions = (context: HttpRequestContext): Readonly<HttpRetryOptions> => {
+export const getRequestRetryOptions = (context: HttpRequestContext): Readonly<HttpRetryOptions> | null => {
     return getFeignClientMethodConfiguration(context)?.retryOptions;
 };
 
