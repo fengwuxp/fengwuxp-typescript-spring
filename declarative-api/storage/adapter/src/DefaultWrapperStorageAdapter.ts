@@ -61,10 +61,10 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
 
 
     getStorage = <T>(key: string, options?: GetStorageOptions | true | StorageUpdateStrategy) => {
-        const reelKey = this.genKey(key);
+        const realKey = this.genKey(key);
         // 如果存在配置项，则进行验证，例如过期时间
         // 尝试使用更新策略，自动更新数据
-        return this.storageAdapter.getStorage<T>(reelKey).then((data) => {
+        return this.storageAdapter.getStorage<T>(realKey).then((data) => {
             const storageItem = this.resolveStorageItem(data);
             if (storageItem.data == null) {
                 return Promise.reject();
@@ -74,14 +74,13 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
             if (this.isItEffective(localStorageOptions)) {
                 return storageItem.data;
             }
-            return this.updateStorageItem(StorageStatus.INVALID, reelKey, options, localStorageOptions);
+            return this.updateStorageItem(StorageStatus.INVALID, realKey, options, localStorageOptions);
         }).catch((e) => {
-            return this.updateStorageItem(e, reelKey, options, undefined);
+            return this.updateStorageItem(e, realKey, options, undefined);
         })
     };
 
     removeStorage = (key: (string | string[])) => {
-
         if (Array.isArray(key)) {
             return Promise.all(key.map(this.removeStorage));
         } else {
@@ -90,7 +89,7 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
     };
 
     getStorageSync = <T = any>(key: string) => {
-        const storageItem = this.resolveStorageItem(this.storageAdapter.getStorageSync(key));
+        const storageItem = this.resolveStorageItem(this.storageAdapter.getStorageSync(this.genKey(key)));
         if (storageItem.data == null) {
             return null;
         }
