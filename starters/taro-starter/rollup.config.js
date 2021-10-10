@@ -59,10 +59,7 @@ const getConfig = (isProd) => {
                 output: {
                     comments: false
                 },
-                include: [/^.+\.js$/],
-                exclude: ['node_moudles/**'],
-                numWorkers: cpuNums,
-                sourcemap: false
+                numWorkers: cpuNums
             })
         ],
         treeshake: {

@@ -33,14 +33,6 @@ const getConfig = (isProd) => {
             "fengwuxp-common-utils"
         ],
         output: [
-            // {
-            //     file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-            //     format: 'commonjs',
-            //     compact: true,
-            //     extend: false,
-            //     sourcemap: isProd,
-            //     strictDeprecations: false
-            // },
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
                 format: 'esm',
@@ -88,10 +80,7 @@ const getConfig = (isProd) => {
                 output: {
                     comments: false
                 },
-                include: [/^.+\.js$/],
-                exclude: ['node_modules/**'],
                 numWorkers: cpuNums,
-                sourcemap: true
             }),
 
         ],

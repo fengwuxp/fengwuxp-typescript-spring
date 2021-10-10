@@ -1,7 +1,7 @@
 {
   "name": "feign-boot-tarojs-starter",
-  "version": "1.0.10",
-  "description": "",
+  "version": "2.0.0",
+  "description": "tarojs feign boot starter",
   "main": "./es/index.js",
   "typings": "types/index.d.ts",
   "files": [
@@ -31,20 +31,20 @@
   "author": "wuxp",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^12.12.53",
-    "@types/jest": "^24.9.1",
-    "@types/lodash": "^4.14.149",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
+    "@tarojs/taro": "^3.3.0",
+    "@types/jest": "^24.9.1",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.53",
     "@types/react": "^16.9.13",
+    "@types/vue": "^2.0.0",
     "core-js": "^3.4.1",
+    "feign-boot-stater": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
-    "@tarojs/taro": "^2.0.0-beta.14",
-    "feign-boot-stater": "^1.0.10",
-    "fengwuxp-typescript-feign": "^1.0.10"
-  },
-  "dependencies": {
-
+    "fengwuxp-typescript-feign": "^1.0.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "typescript": "^4.4.3"
   }
 }

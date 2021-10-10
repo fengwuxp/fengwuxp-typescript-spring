@@ -29,14 +29,6 @@ const getConfig = (isProd) => {
             "@tarojs/taro"
         ],
         output: [
-            // {
-            //     file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
-            //     format: 'commonjs',
-            //     compact: true,
-            //     extend: false,
-            //     sourcemap: isProd,
-            //     strictDeprecations: false
-            // },
             {
                 file: isProd ? pkg.main.replace(".js", ".min.js") : pkg.main,
                 format: 'esm',
@@ -59,19 +51,8 @@ const getConfig = (isProd) => {
             json(),
             resolve(),
             common({
-                // 包括
-                include: [
-                    // 'node_modules/**'
-                ],
-                // 排除
-                exclude: [],
-                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"],
+                extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
             }),
-            // babel({
-            //     exclude: "node_modules/**",
-            //     babelHelpers: "runtime",
-            //     extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
-            // }),
             analyze({
                 stdout: true,
             }),
@@ -84,10 +65,9 @@ const getConfig = (isProd) => {
                 output: {
                     comments: false
                 },
-                include: [/^.+\.js$/],
-                exclude: ['node_modules/**'],
+                // include: [/^.+\.js$/],
+                // exclude: ['node_modules/**'],
                 numWorkers: cpuNums,
-                sourcemap: true
             }),
 
         ],

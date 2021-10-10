@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-tarojs-broadcast",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "declarative tarojs broadcast",
   "publishConfig": {
     "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
@@ -35,10 +35,14 @@
     "typescript"
   ],
   "devDependencies": {
-    "@tarojs/taro": "^2.0.0-beta.14",
+    "@tarojs/taro": "^3.3.0",
     "@types/react": "^16.9.16",
+    "@types/vue": "^2.0.0",
     "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2"
+    "rollup-plugin-babel": "^4.4.0",
+    "rollup-plugin-commonjs": "^10.1.0",
+    "rollup-plugin-json": "^4.0.0",
+    "typescript": "^4.4.3"
   },
   "dependencies": {
     "fengwuxp-common-proxy": "^1.0.0",

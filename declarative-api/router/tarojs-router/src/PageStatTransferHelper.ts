@@ -16,12 +16,7 @@ export interface ViewRouteState<Q = any, S = any, P = any> {
 
     viewParams: Q,
 
-    viewState: S,
-
-    /**
-     * 页面预加载数据
-     */
-    viewPreload: P
+    viewState: S
 }
 
 /**
@@ -34,7 +29,6 @@ export const initViewState = <Q = any, S = any, P = any, T = any>(viewInstance: 
 
         return {
             viewParams: viewInstance.$router.params as any,
-            viewPreload: viewInstance.$router.preload as any,
             viewState: viewState == null ? {} as any : viewState
         }
     });

@@ -1,3 +1,4 @@
+import * as fengwuxp_declarative_router_adapter from 'fengwuxp-declarative-router-adapter';
 import { NavigatorAdapter, NavigatorDescriptorObject, RouteUriVariable, RouteConfirmBeforeJumping, NavigatorContextAdapter, RouterCommandConfiguration, AppCommandRouter, AbstractAppCommandRouter, AppRouterMappingConfiguration } from 'fengwuxp-declarative-router-adapter';
 import Taro from '@tarojs/taro';
 import { MethodNameCommandResolver } from 'fengwuxp-declarative-command';
@@ -19,10 +20,6 @@ declare class TaroNavigatorAdapter implements NavigatorAdapter {
 interface ViewRouteState<Q = any, S = any, P = any> {
     viewParams: Q;
     viewState: S;
-    /**
-     * 页面预加载数据
-     */
-    viewPreload: P;
 }
 /**
  * 初始化页面状态
@@ -52,7 +49,7 @@ declare const getRouterCommandConfiguration: (confirmBeforeJumping?: RouteConfir
  * @param navigatorAdapter
  * @param navigatorContextAdapter
  */
-declare const tarojsAppCommandRouterFactory: <T extends AppCommandRouter<NavigatorDescriptorObject>, N extends NavigatorAdapter<NavigatorDescriptorObject> = NavigatorAdapter<NavigatorDescriptorObject>>(pathPrefix?: string, confirmBeforeJumping?: RouteConfirmBeforeJumping, methodNameCommandResolver?: MethodNameCommandResolver, navigatorAdapter?: NavigatorAdapter, navigatorContextAdapter?: NavigatorContextAdapter) => T;
+declare const tarojsAppCommandRouterFactory: <T extends AppCommandRouter<fengwuxp_declarative_router_adapter.NavigatorDescriptorObject>, N extends NavigatorAdapter<fengwuxp_declarative_router_adapter.NavigatorDescriptorObject> = NavigatorAdapter<fengwuxp_declarative_router_adapter.NavigatorDescriptorObject>>(pathPrefix?: string, confirmBeforeJumping?: RouteConfirmBeforeJumping, methodNameCommandResolver?: MethodNameCommandResolver, navigatorAdapter?: NavigatorAdapter, navigatorContextAdapter?: NavigatorContextAdapter) => T;
 
 /**
  * 抽象的tarojs命令路由器

@@ -10,7 +10,6 @@ export default class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest>
 
     private timeout: number;
 
-
     /**
      *
      * @param timeout  default 5000ms
