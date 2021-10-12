@@ -1,5 +1,3 @@
-import { showToast as showToast$1 } from '@tarojs/taro';
-
-declare const showToast: (options: showToast$1.Option) => Promise<void>;
+declare const showToast: (options: any) => Promise<void>;
 
 export { showToast };

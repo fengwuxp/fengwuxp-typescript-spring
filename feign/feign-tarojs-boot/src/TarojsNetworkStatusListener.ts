@@ -8,8 +8,8 @@ export default class TarojsNetworkStatusListener implements NetworkStatusListene
 
     getNetworkStatus = (): Promise<NetworkStatus> => {
 
-        // @ts-ignore
-        return Taro.getNetworkType().then(({networkType}) => {
+        return Taro.getNetworkType().then((result) => {
+            const networkType = result.networkType as NetworkType;
             if (networkType == null || networkType === NetworkType.NONE) {
                 return Promise.reject(null)
             } else {

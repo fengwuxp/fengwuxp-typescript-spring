@@ -1,5 +1,6 @@
 import {GetStorageOptions, PersistenceStorageOptions, StorageAdapter} from "./StorageAdapter";
 import {StorageUpdateStrategy} from "./StorageUpdateStrategy";
+import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 
 
 interface StorageItem {
@@ -208,7 +209,14 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
             };
         }
         if (typeof data === "string") {
-            return JSON.parse(data);
+            if (StringUtils.hasText(data)) {
+                return JSON.parse(data);
+            } else {
+                return {
+                    data,
+                    __localStorageOptions__: null
+                }
+            }
         } else {
             return data as StorageItem;
         }

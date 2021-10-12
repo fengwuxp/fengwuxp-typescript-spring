@@ -1,18 +1,18 @@
-import * as Taro from "@tarojs/taro";
-import {showToast as Toast} from '@tarojs/taro';
+// @ts-ignore
+import Taro from "@tarojs/taro";
 
-
-export const showToast = (options: Toast.Option) => {
+export const  showToast = (options: Taro.showToast.Option) => {
 
     const _o = {...options};
-
     return new Promise<void>(resolve => {
         const {duration} = _o;
         _o.icon = _o.icon || "none";
-        Taro.showToast(_o);
-        setTimeout(() => {
-            Taro.hideLoading();
-            resolve();
-        }, duration || 1500);
+        return Taro.showToast(_o).then((result) => {
+            setTimeout(() => {
+                Taro.hideLoading();
+                resolve();
+            }, duration || 1500);
+        });
+
     });
 };
