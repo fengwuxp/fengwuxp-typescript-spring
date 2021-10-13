@@ -67,7 +67,7 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         // 尝试使用更新策略，自动更新数据
         return this.storageAdapter.getStorage<T>(realKey).then((data) => {
             const storageItem = this.resolveStorageItem(data);
-            if (storageItem.data == null) {
+            if (storageItem == null) {
                 return Promise.reject();
             }
             //数据有效
@@ -91,12 +91,12 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
 
     getStorageSync = <T = any>(key: string) => {
         const storageItem = this.resolveStorageItem(this.storageAdapter.getStorageSync(this.genKey(key)));
-        if (storageItem.data == null) {
+        if (storageItem == null) {
             return null;
         }
         //数据有效
         const localStorageOptions = storageItem.__localStorageOptions__;
-        if (this.isItEffective(localStorageOptions)) {
+        if (localStorageOptions != null && this.isItEffective(localStorageOptions)) {
             return storageItem.data;
         }
         return null;
@@ -128,12 +128,16 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         // 保存配置项
         const result: StorageItem = {
             data,
-            __localStorageOptions__: {
-                effectiveTime: options == null ? NEVER_EXPIRE : options.effectiveTime || NEVER_EXPIRE,
-                lastUpdateTime: new Date().getTime()
-            }
+            __localStorageOptions__: DefaultWrapperStorageAdapter.getLocalStorageOptions(options)
         };
         return result;
+    }
+
+    private static getLocalStorageOptions(options?: PersistenceStorageOptions) {
+        return {
+            effectiveTime: options == null ? NEVER_EXPIRE : options.effectiveTime || NEVER_EXPIRE,
+            lastUpdateTime: new Date().getTime()
+        };
     }
 
     /**
@@ -200,25 +204,22 @@ export default class DefaultWrapperStorageAdapter implements StorageAdapter {
         });
     }
 
-    private resolveStorageItem = (data): StorageItem => {
+    private resolveStorageItem = (data): StorageItem | null => {
         if (data == null) {
             // data is null or undefined
-            return {
-                data: null,
-                __localStorageOptions__: null
-            };
+            return null;
         }
-        if (typeof data === "string") {
-            if (StringUtils.hasText(data)) {
-                return JSON.parse(data);
-            } else {
-                return {
-                    data,
-                    __localStorageOptions__: null
-                }
-            }
-        } else {
+        if (typeof data !== "string") {
             return data as StorageItem;
+        }
+
+        if (StringUtils.hasText(data)) {
+            return JSON.parse(data);
+        } else {
+            return {
+                data,
+                __localStorageOptions__: DefaultWrapperStorageAdapter.getLocalStorageOptions()
+            }
         }
     }
 }

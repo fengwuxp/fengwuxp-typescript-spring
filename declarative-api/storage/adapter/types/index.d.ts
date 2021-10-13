@@ -121,6 +121,7 @@ declare class DefaultWrapperStorageAdapter implements StorageAdapter {
     setStorageSync: (key: string, data: (object | string | boolean | number), options?: PersistenceStorageOptions) => void;
     private genKey;
     private static generateStorageItem;
+    private static getLocalStorageOptions;
     /**
      * 数据是否有效
      * @param expireDate
