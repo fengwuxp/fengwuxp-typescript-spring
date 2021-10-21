@@ -18,19 +18,19 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
     implements NavigatorAdapter<T>, NavigatorContextAdapter<T> {
 
 
-    private navigatorAdapter: NavigatorAdapter<T>;
+    private readonly navigatorAdapter: NavigatorAdapter<T>;
 
-    private navigatorContextAdapter: NavigatorContextAdapter<T>;
+    private readonly navigatorContextAdapter: NavigatorContextAdapter<T>;
 
-    private confirmBeforeJumping: RouteConfirmBeforeJumping;
+    private readonly confirmBeforeJumping: RouteConfirmBeforeJumping;
 
     // 路径前缀 web context path
-    private pathPrefix: string;
+    private readonly pathPrefix: string;
 
     /**
      * 自动拼接查询参数
      */
-    private autoJoinQueryString: boolean;
+    private readonly autoJoinQueryString: boolean;
 
 
     constructor(navigatorAdapter: NavigatorAdapter<T>,
@@ -157,7 +157,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
 
         const navigatorObject = this.tryHandlePathArguments(navigatorDescriptorObject);
         let {pathname, uriVariables} = navigatorObject;
-        const [, queryString] = pathname.split("?");
+        const [path, queryString] = pathname.split("?");
 
         uriVariables = {
             ...(uriVariables as object),
@@ -169,11 +169,12 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         if (this.autoJoinQueryString) {
             return {
                 ...navigatorObject,
-                pathname: `${pathname}?${stringify(uriVariables as any)}`
+                pathname: `${path}?${stringify(uriVariables as any)}`
             }
         }
         navigatorObject.uriVariables = uriVariables;
-        navigatorObject.search=`?${stringify(uriVariables as any)}`;
+        navigatorObject.pathname = path;
+        navigatorObject.search = `?${stringify(uriVariables as any)}`;
         return navigatorObject
     };
 
@@ -181,7 +182,7 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
      * 尝试处理路径参数
      * @param navigatorDescriptorObject
      */
-    private tryHandlePathArguments(navigatorDescriptorObject: NavigatorDescriptorObject) {
+    private tryHandlePathArguments = (navigatorDescriptorObject: NavigatorDescriptorObject) => {
         const {pathname, uriVariables} = navigatorDescriptorObject;
         // 路径参数处理，存在路径参数
         if (grabUrlPathVariableRegExp.test(pathname)) {
