@@ -1,6 +1,6 @@
 import {NavigatorAdapter, NavigatorDescriptorObject,} from "./NavigatorAdapter";
 import {replaceUriVariableValue} from "./PathnameMethodNameCommandResolver";
-import {parse, stringify} from "querystring";
+import {parse, ParseOptions, stringify, StringifyOptions} from "query-string";
 import {RouteConfirmBeforeJumping} from "./RouterCommandConfiguration";
 import {RouterCommand} from "./RouterCommand";
 import {RouteUriVariable} from "./AppCommandRouter";
@@ -10,6 +10,17 @@ import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
 const grabUrlPathVariableRegExp = /\{(.+?)\}/g;
 
 const VIEW_JUMP_CONTEXT_ID = '__VIEW_JUMP_CONTEXT__';
+
+const STRINGIFY_OPTIONS: StringifyOptions = {
+    arrayFormat: "index",
+    skipNull: true
+};
+
+const QUERY_PARSE_OPTIONS: ParseOptions = {
+    parseBooleans: true,
+    parseNumbers: true,
+    arrayFormat: "index"
+};
 
 /**
  * wrapper navigator
@@ -159,22 +170,24 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         let {pathname, uriVariables} = navigatorObject;
         const [path, queryString] = pathname.split("?");
 
+
         uriVariables = {
             ...(uriVariables as object),
-            ...parse(queryString)
+            ...parse(queryString, QUERY_PARSE_OPTIONS)
         };
         if (Object.keys(uriVariables).length === 0) {
             return navigatorObject;
         }
         if (this.autoJoinQueryString) {
+
             return {
                 ...navigatorObject,
-                pathname: `${path}?${stringify(uriVariables as any)}`
+                pathname: `${path}?${stringify(uriVariables, STRINGIFY_OPTIONS)}`
             }
         }
         navigatorObject.uriVariables = uriVariables;
         navigatorObject.pathname = path;
-        navigatorObject.search = `?${stringify(uriVariables as any)}`;
+        navigatorObject.search = `?${stringify(uriVariables, STRINGIFY_OPTIONS)}`;
         return navigatorObject
     };
 

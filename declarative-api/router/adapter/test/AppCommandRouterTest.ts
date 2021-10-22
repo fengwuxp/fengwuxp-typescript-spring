@@ -8,6 +8,7 @@ import {toLineResolver} from "fengwuxp-declarative-command";
 import {AppRouterMapping, AppRouterMappingConfiguration} from '../src/annotations/AppRouterMapping';
 import {RouteMapping} from '../src/annotations/RouteMapping';
 import {AbstractAppCommandRouter} from "../src";
+import {stringify} from "query-string";
 
 
 const logger = log4js.getLogger();
@@ -176,17 +177,15 @@ describe("test  app command router factory", () => {
     });
 
     mockAppRouter.push({
-        pathname:"/index?a=1",
-        uriVariables:{
-
-        }
+        pathname: "/index?a=1",
+        uriVariables: {}
     })
 
 
     test("test mock annotation", () => {
         mockAppCommandRouter.push('/home');
         mockAppCommandRouter.login({id: 2}, {name: "2"});
-        mockAppCommandRouter.homeView(null,RouterCommand.RESET);
+        mockAppCommandRouter.homeView(null, RouterCommand.RESET);
         mockAppCommandRouter.bindMobile();
         mockAppCommandRouter.goodsListView();
         const navigatorAdapter = mockAppCommandRouter.getNavigatorAdapter();
@@ -251,6 +250,15 @@ describe("test  app command router factory", () => {
         logger.debug("userById==>", tryConverterPathnameVariableResolver("userById"));
         logger.debug("simpleBName==>", tryConverterPathnameVariableResolver("simpleBName"));
     });
+
+    test("query string array", () => {
+
+        logger.debug("goodsDetailById==>", stringify({
+            ids: [1]
+        }, {
+            arrayFormat: "index"
+        }));
+    })
 
 
 });
