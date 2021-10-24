@@ -9,6 +9,7 @@ import {AppRouterMapping, AppRouterMappingConfiguration} from '../src/annotation
 import {RouteMapping} from '../src/annotations/RouteMapping';
 import {AbstractAppCommandRouter} from "../src";
 import {stringify} from "query-string";
+import DefaultWrapperNavigatorAdapter from "../src/DefaultWrapperNavigatorAdapter";
 
 
 const logger = log4js.getLogger();
@@ -82,10 +83,7 @@ const mockNavigatorAdapter = {
         logger.debug(`push`, navigatorDescriptorObject)
         return;
     },
-    // toView: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
-    //     logger.debug(`toView`, navigatorDescriptorObject)
-    //     return;
-    // },
+
     reLaunch: function (navigatorDescriptorObject: NavigatorDescriptorObject) {
         logger.debug(`reLaunch`, navigatorDescriptorObject)
         return;
@@ -251,14 +249,17 @@ describe("test  app command router factory", () => {
         logger.debug("simpleBName==>", tryConverterPathnameVariableResolver("simpleBName"));
     });
 
-    test("query string array", () => {
+    test("test none query params", async () => {
+        const navigatorAdapter: NavigatorAdapter = new DefaultWrapperNavigatorAdapter(mockNavigatorAdapter, mockNavigatorContextAdapter);
+        await navigatorAdapter.push("/test")
+    })
 
+    test("test query string array", () => {
         logger.debug("goodsDetailById==>", stringify({
             ids: [1]
         }, {
             arrayFormat: "index"
         }));
     })
-
 
 });

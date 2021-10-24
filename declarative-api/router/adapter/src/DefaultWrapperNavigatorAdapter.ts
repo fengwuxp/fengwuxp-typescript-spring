@@ -5,6 +5,7 @@ import {RouteConfirmBeforeJumping} from "./RouterCommandConfiguration";
 import {RouterCommand} from "./RouterCommand";
 import {RouteUriVariable} from "./AppCommandRouter";
 import {NavigatorContextAdapter} from "./NavigatorContextAdapter";
+import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 
 
 const grabUrlPathVariableRegExp = /\{(.+?)\}/g;
@@ -151,8 +152,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
             delete navigatorDescriptorObject[VIEW_JUMP_CONTEXT_ID];
             return (this.navigatorAdapter[routerCommand] as any)(navigatorDescriptorObject);
         }
-
-
     };
 
 
@@ -170,7 +169,6 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         let {pathname, uriVariables} = navigatorObject;
         const [path, queryString] = pathname.split("?");
 
-
         uriVariables = {
             ...(uriVariables as object),
             ...parse(queryString, QUERY_PARSE_OPTIONS)
@@ -178,16 +176,20 @@ export default class DefaultWrapperNavigatorAdapter<T extends NavigatorDescripto
         if (Object.keys(uriVariables).length === 0) {
             return navigatorObject;
         }
-        if (this.autoJoinQueryString) {
+        const _queryText = stringify(uriVariables, STRINGIFY_OPTIONS);
+        if (!StringUtils.hasText(_queryText)) {
+            return navigatorObject;
+        }
 
+        if (this.autoJoinQueryString) {
             return {
                 ...navigatorObject,
-                pathname: `${path}?${stringify(uriVariables, STRINGIFY_OPTIONS)}`
+                pathname: `${path}?${_queryText}`
             }
         }
         navigatorObject.uriVariables = uriVariables;
         navigatorObject.pathname = path;
-        navigatorObject.search = `?${stringify(uriVariables, STRINGIFY_OPTIONS)}`;
+        navigatorObject.search = `?${_queryText}`;
         return navigatorObject
     };
 
