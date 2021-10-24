@@ -14,11 +14,13 @@
   },
   "dependencies": {
     "fengwuxp-babel-dependency": "^1.0.0",
+    "fengwuxp-declarative-router-adapter": "^1.0.4",
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",
     "fengwuxp-styles-dependency": "^1.0.0",
     "fengwuxp-typescipt-dependency": "^1.0.0",
     "fengwuxp-webpack5-dependency": "^1.0.0",
+    "react-ga": "^3.3.0",
     "react-helmet": "^6.1.0"
   },
   "devDependencies": {
