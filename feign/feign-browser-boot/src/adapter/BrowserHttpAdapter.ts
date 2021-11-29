@@ -134,13 +134,11 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
      * @return {any}
      */
     private parse = (response: Response): Promise<any> => {
-
-
         const {getHeaderByName, consumes} = this;
         const headers = response.headers;
 
         if (response.body == null) {
-            // 没有请求体
+            // 没有响应 body 为null
             if (response.ok) {
                 return Promise.resolve();
             }

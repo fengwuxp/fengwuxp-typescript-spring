@@ -6,6 +6,15 @@ export default class CommonResolveHttpResponse implements ResolveHttpResponse<Re
 
 
     resolve = (resp: Response): HttpResponse => {
+        if (resp == null) {
+            return {
+                ok: false,
+                headers: {},
+                data: null,
+                statusCode: -1,
+                statusText: "Response is null"
+            }
+        }
 
         const {headers, ok, status} = resp;
 

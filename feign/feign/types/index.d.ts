@@ -25,7 +25,7 @@ declare type SupportSerializableBody = any;
  * 请求上下文
  */
 interface HttpRequestContext {
-    attributes: object;
+    attributes?: object;
 }
 /**
  * The payload object used to make the HTTP request
@@ -1164,11 +1164,8 @@ declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
  */
 declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
     private static DEFAULT_AUTHENTICATION_HEADER_NAMES;
-    protected static IS_REFRESH_TOKEN_ING: boolean;
-    protected static WAITING_QUEUE: Array<{
-        resolve: (value?: any | PromiseLike<any>) => void;
-        reject: (reason?: any) => void;
-    }>;
+    private refreshing;
+    private waitRequestQueue;
     private readonly aheadOfTimes;
     private authenticationStrategy;
     private readonly synchronousRefreshAuthorization;
@@ -1184,6 +1181,8 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> 
     private getRequestAuthenticationType;
     private requestRequiresAuthorization;
     private refreshAuthenticationToken;
+    private syncRefreshAuthenticationToken;
+    private completeWaitQueue;
     private refreshAuthenticationToken0;
     /**
      * append authorization header
@@ -1594,9 +1593,9 @@ declare const UNAUTHORIZED_RESPONSE: {
 };
 
 /**
- * 通过请求上下文id 获取FeignClientMethodConfig
+ * 通过请求上下文 获取 {@link FeignClientMethodConfig}
  */
-declare const getFeignClientMethodConfiguration: (context: HttpRequestContext) => Readonly<FeignClientMethodConfig>;
+declare const getFeignClientMethodConfiguration: (context: HttpRequestContext) => Readonly<FeignClientMethodConfig> | null;
 
 interface HttpHeader {
     name: string;
@@ -1789,7 +1788,7 @@ declare type ResponseErrorHandler<T extends HttpRequest = HttpRequest, E = any> 
  *  http rest template
  */
 declare class RestTemplate implements RestOperations {
-    private httpClient;
+    private readonly httpClient;
     private _uriTemplateHandler;
     private _responseErrorHandler;
     private businessResponseExtractor;
