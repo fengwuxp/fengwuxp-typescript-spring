@@ -1,15 +1,14 @@
 import * as os from 'os';
-import * as  path from "path";
-import resolve from 'rollup-plugin-node-resolve';
-import common from 'rollup-plugin-commonjs';
-import babel from 'rollup-plugin-babel';
+import resolve from '@rollup/plugin-node-resolve';
+import commonjs from '@rollup/plugin-commonjs';
+import babel from '@rollup/plugin-babel';
 import {terser} from 'rollup-plugin-terser';
+import json from '@rollup/plugin-json';
 import typescript from 'rollup-plugin-typescript2';
-import json from 'rollup-plugin-json';
-import dts from "rollup-plugin-dts";
 import filesize from "rollup-plugin-filesize";
 import includePaths from "rollup-plugin-includepaths";
 import analyze from "rollup-plugin-analyzer";
+import dts from "rollup-plugin-dts";
 
 import pkg from './package.json';
 import {DEFAULT_EXTENSIONS} from "@babel/core";
@@ -27,7 +26,11 @@ const getConfig = (isProd) => {
             "@babel/runtime-corejs2",
             "@babel/runtime-corejs3",
             "@abraham/reflection",
-            "fengwuxp-typescript-feign"
+            "fengwuxp-typescript-feign",
+            "fengwuxp-common-utils",
+            "fengwuxp-common-utils/lib/date/DateFormatUtils",
+            "fengwuxp-common-utils/lib/match/SimplePathMatcher",
+            "fengwuxp-common-utils/lib/string/StringUtils"
         ],
         output: [
             {
@@ -59,7 +62,7 @@ const getConfig = (isProd) => {
             }),
             json(),
             resolve(),
-            common({
+            commonjs({
                 // 包括
                 include: [
                     // 'node_modules/**'
@@ -83,12 +86,13 @@ const getConfig = (isProd) => {
             //压缩代码
             isProd && terser({
                 output: {
-                    comments: false
+                    comments: false,
+                    source_map: true,
                 },
-                include: [/^.+\.js$/],
-                exclude: ['node_modules/**'],
-                numWorkers: cpuNums,
-                sourcemap: true
+                keep_classnames: false,
+                ie8: false,
+                ecma: 2015,
+                numWorkers: cpuNums
             }),
 
         ],

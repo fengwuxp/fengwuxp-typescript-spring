@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, AuthenticationBroadcaster, RequestURLResolver, FeignUIToast, BusinessResponseExtractorFunction } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, FeignUIToast, BusinessResponseExtractorFunction, FeignConfiguration } from 'fengwuxp-typescript-feign';
 
 /**
  * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
@@ -86,7 +86,6 @@ interface FeignConfigurationAdapter {
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
     authenticationStrategy?: () => AuthenticationStrategy;
-    authenticationBroadcaster?: () => AuthenticationBroadcaster;
     /**
      * url 解析策略
      * default restfulRequestURLResolver
@@ -109,6 +108,6 @@ interface FeignConfigurationAdapter {
     getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
 }
 
-declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => void;
+declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => Readonly<FeignConfiguration>;
 
 export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurationAdapter, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitializer };

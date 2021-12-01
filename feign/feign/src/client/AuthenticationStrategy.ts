@@ -11,12 +11,6 @@ import {MappingHeaders, RequestAuthenticationType} from "../annotations/mapping/
 export interface CacheCapableAuthenticationStrategy {
 
     /**
-     * enable cache support
-     * if value is 'true',use {@link CacheAuthenticationStrategy} wrapper
-     */
-    readonly enableCache: boolean;
-
-    /**
      * clear cache
      * if send send unauthorized event,need clear cache
      * {@link AuthenticationBroadcaster#sendUnAuthorizedEvent}
@@ -27,7 +21,7 @@ export interface CacheCapableAuthenticationStrategy {
 /**
  * authentication strategy
  */
-export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends Partial<CacheCapableAuthenticationStrategy> {
+export interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
 
     /**
      * get authorization header names
@@ -75,24 +69,6 @@ export interface AuthenticationToken {
      */
     refreshExpireDate?: number;
 
-}
-
-/**
- * use broadcast event handle authentication
- * {@see HttpStatus.UNAUTHORIZED}
- */
-export interface AuthenticationBroadcaster {
-
-    /**
-     * send unauthorized event
-     */
-    sendUnAuthorizedEvent: () => void;
-
-    /**
-     * receive authorized success event
-     * @param handle
-     */
-    receiveAuthorizedEvent: (handle: () => void) => void
 }
 
 

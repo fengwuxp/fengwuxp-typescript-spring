@@ -18,6 +18,8 @@ const DefaultPrivateRoute: PrivateRoute = (props: PrivateRouteProps) => {
     useEffect(() => {
         authenticator.isAuthenticated().then(() => true).catch(() => false)
             .then(setAuthenticated);
+        return () => {
+        }
     }, []);
 
     if (authenticated == null) {

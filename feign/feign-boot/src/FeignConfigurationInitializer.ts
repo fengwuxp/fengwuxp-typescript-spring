@@ -1,20 +1,29 @@
 import {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
 import {
+    CheckAuthorizedClientInterceptor,
     DefaultFeignClientExecutor,
     DefaultHttpClient,
     FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
+    FeignUIToastHolder,
+    HttpResponseEventPublisher,
     RestTemplate,
-    FeignUIToastHolder
+    SimpleHttpResponseEventListener,
+    SimpleHttpResponseEventPublisher,
+    SmartHttpResponseEventListener
 } from "fengwuxp-typescript-feign";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 
 
-const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
+const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
 
-    class A implements FeignConfiguration {
+    const httpResponseEventListener = new SimpleHttpResponseEventListener();
+    const httpResponseEventPublisher = new SimpleHttpResponseEventPublisher(httpResponseEventListener);
+
+    class _InnerFeignConfiguration implements FeignConfiguration {
+
         getApiSignatureStrategy = feignConfigurationAdapter.apiSignatureStrategy;
 
         getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client) => {
@@ -33,6 +42,8 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
 
         getHttpClient = () => {
             const clientHttpInterceptorRegistry = new ClientHttpInterceptorRegistry();
+            // 默认注册检查认证状态的拦截器
+            clientHttpInterceptorRegistry.addInterceptor(CheckAuthorizedClientInterceptor);
             feignConfigurationAdapter.registryClientHttpRequestInterceptors(clientHttpInterceptorRegistry);
             return new DefaultHttpClient(
                 this.getHttpAdapter(),
@@ -41,28 +52,34 @@ const genConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) 
             );
         };
 
-
         getRestTemplate = () => {
             return new RestTemplate(this.getHttpClient(),
                 feignConfigurationAdapter.getBusinessResponseExtractor == null ? undefined : feignConfigurationAdapter.getBusinessResponseExtractor());
         };
 
+        getHttpResponseEventListener = (): SmartHttpResponseEventListener => {
+            return httpResponseEventListener;
+        }
+
+        getHttpResponseEventPublisher = (): HttpResponseEventPublisher => {
+            return httpResponseEventPublisher;
+        }
+
         getAuthenticationStrategy = feignConfigurationAdapter.authenticationStrategy;
-        getAuthenticationBroadcaster = feignConfigurationAdapter.authenticationBroadcaster;
         getRequestURLResolver = feignConfigurationAdapter.requestURLResolver;
         getDefaultHttpHeaders = feignConfigurationAdapter.getDefaultHttpHeaders;
     }
 
-    return new A()
+    return new _InnerFeignConfiguration()
 };
 
-export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
-
-    const configuration = genConfiguration(feignConfigurationAdapter);
+export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter): Readonly<FeignConfiguration> => {
+    const configuration = buildConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
 
     if (feignConfigurationAdapter.feignUIToast) {
         // set feignUIToast
         FeignUIToastHolder.setFeignUIToast(feignConfigurationAdapter.feignUIToast())
     }
+    return configuration;
 };

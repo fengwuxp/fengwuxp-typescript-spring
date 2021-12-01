@@ -14,6 +14,7 @@
   },
   "dependencies": {
     "fengwuxp-babel-dependency": "^1.0.0",
+    "fengwuxp-browser-router": "^1.0.1",
     "fengwuxp-declarative-router-adapter": "^1.0.4",
     "fengwuxp-jest-dependency": "^1.0.0",
     "fengwuxp-react-dependency": "^1.0.0",

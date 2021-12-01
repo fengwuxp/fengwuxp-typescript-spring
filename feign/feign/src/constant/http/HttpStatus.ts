@@ -91,11 +91,11 @@ export enum HttpStatus {
     //  * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.2">HTTP/1.1: Semantics and Content, section 6.4.2</a>
     //  */
     // MOVED_PERMANENTLY = 301,
-    // /**
-    //  * {@code 302 Found}.
-    //  * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.3">HTTP/1.1: Semantics and Content, section 6.4.3</a>
-    //  */
-    // FOUND = 302,
+    /**
+     * {@code 302 Found}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.3">HTTP/1.1: Semantics and Content, section 6.4.3</a>
+     */
+    FOUND = 302,
     //
     // /**
     //  * {@code 303 See Other}.

@@ -1,4 +1,5 @@
 import {Route, Switch} from "react-router-dom";
+import StringUtils from "fengwuxp-common-utils/lib/string/StringUtils";
 import React, {useEffect, useState} from "react";
 import DefaultPrivateRoute from "@/components/route/DefaultPrivateRoute";
 import {AppRouterAuthenticator, AuthenticatedRouteConfig} from "@/components/route/PrivateRoute";
@@ -8,6 +9,7 @@ import {DEFAULT_SITE_TITLE, GOOGLE_ANALYTICS_UA} from "@/env/EvnVariable";
 import {useTranslation} from "react-i18next";
 import ReactGA from "react-ga";
 import {withTracker} from "@/components/route/gaWithTracker";
+import {RouteComponentProps, RouteProps} from "react-router";
 
 const QUERY_PARSE_OPTIONS: ParseOptions = {
     parseBooleans: true,
@@ -46,16 +48,24 @@ const RouteDocumentTitleProvider = (props) => {
     </>
 }
 
-const renderComponent = (enableTrace: boolean, route: AuthenticatedRouteConfig, authenticator: AppRouterAuthenticator<any>) => {
-    const {routes, name, extraProps} = route;
-    return props => {
+const renderRouteComponent = (enableTrace: boolean, route: AuthenticatedRouteConfig, authenticator: AppRouterAuthenticator<any>) => {
+    const {routes, path, requiredAuthentication, name, extraProps} = route;
+    const childRoutes = routes?.map(childRoute => {
+        return {
+            requiredAuthentication,
+            ...childRoute,
+            // 拼接父路由的 path
+            path: `${path}${childRoute.path}`
+        }
+    })
+    return (props: RouteComponentProps) => {
         return <RouteDocumentTitleProvider name={name}
                                            renderRoute={(onDocumentTitleChange) => {
                                                return <route.component {...props}
                                                                        {...extraProps}
                                                                        {...parseQueryParameters(props.location)}
                                                                        onDocumentTitleChange={onDocumentTitleChange}>
-                                                   {routes?.length > 0 && renderRoutes(enableTrace, routes, authenticator)}
+                                                   {childRoutes?.length > 0 && renderRoutes(enableTrace, childRoutes, authenticator)}
                                                </route.component>
                                            }}/>
     };
@@ -64,16 +74,16 @@ const renderComponent = (enableTrace: boolean, route: AuthenticatedRouteConfig, 
 const routeChildrenRoute = (enableTrace: boolean, route: AuthenticatedRouteConfig, authenticator: AppRouterAuthenticator<any>) => {
 
     const {requiredAuthentication, routes, component, extraProps, ...routeProps} = route;
-    const renderProps = {
+    const renderProps: RouteProps = {
         ...routeProps,
-        render: renderComponent(enableTrace, route, authenticator)
+        render: renderRouteComponent(enableTrace, route, authenticator)
     }
     const PrivateRouteComponent = enableTrace ? withTracker(DefaultPrivateRoute) : DefaultPrivateRoute
     const RouteComponent = enableTrace ? withTracker(Route) : Route
     return requiredAuthentication ?
-        <PrivateRouteComponent key={`private_route_${route.key}`} {...renderProps}
+        <PrivateRouteComponent key={`private_route_${route.key ?? route.path}`} {...renderProps}
                                authenticator={authenticator}/> :
-        <RouteComponent key={`route_${route.key}`} {...renderProps}/>
+        <RouteComponent key={`route_${route.key ?? route.path}`} {...renderProps}/>
 }
 
 const renderRoutes = (enableTrace: boolean, routeConfigs: AuthenticatedRouteConfig[], authenticator: AppRouterAuthenticator<any>) => {
@@ -81,7 +91,7 @@ const renderRoutes = (enableTrace: boolean, routeConfigs: AuthenticatedRouteConf
         {routeConfigs.map((route) => {
             return routeChildrenRoute(enableTrace, route, authenticator)
         })}
-    </Switch>;
+    </Switch>
 }
 
 /**
@@ -90,11 +100,11 @@ const renderRoutes = (enableTrace: boolean, routeConfigs: AuthenticatedRouteConf
  * @param authenticator
  */
 export const renderAppRoutes = (routeConfigs: AuthenticatedRouteConfig[], authenticator: AppRouterAuthenticator<any>) => {
-    if (GOOGLE_ANALYTICS_UA) {
+    const enableTrace = StringUtils.hasText(GOOGLE_ANALYTICS_UA);
+    if (enableTrace) {
         // 配置则启用 google Analytics
         ReactGA.initialize(GOOGLE_ANALYTICS_UA);
-        return renderRoutes(true, routeConfigs, authenticator)
     }
-    return renderRoutes(false, routeConfigs, authenticator)
+    return renderRoutes(enableTrace, routeConfigs, authenticator);
 
 }

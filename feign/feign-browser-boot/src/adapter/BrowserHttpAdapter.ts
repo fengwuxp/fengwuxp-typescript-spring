@@ -17,9 +17,10 @@ import {BrowserHttpRequest} from './BrowserHttpRequest';
 
 
 // RequestInit prop names
-const RequestInitAttrNames: string[] = [
+const REQUEST_INIT_ATTRIBUTE_NAMES: string[] = [
     "referrer",
     "referrerPolicy",
+    "mode",
     "credentials",
     "redirect",
     "cache",
@@ -35,18 +36,24 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
 
     private readonly timeout: number;
 
-    private consumes: HttpMediaType;
+    private readonly defaultOptions: RequestInit;
 
-    private resolveHttpResponse: ResolveHttpResponse;
+    private readonly consumes: HttpMediaType;
+
+    private readonly resolveHttpResponse: ResolveHttpResponse;
 
     /**
      *
      * @param timeout  default 5000ms
+     * @param defaultOptions
      * @param resolveHttpResponse
      * @param consumes  default 'application/json;charset=UTF-8'
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType) {
-        this.timeout = timeout || 5 * 1000;
+    constructor(timeout?: number, defaultOptions?: RequestInit, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType) {
+        this.timeout = timeout ?? 5 * 1000;
+        this.defaultOptions = defaultOptions ?? {
+            credentials: "include"
+        };
         this.resolveHttpResponse = resolveHttpResponse || new CommonResolveHttpResponse();
         this.consumes = consumes;
     }
@@ -97,8 +104,7 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
             url,
             method,
             headers,
-            body,
-            mode
+            body
         } = request;
 
         if (headers != null && matchMediaType(headers[contentTypeName] as HttpMediaType, HttpMediaType.MULTIPART_FORM_DATA)) {
@@ -108,25 +114,24 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
         }
 
         const reqMethod = HttpMethod[method];
-
         // build RequestInit
-        const reqOptions = {
+        const requestInit: RequestInit = {
+            ...this.defaultOptions,
             method: reqMethod,
             headers,
-            body,
-            mode
-        } as RequestInit;
+            body
+        };
 
-        RequestInitAttrNames.forEach((name) => {
+        REQUEST_INIT_ATTRIBUTE_NAMES.forEach((name) => {
             const attr = request[name];
             if (attr == null) {
                 return;
             }
-            reqOptions[name] = attr;
+            requestInit[name] = attr;
         });
-        return new Request(url, reqOptions);
-    }
 
+        return new Request(url, requestInit);
+    }
 
     /**
      * parse response data
@@ -161,8 +166,12 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
 
         const responseMediaType: string = getHeaderByName(headers, contentTypeName) || consumes;
         if (responseMediaType == null) {
-            // 未知的content-type
-            return Promise.resolve(response);
+            // 未知的 Content-Type  尝试做 json 解析
+            return this.parseJSON(response)
+                .catch(error => {
+                    console.warn("Content-Type unknown,try parseJSON failure", error);
+                    return Promise.resolve(response);
+                })
         }
         const responseHeaders = {
             [contentTypeName]: responseMediaType
@@ -207,7 +216,6 @@ export default class BrowserHttpAdapter implements HttpAdapter<BrowserHttpReques
     // private paresFormData(response: Response): Promise<FormData> {
     //     return response.formData();
     // }
-
 
     private getHeaderByName = (headers: Headers, name: string) => {
 

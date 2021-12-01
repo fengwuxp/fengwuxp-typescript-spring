@@ -58,7 +58,6 @@ let WAIT_GET_CONFIGURATION_QUEUE: Array<(configuration: FeignConfiguration) => v
 
 const registry = {
 
-
     setDefaultFeignConfiguration(configuration: FeignConfiguration) {
         DEFAULT_CONFIGURATION = memorizationConfiguration(configuration);
         if (WAIT_GET_CONFIGURATION_QUEUE.length > 0) {

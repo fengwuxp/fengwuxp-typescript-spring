@@ -23,7 +23,6 @@ import RetryHttpClient from "../client/RetryHttpClient";
  */
 export default class RestTemplate implements RestOperations {
 
-
     private readonly httpClient: HttpClient;
 
     private _uriTemplateHandler: UriTemplateHandler = defaultUriTemplateFunctionHandler;
@@ -137,7 +136,6 @@ export default class RestTemplate implements RestOperations {
         return httpResponse;
 
     };
-
 
     set uriTemplateHandler(uriTemplateHandler: UriTemplateHandler) {
         this._uriTemplateHandler = uriTemplateHandler;

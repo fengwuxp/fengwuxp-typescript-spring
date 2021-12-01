@@ -1,6 +1,5 @@
 /// <reference types="lodash" />
 import { RuleItem } from 'async-validator';
-import { DebouncedFunc } from 'lodash';
 import { DateFormatType } from 'fengwuxp-common-utils/lib/date/DateFormatUtils';
 import { PathMatcher } from 'fengwuxp-common-utils/lib/match/PathMatcher';
 import { ParsedUrlQueryInput } from 'querystring';
@@ -924,11 +923,6 @@ interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = Fei
  */
 interface CacheCapableAuthenticationStrategy {
     /**
-     * enable cache support
-     * if value is 'true',use {@link CacheAuthenticationStrategy} wrapper
-     */
-    readonly enableCache: boolean;
-    /**
      * clear cache
      * if send send unauthorized event,need clear cache
      * {@link AuthenticationBroadcaster#sendUnAuthorizedEvent}
@@ -938,7 +932,7 @@ interface CacheCapableAuthenticationStrategy {
 /**
  * authentication strategy
  */
-interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> extends Partial<CacheCapableAuthenticationStrategy> {
+interface AuthenticationStrategy<T extends AuthenticationToken = AuthenticationToken> {
     /**
      * get authorization header names
      * default :['Authorization']
@@ -974,21 +968,6 @@ interface AuthenticationToken {
     refreshExpireDate?: number;
 }
 /**
- * use broadcast event handle authentication
- * {@see HttpStatus.UNAUTHORIZED}
- */
-interface AuthenticationBroadcaster {
-    /**
-     * send unauthorized event
-     */
-    sendUnAuthorizedEvent: () => void;
-    /**
-     * receive authorized success event
-     * @param handle
-     */
-    receiveAuthorizedEvent: (handle: () => void) => void;
-}
-/**
  * @param url 接口请求路径
  */
 declare type ApiPermissionProbeStrategyFunction = (url: string) => Promise<MappingHeaders>;
@@ -1001,6 +980,165 @@ interface ApiPermissionProbeStrategyInterface {
  * {@see HeadMapping}
  */
 declare type ApiPermissionProbeStrategy = ApiPermissionProbeStrategyInterface | ApiPermissionProbeStrategyFunction;
+
+/**
+ *  * Enumeration of HTTP status codes.
+ */
+declare enum HttpStatus {
+    /**
+     * {@code 100 Continue}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">HTTP/1.1: Semantics and Content, section 6.2.1</a>
+     */
+    /**
+     * {@code 200 OK}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">HTTP/1.1: Semantics and Content, section 6.3.1</a>
+     */
+    OK = 200,
+    /**
+     * {@code 201 Created}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">HTTP/1.1: Semantics and Content, section 6.3.2</a>
+     */
+    CREATED = 201,
+    /**
+     * {@code 202 Accepted}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">HTTP/1.1: Semantics and Content, section 6.3.3</a>
+     */
+    ACCEPTED = 202,
+    /**
+     * {@code 203 Non-Authoritative Information}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.4">HTTP/1.1: Semantics and Content, section 6.3.4</a>
+     */
+    NON_AUTHORITATIVE_INFORMATION = 203,
+    /**
+     * {@code 204 No Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">HTTP/1.1: Semantics and Content, section 6.3.5</a>
+     */
+    NO_CONTENT = 204,
+    /**
+     * {@code 205 Reset Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.6">HTTP/1.1: Semantics and Content, section 6.3.6</a>
+     */
+    RESET_CONTENT = 205,
+    /**
+     * {@code 206 Partial Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7233#section-4.1">HTTP/1.1: Range Requests, section 4.1</a>
+     */
+    PARTIAL_CONTENT = 206,
+    /**
+     * {@code 207 Multi-Status}.
+     * @see <a href="https://tools.ietf.org/html/rfc4918#section-13">WebDAV</a>
+     */
+    /**
+     * {@code 302 Found}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.3">HTTP/1.1: Semantics and Content, section 6.4.3</a>
+     */
+    FOUND = 302,
+    /**
+     * {@code 400 Bad Request}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
+     */
+    BAD_REQUEST = 400,
+    /**
+     * {@code 401 Unauthorized}.
+     * @see <a href="https://tools.ietf.org/html/rfc7235#section-3.1">HTTP/1.1: Authentication, section 3.1</a>
+     */
+    UNAUTHORIZED = 401,
+    /**
+     * {@code 402 Payment Required}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">HTTP/1.1: Semantics and Content, section 6.5.2</a>
+     */
+    PAYMENT_REQUIRED = 402,
+    /**
+     * {@code 403 Forbidden}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">HTTP/1.1: Semantics and Content, section 6.5.3</a>
+     */
+    FORBIDDEN = 403,
+    /**
+     * {@code 404 Not Found}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
+     */
+    NOT_FOUND = 404,
+    /**
+     * {@code 405 Method Not Allowed}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
+     */
+    METHOD_NOT_ALLOWED = 405,
+    /**
+     * {@code 406 Not Acceptable}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.6">HTTP/1.1: Semantics and Content, section 6.5.6</a>
+     */
+    /**
+     * {@code 500 Internal Server Error}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">HTTP/1.1: Semantics and Content, section 6.6.1</a>
+     */
+    INTERNAL_SERVER_ERROR = 500,
+    /**
+     * {@code 501 Not Implemented}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">HTTP/1.1: Semantics and Content, section 6.6.2</a>
+     */
+    NOT_IMPLEMENTED = 501,
+    /**
+     * {@code 502 Bad Gateway}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">HTTP/1.1: Semantics and Content, section 6.6.3</a>
+     */
+    BAD_GATEWAY = 502,
+    /**
+     * {@code 503 Service Unavailable}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
+     */
+    SERVICE_UNAVAILABLE = 503,
+    /**
+     * {@code 504 Gateway Timeout}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
+     */
+    GATEWAY_TIMEOUT = 504,
+    /**
+     * {@code 505 HTTP Version Not Supported}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.6">HTTP/1.1: Semantics and Content, section 6.6.6</a>
+     */
+    HTTP_VERSION_NOT_SUPPORTED = 505
+}
+
+interface HttpResponseEventPublisher {
+    publishEvent: (response: HttpResponse) => void;
+}
+declare type HttpResponseEventHandler = (response: HttpResponse) => void;
+interface HttpResponseEventHandlerSupplier {
+    getHandlers: (httpStatus: HttpStatus | number) => HttpResponseEventHandler[];
+}
+interface HttpResponseEventListener extends HttpResponseEventHandlerSupplier {
+    /**
+     * 回调指定的的 http status handler
+     * @param httpStatus
+     * @param handler
+     */
+    onEvent(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
+    removeListen(httpStatus: HttpStatus | number): void;
+    removeListen(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
+}
+interface SmartHttpResponseEventListener extends HttpResponseEventListener {
+    /**
+     * 所有非 2xx 响应都会回调
+     * @param handler
+     */
+    onError(handler: HttpResponseEventHandler): void;
+    removeErrorListen(handler: HttpResponseEventHandler): void;
+    /**
+     * @see HttpStatus#FOUND
+     * @param handler
+     */
+    onFound(handler: (response: HttpResponse) => void): void;
+    /**
+     * @see HttpStatus#UNAUTHORIZED
+     * @param handler
+     */
+    onUnAuthorized(handler: HttpResponseEventHandler): void;
+    /**
+     * @see HttpStatus#FORBIDDEN
+     * @param handler
+     */
+    onForbidden(handler: HttpResponseEventHandler): void;
+}
 
 /**
  * feign configuration
@@ -1017,11 +1155,12 @@ interface FeignConfiguration {
     getHttpClient: <T extends HttpRequest = HttpRequest>() => HttpClient;
     getRestTemplate: () => RestOperations;
     getFeignClientExecutor: <T extends FeignProxyClient = FeignProxyClient>(client: T) => FeignClientExecutor;
+    getHttpResponseEventPublisher: () => HttpResponseEventPublisher;
+    getHttpResponseEventListener: () => SmartHttpResponseEventListener;
     getRequestURLResolver?: () => RequestURLResolver;
     getRequestHeaderResolver?: () => RequestHeaderResolver;
     getApiSignatureStrategy?: () => ApiSignatureStrategy;
     getAuthenticationStrategy?: () => AuthenticationStrategy;
-    getAuthenticationBroadcaster?: () => AuthenticationBroadcaster;
     getFeignClientExecutorInterceptors?: () => FeignClientExecutorInterceptor[];
     /**
      * get default feign request context options
@@ -1098,6 +1237,12 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
     getInterceptors: () => Array<ClientHttpRequestInterceptor<T>>;
     setInterceptors: (interceptors: Array<ClientHttpRequestInterceptor<T>>) => void;
 }
+
+/**
+ * 检查是否已认证的拦截器，如果未认证，将会模拟返回 401 响应
+ * @param req
+ */
+declare const CheckAuthorizedClientInterceptor: ClientHttpRequestInterceptorFunction<HttpRequest>;
 
 /**
  * default http client
@@ -1218,31 +1363,6 @@ declare class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpRequest>
     interceptor: (req: T) => Promise<T>;
     private getApiPermissionProbeStrategy;
     private static getDefaultApiPermissionProbeStrategy;
-}
-
-/**
- * cache AuthenticationStrategy
- * {@see CacheCapableAuthenticationStrategy#enableCache}
- */
-declare class CacheAuthenticationStrategy implements AuthenticationStrategy {
-    private authenticationStrategy;
-    private cacheAuthenticationToken;
-    constructor(authenticationStrategy: AuthenticationStrategy);
-    appendAuthorizationHeader: (authorization: AuthenticationToken, headers: Record<string, string>) => Record<string, string>;
-    getAuthorization: (req: Readonly<HttpRequest>) => Promise<AuthenticationToken>;
-    getAuthorizationHeaderNames: () => string[];
-    refreshAuthorization: (authorization: AuthenticationToken, req: Readonly<HttpRequest>) => Promise<AuthenticationToken>;
-    clearCache: () => void;
-}
-
-/**
- * debounce broadcaster
- */
-declare class DebounceAuthenticationBroadcaster implements AuthenticationBroadcaster {
-    private broadcaster;
-    constructor(broadcaster: AuthenticationBroadcaster);
-    receiveAuthorizedEvent(handle: () => void): void;
-    sendUnAuthorizedEvent: DebouncedFunc<() => void>;
 }
 
 /**
@@ -1447,119 +1567,6 @@ declare const registry: {
 };
 
 /**
- *  * Enumeration of HTTP status codes.
- */
-declare enum HttpStatus {
-    /**
-     * {@code 100 Continue}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">HTTP/1.1: Semantics and Content, section 6.2.1</a>
-     */
-    /**
-     * {@code 200 OK}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">HTTP/1.1: Semantics and Content, section 6.3.1</a>
-     */
-    OK = 200,
-    /**
-     * {@code 201 Created}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">HTTP/1.1: Semantics and Content, section 6.3.2</a>
-     */
-    CREATED = 201,
-    /**
-     * {@code 202 Accepted}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">HTTP/1.1: Semantics and Content, section 6.3.3</a>
-     */
-    ACCEPTED = 202,
-    /**
-     * {@code 203 Non-Authoritative Information}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.4">HTTP/1.1: Semantics and Content, section 6.3.4</a>
-     */
-    NON_AUTHORITATIVE_INFORMATION = 203,
-    /**
-     * {@code 204 No Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">HTTP/1.1: Semantics and Content, section 6.3.5</a>
-     */
-    NO_CONTENT = 204,
-    /**
-     * {@code 205 Reset Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.6">HTTP/1.1: Semantics and Content, section 6.3.6</a>
-     */
-    RESET_CONTENT = 205,
-    /**
-     * {@code 206 Partial Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7233#section-4.1">HTTP/1.1: Range Requests, section 4.1</a>
-     */
-    PARTIAL_CONTENT = 206,
-    /**
-     * {@code 207 Multi-Status}.
-     * @see <a href="https://tools.ietf.org/html/rfc4918#section-13">WebDAV</a>
-     */
-    /**
-     * {@code 400 Bad Request}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
-     */
-    BAD_REQUEST = 400,
-    /**
-     * {@code 401 Unauthorized}.
-     * @see <a href="https://tools.ietf.org/html/rfc7235#section-3.1">HTTP/1.1: Authentication, section 3.1</a>
-     */
-    UNAUTHORIZED = 401,
-    /**
-     * {@code 402 Payment Required}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">HTTP/1.1: Semantics and Content, section 6.5.2</a>
-     */
-    PAYMENT_REQUIRED = 402,
-    /**
-     * {@code 403 Forbidden}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">HTTP/1.1: Semantics and Content, section 6.5.3</a>
-     */
-    FORBIDDEN = 403,
-    /**
-     * {@code 404 Not Found}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
-     */
-    NOT_FOUND = 404,
-    /**
-     * {@code 405 Method Not Allowed}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
-     */
-    METHOD_NOT_ALLOWED = 405,
-    /**
-     * {@code 406 Not Acceptable}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.6">HTTP/1.1: Semantics and Content, section 6.5.6</a>
-     */
-    /**
-     * {@code 500 Internal Server Error}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">HTTP/1.1: Semantics and Content, section 6.6.1</a>
-     */
-    INTERNAL_SERVER_ERROR = 500,
-    /**
-     * {@code 501 Not Implemented}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">HTTP/1.1: Semantics and Content, section 6.6.2</a>
-     */
-    NOT_IMPLEMENTED = 501,
-    /**
-     * {@code 502 Bad Gateway}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">HTTP/1.1: Semantics and Content, section 6.6.3</a>
-     */
-    BAD_GATEWAY = 502,
-    /**
-     * {@code 503 Service Unavailable}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
-     */
-    SERVICE_UNAVAILABLE = 503,
-    /**
-     * {@code 504 Gateway Timeout}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
-     */
-    GATEWAY_TIMEOUT = 504,
-    /**
-     * {@code 505 HTTP Version Not Supported}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.6">HTTP/1.1: Semantics and Content, section 6.6.6</a>
-     */
-    HTTP_VERSION_NOT_SUPPORTED = 505
-}
-
-/**
  * default api module name
  */
 declare const defaultApiModuleName = "default";
@@ -1596,6 +1603,54 @@ declare const UNAUTHORIZED_RESPONSE: {
  * 通过请求上下文 获取 {@link FeignClientMethodConfig}
  */
 declare const getFeignClientMethodConfiguration: (context: HttpRequestContext) => Readonly<FeignClientMethodConfig> | null;
+
+declare class SimpleHttpResponseEventPublisher implements HttpResponseEventPublisher {
+    private readonly supplier;
+    constructor(supplier: HttpResponseEventHandlerSupplier);
+    publishEvent: (response: HttpResponse) => void;
+}
+
+declare class SimpleHttpResponseEventListener implements SmartHttpResponseEventListener {
+    private errorHandlers;
+    private readonly handlerCaches;
+    onEvent: (httpStatus: HttpStatus | number | HttpResponseEventHandler, handler?: HttpResponseEventHandler) => void;
+    onFound: (handler: (response: HttpResponse) => void) => void;
+    onForbidden: (handler: HttpResponseEventHandler) => void;
+    onUnAuthorized: (handler: HttpResponseEventHandler) => void;
+    onError: (handler: HttpResponseEventHandler) => void;
+    removeErrorListen: (handler: HttpResponseEventHandler) => void;
+    removeListen(httpStatus: HttpStatus | number, handler?: HttpResponseEventHandler): void;
+    getHandlers: (httpStatus: HttpStatus | number) => HttpResponseEventHandler[];
+    private getHandlersByHttpStatus;
+    private storeHandlers;
+    private filterHandlers;
+}
+
+/**
+ * unified failure toast
+ * @param response
+ */
+declare type UnifiedFailureToast = (response: HttpResponse | string) => void | Promise<void>;
+declare type FeignUIToastFunction = (message: string) => Promise<void> | void;
+interface FeignUIToastInterface {
+    toast: FeignUIToastFunction;
+}
+declare type FeignUIToast = FeignUIToastFunction | FeignUIToastInterface;
+declare class FeignUIToastHolder {
+    static feignUIToast: FeignUIToast;
+    static getFeignUIToast: () => FeignUIToastInterface;
+    static setFeignUIToast: (feignUIToast: FeignUIToast) => FeignUIToast;
+}
+
+declare class HttpErrorResponseEventPublisherExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
+    constructor(unifiedFailureToast?: UnifiedFailureToast);
+    postError: (options: T, response: HttpResponse) => HttpResponse<any> | Promise<never>;
+    /**
+     * try send unauthorized event
+     * @param response
+     */
+    private publishEvent;
+}
 
 interface HttpHeader {
     name: string;
@@ -1870,48 +1925,6 @@ declare class ProcessBarExecutorInterceptor<T extends FeignRequestOptions = Feig
 }
 
 /**
- * unified failure toast
- * @param response
- */
-declare type UnifiedFailureToast = (response: HttpResponse | string) => void | Promise<void>;
-declare type FeignUIToastFunction = (message: string) => Promise<void> | void;
-interface FeignUIToastInterface {
-    toast: FeignUIToastFunction;
-}
-declare type FeignUIToast = FeignUIToastFunction | FeignUIToastInterface;
-declare class FeignUIToastHolder {
-    static feignUIToast: FeignUIToast;
-    static getFeignUIToast: () => FeignUIToastInterface;
-    static setFeignUIToast: (feignUIToast: FeignUIToast) => FeignUIToast;
-}
-
-/**
- * unified transform failure toast
- */
-declare class UnifiedFailureToastExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
-    /**
-     * @deprecated
-     * {@see AuthenticationBroadcaster}
-     */
-    private static IS_TO_AUTHENTICATION_VIEW;
-    protected unifiedFailureToast: UnifiedFailureToast;
-    /**
-     * jump authentication view
-     * @deprecated
-     * {@see AuthenticationBroadcaster}
-     */
-    protected toAuthenticationViewHandle: Function;
-    constructor(unifiedFailureToast?: UnifiedFailureToast, toAuthenticationViewHandle?: Function);
-    postError: (options: T, response: HttpResponse) => HttpResponse<any> | Promise<never>;
-    protected tryToast: (options: T, response: HttpResponse) => void;
-    /**
-     * try send unauthorized event
-     * @param response
-     */
-    protected tryHandleUnAuthorized: (response: HttpResponse) => Promise<void>;
-}
-
-/**
  * file upload progressbar
  */
 interface FileUploadProgressBar extends RequestProgressBarInterface<FileUploadProgressBarOptions> {
@@ -2045,21 +2058,20 @@ declare const defaultFeignClientBuilder: FeignClientBuilderFunction;
  * default feign client executor
  */
 declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
-    protected readonly apiService: T;
-    protected requestURLResolver: RequestURLResolver;
-    protected requestHeaderResolver: RequestHeaderResolver;
-    protected apiSignatureStrategy: ApiSignatureStrategy;
-    protected authenticationStrategy: AuthenticationStrategy;
-    protected authenticationBroadcaster: AuthenticationBroadcaster;
-    protected restTemplate: RestOperations;
-    protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
-    protected defaultRequestContextOptions: FeignRequestContextOptions;
-    protected defaultHeaders: Record<string, string>;
+    private readonly apiService;
+    private requestURLResolver;
+    private requestHeaderResolver;
+    private apiSignatureStrategy;
+    private authenticationStrategy;
+    private restTemplate;
+    private feignClientExecutorInterceptors;
+    private defaultRequestContextOptions;
+    private defaultHeaders;
     /**
      * 是否已经初始化
      * @protected
      */
-    protected initialized: boolean;
+    private initialized;
     constructor(apiService: T);
     invoke: (methodName: string, ...args: any[]) => Promise<any>;
     /**
@@ -2071,11 +2083,6 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     private postHandle;
     private postHandleError;
     private getInterceptorHandle;
-    /**
-     * try check authorized status
-     * @param methodName
-     */
-    private tryCheckAuthorizedStatus;
 }
 
 /**
@@ -2100,4 +2107,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationBroadcaster, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheAuthenticationStrategy, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DebounceAuthenticationBroadcaster, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UnifiedFailureToast, UnifiedFailureToastExecutorInterceptor, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheCapableAuthenticationStrategy, CheckAuthorizedClientInterceptor, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FeignUIToast, FeignUIToastFunction, FeignUIToastHolder, FeignUIToastInterface, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpErrorResponseEventPublisherExecutorInterceptor, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpResponseEventHandler, HttpResponseEventHandlerSupplier, HttpResponseEventListener, HttpResponseEventPublisher, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleHttpResponseEventListener, SimpleHttpResponseEventPublisher, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, SmartHttpResponseEventListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UnifiedFailureToast, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };

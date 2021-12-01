@@ -15,9 +15,7 @@ import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/Serialize
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 import {setFeignClientMethodConfiguration} from "./context/RequestContextHolder"
-import {AuthenticationBroadcaster, AuthenticationStrategy, AuthenticationToken} from "./client/AuthenticationStrategy";
-import {UNAUTHORIZED_RESPONSE} from './constant/FeignConstVar';
-import {AuthenticationType} from "./constant/AuthenticationType";
+import {AuthenticationStrategy} from "./client/AuthenticationStrategy";
 import {parse} from "querystring";
 
 /**
@@ -25,55 +23,45 @@ import {parse} from "querystring";
  */
 export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
 
-    protected readonly apiService: T;
+    private readonly apiService: T;
 
     // request url resolver
-    protected requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
+    private requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
 
     // request headers resolver
-    protected requestHeaderResolver: RequestHeaderResolver = simpleRequestHeaderResolver;
+    private requestHeaderResolver: RequestHeaderResolver = simpleRequestHeaderResolver;
 
     // api signature strategy
-    protected apiSignatureStrategy: ApiSignatureStrategy;
+    private apiSignatureStrategy: ApiSignatureStrategy;
 
     // authentication strategy
-    protected authenticationStrategy: AuthenticationStrategy;
-
-    protected authenticationBroadcaster: AuthenticationBroadcaster;
+    private authenticationStrategy: AuthenticationStrategy;
 
     // rest template
-    protected restTemplate: RestOperations;
+    private restTemplate: RestOperations;
 
     // feign client executor interceptors
-    protected feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
+    private feignClientExecutorInterceptors: FeignClientExecutorInterceptor[];
 
     // default request context options
-    protected defaultRequestContextOptions: FeignRequestContextOptions;
+    private defaultRequestContextOptions: FeignRequestContextOptions;
 
     // default request headers
-    protected defaultHeaders: Record<string, string>;
+    private defaultHeaders: Record<string, string>;
 
     /**
      * 是否已经初始化
      * @protected
      */
-    protected initialized: boolean = false;
-
+    private initialized: boolean = false;
 
     constructor(apiService: T) {
         this.apiService = apiService;
     }
 
-
     invoke = async (methodName: string, ...args): Promise<any> => {
         // 初始化
         await this.init(this.apiService);
-        try {
-            await this.tryCheckAuthorizedStatus(methodName);
-        } catch (e) {
-            return Promise.reject(e);
-        }
-
         const {
             apiSignatureStrategy,
             restTemplate,
@@ -90,7 +78,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
 
         //requestMapping
-        const {requestMapping, signature, retryOptions, validateSchemaOptions} = feignMethodConfig;
+        const {requestMapping, signature, validateSchemaOptions} = feignMethodConfig;
 
         if (validateSchemaOptions != null) {
             try {
@@ -181,7 +169,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         // post handle
         return await this.postHandle(requestURL, requestMapping, feignRequestOptions, httpResponse);
-
     };
 
     /**
@@ -201,8 +188,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestContextOptions,
             getDefaultHttpHeaders,
-            getAuthenticationStrategy,
-            getAuthenticationBroadcaster
+            getAuthenticationStrategy
         } = configuration;
 
         this.restTemplate = getRestTemplate();
@@ -222,9 +208,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         if (getAuthenticationStrategy) {
             this.authenticationStrategy = getAuthenticationStrategy();
-        }
-        if (getAuthenticationBroadcaster) {
-            this.authenticationBroadcaster = getAuthenticationBroadcaster();
         }
 
         if (getDefaultHttpHeaders) {
@@ -321,48 +304,4 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
         return handle;
     }
-
-
-    /**
-     * try check authorized status
-     * @param methodName
-     */
-    private tryCheckAuthorizedStatus = async (methodName: string) => {
-
-        const {
-            apiService,
-            authenticationStrategy,
-            authenticationBroadcaster
-        } = this;
-        const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
-        //requestMapping
-        const {requestMapping} = feignMethodConfig;
-        // need certification
-        if (requestMapping.authenticationType !== AuthenticationType.FORCE) {
-            return;
-        }
-        if (authenticationStrategy == null) {
-            return;
-        }
-        let result: AuthenticationToken;
-        try {
-            result = await authenticationStrategy.getAuthorization(null);
-        } catch (e) {
-        }
-        const noneLogin = result == null || result.expireDate <= new Date().getTime() - 5 * 1000;
-        if (noneLogin) {
-            // not login
-            if (authenticationBroadcaster != null) {
-                if (authenticationStrategy.clearCache != null) {
-                    authenticationStrategy.clearCache()
-                }
-                // send event
-                authenticationBroadcaster.sendUnAuthorizedEvent();
-            }
-
-            return Promise.reject(UNAUTHORIZED_RESPONSE);
-        }
-    }
-
-
 }

@@ -38,15 +38,17 @@ interface BrowserHttpRequest extends HttpRequest {
  */
 declare class BrowserHttpAdapter implements HttpAdapter<BrowserHttpRequest> {
     private readonly timeout;
-    private consumes;
-    private resolveHttpResponse;
+    private readonly defaultOptions;
+    private readonly consumes;
+    private readonly resolveHttpResponse;
     /**
      *
      * @param timeout  default 5000ms
+     * @param defaultOptions
      * @param resolveHttpResponse
      * @param consumes  default 'application/json;charset=UTF-8'
      */
-    constructor(timeout?: number, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType);
+    constructor(timeout?: number, defaultOptions?: RequestInit, resolveHttpResponse?: ResolveHttpResponse<any>, consumes?: HttpMediaType);
     send: (req: BrowserHttpRequest) => Promise<HttpResponse>;
     /**
      * build http request

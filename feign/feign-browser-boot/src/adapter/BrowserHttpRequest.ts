@@ -42,5 +42,4 @@ export interface BrowserHttpRequest extends HttpRequest{
     keepalive?: boolean;
 
     window?: any;
-
 }

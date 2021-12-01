@@ -14,7 +14,6 @@ import CodecFeignClientExecutorInterceptor from "../../src/codec/CodecFeignClien
 import DateEncoder from "../../src/codec/DateEncoder";
 import {FeignClientExecutorInterceptor} from "../../src/FeignClientExecutorInterceptor";
 
-import UnifiedFailureToastExecutorInterceptor from "../../src/ui/UnifiedFailureToastExecutorInterceptor";
 import AuthenticationClientHttpRequestInterceptor from "../../src/client/AuthenticationClientHttpRequestInterceptor";
 import {ApiSignatureStrategy} from '../../src/signature/ApiSignatureStrategy';
 import {RequestHeaderResolver} from '../../src/resolve/header/RequestHeaderResolver';
@@ -24,6 +23,11 @@ import {ProgressBarOptions} from '../../src/ui/RequestProgressBar';
 import TraceRequestExecutorInterceptor from "../../src/trace/TraceRequestExecutorInterceptor";
 import ApiPermissionProbeInterceptor from "../../src/client/ApiPermissionProbeInterceptor";
 import * as log4js from "log4js";
+import {HttpResponseEventPublisher, SmartHttpResponseEventListener} from 'event/HttpResponseEvent';
+import SimpleHttpResponseEventListener from "../../src/event/SimpleHttpResponseEventListener";
+import SimpleHttpResponseEventPublisher from "../../src/event/SimpleHttpResponseEventPublisher";
+import HttpErrorResponseEventPublisherExecutorInterceptor
+    from 'event/HttpErrorResponseEventPublisherExecutorInterceptor';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -38,8 +42,9 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     protected baseUrl: string = "http://test.ab.com/api/";
 
-    constructor() {
+    private simpleHttpResponseEventListener = new SimpleHttpResponseEventListener();
 
+    constructor() {
     }
 
     getApiSignatureStrategy: () => ApiSignatureStrategy;
@@ -146,6 +151,15 @@ export class MockFeignConfiguration implements FeignConfiguration {
 
     getRestTemplate = () => new RestTemplate(this.getHttpClient());
 
+    getHttpResponseEventListener = (): SmartHttpResponseEventListener => {
+        return this.simpleHttpResponseEventListener;
+    }
+
+    getHttpResponseEventPublisher = (): HttpResponseEventPublisher => {
+        return new SimpleHttpResponseEventPublisher(this.getHttpResponseEventListener());
+    }
+
+
     getFeignClientExecutorInterceptors = (): FeignClientExecutorInterceptor[] => {
 
         return [
@@ -161,7 +175,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
                 new DateEncoder(),
             ], []),
 
-            new UnifiedFailureToastExecutorInterceptor((response) => {
+            new HttpErrorResponseEventPublisherExecutorInterceptor((response) => {
                 logger.log("[UnifiedTransformDataExecutorInterceptor]", response);
             }),
             new TraceRequestExecutorInterceptor({

@@ -1,12 +1,12 @@
 import {
     ApiSignatureStrategy,
+    AuthenticationStrategy,
+    BusinessResponseExtractorFunction,
+    FeignUIToast,
     HttpAdapter,
     HttpMediaType,
     HttpRequest,
-    FeignUIToast,
-    RequestURLResolver,
-    AuthenticationBroadcaster,
-    AuthenticationStrategy, BusinessResponseExtractorFunction
+    RequestURLResolver
 } from "fengwuxp-typescript-feign";
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
@@ -48,8 +48,6 @@ export interface FeignConfigurationAdapter {
     apiSignatureStrategy?: () => ApiSignatureStrategy;
 
     authenticationStrategy?: () => AuthenticationStrategy;
-
-    authenticationBroadcaster?: () => AuthenticationBroadcaster;
 
     /**
      * url 解析策略
