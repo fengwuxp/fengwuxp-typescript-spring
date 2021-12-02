@@ -70,8 +70,8 @@ const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter
     return new _InnerFeignConfiguration()
 };
 
-export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter): Omit<Readonly<FeignConfiguration>,
-    "getHttpResponseEventPublisher" | "getFeignClientExecutor" | "getFeignClientExecutorInterceptors" | "getDefaultFeignRequestContextOptions" | ""> => {
+export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter):
+    Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">> => {
     const configuration = buildConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
 
@@ -79,5 +79,8 @@ export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignCo
         // set feignUIToast
         FeignUIToastHolder.setFeignUIToast(feignConfigurationAdapter.feignUIToast())
     }
-    return configuration;
+    return {
+        getRestTemplate: configuration.getRestTemplate,
+        getHttpResponseEventListener: configuration.getHttpResponseEventListener,
+    };
 };

@@ -1355,11 +1355,12 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> 
  * @see AuthenticationClientHttpRequestInterceptor
  */
 declare class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
-    private permissionProbeStrategy;
+    private permissionProbeStrategy?;
     constructor(permissionProbeStrategy?: ApiPermissionProbeStrategy);
     interceptor: (req: T) => Promise<T>;
+    private parseAuthenticationType;
     private getApiPermissionProbeStrategy;
-    private static getDefaultApiPermissionProbeStrategy;
+    private getDefaultApiPermissionProbeStrategy;
 }
 
 /**

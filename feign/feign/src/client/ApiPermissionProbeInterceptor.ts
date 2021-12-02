@@ -1,10 +1,9 @@
 import {ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
-import {HttpRequest} from "./HttpRequest";
+import {HttpRequest, HttpRequestContext} from "./HttpRequest";
 import {ApiPermissionProbeStrategy, ApiPermissionProbeStrategyInterface} from "./AuthenticationStrategy";
 import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../constant/FeignConstVar";
 import {RequestAuthenticationType} from "../annotations/mapping/Mapping";
 import {AuthenticationType} from "../constant/AuthenticationType";
-import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
 import {getRequestFeignClientMethodConfiguration, getRequestFeignConfiguration,} from "../context/RequestContextHolder";
 
 /**
@@ -20,15 +19,15 @@ import {getRequestFeignClientMethodConfiguration, getRequestFeignConfiguration,}
  */
 export default class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
 
-    private permissionProbeStrategy: ApiPermissionProbeStrategyInterface;
+    private permissionProbeStrategy?: ApiPermissionProbeStrategy;
 
     constructor(permissionProbeStrategy?: ApiPermissionProbeStrategy) {
-        this.permissionProbeStrategy = this.getApiPermissionProbeStrategy(permissionProbeStrategy);
+        this.permissionProbeStrategy = permissionProbeStrategy;
     }
 
     interceptor = async (req: T): Promise<T> => {
         if (req.headers[REQUEST_AUTHENTICATION_TYPE_HEADER_NAME] != null) {
-            // 用于获取接口权限的请求，直接跳过
+            // 用于获取接口权限的请求，直接跳过，避免死循环
             return req;
         }
         const requestMapping = getRequestFeignClientMethodConfiguration(req)?.requestMapping;
@@ -36,41 +35,42 @@ export default class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpR
             return req;
         }
         if (requestMapping.authenticationType == null || requestMapping.authenticationType === AuthenticationType.DEFAULT) {
-            const {permissionProbeStrategy} = this;
             const url = req.url.split("?")[0];
-            const headers = await permissionProbeStrategy.probe(url);
-            let requestAuthenticationType: RequestAuthenticationType;
-            if (headers == null) {
-                requestAuthenticationType = AuthenticationType.NONE;
-            } else {
-                requestAuthenticationType = headers[REQUEST_AUTHENTICATION_TYPE_HEADER_NAME] as RequestAuthenticationType;
-                if (typeof requestAuthenticationType === "string") {
-                    requestAuthenticationType = AuthenticationType[requestAuthenticationType];
-                }
-            }
-            requestMapping.authenticationType = requestAuthenticationType;
+            const responseHeaders = await this.getApiPermissionProbeStrategy(req).probe(url);
+            // 更新接口权限
+            requestMapping.authenticationType = this.parseAuthenticationType(responseHeaders);
         }
         return req;
     }
 
-    private getApiPermissionProbeStrategy = (apiPermissionProbeStrategy?: ApiPermissionProbeStrategy): ApiPermissionProbeStrategyInterface => {
-        if (apiPermissionProbeStrategy == null) {
-            return ApiPermissionProbeInterceptor.getDefaultApiPermissionProbeStrategy();
+    private parseAuthenticationType = (responseHeaders): RequestAuthenticationType => {
+        if (responseHeaders == null) {
+            return AuthenticationType.NONE;
         }
-        return typeof apiPermissionProbeStrategy == "function" ? {
-            probe: apiPermissionProbeStrategy
-        } : apiPermissionProbeStrategy;
+        const requestAuthenticationType = responseHeaders[REQUEST_AUTHENTICATION_TYPE_HEADER_NAME] as RequestAuthenticationType;
+        if (typeof requestAuthenticationType === "string") {
+            return AuthenticationType[requestAuthenticationType];
+        }
+        return requestAuthenticationType;
     }
 
-    private static getDefaultApiPermissionProbeStrategy = (): ApiPermissionProbeStrategyInterface => {
+    private getApiPermissionProbeStrategy = (context: HttpRequestContext): ApiPermissionProbeStrategyInterface => {
+        const {permissionProbeStrategy} = this;
+        if (permissionProbeStrategy == null) {
+            return this.getDefaultApiPermissionProbeStrategy(context);
+        }
+        return typeof permissionProbeStrategy == "function" ? {
+            probe: permissionProbeStrategy
+        } : permissionProbeStrategy;
+    }
+
+    private getDefaultApiPermissionProbeStrategy = (context: HttpRequestContext): ApiPermissionProbeStrategyInterface => {
         return {
             probe: (url: string) => {
-                return FeignConfigurationRegistry.getDefaultFeignConfiguration().then(config => {
-                    return config.getRestTemplate().headForHeaders(url, undefined, {});
+                return getRequestFeignConfiguration(context).getRestTemplate().headForHeaders(url, undefined, {
+                    REQUEST_AUTHENTICATION_TYPE_HEADER_NAME: "Probe"
                 })
             }
         };
     }
-
-
 }
