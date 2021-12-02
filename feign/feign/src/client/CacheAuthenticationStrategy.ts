@@ -48,10 +48,7 @@ export default class CacheAuthenticationStrategy implements AuthenticationStrate
         return this.cacheAuthenticationToken;
     }
 
-
     clearCache = () => {
         this.cacheAuthenticationToken = null;
     }
-
-
 }

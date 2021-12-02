@@ -77,6 +77,9 @@ export interface AuthenticationToken {
  */
 export type ApiPermissionProbeStrategyFunction = (url: string) => Promise<MappingHeaders>
 
+/**
+ * 用于判断接口请求路径是否需要权限
+ */
 export interface ApiPermissionProbeStrategyInterface {
 
     probe: ApiPermissionProbeStrategyFunction;

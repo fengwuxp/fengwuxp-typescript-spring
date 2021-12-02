@@ -14,9 +14,10 @@ import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
 import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
-import {setFeignClientMethodConfiguration} from "./context/RequestContextHolder"
+import {setRequestFeignClientMethodConfiguration, setRequestFeignConfiguration} from "./context/RequestContextHolder"
 import {AuthenticationStrategy} from "./client/AuthenticationStrategy";
 import {parse} from "querystring";
+import {FeignConfiguration} from "./configuration/FeignConfiguration";
 
 /**
  * default feign client executor
@@ -24,6 +25,8 @@ import {parse} from "querystring";
 export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
 
     private readonly apiService: T;
+
+    private feignConfiguration: Readonly<FeignConfiguration>;
 
     // request url resolver
     private requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
@@ -146,7 +149,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         // init request context
         feignRequestOptions.attributes = {};
         // set mapping options
-        setFeignClientMethodConfiguration(feignRequestOptions, feignMethodConfig);
+        setRequestFeignClientMethodConfiguration(feignRequestOptions, feignMethodConfig);
+        setRequestFeignConfiguration(feignRequestOptions, this.feignConfiguration);
 
         // pre handle
         feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
@@ -179,7 +183,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (this.initialized) {
             return;
         }
-        const configuration = await apiService.feignConfiguration();
+        this.feignConfiguration = await apiService.feignConfiguration();
         const {
             getRestTemplate,
             getApiSignatureStrategy,
@@ -189,7 +193,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getDefaultFeignRequestContextOptions,
             getDefaultHttpHeaders,
             getAuthenticationStrategy
-        } = configuration;
+        } = this.feignConfiguration;
 
         this.restTemplate = getRestTemplate();
         this.feignClientExecutorInterceptors = getFeignClientExecutorInterceptors();

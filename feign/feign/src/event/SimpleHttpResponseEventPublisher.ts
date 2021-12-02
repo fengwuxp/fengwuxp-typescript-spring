@@ -1,5 +1,6 @@
 import {HttpResponseEventHandlerSupplier, HttpResponseEventPublisher} from "./HttpResponseEvent";
 import {HttpResponse} from '../client/HttpResponse';
+import {FeignRequestOptions} from "../FeignRequestOptions";
 
 
 export default class SimpleHttpResponseEventPublisher implements HttpResponseEventPublisher {
@@ -10,8 +11,8 @@ export default class SimpleHttpResponseEventPublisher implements HttpResponseEve
         this.supplier = supplier;
     }
 
-    publishEvent = (response: HttpResponse): void => {
-        this.supplier.getHandlers(response.statusCode).forEach(handler => handler(response));
+    publishEvent = (request: FeignRequestOptions, response: HttpResponse): void => {
+        this.supplier.getHandlers(response.statusCode).forEach(handler => handler(request, response));
     }
 
 }

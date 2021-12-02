@@ -1,6 +1,5 @@
 import {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
 import {
-    CheckAuthorizedClientInterceptor,
     DefaultFeignClientExecutor,
     DefaultHttpClient,
     FeignConfiguration,
@@ -42,8 +41,6 @@ const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter
 
         getHttpClient = () => {
             const clientHttpInterceptorRegistry = new ClientHttpInterceptorRegistry();
-            // 默认注册检查认证状态的拦截器
-            clientHttpInterceptorRegistry.addInterceptor(CheckAuthorizedClientInterceptor);
             feignConfigurationAdapter.registryClientHttpRequestInterceptors(clientHttpInterceptorRegistry);
             return new DefaultHttpClient(
                 this.getHttpAdapter(),
@@ -73,7 +70,8 @@ const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter
     return new _InnerFeignConfiguration()
 };
 
-export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter): Readonly<FeignConfiguration> => {
+export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter): Omit<Readonly<FeignConfiguration>,
+    "getHttpResponseEventPublisher" | "getFeignClientExecutor" | "getFeignClientExecutorInterceptors" | "getDefaultFeignRequestContextOptions" | ""> => {
     const configuration = buildConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
 

@@ -1,12 +1,13 @@
 import {HttpResponse} from '../client/HttpResponse';
 import {HttpStatus} from "../constant/http/HttpStatus";
+import {FeignRequestOptions} from "../FeignRequestOptions";
 
 export interface HttpResponseEventPublisher {
 
-    publishEvent: (response: HttpResponse) => void;
+    publishEvent: (request: FeignRequestOptions, response: HttpResponse) => void;
 }
 
-export type HttpResponseEventHandler = (response: HttpResponse) => void;
+export type HttpResponseEventHandler = (request: FeignRequestOptions, response: HttpResponse) => void;
 
 export interface HttpResponseEventHandlerSupplier {
 

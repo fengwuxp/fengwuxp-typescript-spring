@@ -1,6 +1,6 @@
 import {HttpRequestDataEncoder} from "../codec/HttpRequestDataEncoder";
 import {FeignRequestOptions} from '../FeignRequestOptions';
-import {getFeignClientMethodConfiguration} from "../context/RequestContextHolder";
+import {getRequestFeignClientMethodConfiguration} from "../context/RequestContextHolder";
 import {FileUploadStrategy} from "./FileUploadStrategy";
 import {HttpMethod} from '../constant/http/HttpMethod';
 import {AutoFileUploadOptions} from "../annotations/upload/FileUpload";
@@ -29,7 +29,7 @@ export abstract class AbstractRequestFileObjectEncoder<T extends FeignRequestOpt
 
     async encode(request: T): Promise<T> {
 
-        const {requestMapping, fileUploadOptions} = getFeignClientMethodConfiguration(request) ?? {};
+        const {requestMapping, fileUploadOptions} = getRequestFeignClientMethodConfiguration(request) ?? {};
         if (requestMapping == null || fileUploadOptions == null) {
             return request;
         }

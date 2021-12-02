@@ -18,7 +18,6 @@ export {FeignRetry} from "./annotations/retry/FeignRetry";
 export {Feign, FeignOptions} from "./annotations/Feign";
 
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
-export {default as CheckAuthorizedClientInterceptor} from "./client/CheckAuthorizedClientInterceptor"
 export {
     ClientHttpRequestInterceptorInterface, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptor
 } from "./client/ClientHttpRequestInterceptor";
@@ -75,7 +74,7 @@ export {
     UNAUTHORIZED_RESPONSE,
     grabUrlPathVariable
 } from "./constant/FeignConstVar";
-export {getFeignClientMethodConfiguration} from "./context/RequestContextHolder";
+export {getRequestFeignClientMethodConfiguration} from "./context/RequestContextHolder";
 
 export {
     HttpResponseEventPublisher,

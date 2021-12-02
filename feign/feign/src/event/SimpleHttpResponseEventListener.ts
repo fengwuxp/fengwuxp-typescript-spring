@@ -46,11 +46,19 @@ export default class SimpleHttpResponseEventListener implements SmartHttpRespons
     }
 
     getHandlers = (httpStatus: HttpStatus | number): HttpResponseEventHandler[] => {
+        if (this.isSuccessful(httpStatus)) {
+            return this.getHandlersByHttpStatus(httpStatus);
+        }
         return [
             ...this.getHandlersByHttpStatus(httpStatus),
             ...this.errorHandlers
         ];
     }
+
+    private isSuccessful = (httpStatus: HttpStatus | number): boolean => {
+        return httpStatus >= 200 && httpStatus < 300;
+    }
+
     private getHandlersByHttpStatus = (httpStatus: HttpStatus | number): HttpResponseEventHandler[] => {
         return this.handlerCaches[httpStatus] ?? [];
     }

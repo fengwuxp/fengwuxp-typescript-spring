@@ -1,7 +1,7 @@
 import {HttpRequest} from "./HttpRequest";
 import {ClientHttpRequestInterceptorInterface,} from "./ClientHttpRequestInterceptor";
 import {AuthenticationStrategy, AuthenticationToken, NEVER_REFRESH_FLAG} from "./AuthenticationStrategy";
-import {getFeignClientMethodConfiguration,} from "../context/RequestContextHolder";
+import {getRequestFeignClientMethodConfiguration,} from "../context/RequestContextHolder";
 import {UNAUTHORIZED_RESPONSE} from '../constant/FeignConstVar';
 import {AuthenticationType} from "../constant/AuthenticationType";
 import {RequestAuthenticationType} from "../annotations/mapping/Mapping";
@@ -103,7 +103,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
     };
 
     private getRequestAuthenticationType = (req: T): AuthenticationType => {
-        const requestMapping = getFeignClientMethodConfiguration(req)?.requestMapping;
+        const requestMapping = getRequestFeignClientMethodConfiguration(req)?.requestMapping;
         if (requestMapping == null) {
             // 不存在则不处理
             return AuthenticationType.NONE;
@@ -217,6 +217,4 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         const defaultAuthenticationType = authenticationStrategy.getDefaultAuthenticationType?.();
         this.defaultAuthenticationType = this.getAuthenticationType(defaultAuthenticationType);
     }
-
-
 }

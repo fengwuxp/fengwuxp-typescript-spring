@@ -69,7 +69,7 @@ const registry = {
         }
     },
 
-    getDefaultFeignConfiguration(): Promise<FeignConfiguration> {
+    getDefaultFeignConfiguration(): Promise<Readonly<FeignConfiguration>> {
         if (DEFAULT_CONFIGURATION != null) {
             return Promise.resolve(DEFAULT_CONFIGURATION);
         }

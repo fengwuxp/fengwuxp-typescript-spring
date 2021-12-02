@@ -108,6 +108,6 @@ interface FeignConfigurationAdapter {
     getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
 }
 
-declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => Readonly<FeignConfiguration>;
+declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => Omit<Readonly<FeignConfiguration>, "getHttpResponseEventPublisher" | "getFeignClientExecutor" | "getFeignClientExecutorInterceptors" | "getDefaultFeignRequestContextOptions" | "">;
 
 export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurationAdapter, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitializer };
