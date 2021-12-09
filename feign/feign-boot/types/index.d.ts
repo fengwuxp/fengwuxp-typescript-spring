@@ -90,6 +90,9 @@ interface FeignConfigurer {
      * api signature
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
+    /**
+     * 认证策略
+     */
     authenticationStrategy?: () => AuthenticationStrategy;
     /**
      * url 解析策略
@@ -108,6 +111,10 @@ interface FeignConfigurer {
     getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
 }
 
-declare const feignConfigurationInitializer: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">>;
+/**
+ * feign 配置初始化
+ * @param configurer
+ */
+declare const feignConfigurationInitialize: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">>;
 
-export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurer, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitializer };
+export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurer, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitialize };

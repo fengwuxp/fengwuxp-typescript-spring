@@ -8,4 +8,4 @@ export {
 export {default as FeignClientInterceptorRegistry} from "./registry/FeignClientInterceptorRegistry";
 
 export {FeignConfigurer} from "./FeignConfigurer";
-export {feignConfigurationInitializer} from "./FeignConfigurationInitializer";
+export {feignConfigurationInitialize} from "./FeignConfigurationInitializer";

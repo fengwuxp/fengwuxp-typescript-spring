@@ -74,13 +74,13 @@ import {
 import {
     ClientHttpInterceptorRegistry,
     FeignClientInterceptorRegistry,
-    FeignConfigurationAdapter,
+    FeignConfigurer,
 } from 'feign-boot-starter'
 import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-browser-starter'
 
 import {API_ENTRY_ADDRESS} from "@/env/EvnVariable";
 
-export default class BrowserFeignConfigurationAdapter implements FeignConfigurationAdapter {
+export default class BrowserFeignConfigurer implements FeignConfigurer {
 
     /**
      * 默认使用的 content-type
@@ -118,7 +118,7 @@ export default class BrowserFeignConfigurationAdapter implements FeignConfigurat
         interceptorRegistry.addInterceptor(new HttpErrorResponseEventPublisherExecutorInterceptor(unifiedFailureToast))
     };
 
-    private getRespErrorMessage = (response: HttpResponse<any> | string): string => {
+    private getRespErrorMessage = (response: HttpResponse): string => {
         if (response.statusCode === HttpStatus.GATEWAY_TIMEOUT) {
             return response.statusText;
         } else {
@@ -138,7 +138,7 @@ export default class BrowserFeignConfigurationAdapter implements FeignConfigurat
 这个步骤最好在 index.ts 中做，尽量让注册配置时机靠前
 
 ```typescript
-import {feignConfigurationInitializer} from "feign-boot-starter";
+import {feignConfigurationInitialize} from "feign-boot-starter";
 //  注册feign 代理
-const feignConfig = feignConfigurationInitializer(new BrowserFeignConfigurationAdapter());
+const feignConfig = feignConfigurationInitialize(new BrowserFeignConfigurer());
 ```

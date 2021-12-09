@@ -77,7 +77,11 @@ const getApiModule = (configurer: FeignConfigurer): string => {
     return configurer.apiModule() || defaultApiModuleName;
 }
 
-export const feignConfigurationInitializer = (configurer: FeignConfigurer):
+/**
+ * feign 配置初始化
+ * @param configurer
+ */
+export const feignConfigurationInitialize = (configurer: FeignConfigurer):
     Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">> => {
     const feignConfiguration = buildConfiguration(configurer);
     FeignConfigurationRegistry.setFeignConfiguration(getApiModule(configurer), feignConfiguration);
