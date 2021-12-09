@@ -2,7 +2,6 @@ import {
     ApiSignatureStrategy,
     AuthenticationStrategy,
     BusinessResponseExtractorFunction,
-    FeignUIToast,
     HttpAdapter,
     HttpMediaType,
     HttpRequest,
@@ -56,12 +55,6 @@ export interface FeignConfigurationAdapter {
      * @see restfulRequestURLResolver
      */
     requestURLResolver?: () => RequestURLResolver;
-
-    /**
-     * feign ui toast
-     * {@link FeignUIToast}
-     */
-    feignUIToast?: () => FeignUIToast;
 
     /**
      * get default request headers

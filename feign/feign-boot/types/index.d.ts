@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, FeignUIToast, BusinessResponseExtractorFunction, FeignConfiguration } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, BusinessResponseExtractorFunction, FeignConfiguration } from 'fengwuxp-typescript-feign';
 
 /**
  * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
@@ -93,11 +93,6 @@ interface FeignConfigurationAdapter {
      * @see restfulRequestURLResolver
      */
     requestURLResolver?: () => RequestURLResolver;
-    /**
-     * feign ui toast
-     * {@link FeignUIToast}
-     */
-    feignUIToast?: () => FeignUIToast;
     /**
      * get default request headers
      */

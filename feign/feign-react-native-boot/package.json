@@ -1,6 +1,6 @@
 {
   "name": "feign-boot-react-native-starter",
-  "version": "1.0.10",
+  "version": "1.2.0",
   "description": "feign react-native starter",
   "main": "lib/index.js",
   "module": "es/index.js",

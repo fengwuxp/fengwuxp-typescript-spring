@@ -131,9 +131,6 @@ export {default as TraceRequestExecutorInterceptor} from "./trace/TraceRequestEx
 export {default as ProcessBarExecutorInterceptor} from "./ui/ProcessBarExecutorInterceptor";
 export {RequestProgressBar, ProgressBarOptions} from "./ui/RequestProgressBar";
 export {FileUploadProgressBar} from "./ui/FileUploadProgressBar";
-export {
-    default as FeignUIToastHolder, FeignUIToastInterface, FeignUIToastFunction, FeignUIToast, UnifiedFailureToast
-} from "./ui/FeignUIToast";
 
 export {AbstractRequestFileObjectEncoder} from "./upload/AbstractRequestFileObjectEncoder"
 export {

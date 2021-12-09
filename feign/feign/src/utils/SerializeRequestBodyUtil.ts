@@ -39,12 +39,13 @@ export const serializeRequestBody = (method: string,
         // form data
         return queryStringify(body, filterNoneValue);
     }
+
     if (matchMediaType(contentType, HttpMediaType.APPLICATION_JSON_UTF8)) {
         // json data
         return JSON.stringify(filterNoneValue ? body : filterNoneValueAndNewObject(body));
     }
 
-    throw new Error("");
+    throw new Error(`unsupported content-type: ${contentType}`);
 };
 
 export const filterNoneValueAndNewObject = (body: Record<string, any>) => {
@@ -60,17 +61,14 @@ export const filterNoneValueAndNewObject = (body: Record<string, any>) => {
     return newData;
 };
 
-const stringifyPrimitive = function (v) {
-    switch (typeof v) {
+const stringifyPrimitive = function (val) {
+    switch (typeof val) {
         case 'string':
-            return v;
-
+            return val;
         case 'boolean':
-            return v ? 'true' : 'false';
-
+            return val ? 'true' : 'false';
         case 'number':
-            return isFinite(v) ? v : '';
-
+            return isFinite(val) ? val : '';
         default:
             return '';
     }

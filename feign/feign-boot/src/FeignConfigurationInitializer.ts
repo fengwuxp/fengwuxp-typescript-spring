@@ -5,7 +5,6 @@ import {
     FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
-    FeignUIToastHolder,
     HttpResponseEventPublisher,
     RestTemplate,
     SimpleHttpResponseEventListener,
@@ -74,11 +73,6 @@ export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignCo
     Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">> => {
     const configuration = buildConfiguration(feignConfigurationAdapter);
     FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
-
-    if (feignConfigurationAdapter.feignUIToast) {
-        // set feignUIToast
-        FeignUIToastHolder.setFeignUIToast(feignConfigurationAdapter.feignUIToast())
-    }
     return {
         getRestTemplate: configuration.getRestTemplate,
         getHttpResponseEventListener: configuration.getHttpResponseEventListener,

@@ -1,24 +1,24 @@
 import {FeignRequestOptions} from "../FeignRequestOptions";
 import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor";
 import {HttpResponse} from "../client/HttpResponse";
-import {UnifiedFailureToast} from "../ui/FeignUIToast";
 import {getRequestFeignConfiguration} from "../context/RequestContextHolder";
 import {HttpResponseEventHandler} from "./HttpResponseEvent";
+import {FeignConfiguration} from "../configuration/FeignConfiguration";
 
 
 export default class HttpErrorResponseEventPublisherExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
 
-    private registered: boolean = false;
+    private readonly errorResponseHandler: HttpResponseEventHandler;
 
-    private readonly errorResponseHandler: HttpResponseEventHandler
+    private readonly registeredCaches: Map<FeignConfiguration, boolean> = new Map<FeignConfiguration, boolean>();
 
-    constructor(unifiedFailureToast?: UnifiedFailureToast) {
+    constructor(errorHandle?: HttpResponseEventHandler) {
         this.errorResponseHandler = (request: FeignRequestOptions, response: HttpResponse) => {
-            if (request.useUnifiedTransformResponse === false) {
+            if (request.useUnifiedToast === false) {
                 return
             }
-            if (unifiedFailureToast != null) {
-                unifiedFailureToast(response);
+            if (errorHandle != null) {
+                errorHandle(request, response);
             }
         }
     }
@@ -30,21 +30,23 @@ export default class HttpErrorResponseEventPublisherExecutorInterceptor<T extend
     };
 
     private registerErrorListener = (options: T) => {
-        if (this.registered) {
-            return
-        }
-        this.registered = true;
         const feignConfiguration = getRequestFeignConfiguration(options);
-        if (feignConfiguration != null) {
-            feignConfiguration.getHttpResponseEventListener().onError(this.errorResponseHandler);
+        if (feignConfiguration == null) {
+            return;
         }
+
+        if (this.registeredCaches.get(feignConfiguration) === true) {
+            return;
+        }
+        this.registeredCaches.set(feignConfiguration, true);
+        feignConfiguration.getHttpResponseEventListener().onError(this.errorResponseHandler);
     }
 
     /**
      * @param options
      * @param response
      */
-    private publishEvent = async (options: T, response: HttpResponse) => {
+    private publishEvent = (options: T, response: HttpResponse) => {
         const feignConfiguration = getRequestFeignConfiguration(options);
         if (feignConfiguration != null) {
             feignConfiguration.getHttpResponseEventPublisher().publishEvent(options, response);

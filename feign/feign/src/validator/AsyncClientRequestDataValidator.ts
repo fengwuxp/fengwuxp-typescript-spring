@@ -1,5 +1,5 @@
 import {ClientRequestDataValidator, ValidateInvokeOptions, ValidatorDescriptor} from "./ClientRequestDataValidator";
-import schema from 'async-validator';
+import AsyncValidator from 'async-validator';
 
 export default class AsyncClientRequestDataValidator implements ClientRequestDataValidator {
 
@@ -12,8 +12,8 @@ export default class AsyncClientRequestDataValidator implements ClientRequestDat
                 descriptor[key].type = typeof value
             }
         });
-        const validator = new schema(descriptor);
 
+        const validator = new AsyncValidator(descriptor);
         return new Promise<T>((resolve, reject) => {
             validator.validate(requestData, {
                 first: true
