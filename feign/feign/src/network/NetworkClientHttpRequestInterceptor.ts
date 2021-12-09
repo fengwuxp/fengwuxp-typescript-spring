@@ -66,7 +66,7 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
     }
 
 
-    interceptor = async (req: T) => {
+    intercept = async (req: T) => {
         const {networkStatus} = this;
         const noneNetwork = networkStatus == null || !networkStatus.isConnected;
         if (noneNetwork) {

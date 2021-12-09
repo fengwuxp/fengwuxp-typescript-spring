@@ -73,16 +73,17 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
         return class extends clazz implements FeignProxyClient {
 
             private readonly _serviceName: string;
+
             private readonly _feignOptions: FeignMemberOptions;
 
             constructor() {
                 super();
 
                 const feignOptions: FeignMemberOptions = {
-                    apiModule: defaultApiModuleName,
+                    apiModule: options.apiModule || defaultApiModuleName,
                     value: options.value,
                     url: options.url,
-                    configuration: null
+                    configuration: undefined
                 };
 
                 this._serviceName = feignOptions.value || clazz.name;
@@ -102,8 +103,9 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             };
 
             readonly feignConfiguration = async () => {
+                const apiModule = this.feignOptions().apiModule;
                 const feignConfiguration: FeignConfiguration = feignConfigurationConstructor != null ?
-                    new feignConfigurationConstructor() : await FeignConfigurationRegistry.getDefaultFeignConfiguration();
+                    new feignConfigurationConstructor() : await FeignConfigurationRegistry.getFeignConfiguration(apiModule);
 
                 // TODO 某些情况下 feign configuration 未初始化
                 if (feignConfiguration == null) {

@@ -25,7 +25,7 @@ export default class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpR
         this.permissionProbeStrategy = permissionProbeStrategy;
     }
 
-    interceptor = async (req: T): Promise<T> => {
+    intercept = async (req: T): Promise<T> => {
         if (req.headers[REQUEST_AUTHENTICATION_TYPE_HEADER_NAME] != null) {
             // 用于获取接口权限的请求，直接跳过，避免死循环
             return req;

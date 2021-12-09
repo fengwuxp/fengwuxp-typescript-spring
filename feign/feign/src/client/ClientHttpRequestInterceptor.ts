@@ -12,7 +12,7 @@ export interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = H
     /**
      * Intercept before http request, you can change the requested information
      */
-    interceptor: ClientHttpRequestInterceptorFunction<T>;
+    intercept: ClientHttpRequestInterceptorFunction<T>;
 }
 
 

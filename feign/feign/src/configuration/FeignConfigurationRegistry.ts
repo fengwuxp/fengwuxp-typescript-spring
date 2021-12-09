@@ -3,16 +3,6 @@ import {FeignClientBuilder} from "../FeignClientBuilder";
 import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 import memoize from "lodash/memoize";
 
-/**
- * FeignConfiguration
- */
-let DEFAULT_CONFIGURATION: FeignConfiguration = null;
-
-/**
- * feign builder
- */
-let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
-
 
 // ignore memorization method names
 const ignoreMethodNames = ["getFeignClientExecutor"];
@@ -45,8 +35,6 @@ export const configurationFactory = memoize(factory, (feignConfigurationConstruc
     if (feignConfigurationConstructor == null) {
         return 0;
     }
-    // const description = feignConfigurationConstructor.name;
-    // return description
     return feignConfigurationConstructor;
 });
 
@@ -54,28 +42,51 @@ export const configurationFactory = memoize(factory, (feignConfigurationConstruc
 /**
  * 等待获取配置队列
  */
-let WAIT_GET_CONFIGURATION_QUEUE: Array<(configuration: FeignConfiguration) => void> = [];
+const WAIT_GET_CONFIGURATION_QUEUE: {
+    [key: string]: Array<(configuration: FeignConfiguration) => void>
+} = {};
+
+const getWaitConfigurationQueue = (apiModule: string) => {
+    return WAIT_GET_CONFIGURATION_QUEUE[apiModule];
+}
+
+const initWaitConfigurationQueue = (apiModule: string) => {
+    WAIT_GET_CONFIGURATION_QUEUE[apiModule] = [];
+}
+
+
+/**
+ * @key apiModule
+ * @value FeignConfiguration
+ */
+const CONFIGURATION_CACHES: { [key: string]: FeignConfiguration } = {};
+
+/**
+ * feign builder
+ */
+let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
 
 const registry = {
 
-    setDefaultFeignConfiguration(configuration: FeignConfiguration) {
-        DEFAULT_CONFIGURATION = memorizationConfiguration(configuration);
-        if (WAIT_GET_CONFIGURATION_QUEUE.length > 0) {
-            WAIT_GET_CONFIGURATION_QUEUE.forEach(fn => {
-                fn(DEFAULT_CONFIGURATION);
-            });
+    setFeignConfiguration(apiModule: string, configuration: FeignConfiguration) {
+        CONFIGURATION_CACHES[apiModule] = memorizationConfiguration(configuration);
+        const waitQueue = getWaitConfigurationQueue(apiModule);
+        if (getWaitConfigurationQueue(apiModule)?.length > 0) {
+            waitQueue.forEach(fn => fn(configuration));
             // clear
-            WAIT_GET_CONFIGURATION_QUEUE = [];
+            initWaitConfigurationQueue(apiModule);
         }
     },
 
-    getDefaultFeignConfiguration(): Promise<Readonly<FeignConfiguration>> {
-        if (DEFAULT_CONFIGURATION != null) {
-            return Promise.resolve(DEFAULT_CONFIGURATION);
+    getFeignConfiguration(apiModule: string): Promise<Readonly<FeignConfiguration>> {
+        const configuration = CONFIGURATION_CACHES[apiModule];
+        if (configuration != null) {
+            return Promise.resolve(configuration);
         }
-        return new Promise<FeignConfiguration>(resolve => {
-            WAIT_GET_CONFIGURATION_QUEUE.push(resolve)
-        });
+        if (getWaitConfigurationQueue(apiModule) == null) {
+            initWaitConfigurationQueue(apiModule);
+        }
+        return new Promise<FeignConfiguration>(resolve => getWaitConfigurationQueue(apiModule).push(resolve));
     },
 
     setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void {

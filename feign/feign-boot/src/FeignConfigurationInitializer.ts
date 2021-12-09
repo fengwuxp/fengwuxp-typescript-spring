@@ -1,5 +1,6 @@
-import {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
+import {FeignConfigurer} from "./FeignConfigurer";
 import {
+    defaultApiModuleName,
     DefaultFeignClientExecutor,
     DefaultHttpClient,
     FeignConfiguration,
@@ -15,7 +16,7 @@ import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorReg
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 
 
-const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter) => {
+const buildConfiguration = (feignConfigurationAdapter: FeignConfigurer) => {
 
     const httpResponseEventListener = new SimpleHttpResponseEventListener();
     const httpResponseEventPublisher = new SimpleHttpResponseEventPublisher(httpResponseEventListener);
@@ -69,12 +70,19 @@ const buildConfiguration = (feignConfigurationAdapter: FeignConfigurationAdapter
     return new _InnerFeignConfiguration()
 };
 
-export const feignConfigurationInitializer = (feignConfigurationAdapter: FeignConfigurationAdapter):
+const getApiModule = (configurer: FeignConfigurer): string => {
+    if (configurer.apiModule == null) {
+        return defaultApiModuleName;
+    }
+    return configurer.apiModule() || defaultApiModuleName;
+}
+
+export const feignConfigurationInitializer = (configurer: FeignConfigurer):
     Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">> => {
-    const configuration = buildConfiguration(feignConfigurationAdapter);
-    FeignConfigurationRegistry.setDefaultFeignConfiguration(configuration);
+    const feignConfiguration = buildConfiguration(configurer);
+    FeignConfigurationRegistry.setFeignConfiguration(getApiModule(configurer), feignConfiguration);
     return {
-        getRestTemplate: configuration.getRestTemplate,
-        getHttpResponseEventListener: configuration.getHttpResponseEventListener,
+        getRestTemplate: feignConfiguration.getRestTemplate,
+        getHttpResponseEventListener: feignConfiguration.getHttpResponseEventListener,
     };
 };

@@ -27,7 +27,7 @@ import {HttpResponseEventPublisher, SmartHttpResponseEventListener} from 'event/
 import SimpleHttpResponseEventListener from "../../src/event/SimpleHttpResponseEventListener";
 import SimpleHttpResponseEventPublisher from "../../src/event/SimpleHttpResponseEventPublisher";
 import HttpErrorResponseEventPublisherExecutorInterceptor
-    from 'event/HttpErrorResponseEventPublisherExecutorInterceptor';
+    from '../../src/event/HttpErrorResponseEventPublisherExecutorInterceptor';
 
 const logger = log4js.getLogger();
 logger.level = 'debug';

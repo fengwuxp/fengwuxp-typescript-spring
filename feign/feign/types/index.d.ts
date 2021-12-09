@@ -104,7 +104,7 @@ interface HttpAdapter<T extends HttpRequest = HttpRequest> {
 
 /**
  *  Request API, type of authentication
- *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+ *  {@see AuthenticationClientHttpRequestInterceptor#intercept}
  *  {@see BaseRequestMappingOptions#authenticationType}
  */
 declare enum AuthenticationType {
@@ -160,7 +160,7 @@ interface BaseRequestMappingOptions {
     produces?: string[];
     /**
      * 接口认证类型
-     *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+     *  {@see AuthenticationClientHttpRequestInterceptor#intercept}
      *  {@see DefaultFeignClientExecutor#tryCheckAuthorizedStatus}
      *  可以通过自定义拦截器处理该字段
      */
@@ -312,7 +312,7 @@ interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequ
     /**
      * Intercept before http request, you can change the requested information
      */
-    interceptor: ClientHttpRequestInterceptorFunction<T>;
+    intercept: ClientHttpRequestInterceptorFunction<T>;
 }
 /**
  *  Intercept the given request, and return a response
@@ -1296,7 +1296,7 @@ declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
      * mapping between api module and url
      */
     constructor(routeMapping: Record<string, string> | string);
-    interceptor: (req: T) => Promise<T>;
+    intercept: (req: T) => Promise<T>;
 }
 
 /**
@@ -1319,7 +1319,7 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> 
      * @param synchronousRefreshAuthorization
      */
     constructor(authenticationStrategy: AuthenticationStrategy, aheadOfTimes?: number, synchronousRefreshAuthorization?: boolean);
-    interceptor: (req: T) => Promise<T>;
+    intercept: (req: T) => Promise<T>;
     private getRequestAuthenticationType;
     private requestRequiresAuthorization;
     private refreshAuthenticationToken;
@@ -1357,7 +1357,7 @@ declare class AuthenticationClientHttpRequestInterceptor<T extends HttpRequest> 
 declare class ApiPermissionProbeInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
     private permissionProbeStrategy?;
     constructor(permissionProbeStrategy?: ApiPermissionProbeStrategy);
-    interceptor: (req: T) => Promise<T>;
+    intercept: (req: T) => Promise<T>;
     private parseAuthenticationType;
     private getApiPermissionProbeStrategy;
     private getDefaultApiPermissionProbeStrategy;
@@ -1432,7 +1432,7 @@ declare class NetworkClientHttpRequestInterceptor<T extends HttpRequest = HttpRe
     private tryWaitNetworkCount;
     private spinWaitMaxTimes;
     constructor(networkStatusListener: NetworkStatusListener, noneNetworkHandler?: NoneNetworkFailBack<T>, tryWaitNetworkCount?: number, spinWaitMaxTimes?: number);
-    interceptor: (req: T) => Promise<T>;
+    intercept: (req: T) => Promise<T>;
     private initNetwork;
     private handleFailBack;
     /**
@@ -1556,8 +1556,8 @@ declare type FeignClientBuilderFunction<T extends FeignProxyClient = FeignProxyC
 declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> = FeignClientBuilderFunction<T> | FeignClientBuilderInterface<T>;
 
 declare const registry: {
-    setDefaultFeignConfiguration(configuration: FeignConfiguration): void;
-    getDefaultFeignConfiguration(): Promise<Readonly<FeignConfiguration>>;
+    setFeignConfiguration(apiModule: string, configuration: FeignConfiguration): void;
+    getFeignConfiguration(apiModule: string): Promise<Readonly<FeignConfiguration>>;
     setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void;
     getFeignClientBuilder(): FeignClientBuilder;
 };
@@ -1625,6 +1625,12 @@ declare class SimpleHttpResponseEventListener implements SmartHttpResponseEventL
 
 declare class HttpErrorResponseEventPublisherExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
     private readonly errorResponseHandler;
+    /**
+     * 对应的配置是否注册了统一错误回调
+     * @key 配置
+     * @value 是否已经注册了错误回调
+     * @private
+     */
     private readonly registeredCaches;
     constructor(errorHandle?: HttpResponseEventHandler);
     postError: (options: T, response: HttpResponse) => Promise<never>;
@@ -1701,7 +1707,7 @@ declare class MappedFeignClientExecutorInterceptor<T extends FeignRequestBaseOpt
 declare class MappedClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> extends MappedInterceptor implements ClientHttpRequestInterceptorInterface<T> {
     private clientInterceptor;
     constructor(clientInterceptor: ClientHttpRequestInterceptor<T>, includePatterns?: string[], excludePatterns?: string[], includeMethods?: HttpMethod[], excludeMethods?: HttpMethod[], includeHeaders?: string[][], excludeHeaders?: string[][]);
-    interceptor: (req: T) => Promise<T>;
+    intercept: (req: T) => Promise<T>;
 }
 
 /**

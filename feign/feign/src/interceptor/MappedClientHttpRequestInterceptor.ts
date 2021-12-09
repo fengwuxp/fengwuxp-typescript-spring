@@ -32,9 +32,9 @@ export default class MappedClientHttpRequestInterceptor<T extends HttpRequest = 
     }
 
 
-    public interceptor = (req: T): Promise<T> => {
+    public intercept = (req: T): Promise<T> => {
         const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(this.clientInterceptor);
-        return clientHttpRequestInterceptorInterface.interceptor(req);
+        return clientHttpRequestInterceptorInterface.intercept(req);
     };
 
 

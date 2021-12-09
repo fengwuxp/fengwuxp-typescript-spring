@@ -45,7 +45,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
             }
             const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
             try {
-                httpRequest = await clientHttpRequestInterceptorInterface.interceptor(httpRequest);
+                httpRequest = await clientHttpRequestInterceptorInterface.intercept(httpRequest);
             } catch (e) {
                 // error ignore
                 console.error("http request interceptor handle exception", e);

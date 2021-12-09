@@ -64,7 +64,7 @@ export interface BaseRequestMappingOptions {
 
     /**
      * 接口认证类型
-     *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+     *  {@see AuthenticationClientHttpRequestInterceptor#intercept}
      *  {@see DefaultFeignClientExecutor#tryCheckAuthorizedStatus}
      *  可以通过自定义拦截器处理该字段
      */

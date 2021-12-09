@@ -26,7 +26,7 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
         // this.routeMapping = routeMapping;
     }
 
-    interceptor = async (req: T) => {
+    intercept = async (req: T) => {
         req.url = parseRequestUrl(req.url);
         return req;
     }

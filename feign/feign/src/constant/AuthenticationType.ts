@@ -1,6 +1,6 @@
 /**
  *  Request API, type of authentication
- *  {@see AuthenticationClientHttpRequestInterceptor#interceptor}
+ *  {@see AuthenticationClientHttpRequestInterceptor#intercept}
  *  {@see BaseRequestMappingOptions#authenticationType}
  */
 export enum AuthenticationType {

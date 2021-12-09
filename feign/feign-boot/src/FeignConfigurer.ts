@@ -11,8 +11,14 @@ import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegis
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
 
 
-export interface FeignConfigurationAdapter {
+export interface FeignConfigurer {
 
+
+    /**
+     * 配置支持的 api 模块
+     * 默认：default
+     */
+    apiModule?: () => string;
 
     /**
      * get http adapter
@@ -46,6 +52,9 @@ export interface FeignConfigurationAdapter {
      */
     apiSignatureStrategy?: () => ApiSignatureStrategy;
 
+    /**
+     * 认证策略
+     */
     authenticationStrategy?: () => AuthenticationStrategy;
 
     /**

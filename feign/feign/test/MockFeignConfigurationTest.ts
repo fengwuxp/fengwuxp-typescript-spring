@@ -3,12 +3,13 @@ import ProcessBarExecutorInterceptor from "../src/ui/ProcessBarExecutorIntercept
 import {FeignRequestOptions, FileUploadProgressBarOptions, ProgressBarOptions} from "../src";
 import CodecFeignClientExecutorInterceptor from "../src/codec/CodecFeignClientExecutorInterceptor";
 import DateEncoder from "../src/codec/DateEncoder";
-import UnifiedFailureToastExecutorInterceptor from "../src/ui/UnifiedFailureToastExecutorInterceptor";
 import {MockRequestFileObjectEncoder} from "./upload/MockRequestFileObjectEncoder";
 import TraceRequestExecutorInterceptor from "../src/trace/TraceRequestExecutorInterceptor";
 import MockHttpAdapter from "./mock/MockHttpAdapter";
 import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../src/constant/FeignConstVar";
 import * as log4js from "log4js";
+import HttpErrorResponseEventPublisherExecutorInterceptor
+    from "../src/event/HttpErrorResponseEventPublisherExecutorInterceptor";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -59,7 +60,7 @@ export default class MockFeignConfigurationTest extends MockFeignConfiguration {
                 })
             ], []),
 
-            new UnifiedFailureToastExecutorInterceptor((response) => {
+            new HttpErrorResponseEventPublisherExecutorInterceptor((request, response) => {
                 logger.log("[UnifiedTransformDataExecutorInterceptor] failure toast", response);
             }),
             new TraceRequestExecutorInterceptor({

@@ -59,7 +59,12 @@ declare class FeignClientInterceptorRegistry implements InterceptorRegistry {
     getInterceptors: () => any[];
 }
 
-interface FeignConfigurationAdapter {
+interface FeignConfigurer {
+    /**
+     * 配置支持的 api 模块
+     * 默认：default
+     */
+    apiModule?: () => string;
     /**
      * get http adapter
      */
@@ -103,6 +108,6 @@ interface FeignConfigurationAdapter {
     getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
 }
 
-declare const feignConfigurationInitializer: (feignConfigurationAdapter: FeignConfigurationAdapter) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">>;
+declare const feignConfigurationInitializer: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">>;
 
-export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurationAdapter, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitializer };
+export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurer, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitializer };

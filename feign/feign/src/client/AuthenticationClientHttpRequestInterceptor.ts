@@ -52,7 +52,7 @@ export default class AuthenticationClientHttpRequestInterceptor<T extends HttpRe
         this.setAuthenticationStrategy(authenticationStrategy);
     }
 
-    interceptor = async (req: T) => {
+    intercept = async (req: T) => {
         const authenticationType = this.getRequestAuthenticationType(req)
         if (!this.requestRequiresAuthorization(authenticationType) || this.hasAuthorizationHeader(req.headers)) {
             return req;

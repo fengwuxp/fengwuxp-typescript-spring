@@ -10,6 +10,12 @@ export default class HttpErrorResponseEventPublisherExecutorInterceptor<T extend
 
     private readonly errorResponseHandler: HttpResponseEventHandler;
 
+    /**
+     * 对应的配置是否注册了统一错误回调
+     * @key 配置
+     * @value 是否已经注册了错误回调
+     * @private
+     */
     private readonly registeredCaches: Map<FeignConfiguration, boolean> = new Map<FeignConfiguration, boolean>();
 
     constructor(errorHandle?: HttpResponseEventHandler) {

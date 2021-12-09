@@ -7,5 +7,5 @@ export {
 }from "./registry/FeignClientExecutorInterceptorRegistration";
 export {default as FeignClientInterceptorRegistry} from "./registry/FeignClientInterceptorRegistry";
 
-export {FeignConfigurationAdapter} from "./FeignConfigurationAdapter";
+export {FeignConfigurer} from "./FeignConfigurer";
 export {feignConfigurationInitializer} from "./FeignConfigurationInitializer";

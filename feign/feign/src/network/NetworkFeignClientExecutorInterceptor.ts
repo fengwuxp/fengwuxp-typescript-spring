@@ -28,7 +28,7 @@ export default class NetworkFeignClientExecutorInterceptor<T extends FeignReques
     };
 
     preHandle = <T>(options: T) => {
-        return this.interceptor(options);
+        return this.intercept(options);
     }
 
 }
