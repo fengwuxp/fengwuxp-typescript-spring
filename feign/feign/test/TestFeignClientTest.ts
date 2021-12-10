@@ -5,7 +5,6 @@ import ExampleFeignClient from "./ExampleFeignClient";
 import MockFeignConfigurationTest from "./MockFeignConfigurationTest";
 import {defaultApiModuleName} from "../src";
 
-
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
@@ -13,7 +12,6 @@ logger.level = 'debug';
 describe("test feign client", () => {
 
     const mockFeignConfiguration = new MockFeignConfigurationTest();
-
 
     const testFeignClient = new TestFeignClient();
     const exampleFeignClient = new ExampleFeignClient();

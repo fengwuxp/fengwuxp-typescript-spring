@@ -18,11 +18,16 @@ import {setRequestFeignClientMethodConfiguration, setRequestFeignConfiguration} 
 import {AuthenticationStrategy} from "./client/AuthenticationStrategy";
 import {parse} from "querystring";
 import {FeignConfiguration} from "./configuration/FeignConfiguration";
+import {Log4jLogger} from "./log/Log4jLogger";
+import DefaultLoggerFactory from "./log/Log4jApiDetector";
 
 /**
  * default feign client executor
  */
 export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
+
+    // 日志支持
+    private logger: Log4jLogger;
 
     private readonly apiService: T;
 
@@ -73,6 +78,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             requestHeaderResolver,
             defaultRequestContextOptions,
             defaultHeaders,
+            logger
         } = this;
 
         //original parameter
@@ -152,6 +158,14 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         setRequestFeignClientMethodConfiguration(feignRequestOptions, feignMethodConfig);
         setRequestFeignConfiguration(feignRequestOptions, this.feignConfiguration);
 
+        if (logger.isDebugEnabled()) {
+            logger.debug(`requestUrl: %s
+                          requestParams: %O
+                          requestHeaders: %O 
+                          requestBody: %O`,
+                requestURL, feignRequestOptions.queryParams, feignRequestOptions.headers, feignRequestOptions.body);
+        }
+
         // pre handle
         feignRequestOptions = await this.preHandle(feignRequestOptions, requestURL, requestMapping);
 
@@ -192,7 +206,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestContextOptions,
             getDefaultHttpHeaders,
-            getAuthenticationStrategy
+            getAuthenticationStrategy,
+            getLog4jFactory
         } = this.feignConfiguration;
 
         this.restTemplate = getRestTemplate();
@@ -216,6 +231,12 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
         if (getDefaultHttpHeaders) {
             this.defaultHeaders = getDefaultHttpHeaders();
+        }
+
+        if (getLog4jFactory) {
+            this.logger = getLog4jFactory().getLogger(DefaultFeignClientExecutor.name);
+        } else {
+            this.logger = DefaultLoggerFactory.getLogger(DefaultFeignClientExecutor.name)
         }
         this.initialized = true;
     }
@@ -281,7 +302,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
         return Promise.reject(result);
     };
-
 
     private getInterceptorHandle = (feignClientExecutorInterceptor,
                                     handle: Function,

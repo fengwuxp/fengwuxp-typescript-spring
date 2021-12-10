@@ -33,13 +33,6 @@ export const grabUrlPathVariable = /\{(.+?)\}/g;
 
 
 /**
- * request id header name
- * {@see DefaultFeignClientExecutor}
- */
-export const REQUEST_ID_HEADER_NAME = 'Ts-Feign-Request-Id';
-
-
-/**
  * mock unauthorized response
  */
 export const UNAUTHORIZED_RESPONSE = {

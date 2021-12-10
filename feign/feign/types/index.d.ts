@@ -1143,6 +1143,34 @@ interface SmartHttpResponseEventListener extends HttpResponseEventListener {
     onForbidden(handler: HttpResponseEventHandler): void;
 }
 
+declare enum LoggerLevel {
+    TRACE = "trace",
+    DEBUG = "debug",
+    INFO = "info",
+    WARN = "warn",
+    ERROR = "error"
+}
+
+interface Log4jLogger {
+    level: LoggerLevel;
+    log(...args: any[]): void;
+    isLevelEnabled(level?: LoggerLevel): boolean;
+    isTraceEnabled(): boolean;
+    isDebugEnabled(): boolean;
+    isInfoEnabled(): boolean;
+    isWarnEnabled(): boolean;
+    isErrorEnabled(): boolean;
+    trace(message: any, ...args: any[]): void;
+    debug(message: any, ...args: any[]): void;
+    info(message: any, ...args: any[]): void;
+    warn(message: any, ...args: any[]): void;
+    error(message: any, ...args: any[]): void;
+}
+
+interface FeignLog4jFactory {
+    getLogger: (category?: string) => Log4jLogger;
+}
+
 /**
  * feign configuration
  * since the method of changing the interface is called every time, it is necessary to implement memory.
@@ -1173,6 +1201,10 @@ interface FeignConfiguration {
      * get default request headers
      */
     getDefaultHttpHeaders?: () => Record<string, string>;
+    /**
+     * log4j support
+     */
+    getLog4jFactory?: () => FeignLog4jFactory;
 }
 declare type FeignConfigurationConstructor = {
     new (...args: any[]): FeignConfiguration;
@@ -2048,6 +2080,7 @@ declare const defaultFeignClientBuilder: FeignClientBuilderFunction;
  * default feign client executor
  */
 declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
+    private logger;
     private readonly apiService;
     private feignConfiguration;
     private requestURLResolver;

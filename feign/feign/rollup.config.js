@@ -23,6 +23,7 @@ const getConfig = (isProd) => {
         // https://rollupjs.org/guide/en#external-e-external
         external: [
             "core-js",
+            "log4js",
             "@babel/runtime-corejs3",
             "@abraham/reflection",
             "async-validator",

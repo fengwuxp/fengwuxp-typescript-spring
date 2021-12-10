@@ -28,6 +28,9 @@ import SimpleHttpResponseEventListener from "../../src/event/SimpleHttpResponseE
 import SimpleHttpResponseEventPublisher from "../../src/event/SimpleHttpResponseEventPublisher";
 import HttpErrorResponseEventPublisherExecutorInterceptor
     from '../../src/event/HttpErrorResponseEventPublisherExecutorInterceptor';
+import {FeignLog4jFactory} from "../../src/log/FeignLog4jFactory";
+import ConsoleLogger from "../../src/log/ConsoleLogger";
+import {AuthenticationStrategy} from "../../types";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -39,6 +42,9 @@ let refreshTokenCount = 0;
  * mock feign configuration
  */
 export class MockFeignConfiguration implements FeignConfiguration {
+    getAuthenticationStrategy(): AuthenticationStrategy {
+        return undefined;
+    }
 
     protected baseUrl: string = "http://test.ab.com/api/";
 
@@ -186,18 +192,16 @@ export class MockFeignConfiguration implements FeignConfiguration {
         ]
     };
 
-
-    getFeignUIToast = () => {
-        return (message: string) => {
-            logger.info("[getFeignUIToast]ui toast", message);
-        }
-    };
-
     getDefaultHttpHeaders = () => {
         return {
             "mock-key": "1122"
         }
     };
 
+    getLog4jFactory(): FeignLog4jFactory {
+        return {
+            getLogger: (category) => new ConsoleLogger(category)
+        }
+    }
 
 }

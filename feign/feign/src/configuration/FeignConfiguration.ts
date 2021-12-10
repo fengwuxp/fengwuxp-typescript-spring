@@ -11,6 +11,8 @@ import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor"
 import {FeignRequestContextOptions} from '../FeignRequestOptions';
 import {AuthenticationStrategy} from '../client/AuthenticationStrategy';
 import {HttpResponseEventPublisher, SmartHttpResponseEventListener} from "../event/HttpResponseEvent";
+import {Log4jLogger} from "../log/Log4jLogger";
+import {FeignLog4jFactory} from "../log/FeignLog4jFactory";
 
 /**
  * feign configuration
@@ -56,6 +58,10 @@ export interface FeignConfiguration {
      */
     getDefaultHttpHeaders?: () => Record<string, string>
 
+    /**
+     * log4j support
+     */
+    getLog4jFactory?: () => FeignLog4jFactory;
 }
 
 

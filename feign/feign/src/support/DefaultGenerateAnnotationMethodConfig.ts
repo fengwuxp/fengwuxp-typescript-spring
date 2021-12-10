@@ -2,7 +2,7 @@ import {FeignProxyClient} from "./FeignProxyClient";
 import {FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import {GenerateAnnotationMethodConfig} from "./GenerateAnnotationMethodConfig";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
-import Reflect from "../ReflectMetadata";
+import {Reflection as Reflect} from '@abraham/reflection';
 import {getFeignClientMethodConfig} from "../annotations/Feign";
 
 /**
@@ -11,13 +11,10 @@ import {getFeignClientMethodConfig} from "../annotations/Feign";
  * @param methodName
  * @param options
  */
-export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient,
-                                methodName: string,
-                                options: FeignClientMethodConfig) => {
+export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient, methodName: string, options: FeignClientMethodConfig) => {
 
     if (typeof targetService[methodName] !== "function") {
-        targetService[methodName] = function (...args) {
-        };
+        targetService[methodName] = function (...args) {};
     }
 
     const target = targetService.constructor;

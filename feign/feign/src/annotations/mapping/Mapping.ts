@@ -81,7 +81,6 @@ export interface RequestMappingOptions extends BaseRequestMappingOptions {
      */
     method: HttpMethod;
 
-
 }
 
 //url mapping 类型

@@ -87,7 +87,9 @@ export default class RestTemplate implements RestOperations {
                               headers?: Record<string, string>,
                               context?: HttpRequestContext): Promise<E> => {
 
-
+        if (context == null) {
+            context = {attributes: {}};
+        }
         // handle url and query params
         const {_uriTemplateHandler, _responseErrorHandler, businessResponseExtractor} = this;
 
