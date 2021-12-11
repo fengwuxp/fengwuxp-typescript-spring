@@ -43,7 +43,6 @@ export default class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpReque
         if (length == 0) {
             return;
         }
-        // console.log("等待队列的长度", length);
         let newQueue = [...waitQueue];
         //clear queue
         this.waitQueue = [];
@@ -52,7 +51,6 @@ export default class SimpleNoneNetworkFailBack<T extends HttpRequest = HttpReque
         newQueue.forEach(({request, resolve}) => {
             resolve(request);
         });
-        // console.log("处理等待队列中的个数", newQueue.length);
         newQueue = null;
     };
 

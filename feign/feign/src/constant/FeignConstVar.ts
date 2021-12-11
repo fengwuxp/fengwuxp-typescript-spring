@@ -5,6 +5,10 @@ import {HttpStatus} from "./http/HttpStatus";
  */
 export const defaultApiModuleName = "default";
 
+export const LB_SCHEMA = "lb://"
+
+export const HTTP_SCHEMA = "http://"
+
 /**
  * http header content type name
  */

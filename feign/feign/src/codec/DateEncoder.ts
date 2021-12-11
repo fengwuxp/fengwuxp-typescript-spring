@@ -1,7 +1,7 @@
 import {HttpRequestDataEncoder} from "./HttpRequestDataEncoder";
 import {FeignRequestOptions} from "../FeignRequestOptions";
-import {QueryParamType} from "../template/RestOperations";
 import {DateConverter, timeStampDateConverter} from './converter/DateConverter';
+import {QueryParamType} from "../template/RestOperations";
 
 
 /**
@@ -18,7 +18,7 @@ export default class DateEncoder<T extends FeignRequestOptions = FeignRequestOpt
 
     encode = async (request: T) => {
         request.queryParams = this.converterDate(request.queryParams);
-        request.body = this.converterDate(request.body);
+        request.body = this.converterDate(request.body as any);
         return request;
     };
 

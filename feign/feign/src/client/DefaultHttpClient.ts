@@ -9,6 +9,7 @@ import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpStatus} from "../constant/http/HttpStatus";
 import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpRequestInterceptor";
+import Log4jFactory from "../log/DefaultFeignLo4jFactory";
 
 /**
  * default http client
@@ -16,6 +17,8 @@ import MappedClientHttpRequestInterceptor from "../interceptor/MappedClientHttpR
  * Retry if needed {@see RetryHttpClient}
  */
 export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+
+    private static LOG = Log4jFactory.getLogger(DefaultHttpClient.name);
 
 
     /**
@@ -48,7 +51,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
                 httpRequest = await clientHttpRequestInterceptorInterface.intercept(httpRequest);
             } catch (e) {
                 // error ignore
-                console.error("http request interceptor handle exception", e);
+                DefaultHttpClient.LOG.error("http request interceptor handle exception", e);
                 // Interrupt request
                 if (e != null && e.statusCode != null && e.ok !== null) {
                     return Promise.reject(e);

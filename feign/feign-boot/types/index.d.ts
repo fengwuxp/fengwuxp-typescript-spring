@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, BusinessResponseExtractorFunction, FeignConfiguration } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, BusinessResponseExtractorFunction, FeignConfiguration, Log4jLevel } from 'fengwuxp-typescript-feign';
 
 /**
  * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
@@ -115,6 +115,8 @@ interface FeignConfigurer {
  * feign 配置初始化
  * @param configurer
  */
-declare const feignConfigurationInitialize: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">>;
+declare const feignConfigurationInitialize: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & {
+    setLoggerLevel: (level: Log4jLevel) => void;
+}>;
 
 export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurer, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitialize };

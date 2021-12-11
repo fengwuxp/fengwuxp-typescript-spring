@@ -1,7 +1,7 @@
 import {HttpMethod} from "../constant/http/HttpMethod";
 
 
-export type SupportSerializableBody = any;
+export type SupportSerializableBody = Record<string, any> | Array<any> | string | undefined;
 
 
 type HttpRequestIdGenerator = () => string;

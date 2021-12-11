@@ -12,38 +12,37 @@ import {replacePathVariableValue} from "../../helper/ReplaceUriVariableHelper";
 export const simpleRequestHeaderResolver: RequestHeaderResolver = (apiService: FeignProxyClient,
                                                                    methodName: string,
                                                                    headers: Record<string, string>,
-                                                                   data: UriVariable): Record<string, string> => {
+                                                                   data?: UriVariable): Record<string, string> => {
 
     const apiServiceConfig = apiService.getFeignMethodConfig(methodName);
     const requestMapping = apiServiceConfig.requestMapping;
-    if (requestMapping == null) {
-        return headers;
+    if (requestMapping == null || data == null) {
+        return headers ?? {};
     }
-    const newHeaders = {
-        ...headers
-    };
-    const configHeaders = requestMapping.headers;
-    const produces = requestMapping.produces;
+    const newHeaders = {...headers};
+    const mappingHeaders = requestMapping.headers;
 
-    //marge headers
-    for (const key in configHeaders) {
-        const headerValue = configHeaders[key];
-        if (headerValue == null) {
+    // marge headers
+    for (const key in mappingHeaders) {
+        const headerValue = mappingHeaders[key];
+        if (headerValue == null || newHeaders[key] != null) {
+            // key不存在 或 已经解析过了
             continue;
-        } else if (typeof headerValue === "string") {
+        }
+
+        if (typeof headerValue === "string") {
             newHeaders[key] = replacePathVariableValue(headerValue, data);
         } else if (Array.isArray(headerValue)) {
             newHeaders[key] = headerValue.join(";");
         } else {
             newHeaders[key] = headerValue + "";
         }
-
     }
+    const produces = requestMapping.produces;
     if (produces != null) {
         newHeaders[contentTypeName] = produces[0];
     }
 
-    //return new headers
     return newHeaders;
 };
 

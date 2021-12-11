@@ -1,12 +1,12 @@
-import {LoggerLevel} from "./LoggerLevel";
+import Log4jLevel from "./Log4jLevel";
 
 export interface Log4jLogger {
 
-    level: LoggerLevel;
+    level: Log4jLevel;
 
     log(...args: any[]): void;
 
-    isLevelEnabled(level?: LoggerLevel): boolean;
+    isLevelEnabled(level?: string): boolean;
 
     isTraceEnabled(): boolean;
 

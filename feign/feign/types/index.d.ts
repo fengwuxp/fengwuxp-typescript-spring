@@ -19,7 +19,7 @@ declare enum HttpMethod {
     CONNECT = "CONNECT"
 }
 
-declare type SupportSerializableBody = any;
+declare type SupportSerializableBody = Record<string, any> | Array<any> | string | undefined;
 /**
  * 请求上下文
  */
@@ -673,7 +673,7 @@ declare type RequestURLResolver = (apiService: FeignProxyClient, methodName: str
 /**
  * resolve request header
  */
-declare type RequestHeaderResolver = (apiService: FeignProxyClient, methodName: string, headers: Record<string, string>, data: UriVariable) => Record<string, string>;
+declare type RequestHeaderResolver = (apiService: FeignProxyClient, methodName: string, headers: Record<string, string>, data: UriVariable | object) => Record<string, string>;
 
 /**
  * http media type
@@ -1143,18 +1143,24 @@ interface SmartHttpResponseEventListener extends HttpResponseEventListener {
     onForbidden(handler: HttpResponseEventHandler): void;
 }
 
-declare enum LoggerLevel {
-    TRACE = "trace",
-    DEBUG = "debug",
-    INFO = "info",
-    WARN = "warn",
-    ERROR = "error"
+declare class Log4jLevel {
+    static NONE: Log4jLevel;
+    static TRACE: Log4jLevel;
+    static DEBUG: Log4jLevel;
+    static INFO: Log4jLevel;
+    static WARN: Log4jLevel;
+    static ERROR: Log4jLevel;
+    readonly name: string;
+    readonly level: number;
+    private constructor();
+    static getLogLevel: (level: string) => number;
+    static of(name: string, level: number): Log4jLevel;
 }
 
 interface Log4jLogger {
-    level: LoggerLevel;
+    level: Log4jLevel;
     log(...args: any[]): void;
-    isLevelEnabled(level?: LoggerLevel): boolean;
+    isLevelEnabled(level?: string): boolean;
     isTraceEnabled(): boolean;
     isDebugEnabled(): boolean;
     isInfoEnabled(): boolean;
@@ -1169,6 +1175,7 @@ interface Log4jLogger {
 
 interface FeignLog4jFactory {
     getLogger: (category?: string) => Log4jLogger;
+    getRootLogger: () => Log4jLogger;
 }
 
 /**
@@ -1279,6 +1286,7 @@ declare abstract class AbstractHttpClient<T extends HttpRequest = HttpRequest> i
  * Retry if needed {@see RetryHttpClient}
  */
 declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+    private static LOG;
     /**
      * In order to support different js runtime environments, the following parameters need to be provided
      * @param httpAdapter           Request adapters for different platforms
@@ -1295,6 +1303,7 @@ declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends Abs
  * HttpClient with retry, need to be recreated each time you use this client
  */
 declare class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+    private static LOG;
     private readonly retryOptions;
     private countRetry;
     private retryEnd;
@@ -1321,7 +1330,7 @@ declare class RetryHttpClient<T extends HttpRequest = HttpRequest> extends Abstr
 
 /**
  * If the url starts with @xxx, replace 'xxx' with the value of name='xxx' in the routeMapping
- * example url='@memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
+ * example url='lb://memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
  */
 declare class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> implements ClientHttpRequestInterceptorInterface<T> {
     /**
@@ -1742,6 +1751,32 @@ declare class MappedClientHttpRequestInterceptor<T extends HttpRequest = HttpReq
     intercept: (req: T) => Promise<T>;
 }
 
+declare abstract class AbstractLog4jLogger implements Log4jLogger {
+    protected readonly category: string;
+    level: Log4jLevel;
+    protected constructor(category?: string, level?: Log4jLevel);
+    isLevelEnabled(level: string): boolean;
+    isDebugEnabled(): boolean;
+    isErrorEnabled(): boolean;
+    isInfoEnabled(): boolean;
+    isTraceEnabled(): boolean;
+    isWarnEnabled(): boolean;
+    abstract log(...args: any[]): void;
+    debug(message: any, ...args: any[]): void;
+    error(message: any, ...args: any[]): void;
+    info(message: any, ...args: any[]): void;
+    trace(message: any, ...args: any[]): void;
+    warn(message: any, ...args: any[]): void;
+}
+
+declare class ConsoleLogger extends AbstractLog4jLogger {
+    constructor(category?: string, level?: Log4jLevel);
+    log(...args: any[]): void;
+}
+
+declare let defaultFeignLo4jFactory: FeignLog4jFactory;
+declare const setDefaultFeignLo4jFactory: (factory: FeignLog4jFactory) => void;
+
 /**
  * resolve response data converter to HttpResponse
  */
@@ -2080,7 +2115,7 @@ declare const defaultFeignClientBuilder: FeignClientBuilderFunction;
  * default feign client executor
  */
 declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
-    private logger;
+    private static LOG;
     private readonly apiService;
     private feignConfiguration;
     private requestURLResolver;
@@ -2093,7 +2128,6 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
     private defaultHeaders;
     /**
      * 是否已经初始化
-     * @protected
      */
     private initialized;
     constructor(apiService: T);
@@ -2102,11 +2136,18 @@ declare class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxy
      *  init feign client executor
      * @param apiService
      */
-    private init;
+    private initialize;
     private preHandle;
     private postHandle;
     private postHandleError;
     private getInterceptorHandle;
+    private validateRequestParams;
+    private buildFeignRequest;
+    private resolveRequestBody;
+    private resolveQueryPrams;
+    private resolveRequestMappingParams;
+    private resolverRequestHeaders;
+    private configureRequestContext;
 }
 
 /**
@@ -2131,4 +2172,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractHttpClient, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpErrorResponseEventPublisherExecutorInterceptor, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpResponseEventHandler, HttpResponseEventHandlerSupplier, HttpResponseEventListener, HttpResponseEventPublisher, HttpRetryOptions, HttpStatus, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleHttpResponseEventListener, SimpleHttpResponseEventPublisher, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, SmartHttpResponseEventListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getRequestFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractHttpClient, AbstractLog4jLogger, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, ConsoleLogger, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, defaultFeignLo4jFactory as DefaultFeignLog4jFactory, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignLog4jFactory, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpErrorResponseEventPublisherExecutorInterceptor, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpResponseEventHandler, HttpResponseEventHandlerSupplier, HttpResponseEventListener, HttpResponseEventPublisher, HttpRetryOptions, HttpStatus, Log4jLevel, Log4jLogger, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleHttpResponseEventListener, SimpleHttpResponseEventPublisher, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, SmartHttpResponseEventListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultGenerateAnnotationMethodConfig, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getRequestFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, setDefaultFeignLo4jFactory, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };

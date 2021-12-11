@@ -2,11 +2,13 @@ import {FeignConfigurer} from "./FeignConfigurer";
 import {
     defaultApiModuleName,
     DefaultFeignClientExecutor,
+    DefaultFeignLog4jFactory,
     DefaultHttpClient,
     FeignConfiguration,
     FeignConfigurationRegistry,
     FeignProxyClient,
     HttpResponseEventPublisher,
+    Log4jLevel,
     RestTemplate,
     SimpleHttpResponseEventListener,
     SimpleHttpResponseEventPublisher,
@@ -82,11 +84,12 @@ const getApiModule = (configurer: FeignConfigurer): string => {
  * @param configurer
  */
 export const feignConfigurationInitialize = (configurer: FeignConfigurer):
-    Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener">> => {
+    Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & { setLoggerLevel: (level: Log4jLevel) => void }> => {
     const feignConfiguration = buildConfiguration(configurer);
     FeignConfigurationRegistry.setFeignConfiguration(getApiModule(configurer), feignConfiguration);
     return {
         getRestTemplate: feignConfiguration.getRestTemplate,
         getHttpResponseEventListener: feignConfiguration.getHttpResponseEventListener,
+        setLoggerLevel: (level: Log4jLevel) => DefaultFeignLog4jFactory.getRootLogger().level = level,
     };
 };

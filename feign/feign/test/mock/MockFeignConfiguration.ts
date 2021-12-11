@@ -29,8 +29,8 @@ import SimpleHttpResponseEventPublisher from "../../src/event/SimpleHttpResponse
 import HttpErrorResponseEventPublisherExecutorInterceptor
     from '../../src/event/HttpErrorResponseEventPublisherExecutorInterceptor';
 import {FeignLog4jFactory} from "../../src/log/FeignLog4jFactory";
-import ConsoleLogger from "../../src/log/ConsoleLogger";
 import {AuthenticationStrategy} from "../../types";
+import log4jFactory from "../../src/log/DefaultFeignLo4jFactory";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -199,9 +199,7 @@ export class MockFeignConfiguration implements FeignConfiguration {
     };
 
     getLog4jFactory(): FeignLog4jFactory {
-        return {
-            getLogger: (category) => new ConsoleLogger(category)
-        }
+        return log4jFactory
     }
 
 }

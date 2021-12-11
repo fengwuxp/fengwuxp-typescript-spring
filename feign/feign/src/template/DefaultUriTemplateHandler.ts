@@ -21,12 +21,12 @@ export const defaultUriTemplateFunctionHandler: UriTemplateHandlerFunction = (ur
     }
     const [uri, queryString] = uriTemplate.split("?");
     const hasQueryString = queryString != null;
-    const newUrl = `${uri}?${queryStringify(uriVariables as any)}`;
+    const newUri = `${uri}?${queryStringify(uriVariables as any)}`;
 
     if (hasQueryString) {
-        return hasQueryString ? `${newUrl}&${queryString}` : newUrl;
+        return hasQueryString ? `${newUri}&${queryString}` : newUri;
     }
-    return newUrl;
+    return newUri;
 
 };
 

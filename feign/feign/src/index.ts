@@ -94,6 +94,13 @@ export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";
 export {default as MappedClientHttpRequestInterceptor} from "./interceptor/MappedClientHttpRequestInterceptor";
 
+export {AbstractLog4jLogger} from "./log/AbstractLog4jLogger"
+export {default as ConsoleLogger} from "./log/ConsoleLogger"
+export {FeignLog4jFactory} from "./log/FeignLog4jFactory"
+export {default as DefaultFeignLog4jFactory, setDefaultFeignLo4jFactory} from "./log/DefaultFeignLo4jFactory"
+export {default as Log4jLevel} from "./log/Log4jLevel"
+export {Log4jLogger} from "./log/Log4jLogger"
+
 export {ResolveHttpResponse} from "./resolve/ResolveHttpResponse";
 export {default as CommonResolveHttpResponse} from "./resolve/CommonResolveHttpResponse";
 export {RequestHeaderResolver} from "./resolve/header/RequestHeaderResolver";

@@ -6,7 +6,7 @@ import {appendRouteMapping, parseRequestUrl} from "../context/RquestUrlMappingHo
 
 /**
  * If the url starts with @xxx, replace 'xxx' with the value of name='xxx' in the routeMapping
- * example url='@memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
+ * example url='lb://memberModule/find_member  routeMapping = {memberModule:"http://test.a.b.com/member"} ==> 'http://test.a.b.com/member/find_member'
  */
 export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest>
     implements ClientHttpRequestInterceptorInterface<T> {
@@ -14,8 +14,6 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
     /**
      * mapping between api module and url
      */
-    // protected routeMapping: Record<string, string>;
-
     constructor(routeMapping: Record<string, string> | string) {
         if (typeof routeMapping === "string") {
             const defaultMap: Record<string, string> = {};
@@ -23,7 +21,6 @@ export default class RoutingClientHttpRequestInterceptor<T extends HttpRequest =
             routeMapping = defaultMap;
         }
         appendRouteMapping(routeMapping);
-        // this.routeMapping = routeMapping;
     }
 
     intercept = async (req: T) => {

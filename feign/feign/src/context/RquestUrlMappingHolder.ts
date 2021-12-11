@@ -1,3 +1,5 @@
+import {HTTP_SCHEMA, LB_SCHEMA} from "../constant/FeignConstVar";
+
 /**
  * 路由配置
  * @key  模块名称
@@ -6,42 +8,33 @@
 const ROUTE_MAPPING: Record<string, string> = {};
 
 /**
- * 路由缓存
- * @key  module name
- * @value real url
- */
-const ROUTE_CACHE: Map<string, string> = new Map<string, string>();
-
-/**
  * 根据 {@see ROUTE_MAPPING} 的配置进行url合并
  * @param url             请求的url  格式 @模块名称/uri==>  例如：'@default/api/xxx/test'
  * @param routeMapping    路由配置
  */
 const routing = (url: string, routeMapping: Record<string, string>) => {
-    if (/^(http|https)/.test(url)) {
-        //uri
+    if (/^(http:\/\/|https:\/\/)/.test(url)) {
+        // uri
         return normalizeUrl(url);
     }
-    // if (!/^(@)/.test(url)) {
-    if (!url.startsWith("@")) {
+
+    if (!url.startsWith(LB_SCHEMA)) {
         throw  new Error(`illegal routing url -> ${url}`);
     }
-    let realUrl = ROUTE_CACHE.get(url);
-    if (realUrl != null) {
-        return realUrl;
+
+    const _url = new URL(url.replace(LB_SCHEMA, HTTP_SCHEMA));
+    // TODO 增加负载均衡支持
+    const serviceId = _url.host
+    const serviceUri = routeMapping[serviceId];
+    if (serviceUri.startsWith("/")){
+        return normalizeUrl(`${serviceUri}/${_url.pathname}${_url.search}`);
     }
-    //抓取api模块名称并且进行替换
-    const searchValue = /^@(.+?)\//;
-    realUrl = normalizeUrl(url.replace(searchValue, ($1, $2) => {
-        const domain = routeMapping[$2];
-        if (domain == null) {
-            return "";
-        }
-        return domain.endsWith("/") ? domain : `${domain}/`;
-    }));
-    ROUTE_CACHE.set(url, realUrl);
-    return realUrl;
+    const routeUrl = new URL(serviceUri);
+    _url.host = routeUrl.host;
+    _url.pathname = `${routeUrl.pathname}${_url.pathname}`;
+    return normalizeUrl(_url.toString());
 };
+
 
 /**
  * Remove duplicate slashes if not preceded by a protocol
@@ -61,7 +54,6 @@ const normalizeUrl = (url: string): string => {
  * @param url  example: @default/api/xxx
  */
 export const parseRequestUrl = (url: string) => {
-
     return routing(url, ROUTE_MAPPING)
 };
 

@@ -59,7 +59,7 @@ export const replacePathVariableValue = (uriTemplate: string, uriVariables: UriV
     // replace path variable
     uriTemplate = uriTemplate.replace(grabUrlPathVariable, replaceUriVariableValue(uriVariables, uriVariablesIsArray));
     if (Object.keys(uriVariables).length === 0) {
-        //if uriVariables is empty return,else handle queryString
+        // if uriVariables is empty return,else handle queryString
         return uriTemplate;
     }
     return uriTemplate

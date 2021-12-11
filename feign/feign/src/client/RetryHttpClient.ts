@@ -5,12 +5,15 @@ import {HttpAdapter} from "../adapter/HttpAdapter";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {ClientHttpRequestInterceptor} from "./ClientHttpRequestInterceptor";
+import Log4jFactory from "../log/DefaultFeignLo4jFactory";
 
 /**
  * support retry http client
  * HttpClient with retry, need to be recreated each time you use this client
  */
 export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extends AbstractHttpClient<T> {
+
+    private static LOG = Log4jFactory.getLogger(RetryHttpClient.name);
 
     // retry options
     private readonly retryOptions: HttpRetryOptions;
@@ -43,7 +46,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
             const httpAdapter = this.httpAdapter;
             const result: Promise<HttpResponse> = httpAdapter.send(req).catch((response) => {
                 // try retry
-                console.log("request failure , ready to retry", response);
+                RetryHttpClient.LOG.debug("request failure , ready to retry", response);
                 return this.tryRetry(req, response);
             });
 
@@ -56,7 +59,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
             result.then(resolve)
                 .catch(reject)
                 .finally(() => {
-                    console.log("clear timeout", timerId);
+                    RetryHttpClient.LOG.debug("clear timeout", timerId);
                     clearTimeout(timerId);
                 });
         });
@@ -77,11 +80,11 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
         return new Promise<HttpResponse>((resolve, reject) => {
             const errorHandle = (resp) => {
                 if (this.countRetry === retries) {
-                    console.log("request to reach the maximum number of retries", retries);
+                    RetryHttpClient.LOG.debug("request to reach the maximum number of retries", retries);
                     reject(`retry end，count ${retries}`);
                     return
                 }
-                console.log(`ready to start the ${this.countRetry + 1} retry after ${_delay} milliseconds`, resp);
+                RetryHttpClient.LOG.debug(`ready to start the ${this.countRetry + 1} retry after ${_delay} milliseconds`, resp);
 
                 setTimeout(() => {
                     if (this.retryEnd) {
@@ -92,7 +95,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
                         if (when(error)) {
                             errorHandle(error);
                         } else {
-                            console.log("give up retry ");
+                            RetryHttpClient.LOG.debug("give up retry ");
                             reject(error);
                         }
                     });
@@ -119,7 +122,7 @@ export default class RetryHttpClient<T extends HttpRequest = HttpRequest> extend
      * @param response
      */
     private whenRetry = (response: HttpResponse): boolean => {
-        console.log("when retry", response);
+        RetryHttpClient.LOG.debug("when retry", response);
         const httpCode = response.statusCode;
         if (httpCode == null) {
             return true;

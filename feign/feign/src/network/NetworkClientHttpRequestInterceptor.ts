@@ -117,7 +117,6 @@ export default class NetworkClientHttpRequestInterceptor<T extends HttpRequest =
             return Promise.reject(req);
         }
         while (tryWaitNetworkCount-- > 0 && (this.networkStatus == null || !this.networkStatus.isConnected)) {
-            // console.log("自旋等待网络恢复");
             let times = spinWaitMaxTimes * Math.random();
             if (times < 120) {
                 times = 120;

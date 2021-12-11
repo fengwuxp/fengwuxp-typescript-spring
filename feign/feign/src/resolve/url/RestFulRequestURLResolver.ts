@@ -3,6 +3,7 @@ import {RequestURLResolver} from "./RequestURLResolver";
 import {FeignMemberOptions} from "../../annotations/Feign";
 import {FeignProxyClient} from "../../support/FeignProxyClient";
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
+import {LB_SCHEMA} from "../../constant/FeignConstVar";
 
 /**
  * restful request url resolver
@@ -29,7 +30,7 @@ export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions
         return `${url}`;
     }
     const serviceName = apiService.serviceName();
-    return `@${apiModule}${serviceName.startsWith("/") ? serviceName : "/" + serviceName}`;
+    return `${LB_SCHEMA}${apiModule}${serviceName.startsWith("/") ? serviceName : "/" + serviceName}`;
 };
 
 
