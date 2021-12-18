@@ -2,7 +2,7 @@
  * 数据混淆配置
  */
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 
 
 export interface DataObfuscationOptions {
@@ -33,7 +33,7 @@ export const DataObfuscation = <T extends FeignClient>(options: DataObfuscationO
      * @param  {PropertyDescriptor} descriptor   装饰的对象的描述对象
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
-        defaultGenerateAnnotationMethodConfig(target, name, {
+        registerAnnotationMetadata(target, name, {
             dataObfuscationOptions: options
         });
         return target;

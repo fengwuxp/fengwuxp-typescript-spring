@@ -1,5 +1,5 @@
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 import {HttpRetryOptions} from "../../client/HttpRetryOptions";
 
 
@@ -24,7 +24,7 @@ export const FeignRetry = <T extends FeignClient>(options: HttpRetryOptions): Fu
      * @param  {PropertyDescriptor} descriptor   装饰的对象的描述对象
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
-        defaultGenerateAnnotationMethodConfig(target, name, {
+        registerAnnotationMetadata(target, name, {
             retryOptions: {
                 ...defaultOptions,
                 ...options

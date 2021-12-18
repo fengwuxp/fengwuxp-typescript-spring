@@ -114,7 +114,7 @@ export {ApiSignatureStrategy, SimpleApiSignatureStrategy} from "./signature/ApiS
 export {FeignClientMethodConfig} from "./support/FeignClientMethodConfig";
 export {FeignProxyClient} from "./support/FeignProxyClient";
 export {GenerateAnnotationMethodConfig} from "./support/GenerateAnnotationMethodConfig";
-export {defaultGenerateAnnotationMethodConfig} from "./support/DefaultGenerateAnnotationMethodConfig";
+export {registerAnnotationMetadata} from "./support/AnnotationMetadataRegister";
 
 export {
     objectResponseExtractor, voidResponseExtractor, headResponseExtractor, optionsMethodResponseExtractor

@@ -1,5 +1,5 @@
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 
 /**
  * 缓存配置
@@ -41,7 +41,7 @@ export function CachePut<T extends FeignClient>(options: CachePutOptions): Funct
      * @param  {PropertyDescriptor} descriptor   装饰的对象的描述对象
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
-        defaultGenerateAnnotationMethodConfig(target, name, {
+        registerAnnotationMetadata(target, name, {
             cacheOptions: options
         });
         return target;

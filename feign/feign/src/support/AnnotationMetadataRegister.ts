@@ -6,12 +6,12 @@ import {Reflection as Reflect} from '@abraham/reflection';
 import {getFeignClientMethodConfig} from "../annotations/Feign";
 
 /**
- * 默认的代理服务方法配置生成
+ * 注册注解（装饰器）元数据
  * @param targetService
  * @param methodName
  * @param options
  */
-export const defaultGenerateAnnotationMethodConfig: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient, methodName: string, options: FeignClientMethodConfig) => {
+export const registerAnnotationMetadata: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient, methodName: string, options: FeignClientMethodConfig) => {
 
     if (typeof targetService[methodName] !== "function") {
         targetService[methodName] = function (...args) {};

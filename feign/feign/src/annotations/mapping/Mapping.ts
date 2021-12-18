@@ -1,6 +1,6 @@
 import {HttpMethod} from "../../constant/http/HttpMethod";
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 import {AuthenticationType} from "../../constant/AuthenticationType";
 
 
@@ -65,7 +65,6 @@ export interface BaseRequestMappingOptions {
     /**
      * 接口认证类型
      *  {@see AuthenticationClientHttpRequestInterceptor#intercept}
-     *  {@see DefaultFeignClientExecutor#tryCheckAuthorizedStatus}
      *  可以通过自定义拦截器处理该字段
      */
     authenticationType?: RequestAuthenticationType;
@@ -83,7 +82,9 @@ export interface RequestMappingOptions extends BaseRequestMappingOptions {
 
 }
 
-//url mapping 类型
+/**
+ * url mapping 类型
+ */
 export type Mapping<T extends BaseRequestMappingOptions = BaseRequestMappingOptions> = (options: T) => Function;
 
 /**
@@ -110,7 +111,7 @@ export function generateMapping<T extends BaseRequestMappingOptions>(method?: Ht
                 ...(options as any)
             };
 
-            defaultGenerateAnnotationMethodConfig(target, name, {
+            registerAnnotationMetadata(target, name, {
                 requestMapping
             });
             return target;

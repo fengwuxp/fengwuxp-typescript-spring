@@ -1,5 +1,5 @@
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 import {ValidatorDescriptor} from "../../validator/ClientRequestDataValidator";
 
 
@@ -22,7 +22,7 @@ export const ValidateSchema = <O = any, T extends FeignClient = FeignClient>(opt
      * @param  {PropertyDescriptor} descriptor   装饰的对象的描述对象
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
-        defaultGenerateAnnotationMethodConfig(target, name, {
+        registerAnnotationMetadata(target, name, {
             validateSchemaOptions: options
         });
         return target;

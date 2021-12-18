@@ -1,5 +1,5 @@
 import {FeignClient} from "../../FeignClient";
-import {defaultGenerateAnnotationMethodConfig} from "../../support/DefaultGenerateAnnotationMethodConfig";
+import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegister";
 
 /**
  * 需要自动上传配置
@@ -31,7 +31,7 @@ export const FileUpload = <REQ = any, T extends FeignClient = FeignClient>(optio
      * @param  {PropertyDescriptor} descriptor   装饰的对象的描述对象
      */
     return function (target: T, name: string, descriptor: PropertyDescriptor): T {
-        defaultGenerateAnnotationMethodConfig(target, name, {
+        registerAnnotationMetadata(target, name, {
             fileUploadOptions: options
         });
         return target;
