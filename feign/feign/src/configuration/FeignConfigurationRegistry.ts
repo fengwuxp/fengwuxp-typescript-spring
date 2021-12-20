@@ -1,7 +1,8 @@
 import {FeignConfiguration, FeignConfigurationConstructor} from "./FeignConfiguration";
 import {FeignClientBuilder} from "../FeignClientBuilder";
-import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 import memoize from "lodash/memoize";
+import {FeignClientType} from "../annotations/Feign";
+import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 
 
 // ignore memorization method names
@@ -64,7 +65,7 @@ const CONFIGURATION_CACHES: { [key: string]: FeignConfiguration } = {};
 /**
  * feign builder
  */
-let DEFAULT_FEIGN_BUILDER: FeignClientBuilder = null;
+const FEIGN_CLIENT_BUILDER_CACHES: Array<FeignClientBuilder> = [defaultFeignClientBuilder, null];
 
 const registry = {
 
@@ -89,12 +90,16 @@ const registry = {
         return new Promise<FeignConfiguration>(resolve => getWaitConfigurationQueue(apiModule).push(resolve));
     },
 
-    setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void {
-        DEFAULT_FEIGN_BUILDER = feignClientBuilder;
+    setFeignClientBuilder(type: FeignClientType, feignClientBuilder: FeignClientBuilder): void {
+        FEIGN_CLIENT_BUILDER_CACHES[type] = feignClientBuilder;
     },
 
-    getFeignClientBuilder(): FeignClientBuilder {
-        return DEFAULT_FEIGN_BUILDER || defaultFeignClientBuilder
+    getFeignClientBuilder(type: FeignClientType): FeignClientBuilder {
+        const builder = FEIGN_CLIENT_BUILDER_CACHES[type];
+        if (builder == null) {
+            throw new Error(`not found type = ${type} client builder`);
+        }
+        return builder;
     }
 };
 /**

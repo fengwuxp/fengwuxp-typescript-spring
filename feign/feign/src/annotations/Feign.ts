@@ -8,6 +8,13 @@ import {FeignClientBuilder, FeignClientBuilderInterface} from "../FeignClientBui
 import {Reflection as Reflect} from '@abraham/reflection';
 
 
+export enum FeignClientType {
+
+    HTTP,
+
+    WS
+}
+
 export interface FeignOptions {
 
     /**
@@ -38,6 +45,11 @@ export interface FeignOptions {
      */
     configuration?: FeignConfigurationConstructor;
 
+    /**
+     * client type
+     * default: FeignClientType#HTTP
+     */
+    type?: FeignClientType
 }
 
 export interface FeignMemberOptions extends Pick<FeignOptions, Exclude<keyof FeignOptions, "configuration">> {
@@ -83,16 +95,16 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                     apiModule: options.apiModule || defaultApiModuleName,
                     value: options.value,
                     url: options.url,
-                    configuration: undefined
+                    configuration: undefined,
+                    type: options.type == null ? FeignClientType.HTTP : options.type
                 };
 
                 this._serviceName = feignOptions.value || clazz.name;
                 this._feignOptions = feignOptions;
-                //build feign client instance
-                const feignClientBuilder: FeignClientBuilder = FeignConfigurationRegistry.getFeignClientBuilder();
+                // build feign client instance
+                const feignClientBuilder: FeignClientBuilder = FeignConfigurationRegistry.getFeignClientBuilder(feignOptions.type);
                 return invokeFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
             }
-
 
             readonly serviceName = () => {
                 return this._serviceName
@@ -113,9 +125,7 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
                 }
                 this._feignOptions.configuration = feignConfiguration;
                 return feignConfiguration;
-
             };
-
 
             /**
              * 获取获取接口方法的配置
@@ -124,7 +134,6 @@ export const Feign = <T extends FeignProxyClient = FeignProxyClient>(options: Fe
             public getFeignMethodConfig = (serviceMethod: string): FeignClientMethodConfig => {
                 return getFeignClientMethodConfig(clazz, serviceMethod);
             };
-
         }
     }
 };

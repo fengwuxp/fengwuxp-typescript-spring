@@ -14,7 +14,7 @@ import {getFeignClientMethodConfig} from "../annotations/Feign";
 export const registerAnnotationMetadata: GenerateAnnotationMethodConfig = (targetService: FeignProxyClient, methodName: string, options: FeignClientMethodConfig) => {
 
     if (typeof targetService[methodName] !== "function") {
-        targetService[methodName] = function (...args) {};
+        targetService[methodName]=function (...args) {}
     }
 
     const target = targetService.constructor;

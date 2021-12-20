@@ -118,7 +118,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // post handle
-        return await this.postHandle(requestURL, requestMapping, feignRequestOptions, httpResponse);
+        return this.postHandle(requestURL, requestMapping, feignRequestOptions, httpResponse);
     };
 
     /**
@@ -138,8 +138,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestContextOptions,
             getDefaultHttpHeaders,
-            getAuthenticationStrategy,
-            getLog4jFactory
+            getAuthenticationStrategy
         } = this.feignConfiguration;
 
         this.restTemplate = getRestTemplate();
@@ -258,23 +257,21 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     private validateRequestParams = (requestParameter, methodName: string): Promise<void> => {
         const validateSchemaOptions = this.apiService.getFeignMethodConfig(methodName).validateSchemaOptions;
-
         if (validateSchemaOptions == null) {
             return Promise.resolve();
         }
-        try {
-            // request data validate
-            return ClientRequestDataValidatorHolder.validate(requestParameter, validateSchemaOptions);
-        } catch (error) {
+
+        // request data validate
+        return ClientRequestDataValidatorHolder.validate(requestParameter, validateSchemaOptions).catch(error => {
             // validate error
-            DefaultFeignClientExecutor.LOG.debug("validate request params failure, request: %O", requestParameter, error)
+            DefaultFeignClientExecutor.LOG.debug("validate request params failure, request: %O", requestParameter, error);
             return Promise.reject(error);
-        }
+        });
     }
 
     private buildFeignRequest = (originalParameter: any, options: FeignRequestOptions, methodName: string): FeignRequestOptions => {
         const {defaultRequestContextOptions, apiService, apiSignatureStrategy} = this;
-        const feignMethodConfig = this.apiService.getFeignMethodConfig(methodName);
+        const feignMethodConfig = apiService.getFeignMethodConfig(methodName);
         const {requestMapping, signature} = feignMethodConfig;
 
         const feignRequest: FeignRequestOptions = {

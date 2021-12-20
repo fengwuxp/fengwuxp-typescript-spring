@@ -31,8 +31,7 @@ export const defaultFeignClientBuilder: FeignClientBuilderFunction = <T extends 
         }, null,
         ProxyScope.METHOD,
         (object, key) => {
-            const isIgnore = ignorePropertyNames.some((item) => item === key);
-            return !isIgnore;
+            return !ignorePropertyNames.includes(key)
         }
     );
 };

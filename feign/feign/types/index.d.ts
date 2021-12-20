@@ -882,13 +882,13 @@ interface SimpleApiSignatureStrategy extends ApiSignatureStrategy {
 /**
  * feign client executor
  */
-interface FeignClientExecutor<T extends FeignClient = FeignProxyClient> {
+interface FeignClientExecutor<T extends FeignClient = FeignProxyClient, R = Promise<any>> {
     /**
      * execute proxy service method
      * @param methodName   method name
-     * @param args        method params
+     * @param args  method params
      */
-    invoke: (methodName: string, ...args: any[]) => Promise<any>;
+    invoke: (methodName: string, ...args: any[]) => R;
 }
 
 /**
@@ -1219,6 +1219,10 @@ declare type FeignConfigurationConstructor = {
     new (...args: any[]): FeignConfiguration;
 };
 
+declare enum FeignClientType {
+    HTTP = 0,
+    WS = 1
+}
 interface FeignOptions {
     /**
      * 所属的api模块
@@ -1244,6 +1248,11 @@ interface FeignOptions {
      * feign configuration
      */
     configuration?: FeignConfigurationConstructor;
+    /**
+     * client type
+     * default: FeignClientType#HTTP
+     */
+    type?: FeignClientType;
 }
 interface FeignMemberOptions extends Pick<FeignOptions, Exclude<keyof FeignOptions, "configuration">> {
     /**
@@ -1601,8 +1610,8 @@ declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> =
 declare const registry: {
     setFeignConfiguration(apiModule: string, configuration: FeignConfiguration): void;
     getFeignConfiguration(apiModule: string): Promise<Readonly<FeignConfiguration>>;
-    setFeignClientBuilder(feignClientBuilder: FeignClientBuilder): void;
-    getFeignClientBuilder(): FeignClientBuilder;
+    setFeignClientBuilder(type: FeignClientType, feignClientBuilder: FeignClientBuilder): void;
+    getFeignClientBuilder(type: FeignClientType): FeignClientBuilder;
 };
 
 /**
@@ -1815,7 +1824,7 @@ declare const simpleRequestURLResolver: RequestURLResolver;
 declare type GenerateAnnotationMethodConfig<T extends FeignClient = FeignClient, O extends FeignClientMethodConfig = FeignClientMethodConfig> = (targetService: T, methodName: string, options: O) => void;
 
 /**
- * 默认的代理服务方法配置生成
+ * 注册注解（装饰器）元数据
  * @param targetService
  * @param methodName
  * @param options
