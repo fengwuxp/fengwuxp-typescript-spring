@@ -17,7 +17,7 @@ import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValid
 import {setRequestFeignClientMethodConfiguration, setRequestFeignConfiguration} from "./context/RequestContextHolder"
 import {AuthenticationStrategy} from "./client/AuthenticationStrategy";
 import {parse} from "querystring";
-import {FeignConfiguration} from "./configuration/FeignConfiguration";
+import {FeignHttpConfiguration} from "./configuration/FeignHttpConfiguration";
 import {SupportSerializableBody} from "./client/HttpRequest";
 import {HttpMethod} from "./constant/http/HttpMethod";
 import {FeignClientMethodConfig} from "./support/FeignClientMethodConfig";
@@ -32,7 +32,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     private readonly apiService: T;
 
-    private feignConfiguration: Readonly<FeignConfiguration>;
+    private feignConfiguration: Readonly<FeignHttpConfiguration>;
 
     // request url resolver
     private requestURLResolver: RequestURLResolver = restfulRequestURLResolver;
@@ -129,7 +129,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         if (this.initialized) {
             return;
         }
-        this.feignConfiguration = await apiService.feignConfiguration();
+        this.feignConfiguration = await apiService.feignConfiguration<FeignHttpConfiguration>();
         const {
             getRestTemplate,
             getApiSignatureStrategy,

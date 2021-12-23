@@ -1,7 +1,7 @@
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {HttpRequestContext} from "../client/HttpRequest";
 import {HttpRetryOptions} from "../client/HttpRetryOptions";
-import {FeignConfiguration} from "../configuration/FeignConfiguration";
+import {FeignHttpConfiguration} from "../configuration/FeignHttpConfiguration";
 
 
 const REQUEST_METHOD_MIRROR_ATTRIBUTE_NAME = "REQUEST_METHOD_REFLECT_ATTRIBUTE";
@@ -22,15 +22,15 @@ const getAttribute = <T>(context: HttpRequestContext, key: string): T | null => 
     return context.attributes[key];
 }
 
-export const setRequestFeignConfiguration = (context: HttpRequestContext, feignConfig: Readonly<FeignConfiguration>) => {
+export const setRequestFeignConfiguration = (context: HttpRequestContext, feignConfig: Readonly<FeignHttpConfiguration>) => {
     setAttribute(context, REQUEST_FEIGN_CONFIG_ATTRIBUTE_NAME, feignConfig);
 }
 
 /**
- * 通过请求上下文 获取 {@link FeignConfiguration}
+ * 通过请求上下文 获取 {@link FeignHttpConfiguration}
  */
-export const getRequestFeignConfiguration = (context: HttpRequestContext): Readonly<FeignConfiguration> | null => {
-    return getAttribute<Readonly<FeignConfiguration>>(context, REQUEST_FEIGN_CONFIG_ATTRIBUTE_NAME);
+export const getRequestFeignConfiguration = (context: HttpRequestContext): Readonly<FeignHttpConfiguration> | null => {
+    return getAttribute<Readonly<FeignHttpConfiguration>>(context, REQUEST_FEIGN_CONFIG_ATTRIBUTE_NAME);
 };
 
 export const setRequestFeignClientMethodConfiguration = (context: HttpRequestContext, methodConfig: Readonly<FeignClientMethodConfig>) => {

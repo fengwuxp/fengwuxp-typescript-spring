@@ -3,7 +3,7 @@ import {FeignClientExecutorInterceptor} from "../FeignClientExecutorInterceptor"
 import {HttpResponse} from "../client/HttpResponse";
 import {getRequestFeignConfiguration} from "../context/RequestContextHolder";
 import {HttpResponseEventHandler} from "./HttpResponseEvent";
-import {FeignConfiguration} from "../configuration/FeignConfiguration";
+import {FeignHttpConfiguration} from "../configuration/FeignHttpConfiguration";
 
 
 export default class HttpErrorResponseEventPublisherExecutorInterceptor<T extends FeignRequestOptions = FeignRequestOptions> implements FeignClientExecutorInterceptor<T> {
@@ -16,7 +16,7 @@ export default class HttpErrorResponseEventPublisherExecutorInterceptor<T extend
      * @value 是否已经注册了错误回调
      * @private
      */
-    private readonly registeredCaches: Map<FeignConfiguration, boolean> = new Map<FeignConfiguration, boolean>();
+    private readonly registeredCaches: Map<FeignHttpConfiguration, boolean> = new Map<FeignHttpConfiguration, boolean>();
 
     constructor(errorHandle?: HttpResponseEventHandler) {
         this.errorResponseHandler = (request: FeignRequestOptions, response: HttpResponse) => {

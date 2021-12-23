@@ -1,4 +1,4 @@
-import {FeignConfiguration} from "../../src/configuration/FeignConfiguration";
+import {FeignHttpConfiguration} from "../../src/configuration/FeignHttpConfiguration";
 import DefaultFeignClientExecutor from "../../src/DefaultFeignClientExecutor";
 import {FeignProxyClient} from "../../src/support/FeignProxyClient";
 import DefaultHttpClient from "../../src/client/DefaultHttpClient";
@@ -41,7 +41,7 @@ let refreshTokenCount = 0;
 /**
  * mock feign configuration
  */
-export class MockFeignConfiguration implements FeignConfiguration {
+export class MockFeignConfiguration implements FeignHttpConfiguration {
     getAuthenticationStrategy(): AuthenticationStrategy {
         return undefined;
     }

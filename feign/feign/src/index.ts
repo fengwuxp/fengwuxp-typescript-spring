@@ -1,5 +1,4 @@
 import memoize from "lodash/memoize";
-import {FeignOptions} from "./annotations/Feign";
 // 设置缓存的类型
 memoize.Cache = WeakMap;
 
@@ -15,7 +14,7 @@ export {DataObfuscation} from "./annotations/security/DataObfuscation";
 export {Signature} from "./annotations/security/Signature";
 export {FileUpload, AutoFileUploadOptions} from "./annotations/upload/FileUpload";
 export {FeignRetry} from "./annotations/retry/FeignRetry";
-export {Feign, FeignOptions} from "./annotations/Feign";
+export {Feign} from "./annotations/Feign";
 
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
 export {
@@ -58,7 +57,7 @@ export {DateConverter, stringDateConverter, timeStampDateConverter} from "./code
 export {HttpRequestDataEncoder} from "./codec/HttpRequestDataEncoder";
 export {HttpResponseDataDecoder} from "./codec/HttpResponseDataDecoder";
 
-export {FeignConfiguration} from "./configuration/FeignConfiguration";
+export {FeignHttpConfiguration} from "./configuration/FeignHttpConfiguration";
 export {default as FeignConfigurationRegistry} from "./configuration/FeignConfigurationRegistry";
 
 export {HttpMethod} from "./constant/http/HttpMethod";

@@ -1,7 +1,6 @@
 import {RequestURLResolver} from "./RequestURLResolver";
 
-import {FeignMemberOptions} from "../../annotations/Feign";
-import {FeignProxyClient} from "../../support/FeignProxyClient";
+import {FeignClientMemberOptions, FeignProxyClient} from "../../support/FeignProxyClient";
 import StringUtils from 'fengwuxp-common-utils/lib/string/StringUtils';
 import {LB_SCHEMA} from "../../constant/FeignConstVar";
 
@@ -23,7 +22,7 @@ export const restfulRequestURLResolver: RequestURLResolver = (apiService: FeignP
  * @param apiService
  * @param feignOptions
  */
-export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions: FeignMemberOptions) => {
+export const getApiUriByApiService = (apiService: FeignProxyClient, feignOptions: FeignClientMemberOptions) => {
 
     const {apiModule, url} = feignOptions;
     if (StringUtils.hasText(url)) {

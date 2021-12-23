@@ -1,14 +1,14 @@
-import {FeignConfiguration, FeignConfigurationConstructor} from "./FeignConfiguration";
 import {FeignClientBuilder} from "../FeignClientBuilder";
 import memoize from "lodash/memoize";
-import {FeignClientType} from "../annotations/Feign";
 import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
+import {FeignClientType, FeignConfigurationConstructor} from "../annotations/FeignClientAnnotationFactory";
+import {BaseFeignClientConfiguration} from "../support/BaseFeignClientConfiguration";
 
 
 // ignore memorization method names
 const ignoreMethodNames = ["getFeignClientExecutor"];
 
-const memorizationConfiguration = (configuration: FeignConfiguration): FeignConfiguration => {
+const memorizationConfiguration = (configuration: BaseFeignClientConfiguration): BaseFeignClientConfiguration => {
     if (configuration == null) {
         return;
     }
@@ -43,16 +43,22 @@ export const configurationFactory = memoize(factory, (feignConfigurationConstruc
 /**
  * 等待获取配置队列
  */
-const WAIT_GET_CONFIGURATION_QUEUE: {
-    [key: string]: Array<(configuration: FeignConfiguration) => void>
-} = {};
+const WAIT_GET_CONFIGURATION_QUEUE: Array<{
+    [key: string]: Array<(handle: (val: BaseFeignClientConfiguration) => void) => void>
+}> = [];
 
-const getWaitConfigurationQueue = (apiModule: string) => {
-    return WAIT_GET_CONFIGURATION_QUEUE[apiModule];
+const getWaitConfigurationQueue = (type: FeignClientType, apiModule: string): Array<Function> => {
+    if (WAIT_GET_CONFIGURATION_QUEUE[type] == null) {
+        WAIT_GET_CONFIGURATION_QUEUE[type] = {};
+    }
+    return WAIT_GET_CONFIGURATION_QUEUE[type][apiModule];
 }
 
-const initWaitConfigurationQueue = (apiModule: string) => {
-    WAIT_GET_CONFIGURATION_QUEUE[apiModule] = [];
+const initWaitConfigurationQueue = (type: FeignClientType, apiModule: string) => {
+    if (WAIT_GET_CONFIGURATION_QUEUE[type] == null) {
+        WAIT_GET_CONFIGURATION_QUEUE[type] = {};
+    }
+    WAIT_GET_CONFIGURATION_QUEUE[type][apiModule] = [];
 }
 
 
@@ -60,34 +66,40 @@ const initWaitConfigurationQueue = (apiModule: string) => {
  * @key apiModule
  * @value FeignConfiguration
  */
-const CONFIGURATION_CACHES: { [key: string]: FeignConfiguration } = {};
+const CONFIGURATION_CACHES: Array<Record<string, any>> = [];
 
+const getConfigurationCaches = <C extends BaseFeignClientConfiguration>(type: FeignClientType): Record<string, C> => {
+    if (CONFIGURATION_CACHES[type] == null) {
+        CONFIGURATION_CACHES[type] = {};
+    }
+    return CONFIGURATION_CACHES[type];
+}
 /**
  * feign builder
  */
-const FEIGN_CLIENT_BUILDER_CACHES: Array<FeignClientBuilder> = [defaultFeignClientBuilder, null];
+const FEIGN_CLIENT_BUILDER_CACHES: Array<FeignClientBuilder> = [defaultFeignClientBuilder, defaultFeignClientBuilder];
 
 const registry = {
 
-    setFeignConfiguration(apiModule: string, configuration: FeignConfiguration) {
-        CONFIGURATION_CACHES[apiModule] = memorizationConfiguration(configuration);
-        const waitQueue = getWaitConfigurationQueue(apiModule);
-        if (getWaitConfigurationQueue(apiModule)?.length > 0) {
+    setFeignConfiguration(type: FeignClientType, apiModule: string, configuration: any) {
+        getConfigurationCaches(type)[apiModule] = memorizationConfiguration(configuration);
+        const waitQueue = getWaitConfigurationQueue(type, apiModule);
+        if (getWaitConfigurationQueue(type, apiModule)?.length > 0) {
             waitQueue.forEach(fn => fn(configuration));
             // clear
-            initWaitConfigurationQueue(apiModule);
+            initWaitConfigurationQueue(type, apiModule);
         }
     },
 
-    getFeignConfiguration(apiModule: string): Promise<Readonly<FeignConfiguration>> {
-        const configuration = CONFIGURATION_CACHES[apiModule];
+    getFeignConfiguration<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration>(type: FeignClientType, apiModule: string): Promise<Readonly<C>> {
+        const configuration = getConfigurationCaches<C>(type)[apiModule];
         if (configuration != null) {
             return Promise.resolve(configuration);
         }
-        if (getWaitConfigurationQueue(apiModule) == null) {
-            initWaitConfigurationQueue(apiModule);
+        if (getWaitConfigurationQueue(type, apiModule) == null) {
+            initWaitConfigurationQueue(type, apiModule);
         }
-        return new Promise<FeignConfiguration>(resolve => getWaitConfigurationQueue(apiModule).push(resolve));
+        return new Promise<C>(resolve => getWaitConfigurationQueue(type, apiModule).push(resolve));
     },
 
     setFeignClientBuilder(type: FeignClientType, feignClientBuilder: FeignClientBuilder): void {

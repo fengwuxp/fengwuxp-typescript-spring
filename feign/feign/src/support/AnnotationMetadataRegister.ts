@@ -3,7 +3,7 @@ import {FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import {GenerateAnnotationMethodConfig} from "./GenerateAnnotationMethodConfig";
 import {FeignClientMethodConfig} from "./FeignClientMethodConfig";
 import {Reflection as Reflect} from '@abraham/reflection';
-import {getFeignClientMethodConfig} from "../annotations/Feign";
+import {getFeignClientMethodConfig} from "../annotations/FeignClientAnnotationFactory";
 
 /**
  * 注册注解（装饰器）元数据

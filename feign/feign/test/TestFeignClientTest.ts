@@ -4,6 +4,7 @@ import FeignConfigurationRegistry from "../src/configuration/FeignConfigurationR
 import ExampleFeignClient from "./ExampleFeignClient";
 import MockFeignConfigurationTest from "./MockFeignConfigurationTest";
 import {defaultApiModuleName} from "../src";
+import {FeignClientType} from "../src/annotations/FeignClientAnnotationFactory";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -28,7 +29,7 @@ describe("test feign client", () => {
         try {
             sleep(200).then(() => {
                 logger.info("异步设置设置配置")
-                FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+                FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
             })
             const result = await exampleFeignClient.findMember({
                 name: "张三",
@@ -64,7 +65,7 @@ describe("test feign client", () => {
         try {
             sleep(200).then(() => {
                 logger.info("异步设置设置配置")
-                FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+                FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
             })
             const result = await testFeignClient.getExample({
                 id: 1,
@@ -91,7 +92,7 @@ describe("test feign client", () => {
         try {
             sleep(200).then(() => {
                 logger.info("异步设置设置配置")
-                FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+                FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
             })
             const result = await testFeignClient.testQuery({
                 id: 1,
@@ -136,7 +137,7 @@ describe("test feign client", () => {
     test("test network status change", async () => {
         sleep(200).then(() => {
             logger.info("异步设置设置配置")
-            FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+            FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
         })
         try {
             const queue = await sendRequestEvent(100);
@@ -174,7 +175,7 @@ describe("test feign client", () => {
     test("test auto upload file ", async () => {
         sleep(200).then(() => {
             logger.info("异步设置设置配置")
-            FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+            FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
         })
         try {
             await testFeignClient.evaluateOrder({
@@ -195,7 +196,7 @@ describe("test feign client", () => {
     test("test deleted", async () => {
         sleep(200).then(() => {
             logger.info("异步设置设置配置")
-            FeignConfigurationRegistry.setFeignConfiguration(defaultApiModuleName, mockFeignConfiguration);
+            FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
         })
         try {
             await testFeignClient.deleteById({ids: [1, 2, 3, 4], a: "22", c: "33"});
