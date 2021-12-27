@@ -56,7 +56,7 @@ export interface FeignProxyClient<C extends BaseFeignClientConfiguration = BaseF
     /**
      * get feign configuration
      */
-    readonly feignConfiguration: <C>() => Promise<Readonly<C>> | Readonly<C>;
+    readonly feignConfiguration: <C>() => Promise<Readonly<C>>;
 
     /**
      * 获取获取接口方法的配置

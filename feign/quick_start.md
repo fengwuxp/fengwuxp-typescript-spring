@@ -74,19 +74,41 @@ import {
 import {
     ClientHttpInterceptorRegistry,
     FeignClientInterceptorRegistry,
-    FeignConfigurer,
+    FeignHttpConfigurer,
 } from 'feign-boot-starter'
 import {BrowserHttpAdapter, BrowserNetworkStatusListener} from 'feign-boot-browser-starter'
 
 import {API_ENTRY_ADDRESS} from "@/env/EvnVariable";
 
-export default class BrowserFeignConfigurer implements FeignConfigurer {
+/**
+ * feign的配置器
+ */
+export default class BrowserFeignConfigurer implements FeignHttpConfigurer {
 
     /**
      * 默认使用的 content-type
      */
     public defaultProduce = () => HttpMediaType.APPLICATION_JSON;
 
+    /**
+     * 设置默认 {@link FeignRequestContextOptions} 配置
+     */
+    public getDefaultHttpHeaders = () => {
+        return {
+           xxx:xx
+        }
+    }
+
+    /**
+     * 设置默认 {@link FeignRequestContextOptions} 配置
+     */
+    public getDefaultFeignRequestContextOptions = () => {
+        return {
+            // 默认过滤请求参数的空字符串，谨慎开启
+            filterNoneValue: true
+        }
+    }
+    
     /**
      * 不同环境实现了不同的 HttpAdapter
      */
@@ -138,7 +160,7 @@ export default class BrowserFeignConfigurer implements FeignConfigurer {
 这个步骤最好在 index.ts 中做，尽量让注册配置时机靠前
 
 ```typescript
-import {feignConfigurationInitialize} from "feign-boot-starter";
+import {feignHttpConfigurationInitialize} from "feign-boot-starter";
 //  注册feign 代理
-const feignConfig = feignConfigurationInitialize(new BrowserFeignConfigurer());
+const feignConfig = feignHttpConfigurationInitialize(new BrowserFeignConfigurer());
 ```

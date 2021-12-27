@@ -42,7 +42,7 @@ export const serializeRequestBody = (method: string,
 
     if (matchMediaType(contentType, HttpMediaType.APPLICATION_JSON_UTF8)) {
         // json data
-        return JSON.stringify(filterNoneValue ? body : filterNoneValueAndNewObject(body));
+        return JSON.stringify(filterNoneValue ? filterNoneValueAndNewObject(body) : body);
     }
 
     throw new Error(`unsupported content-type: ${contentType}`);

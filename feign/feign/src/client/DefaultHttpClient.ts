@@ -1,5 +1,5 @@
 import {HttpResponse} from "./HttpResponse";
-import {HttpRequest} from "./HttpRequest";
+import {HttpRequest, HttpRequestContext} from "./HttpRequest";
 import {HttpAdapter} from "../adapter/HttpAdapter";
 import {serializeRequestBody, supportRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
@@ -67,10 +67,15 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
         }
         if (supportRequestBody(req.method)) {
             const contentType = this.resolveContentType(httpRequest);
-            httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType, false);
+            const filterNoneValue = this.getRequestAttributes(req).filterNoneValue ?? false;
+            httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType, filterNoneValue);
         }
         return this.httpAdapter.send(httpRequest);
     };
+
+    private getRequestAttributes = (context: HttpRequestContext): any => {
+        return context.attributes ?? {};
+    }
 
     private resolveContentType = (httpRequest: T): HttpMediaType => {
 

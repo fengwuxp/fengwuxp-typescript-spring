@@ -1,7 +1,7 @@
 import {
     ApiSignatureStrategy,
     AuthenticationStrategy,
-    BusinessResponseExtractorFunction,
+    BusinessResponseExtractorFunction, FeignRequestContextOptions,
     HttpAdapter,
     HttpMediaType,
     HttpRequest,
@@ -11,7 +11,7 @@ import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegis
 import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorRegistry";
 
 
-export interface FeignConfigurer {
+export interface FeignHttpConfigurer {
 
 
     /**
@@ -69,6 +69,11 @@ export interface FeignConfigurer {
      * get default request headers
      */
     getDefaultHttpHeaders?: () => Record<string, string>;
+
+    /**
+     * get default feign request context options
+     */
+    getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
 
     /**
      * get {@link BusinessResponseExtractorFunction}

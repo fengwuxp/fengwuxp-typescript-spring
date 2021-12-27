@@ -47,7 +47,7 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
             /**
              * 返回一个实现了FeignProxyClient接口的匿名类
              */
-            return class extends clazz implements FeignProxyClient<C> {
+            return class _DefaultFeignProxyClient extends clazz implements FeignProxyClient<C> {
 
                 private readonly _serviceName: string;
 
@@ -67,7 +67,7 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
                     this._feignOptions = feignOptions;
                     // build feign client instance
                     const feignClientBuilder: FeignClientBuilder = FeignConfigurationRegistry.getFeignClientBuilder(clientType);
-                    return invokeFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<this>>(feignClientBuilder).build(this);
+                    return invokeFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<any>>(feignClientBuilder).build(this);
                 }
 
                 readonly serviceName = () => {
@@ -80,7 +80,7 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
 
                 readonly feignConfiguration = async () => {
                     const apiModule = this.feignOptions().apiModule;
-                    const feignConfiguration = feignConfigurationConstructor != null ?
+                    const feignConfiguration: any = feignConfigurationConstructor != null ?
                         new feignConfigurationConstructor() : await FeignConfigurationRegistry.getFeignConfiguration<C>(clientType, apiModule);
 
                     // TODO 某些情况下 feign configuration 未初始化

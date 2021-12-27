@@ -294,7 +294,9 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // init request context
-        feignRequest.attributes = {};
+        feignRequest.attributes = {
+            filterNoneValue: feignRequest.filterNoneValue
+        };
         this.configureRequestContext(feignRequest, feignMethodConfig);
 
         return feignRequest;

@@ -1,4 +1,4 @@
-import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, BusinessResponseExtractorFunction, FeignConfiguration, Log4jLevel } from 'fengwuxp-typescript-feign';
+import { HttpMethod, ClientHttpRequestInterceptor, MappedClientHttpRequestInterceptor, FeignClientExecutorInterceptor, MappedFeignClientExecutorInterceptor, HttpRequest, HttpAdapter, HttpMediaType, ApiSignatureStrategy, AuthenticationStrategy, RequestURLResolver, FeignRequestContextOptions, BusinessResponseExtractorFunction, FeignHttpConfiguration, Log4jLevel } from 'fengwuxp-typescript-feign';
 
 /**
  * Get one through {@link InterceptorRegistration#getInterceptor} mapping interceptor
@@ -59,7 +59,7 @@ declare class FeignClientInterceptorRegistry implements InterceptorRegistry {
     getInterceptors: () => any[];
 }
 
-interface FeignConfigurer {
+interface FeignHttpConfigurer {
     /**
      * 配置支持的 api 模块
      * 默认：default
@@ -106,6 +106,10 @@ interface FeignConfigurer {
      */
     getDefaultHttpHeaders?: () => Record<string, string>;
     /**
+     * get default feign request context options
+     */
+    getDefaultFeignRequestContextOptions?: () => FeignRequestContextOptions;
+    /**
      * get {@link BusinessResponseExtractorFunction}
      */
     getBusinessResponseExtractor?: () => BusinessResponseExtractorFunction;
@@ -115,8 +119,8 @@ interface FeignConfigurer {
  * feign 配置初始化
  * @param configurer
  */
-declare const feignConfigurationInitialize: (configurer: FeignConfigurer) => Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & {
+declare const feignHttpConfigurationInitialize: (configurer: FeignHttpConfigurer) => Readonly<Pick<FeignHttpConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & {
     setLoggerLevel: (level: Log4jLevel) => void;
 }>;
 
-export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignConfigurer, InterceptorRegistration, InterceptorRegistry, feignConfigurationInitialize };
+export { ClientHttpInterceptorRegistration, ClientHttpInterceptorRegistry, FeignClientExecutorInterceptorRegistration, FeignClientInterceptorRegistry, FeignHttpConfigurer, InterceptorRegistration, InterceptorRegistry, feignHttpConfigurationInitialize };

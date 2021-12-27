@@ -1,11 +1,12 @@
-import {FeignConfigurer} from "./FeignConfigurer";
+import {FeignHttpConfigurer} from "./FeignHttpConfigurer";
 import {
+    FeignClientType,
     defaultApiModuleName,
     DefaultFeignClientExecutor,
     DefaultFeignLog4jFactory,
     DefaultHttpClient,
-    FeignConfiguration,
     FeignConfigurationRegistry,
+    FeignHttpConfiguration,
     FeignProxyClient,
     HttpResponseEventPublisher,
     Log4jLevel,
@@ -18,12 +19,12 @@ import FeignClientInterceptorRegistry from "./registry/FeignClientInterceptorReg
 import ClientHttpInterceptorRegistry from "./registry/ClientHttpInterceptorRegistry";
 
 
-const buildConfiguration = (feignConfigurationAdapter: FeignConfigurer) => {
+const buildConfiguration = (feignConfigurationAdapter: FeignHttpConfigurer) => {
 
     const httpResponseEventListener = new SimpleHttpResponseEventListener();
     const httpResponseEventPublisher = new SimpleHttpResponseEventPublisher(httpResponseEventListener);
 
-    class _InnerFeignConfiguration implements FeignConfiguration {
+    class _InnerFeignConfiguration implements FeignHttpConfiguration {
 
         getApiSignatureStrategy = feignConfigurationAdapter.apiSignatureStrategy;
 
@@ -67,12 +68,13 @@ const buildConfiguration = (feignConfigurationAdapter: FeignConfigurer) => {
         getAuthenticationStrategy = feignConfigurationAdapter.authenticationStrategy;
         getRequestURLResolver = feignConfigurationAdapter.requestURLResolver;
         getDefaultHttpHeaders = feignConfigurationAdapter.getDefaultHttpHeaders;
+        getDefaultFeignRequestContextOptions = feignConfigurationAdapter.getDefaultFeignRequestContextOptions;
     }
 
     return new _InnerFeignConfiguration()
 };
 
-const getApiModule = (configurer: FeignConfigurer): string => {
+const getApiModule = (configurer: FeignHttpConfigurer): string => {
     if (configurer.apiModule == null) {
         return defaultApiModuleName;
     }
@@ -83,10 +85,10 @@ const getApiModule = (configurer: FeignConfigurer): string => {
  * feign 配置初始化
  * @param configurer
  */
-export const feignConfigurationInitialize = (configurer: FeignConfigurer):
-    Readonly<Pick<FeignConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & { setLoggerLevel: (level: Log4jLevel) => void }> => {
+export const feignHttpConfigurationInitialize = (configurer: FeignHttpConfigurer):
+    Readonly<Pick<FeignHttpConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & { setLoggerLevel: (level: Log4jLevel) => void }> => {
     const feignConfiguration = buildConfiguration(configurer);
-    FeignConfigurationRegistry.setFeignConfiguration(getApiModule(configurer), feignConfiguration);
+    FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, getApiModule(configurer), feignConfiguration);
     return {
         getRestTemplate: feignConfiguration.getRestTemplate,
         getHttpResponseEventListener: feignConfiguration.getHttpResponseEventListener,

@@ -15,6 +15,9 @@ export {Signature} from "./annotations/security/Signature";
 export {FileUpload, AutoFileUploadOptions} from "./annotations/upload/FileUpload";
 export {FeignRetry} from "./annotations/retry/FeignRetry";
 export {Feign} from "./annotations/Feign";
+export {
+    FeignClientType, generateFeignClientAnnotation, FeignClientOptions, FeignConfigurationConstructor
+} from "./annotations/FeignClientAnnotationFactory";
 
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
 export {

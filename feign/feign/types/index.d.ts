@@ -304,97 +304,184 @@ interface HttpRetryOptions {
  */
 declare const FeignRetry: <T extends FeignClient>(options: HttpRetryOptions) => Function;
 
-/**
- * Intercepts client-side HTTP requests.
- * Only executed in http client
- * {@see HttpClient#send}
- * {@see DefaultHttpClient#send}
- */
-interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
+declare type ValidatorDescriptorAll<T> = {
+    [key in keyof T]: RuleItem;
+};
+declare type ValidatorDescriptor<T> = Partial<ValidatorDescriptorAll<T>>;
+interface ValidateInvokeOptions {
     /**
-     * Intercept before http request, you can change the requested information
+     * default true
      */
-    intercept: ClientHttpRequestInterceptorFunction<T>;
+    useToast?: boolean;
 }
 /**
- *  Intercept the given request, and return a response
+ * request data validator
  */
-declare type ClientHttpRequestInterceptorFunction<T extends HttpRequest = HttpRequest> = (req: T) => Promise<T>;
-/**
- * Throw an exception or Promise.reject will interrupt the request
- */
-declare type ClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> = ClientHttpRequestInterceptorFunction<T> | ClientHttpRequestInterceptorInterface<T>;
-
-/**
- * {@see ClientHttpRequestInterceptor} accessor
- */
-interface HttpClientInterceptorAccessor {
+interface ClientRequestDataValidator {
     /**
-     * Set the request interceptors that this http client should use.
-     * @param interceptors
+     *
+     * @param requestData  validate data source
+     * @param descriptor   validate rule desc
+     * @param options      invoke options
      */
-    setInterceptors: (interceptors: ClientHttpRequestInterceptor[]) => void;
-    /**
-     * Get the request interceptors
-     */
-    getInterceptors: () => ClientHttpRequestInterceptor[];
+    validate: <T>(requestData: T, descriptor: ValidatorDescriptor<T>, options?: ValidateInvokeOptions | false) => Promise<T>;
 }
 
 /**
- * http request body
+ * 需要自动上传配置
  */
-declare type HttpRequestBody = string | Record<string, any>;
+declare type ValidateSchemaOptions<T> = ValidatorDescriptor<T>;
+
 /**
- * http request client
- * Provides basic http request capabilities
- * Extend from {@see HttpAdapter }
+ * feign的代理相关配置
  */
-interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, HttpClientInterceptorAccessor {
+interface FeignClientMethodConfig {
     /**
-     *  get request
-     * @param url
-     * @param headers
-     * @param timeout
+     * 请求配置
      */
-    get: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    requestMapping?: RequestMappingOptions;
     /**
-     *  delete request
-     * @param url
-     * @param headers
-     * @param timeout
+     * 签名相关
      */
-    delete: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    signature?: SignatureOptions;
     /**
-     *  delete request
-     * @param url
-     * @param headers
-     * @param timeout
+     * 重试相关配置
      */
-    head: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    retryOptions?: HttpRetryOptions;
     /**
-     * post request
-     * @param url
-     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
-     * @param headers
-     * @param timeout
+     * 缓存相关配置
      */
-    post: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    cacheOptions?: any;
     /**
-     * put request
-     * @param url
-     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
-     * @param headers
-     * @param timeout
+     * 自动上传的相关配置
      */
-    put: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    fileUploadOptions?: AutoFileUploadOptions;
     /**
-     * put request
-     * @param url
-     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
-     * @param headers
-     * @param timeout
+     * 数据混淆配置
      */
-    patch: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    dataObfuscationOptions?: DataObfuscationOptions;
+    /**
+     * 数据验证配置
+     */
+    validateSchemaOptions?: ValidateSchemaOptions<any>;
+}
+
+/**
+ *  * Enumeration of HTTP status codes.
+ */
+declare enum HttpStatus {
+    /**
+     * {@code 100 Continue}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">HTTP/1.1: Semantics and Content, section 6.2.1</a>
+     */
+    /**
+     * {@code 200 OK}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">HTTP/1.1: Semantics and Content, section 6.3.1</a>
+     */
+    OK = 200,
+    /**
+     * {@code 201 Created}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">HTTP/1.1: Semantics and Content, section 6.3.2</a>
+     */
+    CREATED = 201,
+    /**
+     * {@code 202 Accepted}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">HTTP/1.1: Semantics and Content, section 6.3.3</a>
+     */
+    ACCEPTED = 202,
+    /**
+     * {@code 203 Non-Authoritative Information}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.4">HTTP/1.1: Semantics and Content, section 6.3.4</a>
+     */
+    NON_AUTHORITATIVE_INFORMATION = 203,
+    /**
+     * {@code 204 No Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">HTTP/1.1: Semantics and Content, section 6.3.5</a>
+     */
+    NO_CONTENT = 204,
+    /**
+     * {@code 205 Reset Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.6">HTTP/1.1: Semantics and Content, section 6.3.6</a>
+     */
+    RESET_CONTENT = 205,
+    /**
+     * {@code 206 Partial Content}.
+     * @see <a href="https://tools.ietf.org/html/rfc7233#section-4.1">HTTP/1.1: Range Requests, section 4.1</a>
+     */
+    PARTIAL_CONTENT = 206,
+    /**
+     * {@code 207 Multi-Status}.
+     * @see <a href="https://tools.ietf.org/html/rfc4918#section-13">WebDAV</a>
+     */
+    /**
+     * {@code 302 Found}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.3">HTTP/1.1: Semantics and Content, section 6.4.3</a>
+     */
+    FOUND = 302,
+    /**
+     * {@code 400 Bad Request}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
+     */
+    BAD_REQUEST = 400,
+    /**
+     * {@code 401 Unauthorized}.
+     * @see <a href="https://tools.ietf.org/html/rfc7235#section-3.1">HTTP/1.1: Authentication, section 3.1</a>
+     */
+    UNAUTHORIZED = 401,
+    /**
+     * {@code 402 Payment Required}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">HTTP/1.1: Semantics and Content, section 6.5.2</a>
+     */
+    PAYMENT_REQUIRED = 402,
+    /**
+     * {@code 403 Forbidden}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">HTTP/1.1: Semantics and Content, section 6.5.3</a>
+     */
+    FORBIDDEN = 403,
+    /**
+     * {@code 404 Not Found}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
+     */
+    NOT_FOUND = 404,
+    /**
+     * {@code 405 Method Not Allowed}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
+     */
+    METHOD_NOT_ALLOWED = 405,
+    /**
+     * {@code 406 Not Acceptable}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.6">HTTP/1.1: Semantics and Content, section 6.5.6</a>
+     */
+    /**
+     * {@code 500 Internal Server Error}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">HTTP/1.1: Semantics and Content, section 6.6.1</a>
+     */
+    INTERNAL_SERVER_ERROR = 500,
+    /**
+     * {@code 501 Not Implemented}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">HTTP/1.1: Semantics and Content, section 6.6.2</a>
+     */
+    NOT_IMPLEMENTED = 501,
+    /**
+     * {@code 502 Bad Gateway}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">HTTP/1.1: Semantics and Content, section 6.6.3</a>
+     */
+    BAD_GATEWAY = 502,
+    /**
+     * {@code 503 Service Unavailable}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
+     */
+    SERVICE_UNAVAILABLE = 503,
+    /**
+     * {@code 504 Gateway Timeout}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
+     */
+    GATEWAY_TIMEOUT = 504,
+    /**
+     * {@code 505 HTTP Version Not Supported}.
+     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.6">HTTP/1.1: Semantics and Content, section 6.6.6</a>
+     */
+    HTTP_VERSION_NOT_SUPPORTED = 505
 }
 
 /**
@@ -580,103 +667,6 @@ declare type QueryParamType = Record<string, boolean | number | string | Date | 
  */
 declare type UriVariable = UriPathVariable | QueryParamType;
 
-declare type ValidatorDescriptorAll<T> = {
-    [key in keyof T]: RuleItem;
-};
-declare type ValidatorDescriptor<T> = Partial<ValidatorDescriptorAll<T>>;
-interface ValidateInvokeOptions {
-    /**
-     * default true
-     */
-    useToast?: boolean;
-}
-/**
- * request data validator
- */
-interface ClientRequestDataValidator {
-    /**
-     *
-     * @param requestData  validate data source
-     * @param descriptor   validate rule desc
-     * @param options      invoke options
-     */
-    validate: <T>(requestData: T, descriptor: ValidatorDescriptor<T>, options?: ValidateInvokeOptions | false) => Promise<T>;
-}
-
-/**
- * 需要自动上传配置
- */
-declare type ValidateSchemaOptions<T> = ValidatorDescriptor<T>;
-
-/**
- * feign的代理相关配置
- */
-interface FeignClientMethodConfig {
-    /**
-     * 请求配置
-     */
-    requestMapping?: RequestMappingOptions;
-    /**
-     * 签名相关
-     */
-    signature?: SignatureOptions;
-    /**
-     * 重试相关配置
-     */
-    retryOptions?: HttpRetryOptions;
-    /**
-     * 缓存相关配置
-     */
-    cacheOptions?: any;
-    /**
-     * 自动上传的相关配置
-     */
-    fileUploadOptions?: AutoFileUploadOptions;
-    /**
-     * 数据混淆配置
-     */
-    dataObfuscationOptions?: DataObfuscationOptions;
-    /**
-     * 数据验证配置
-     */
-    validateSchemaOptions?: ValidateSchemaOptions<any>;
-}
-
-/**
- * feign proxy client
- */
-interface FeignProxyClient extends FeignClient {
-    /**
-     * service name or access path
-     */
-    readonly serviceName: () => string;
-    /**
-     * feign proxy options
-     */
-    readonly feignOptions: () => Readonly<FeignMemberOptions>;
-    /**
-     * get feign configuration
-     */
-    readonly feignConfiguration: () => Promise<Readonly<FeignConfiguration>> | Readonly<FeignConfiguration>;
-    /**
-     * 获取获取接口方法的配置
-     * @param serviceMethod  服务方法名称
-     */
-    getFeignMethodConfig: (serviceMethod: string) => Readonly<FeignClientMethodConfig>;
-}
-
-/**
- * 解析url
- * @param apiService  接口服务
- * @param methodName  服务方法名称
- */
-declare type RequestURLResolver = (apiService: FeignProxyClient, methodName: string) => string;
-
-/**
- * resolve request header
- */
-declare type RequestHeaderResolver = (apiService: FeignProxyClient, methodName: string, headers: Record<string, string>, data: UriVariable | object) => Record<string, string>;
-
 /**
  * http media type
  */
@@ -830,7 +820,8 @@ interface DataOptions {
     useUnifiedTransformResponse?: boolean;
     /**
      * 是否过滤提交数据中的 空字符串，null的数据，数值类型的NaN
-     * 默认：true
+     * 默认：false
+     * 全局开启可以通过 {@link BaseFeignClientConfiguration#getDefaultFeignRequestContextOptions}
      */
     filterNoneValue?: boolean;
     /**
@@ -860,6 +851,59 @@ interface FeignRequestOptions extends FeignRequestBaseOptions, FeignRequestConte
     consumes?: HttpMediaType[];
 }
 
+interface HttpResponseEventPublisher {
+    publishEvent: (request: FeignRequestOptions, response: HttpResponse) => void;
+}
+declare type HttpResponseEventHandler = (request: FeignRequestOptions, response: HttpResponse) => void;
+interface HttpResponseEventHandlerSupplier {
+    getHandlers: (httpStatus: HttpStatus | number) => HttpResponseEventHandler[];
+}
+interface HttpResponseEventListener extends HttpResponseEventHandlerSupplier {
+    /**
+     * 回调指定的的 http status handler
+     * @param httpStatus
+     * @param handler
+     */
+    onEvent(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
+    removeListen(httpStatus: HttpStatus | number): void;
+    removeListen(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
+}
+interface SmartHttpResponseEventListener extends HttpResponseEventListener {
+    /**
+     * 所有非 2xx 响应都会回调
+     * @param handler
+     */
+    onError(handler: HttpResponseEventHandler): void;
+    removeErrorListen(handler: HttpResponseEventHandler): void;
+    /**
+     * @see HttpStatus#FOUND
+     * @param handler
+     */
+    onFound(handler: (response: HttpResponse) => void): void;
+    /**
+     * @see HttpStatus#UNAUTHORIZED
+     * @param handler
+     */
+    onUnAuthorized(handler: HttpResponseEventHandler): void;
+    /**
+     * @see HttpStatus#FORBIDDEN
+     * @param handler
+     */
+    onForbidden(handler: HttpResponseEventHandler): void;
+}
+
+/**
+ * 解析url
+ * @param apiService  接口服务
+ * @param methodName  服务方法名称
+ */
+declare type RequestURLResolver = (apiService: FeignProxyClient, methodName: string) => string;
+
+/**
+ * resolve request header
+ */
+declare type RequestHeaderResolver = (apiService: FeignProxyClient, methodName: string, headers: Record<string, string>, data: UriVariable | object) => Record<string, string>;
+
 /**
  * api signature strategy
  */
@@ -877,44 +921,6 @@ interface SimpleApiSignatureStrategy extends ApiSignatureStrategy {
      * @param feignOptions  feign request options
      */
     sign: (fields: string[], data: UriVariable, feignRequestBaseOptions: FeignRequestBaseOptions) => void;
-}
-
-/**
- * feign client executor
- */
-interface FeignClientExecutor<T extends FeignClient = FeignProxyClient, R = Promise<any>> {
-    /**
-     * execute proxy service method
-     * @param methodName   method name
-     * @param args  method params
-     */
-    invoke: (methodName: string, ...args: any[]) => R;
-}
-
-/**
- * Only executed in feign client
- * {@see FeignClientExecutor#invoke}
- * {@see DefaultFeignClientExecutor#invoke}
- */
-interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> {
-    /**
-     * in request before invoke
-     * @param options feign request options
-     * @return new options
-     */
-    preHandle?: (options: T) => T | Promise<T>;
-    /**
-     * in request after invoke
-     * @param options
-     * @param response
-     */
-    postHandle?: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
-    /**
-     * in request failure invoke
-     * @param options
-     * @param response
-     */
-    postError?: (options: T, response: HttpResponse<any>) => Promise<any> | any;
 }
 
 /**
@@ -987,162 +993,29 @@ interface ApiPermissionProbeStrategyInterface {
 declare type ApiPermissionProbeStrategy = ApiPermissionProbeStrategyInterface | ApiPermissionProbeStrategyFunction;
 
 /**
- *  * Enumeration of HTTP status codes.
+ * Only executed in feign client
+ * {@see FeignClientExecutor#invoke}
+ * {@see DefaultFeignClientExecutor#invoke}
  */
-declare enum HttpStatus {
+interface FeignClientExecutorInterceptor<T extends FeignRequestBaseOptions = FeignRequestBaseOptions> {
     /**
-     * {@code 100 Continue}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.2.1">HTTP/1.1: Semantics and Content, section 6.2.1</a>
+     * in request before invoke
+     * @param options feign request options
+     * @return new options
      */
+    preHandle?: (options: T) => T | Promise<T>;
     /**
-     * {@code 200 OK}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.1">HTTP/1.1: Semantics and Content, section 6.3.1</a>
+     * in request after invoke
+     * @param options
+     * @param response
      */
-    OK = 200,
+    postHandle?: <E = HttpResponse<any>>(options: T, response: E) => Promise<any> | any;
     /**
-     * {@code 201 Created}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.2">HTTP/1.1: Semantics and Content, section 6.3.2</a>
+     * in request failure invoke
+     * @param options
+     * @param response
      */
-    CREATED = 201,
-    /**
-     * {@code 202 Accepted}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.3">HTTP/1.1: Semantics and Content, section 6.3.3</a>
-     */
-    ACCEPTED = 202,
-    /**
-     * {@code 203 Non-Authoritative Information}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.4">HTTP/1.1: Semantics and Content, section 6.3.4</a>
-     */
-    NON_AUTHORITATIVE_INFORMATION = 203,
-    /**
-     * {@code 204 No Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.5">HTTP/1.1: Semantics and Content, section 6.3.5</a>
-     */
-    NO_CONTENT = 204,
-    /**
-     * {@code 205 Reset Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.3.6">HTTP/1.1: Semantics and Content, section 6.3.6</a>
-     */
-    RESET_CONTENT = 205,
-    /**
-     * {@code 206 Partial Content}.
-     * @see <a href="https://tools.ietf.org/html/rfc7233#section-4.1">HTTP/1.1: Range Requests, section 4.1</a>
-     */
-    PARTIAL_CONTENT = 206,
-    /**
-     * {@code 207 Multi-Status}.
-     * @see <a href="https://tools.ietf.org/html/rfc4918#section-13">WebDAV</a>
-     */
-    /**
-     * {@code 302 Found}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.4.3">HTTP/1.1: Semantics and Content, section 6.4.3</a>
-     */
-    FOUND = 302,
-    /**
-     * {@code 400 Bad Request}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.1">HTTP/1.1: Semantics and Content, section 6.5.1</a>
-     */
-    BAD_REQUEST = 400,
-    /**
-     * {@code 401 Unauthorized}.
-     * @see <a href="https://tools.ietf.org/html/rfc7235#section-3.1">HTTP/1.1: Authentication, section 3.1</a>
-     */
-    UNAUTHORIZED = 401,
-    /**
-     * {@code 402 Payment Required}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.2">HTTP/1.1: Semantics and Content, section 6.5.2</a>
-     */
-    PAYMENT_REQUIRED = 402,
-    /**
-     * {@code 403 Forbidden}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.3">HTTP/1.1: Semantics and Content, section 6.5.3</a>
-     */
-    FORBIDDEN = 403,
-    /**
-     * {@code 404 Not Found}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.4">HTTP/1.1: Semantics and Content, section 6.5.4</a>
-     */
-    NOT_FOUND = 404,
-    /**
-     * {@code 405 Method Not Allowed}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.5">HTTP/1.1: Semantics and Content, section 6.5.5</a>
-     */
-    METHOD_NOT_ALLOWED = 405,
-    /**
-     * {@code 406 Not Acceptable}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.5.6">HTTP/1.1: Semantics and Content, section 6.5.6</a>
-     */
-    /**
-     * {@code 500 Internal Server Error}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.1">HTTP/1.1: Semantics and Content, section 6.6.1</a>
-     */
-    INTERNAL_SERVER_ERROR = 500,
-    /**
-     * {@code 501 Not Implemented}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.2">HTTP/1.1: Semantics and Content, section 6.6.2</a>
-     */
-    NOT_IMPLEMENTED = 501,
-    /**
-     * {@code 502 Bad Gateway}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.3">HTTP/1.1: Semantics and Content, section 6.6.3</a>
-     */
-    BAD_GATEWAY = 502,
-    /**
-     * {@code 503 Service Unavailable}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.4">HTTP/1.1: Semantics and Content, section 6.6.4</a>
-     */
-    SERVICE_UNAVAILABLE = 503,
-    /**
-     * {@code 504 Gateway Timeout}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.5">HTTP/1.1: Semantics and Content, section 6.6.5</a>
-     */
-    GATEWAY_TIMEOUT = 504,
-    /**
-     * {@code 505 HTTP Version Not Supported}.
-     * @see <a href="https://tools.ietf.org/html/rfc7231#section-6.6.6">HTTP/1.1: Semantics and Content, section 6.6.6</a>
-     */
-    HTTP_VERSION_NOT_SUPPORTED = 505
-}
-
-interface HttpResponseEventPublisher {
-    publishEvent: (request: FeignRequestOptions, response: HttpResponse) => void;
-}
-declare type HttpResponseEventHandler = (request: FeignRequestOptions, response: HttpResponse) => void;
-interface HttpResponseEventHandlerSupplier {
-    getHandlers: (httpStatus: HttpStatus | number) => HttpResponseEventHandler[];
-}
-interface HttpResponseEventListener extends HttpResponseEventHandlerSupplier {
-    /**
-     * 回调指定的的 http status handler
-     * @param httpStatus
-     * @param handler
-     */
-    onEvent(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
-    removeListen(httpStatus: HttpStatus | number): void;
-    removeListen(httpStatus: HttpStatus | number, handler: HttpResponseEventHandler): void;
-}
-interface SmartHttpResponseEventListener extends HttpResponseEventListener {
-    /**
-     * 所有非 2xx 响应都会回调
-     * @param handler
-     */
-    onError(handler: HttpResponseEventHandler): void;
-    removeErrorListen(handler: HttpResponseEventHandler): void;
-    /**
-     * @see HttpStatus#FOUND
-     * @param handler
-     */
-    onFound(handler: (response: HttpResponse) => void): void;
-    /**
-     * @see HttpStatus#UNAUTHORIZED
-     * @param handler
-     */
-    onUnAuthorized(handler: HttpResponseEventHandler): void;
-    /**
-     * @see HttpStatus#FORBIDDEN
-     * @param handler
-     */
-    onForbidden(handler: HttpResponseEventHandler): void;
+    postError?: (options: T, response: HttpResponse<any>) => Promise<any> | any;
 }
 
 declare class Log4jLevel {
@@ -1180,21 +1053,7 @@ interface FeignLog4jFactory {
     getRootLogger: () => Log4jLogger;
 }
 
-/**
- * feign configuration
- * since the method of changing the interface is called every time, it is necessary to implement memory.
- */
-interface FeignConfiguration {
-    /**
-     * get http adapter
-     */
-    getHttpAdapter: <T extends HttpRequest = HttpRequest>() => HttpAdapter;
-    /**
-     * get http client
-     */
-    getHttpClient: <T extends HttpRequest = HttpRequest>() => HttpClient;
-    getRestTemplate: () => RestOperations;
-    getFeignClientExecutor: <T extends FeignProxyClient = FeignProxyClient>(client: T) => FeignClientExecutor;
+interface BaseFeignClientConfiguration {
     getHttpResponseEventPublisher: () => HttpResponseEventPublisher;
     getHttpResponseEventListener: () => SmartHttpResponseEventListener;
     getRequestURLResolver?: () => RequestURLResolver;
@@ -1215,15 +1074,8 @@ interface FeignConfiguration {
      */
     getLog4jFactory?: () => FeignLog4jFactory;
 }
-declare type FeignConfigurationConstructor = {
-    new (...args: any[]): FeignConfiguration;
-};
 
-declare enum FeignClientType {
-    HTTP = 0,
-    WS = 1
-}
-interface FeignOptions {
+interface BaseFeignClientOptions {
     /**
      * 所属的api模块
      * 通过api模块名称可以区分不同模块的配置，比如api入口地址等
@@ -1244,28 +1096,179 @@ interface FeignOptions {
      * an absolute URL or resolvable hostname (the protocol is optional)
      */
     url?: string;
+}
+interface FeignClientMemberOptions<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration> extends BaseFeignClientOptions {
     /**
      * feign configuration
      */
-    configuration?: FeignConfigurationConstructor;
-    /**
-     * client type
-     * default: FeignClientType#HTTP
-     */
-    type?: FeignClientType;
+    configuration?: C;
 }
-interface FeignMemberOptions extends Pick<FeignOptions, Exclude<keyof FeignOptions, "configuration">> {
+/**
+ * feign proxy client
+ */
+interface FeignProxyClient<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration> extends FeignClient {
+    /**
+     * service name or access path
+     */
+    readonly serviceName: () => string;
+    /**
+     * feign proxy options
+     */
+    readonly feignOptions: () => Readonly<FeignClientMemberOptions<C>>;
+    /**
+     * get feign configuration
+     */
+    readonly feignConfiguration: <C>() => Promise<Readonly<C>>;
+    /**
+     * 获取获取接口方法的配置
+     * @param serviceMethod  服务方法名称
+     */
+    getFeignMethodConfig: (serviceMethod: string) => Readonly<FeignClientMethodConfig>;
+}
+
+declare type FeignConfigurationConstructor<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration> = {
+    new (...args: any[]): C;
+};
+interface FeignClientOptions<C extends BaseFeignClientConfiguration> extends BaseFeignClientOptions {
     /**
      * feign configuration
      */
-    configuration?: FeignConfiguration;
+    configuration?: FeignConfigurationConstructor<C>;
 }
+declare enum FeignClientType {
+    HTTP = 0,
+    WS = 1
+}
+declare const generateFeignClientAnnotation: <C extends BaseFeignClientConfiguration, T extends FeignProxyClient<C>>(clientType: FeignClientType) => (options: FeignClientOptions<C>) => Function;
+
+/**
+ * Intercepts client-side HTTP requests.
+ * Only executed in http client
+ * {@see HttpClient#send}
+ * {@see DefaultHttpClient#send}
+ */
+interface ClientHttpRequestInterceptorInterface<T extends HttpRequest = HttpRequest> {
+    /**
+     * Intercept before http request, you can change the requested information
+     */
+    intercept: ClientHttpRequestInterceptorFunction<T>;
+}
+/**
+ *  Intercept the given request, and return a response
+ */
+declare type ClientHttpRequestInterceptorFunction<T extends HttpRequest = HttpRequest> = (req: T) => Promise<T>;
+/**
+ * Throw an exception or Promise.reject will interrupt the request
+ */
+declare type ClientHttpRequestInterceptor<T extends HttpRequest = HttpRequest> = ClientHttpRequestInterceptorFunction<T> | ClientHttpRequestInterceptorInterface<T>;
+
+/**
+ * {@see ClientHttpRequestInterceptor} accessor
+ */
+interface HttpClientInterceptorAccessor {
+    /**
+     * Set the request interceptors that this http client should use.
+     * @param interceptors
+     */
+    setInterceptors: (interceptors: ClientHttpRequestInterceptor[]) => void;
+    /**
+     * Get the request interceptors
+     */
+    getInterceptors: () => ClientHttpRequestInterceptor[];
+}
+
+/**
+ * http request body
+ */
+declare type HttpRequestBody = string | Record<string, any>;
+/**
+ * http request client
+ * Provides basic http request capabilities
+ * Extend from {@see HttpAdapter }
+ */
+interface HttpClient<T extends HttpRequest = HttpRequest> extends HttpAdapter<T>, HttpClientInterceptorAccessor {
+    /**
+     *  get request
+     * @param url
+     * @param headers
+     * @param timeout
+     */
+    get: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    /**
+     *  delete request
+     * @param url
+     * @param headers
+     * @param timeout
+     */
+    delete: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    /**
+     *  delete request
+     * @param url
+     * @param headers
+     * @param timeout
+     */
+    head: (url: string, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    /**
+     * post request
+     * @param url
+     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
+     * @param headers
+     * @param timeout
+     */
+    post: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    /**
+     * put request
+     * @param url
+     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
+     * @param headers
+     * @param timeout
+     */
+    put: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+    /**
+     * put request
+     * @param url
+     * @param body  serialize the body to a string based on the `Content-Type` type in the request header
+     * @param headers
+     * @param timeout
+     */
+    patch: (url: string, body: HttpRequestBody, headers?: HeadersInit, timeout?: number) => Promise<HttpResponse>;
+}
+
+/**
+ * feign client executor
+ */
+interface FeignClientExecutor<T extends FeignClient = FeignProxyClient, R = Promise<any>> {
+    /**
+     * execute proxy service method
+     * @param methodName   method name
+     * @param args  method params
+     */
+    invoke: (methodName: string, ...args: any[]) => R;
+}
+
+/**
+ * feign http configuration
+ * since the method of changing the interface is called every time, it is necessary to implement memory.
+ */
+interface FeignHttpConfiguration extends BaseFeignClientConfiguration {
+    /**
+     * get http adapter
+     */
+    getHttpAdapter: <T extends HttpRequest = HttpRequest>() => HttpAdapter;
+    /**
+     * get http client
+     */
+    getHttpClient: <T extends HttpRequest = HttpRequest>() => HttpClient;
+    getRestTemplate: () => RestOperations;
+    getFeignClientExecutor: <T extends FeignProxyClient<FeignHttpConfiguration> = FeignProxyClient<FeignHttpConfiguration>>(client: T) => FeignClientExecutor;
+}
+
 /**
  * Mark a class as feign　client
  * @param options
  * @constructor
  */
-declare const Feign: <T extends FeignProxyClient = FeignProxyClient>(options: FeignOptions) => Function;
+declare const Feign: (options: FeignClientOptions<FeignHttpConfiguration>) => Function;
 
 /**
  * abstract http client
@@ -1306,6 +1309,7 @@ declare class DefaultHttpClient<T extends HttpRequest = HttpRequest> extends Abs
      */
     constructor(httpAdapter: HttpAdapter<T>, defaultProduce?: HttpMediaType, interceptors?: Array<ClientHttpRequestInterceptor<T>>);
     send: (req: T) => Promise<HttpResponse>;
+    private getRequestAttributes;
     private resolveContentType;
 }
 
@@ -1608,8 +1612,8 @@ declare type FeignClientBuilderFunction<T extends FeignProxyClient = FeignProxyC
 declare type FeignClientBuilder<T extends FeignProxyClient = FeignProxyClient> = FeignClientBuilderFunction<T> | FeignClientBuilderInterface<T>;
 
 declare const registry: {
-    setFeignConfiguration(apiModule: string, configuration: FeignConfiguration): void;
-    getFeignConfiguration(apiModule: string): Promise<Readonly<FeignConfiguration>>;
+    setFeignConfiguration(type: FeignClientType, apiModule: string, configuration: any): void;
+    getFeignConfiguration<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration>(type: FeignClientType, apiModule: string): Promise<Readonly<C>>;
     setFeignClientBuilder(type: FeignClientType, feignClientBuilder: FeignClientBuilder): void;
     getFeignClientBuilder(type: FeignClientType): FeignClientBuilder;
 };
@@ -2118,7 +2122,7 @@ declare class ClientRequestDataValidatorHolder {
 }
 
 declare class DefaultFeignClientBuilder implements FeignClientBuilderInterface {
-    build: FeignClientBuilderFunction<FeignProxyClient>;
+    build: FeignClientBuilderFunction<FeignProxyClient<BaseFeignClientConfiguration>>;
 }
 declare const defaultFeignClientBuilder: FeignClientBuilderFunction;
 
@@ -2183,4 +2187,4 @@ interface Enum {
     [extraProp: string]: any;
 }
 
-export { AbstractHttpClient, AbstractLog4jLogger, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, ConsoleLogger, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, defaultFeignLo4jFactory as DefaultFeignLog4jFactory, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignConfiguration, registry as FeignConfigurationRegistry, FeignLog4jFactory, FeignOptions, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpErrorResponseEventPublisherExecutorInterceptor, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpResponseEventHandler, HttpResponseEventHandlerSupplier, HttpResponseEventListener, HttpResponseEventPublisher, HttpRetryOptions, HttpStatus, Log4jLevel, Log4jLogger, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleHttpResponseEventListener, SimpleHttpResponseEventPublisher, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, SmartHttpResponseEventListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, getRequestFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, registerAnnotationMetadata, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, setDefaultFeignLo4jFactory, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };
+export { AbstractHttpClient, AbstractLog4jLogger, AbstractRequestFileObjectEncoder, ApiPermissionProbeInterceptor, ApiPermissionProbeStrategy, ApiPermissionProbeStrategyFunction, ApiPermissionProbeStrategyInterface, ApiSignatureStrategy, AsyncClientRequestDataValidator, AuthenticationClientHttpRequestInterceptor, AuthenticationStrategy, AuthenticationToken, AuthenticationType, AutoFileUploadOptions, BusinessResponseExtractorFunction, CacheCapableAuthenticationStrategy, ClientHttpRequestInterceptor, ClientHttpRequestInterceptorFunction, ClientHttpRequestInterceptorInterface, ClientRequestDataValidator, ClientRequestDataValidatorHolder, CodecFeignClientExecutorInterceptor, CommonResolveHttpResponse, ConsoleLogger, DataObfuscation, DateConverter, DateEncoder, DefaultFeignClientBuilder, DefaultFeignClientExecutor, defaultFeignLo4jFactory as DefaultFeignLog4jFactory, DefaultHttpClient, DefaultNoneNetworkFailBack as DefaultNetworkStatusListener, DefaultUriTemplateHandler, DeleteMapping, Enum, FEIGN_CLINE_META_KEY, Feign, FeignClient, FeignClientBuilder, FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientExecutor, FeignClientExecutorInterceptor, FeignClientMethodConfig, FeignClientOptions, FeignClientType, FeignConfigurationConstructor, registry as FeignConfigurationRegistry, FeignHttpConfiguration, FeignLog4jFactory, FeignProxyClient, FeignRequestBaseOptions, FeignRequestContextOptions, FeignRequestOptions, FeignRetry, FileUpload, FileUploadProgressBar, FileUploadProgressBarOptions, FileUploadStrategy, FileUploadStrategyResult, FileUploadStrategyResultInterface, GenerateAnnotationMethodConfig, GetMapping, HttpAdapter, HttpClient, HttpErrorResponseEventPublisherExecutorInterceptor, HttpMediaType, HttpMethod, HttpRequest, HttpRequestBody, HttpRequestDataEncoder, HttpResponse, HttpResponseDataDecoder, HttpResponseEventHandler, HttpResponseEventHandlerSupplier, HttpResponseEventListener, HttpResponseEventPublisher, HttpRetryOptions, HttpStatus, Log4jLevel, Log4jLogger, MappedClientHttpRequestInterceptor, MappedFeignClientExecutorInterceptor, MappedInterceptor, NEVER_REFRESH_FLAG, NetworkClientHttpRequestInterceptor, NetworkFeignClientExecutorInterceptor, NetworkStatus, NetworkStatusListener, NetworkType, NoneNetworkFailBack, PatchMapping, PostMapping, ProcessBarExecutorInterceptor, ProgressBarOptions, PutMapping, QueryParamType, RequestHeaderResolver, RequestMapping, RequestProgressBar, RequestTracer, RequestURLResolver, ResolveHttpResponse, ResponseErrorHandler, ResponseErrorHandlerFunction, ResponseErrorHandlerInterFace, ResponseExtractor, ResponseExtractorFunction, ResponseExtractorInterface, RestOperations, RestTemplate, RetryHttpClient, RoutingClientHttpRequestInterceptor, Signature, SimpleApiSignatureStrategy, SimpleHttpResponseEventListener, SimpleHttpResponseEventPublisher, SimpleNoneNetworkFailBack as SimpleNetworkStatusListener, SmartHttpResponseEventListener, TraceRequestExecutorInterceptor, UIOptions, UNAUTHORIZED_RESPONSE, UriTemplateHandler, UriTemplateHandlerFunction, UriTemplateHandlerInterface, UriVariable, ValidateInvokeOptions, ValidatorDescriptor, contentLengthName, contentTransferEncodingName, contentTypeName, defaultApiModuleName, defaultFeignClientBuilder, defaultUriTemplateFunctionHandler, filterNoneValueAndNewObject, generateFeignClientAnnotation, getRequestFeignClientMethodConfiguration, grabUrlPathVariable, headResponseExtractor, invokeFunctionInterface, matchMediaType, objectResponseExtractor, optionsMethodResponseExtractor, queryStringify, registerAnnotationMetadata, responseIsFile, responseIsJson, responseIsText, restfulRequestURLResolver, serializeRequestBody, setDefaultFeignLo4jFactory, simpleRequestHeaderResolver, simpleRequestURLResolver, stringDateConverter, supportRequestBody, timeStampDateConverter, voidResponseExtractor };

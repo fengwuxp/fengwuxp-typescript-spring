@@ -1,5 +1,5 @@
 #### Quick-Start
-- [docs](./quick_star.md)
+- [docs](./quick_start.md)
 
 #### 介绍
 
