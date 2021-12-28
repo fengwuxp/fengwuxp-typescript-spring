@@ -21,7 +21,6 @@ import {simpleRequestURLResolver} from '../../src/resolve/url/SimpleRequestURLRe
 import {AuthenticationToken} from "../../src/client/AuthenticationStrategy";
 import {ProgressBarOptions} from '../../src/ui/RequestProgressBar';
 import TraceRequestExecutorInterceptor from "../../src/trace/TraceRequestExecutorInterceptor";
-import ApiPermissionProbeInterceptor from "../../src/client/ApiPermissionProbeInterceptor";
 import * as log4js from "log4js";
 import {HttpResponseEventPublisher, SmartHttpResponseEventListener} from 'event/HttpResponseEvent';
 import SimpleHttpResponseEventListener from "../../src/event/SimpleHttpResponseEventListener";
@@ -31,6 +30,7 @@ import HttpErrorResponseEventPublisherExecutorInterceptor
 import {FeignLog4jFactory} from "../../src/log/FeignLog4jFactory";
 import {AuthenticationStrategy} from "../../types";
 import log4jFactory from "../../src/log/DefaultFeignLo4jFactory";
+import {REQUEST_AUTHENTICATION_TYPE_HEADER_NAME} from "../../src/constant/FeignConstVar";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -50,7 +50,10 @@ export class MockFeignConfiguration implements FeignHttpConfiguration {
 
     private simpleHttpResponseEventListener = new SimpleHttpResponseEventListener();
 
+    private mockHttpAdapter = new MockHttpAdapter(this.baseUrl);
+
     constructor() {
+        this.mockHttpAdapter.setMockData("HEAD /test/example", (req) => ({[REQUEST_AUTHENTICATION_TYPE_HEADER_NAME]: 'NONE'}))
     }
 
     getApiSignatureStrategy: () => ApiSignatureStrategy;
@@ -66,7 +69,7 @@ export class MockFeignConfiguration implements FeignHttpConfiguration {
         return new DefaultFeignClientExecutor<T>(client);
     };
 
-    getHttpAdapter = () => new MockHttpAdapter(this.baseUrl);
+    getHttpAdapter = () => this.mockHttpAdapter;
 
     getHttpClient = <T extends HttpRequest = HttpRequest>() => {
         const httpClient = new DefaultHttpClient(this.getHttpAdapter());
@@ -118,7 +121,6 @@ export class MockFeignConfiguration implements FeignHttpConfiguration {
 
             }),
             new RoutingClientHttpRequestInterceptor(this.baseUrl),
-            new ApiPermissionProbeInterceptor(),
             new AuthenticationClientHttpRequestInterceptor({
                 getAuthorization: (req): AuthenticationToken => {
 

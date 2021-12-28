@@ -45,9 +45,9 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
             const feignConfigurationConstructor = options.configuration;
 
             /**
-             * 返回一个实现了FeignProxyClient接口的匿名类
+             * 返回一个实现了 FeignProxyClient 接口的匿名类
              */
-            return class _DefaultFeignProxyClient extends clazz implements FeignProxyClient<C> {
+            return class extends clazz implements FeignProxyClient<C> {
 
                 private readonly _serviceName: string;
 

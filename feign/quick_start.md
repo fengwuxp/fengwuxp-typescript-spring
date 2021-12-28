@@ -164,3 +164,16 @@ import {feignHttpConfigurationInitialize} from "feign-boot-starter";
 //  注册feign 代理
 const feignConfig = feignHttpConfigurationInitialize(new BrowserFeignConfigurer());
 ```
+
+#### 函数式支持
+- 参考 [FeignHttpFunctionBuilderTests](feign/test/functions/FeignHttpFunctionBuilderTests.ts)
+```typescript
+import {
+    functionBuilder,
+    FeignHttpClientPromiseFunction
+} from 'fengwuxp-typescript-feign'
+   const functionBuilder = feignHttpFunctionBuilder({value: "/api/test/v1"});
+   const findById: FeignHttpClientPromiseFunction<{ id: number }, { name: string }> = functionBuilder.get({value: "/user/{id}"});
+   const result = await findById({id: 1});
+   expect(result).toEqual({name: "test"});
+```

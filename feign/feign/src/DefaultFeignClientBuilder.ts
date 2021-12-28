@@ -29,7 +29,8 @@ export const defaultFeignClientBuilder: FeignClientBuilderFunction = <T extends 
                 // different proxy service executors can be returned according to different strategies
                 return feignClientExecutor.invoke(serviceMethod, ...args);
             };
-        }, null,
+        },
+        null,
         ProxyScope.METHOD,
         (object, key) => {
             return !ignorePropertyNames.includes(key)

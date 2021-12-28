@@ -67,15 +67,10 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
         }
         if (supportRequestBody(req.method)) {
             const contentType = this.resolveContentType(httpRequest);
-            const filterNoneValue = this.getRequestAttributes(req).filterNoneValue ?? false;
-            httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType, filterNoneValue);
+            httpRequest.body = serializeRequestBody(httpRequest.method, httpRequest.body, contentType, false);
         }
         return this.httpAdapter.send(httpRequest);
     };
-
-    private getRequestAttributes = (context: HttpRequestContext): any => {
-        return context.attributes ?? {};
-    }
 
     private resolveContentType = (httpRequest: T): HttpMediaType => {
 

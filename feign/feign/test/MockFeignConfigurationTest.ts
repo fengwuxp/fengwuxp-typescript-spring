@@ -16,13 +16,7 @@ logger.level = 'debug';
 
 export default class MockFeignConfigurationTest extends MockFeignConfiguration {
 
-    getHttpAdapter = () => {
-        return new MockHttpAdapter(this.baseUrl, {
-            "HEAD /test/example": {
-                [REQUEST_AUTHENTICATION_TYPE_HEADER_NAME]: 'NONE'
-            }
-        })
-    };
+
     getFeignClientExecutorInterceptors = () => {
 
 

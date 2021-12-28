@@ -10,7 +10,7 @@ import * as log4js from "log4js";
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
-export type MockDataType = (options: HttpRequest) => Promise<any> | any;
+export type MockDataSupplier = (options: HttpRequest) => any
 
 const sleep = (times) => {
     return new Promise((resolve) => {
@@ -25,16 +25,16 @@ export default class MockHttpAdapter implements HttpAdapter {
 
     private resolveHttpResponse: ResolveHttpResponse = new CommonResolveHttpResponse();
 
-    protected mockDataSource: Record<string, MockDataType> = {};
+    private mockDataSource: Record<string, MockDataSupplier> = {};
 
-    protected baseUrl: string = "";
+    private baseUrl: string = "";
 
     //是否启用参数匹配
     // protected enabledParamsPattern: boolean = false;
 
-    constructor(baseUrl: string, mockDataSource?: Record<string, any>) {
+    constructor(baseUrl: string, mockDataSource?: Record<string, MockDataSupplier>) {
         this.baseUrl = baseUrl;
-        this.mockDataSource = mockDataSource || {};
+        this.mockDataSource = mockDataSource ?? {};
     }
 
     send = async (req: HttpRequest): Promise<HttpResponse> => {
@@ -46,12 +46,7 @@ export default class MockHttpAdapter implements HttpAdapter {
             delete headers[contentTypeName];
         }
 
-        let pathname = url.split("?")[0].replace(this.baseUrl, "");
-        if (!pathname.startsWith("/")) {
-            pathname = `/${pathname}`;
-        }
-        const key = `${method} ${pathname}`;
-        const result: MockDataType = this.mockDataSource[key];
+        const result: MockDataSupplier = this.getMockData(method, url);
         const isFailure = result == null;
         if (isFailure) {
             const response: Response = {
@@ -72,13 +67,13 @@ export default class MockHttpAdapter implements HttpAdapter {
                     ok: true,
                     url,
                     redirected: null,
-                    headers: result
+                    headers: result(req)
                 }));
             }
             return Promise.resolve(this.resolveHttpResponse.resolve({
                 status: HttpStatus.OK,
                 statusText: null,
-                data: req,
+                data: result(req),
                 ok: true,
                 url,
                 redirected: null,
@@ -90,11 +85,21 @@ export default class MockHttpAdapter implements HttpAdapter {
 
     /**
      * set mock data
-     * @param url
-     * @param data
+     * @param pattern
+     * @param supplier
      */
-    setMockData = (url: string, data: MockDataType) => {
-        this.mockDataSource[url] = data;
+    setMockData = (pattern: string, supplier: MockDataSupplier) => {
+        this.mockDataSource[pattern] = supplier;
+    }
+
+
+    getMockData = (method: string, url: string): MockDataSupplier => {
+        let pathname = url.split("?")[0].replace(this.baseUrl, "");
+        if (!pathname.startsWith("/")) {
+            pathname = `/${pathname}`;
+        }
+        const mockDataSource = this.mockDataSource;
+        return mockDataSource[`${method.toUpperCase()} ${pathname}`];
     }
 
 

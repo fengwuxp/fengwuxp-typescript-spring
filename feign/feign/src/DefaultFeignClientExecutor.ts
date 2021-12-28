@@ -278,8 +278,13 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             ...options,
             ...defaultRequestContextOptions
         };
-        feignRequest.queryParams = this.resolveQueryPrams(feignRequest.queryParams ?? {}, requestMapping.params ?? {});
-        feignRequest.body = this.resolveRequestBody(requestMapping.method, originalParameter, feignRequest.filterNoneValue,);
+        const requestSupportRequestBody = supportRequestBody(requestMapping.method);
+        if (requestSupportRequestBody) {
+            feignRequest.body = this.resolveRequestBody(requestMapping.method, originalParameter, feignRequest.filterNoneValue);
+        } else {
+            feignRequest.queryParams = this.resolveQueryPrams(originalParameter, feignRequest.queryParams, requestMapping.params ?? {});
+        }
+
         feignRequest.headers = this.resolverRequestHeaders(feignRequest, methodName);
 
         if (apiSignatureStrategy != null) {
@@ -294,9 +299,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
 
         // init request context
-        feignRequest.attributes = {
-            filterNoneValue: feignRequest.filterNoneValue
-        };
+        feignRequest.attributes = {};
         this.configureRequestContext(feignRequest, feignMethodConfig);
 
         return feignRequest;
@@ -310,11 +313,12 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         return undefined;
     }
 
-    private resolveQueryPrams = (queryParams: QueryParamType, requestMappingParams: MappingHeaders | string[]) => {
+    private resolveQueryPrams = (queryParams: QueryParamType, optionQueryParams: QueryParamType, requestMappingParams: MappingHeaders | string[]) => {
         return {
+            ...(optionQueryParams ?? {}),
             // 合并默认参数
             ...this.resolveRequestMappingParams(requestMappingParams),
-            ...queryParams
+            ...(queryParams ?? {}),
         };
     }
 

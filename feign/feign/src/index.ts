@@ -92,6 +92,9 @@ export {
     default as HttpErrorResponseEventPublisherExecutorInterceptor
 } from "./event/HttpErrorResponseEventPublisherExecutorInterceptor";
 
+export {FeignHttpClientFunction, FeignHttpClientPromiseFunction} from "./functions/FeignHttpClientFunction"
+export {feignHttpFunctionBuilder} from "./functions/FeignHttpFunctionBuilder"
+
 export {MappedInterceptor} from "./interceptor/MappedInterceptor";
 export {default as MappedFeignClientExecutorInterceptor} from "./interceptor/MappedFeignClientExecutorInterceptor";
 export {default as MappedClientHttpRequestInterceptor} from "./interceptor/MappedClientHttpRequestInterceptor";
