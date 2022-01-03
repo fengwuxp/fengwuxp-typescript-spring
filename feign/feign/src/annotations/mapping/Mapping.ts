@@ -4,6 +4,8 @@ import {registerAnnotationMetadata} from "../../support/AnnotationMetadataRegist
 import {AuthenticationType} from "../../constant/AuthenticationType";
 
 
+export type MappingMethod = HttpMethod | string;
+
 export type MappingHeaderType = Array<boolean | string | number | Date>;
 
 /**
@@ -88,10 +90,10 @@ export interface RequestMappingOptions extends BaseRequestMappingOptions {
 export type Mapping<T extends BaseRequestMappingOptions = BaseRequestMappingOptions> = (options: T) => Function;
 
 /**
- * 生成Mapping注解 的方法
+ * 生成 Mapping 注解 的方法
  * @param method
  */
-export function generateMapping<T extends BaseRequestMappingOptions>(method?: HttpMethod): Mapping<T> {
+export function generateMapping<T extends BaseRequestMappingOptions>(method?: MappingMethod): Mapping<T> {
 
     return function <E extends FeignClient>(options: T): Function {
 

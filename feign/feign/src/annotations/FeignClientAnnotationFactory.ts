@@ -2,11 +2,12 @@ import {BaseFeignClientOptions, FeignClientMemberOptions, FeignProxyClient} from
 import {defaultApiModuleName, FEIGN_CLINE_META_KEY} from "../constant/FeignConstVar";
 import {FeignClientBuilder, FeignClientBuilderInterface} from "../FeignClientBuilder";
 import FeignConfigurationRegistry from "../configuration/FeignConfigurationRegistry";
-import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {converterFunctionInterface} from "../utils/ConverterFunctionInterface";
 import {FeignClientMethodConfig} from "../support/FeignClientMethodConfig";
 import {Reflection as Reflect} from "@abraham/reflection";
 import {FeignHttpConfiguration} from "../configuration/FeignHttpConfiguration";
 import {BaseFeignClientConfiguration} from "../support/BaseFeignClientConfiguration";
+import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 
 
 export type FeignConfigurationConstructor<C extends BaseFeignClientConfiguration = BaseFeignClientConfiguration> = { new(...args: any[]): C }
@@ -21,13 +22,7 @@ export interface FeignClientOptions<C extends BaseFeignClientConfiguration> exte
 }
 
 
-export enum FeignClientType {
-
-    HTTP,
-
-    WS
-}
-
+export type FeignClientType = "http" | "ws" | "rpc" | string;
 
 export const generateFeignClientAnnotation = <C extends BaseFeignClientConfiguration, T extends FeignProxyClient<C>>(clientType: FeignClientType) => {
 
@@ -66,8 +61,7 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
                     this._serviceName = feignOptions.value || clazz.name;
                     this._feignOptions = feignOptions;
                     // build feign client instance
-                    const feignClientBuilder: FeignClientBuilder = FeignConfigurationRegistry.getFeignClientBuilder(clientType);
-                    return invokeFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<any>>(feignClientBuilder).build(this);
+                    return converterFunctionInterface<FeignClientBuilder, FeignClientBuilderInterface<any>>(defaultFeignClientBuilder).build(this, clientType);
                 }
 
                 readonly serviceName = () => {
@@ -79,6 +73,9 @@ export const generateFeignClientAnnotation = <C extends BaseFeignClientConfigura
                 };
 
                 readonly feignConfiguration = async () => {
+                    if (this._feignOptions.configuration != null) {
+                        return this._feignOptions.configuration;
+                    }
                     const apiModule = this.feignOptions().apiModule;
                     const feignConfiguration: any = feignConfigurationConstructor != null ?
                         new feignConfigurationConstructor() : await FeignConfigurationRegistry.getFeignConfiguration<C>(clientType, apiModule);

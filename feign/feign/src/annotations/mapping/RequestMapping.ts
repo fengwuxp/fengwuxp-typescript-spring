@@ -1,5 +1,5 @@
 import {generateMapping, Mapping, RequestMappingOptions} from "./Mapping";
 
 
-//RequestMapping
+// RequestMapping
 export const RequestMapping: Mapping<RequestMappingOptions> = generateMapping<RequestMappingOptions>();

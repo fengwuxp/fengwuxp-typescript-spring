@@ -4,7 +4,7 @@ import {HttpAdapter} from "../adapter/HttpAdapter";
 import {serializeRequestBody, supportRequestBody} from "../utils/SerializeRequestBodyUtil";
 import {contentTypeName} from "../constant/FeignConstVar";
 import {ClientHttpRequestInterceptor, ClientHttpRequestInterceptorInterface} from "./ClientHttpRequestInterceptor";
-import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {converterFunctionInterface} from "../utils/ConverterFunctionInterface";
 import {AbstractHttpClient} from "./AbstractHttpClient";
 import {HttpMediaType} from "../constant/http/HttpMediaType";
 import {HttpStatus} from "../constant/http/HttpStatus";
@@ -46,7 +46,7 @@ export default class DefaultHttpClient<T extends HttpRequest = HttpRequest> exte
                     continue;
                 }
             }
-            const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
+            const clientHttpRequestInterceptorInterface = converterFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(interceptor);
             try {
                 httpRequest = await clientHttpRequestInterceptorInterface.intercept(httpRequest);
             } catch (e) {

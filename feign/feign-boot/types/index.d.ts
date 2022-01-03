@@ -119,7 +119,7 @@ interface FeignHttpConfigurer {
  * feign 配置初始化
  * @param configurer
  */
-declare const feignHttpConfigurationInitialize: (configurer: FeignHttpConfigurer) => Readonly<Pick<FeignHttpConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & {
+declare const feignHttpConfigurationInitialize: (configurer: FeignHttpConfigurer) => Readonly<Pick<FeignHttpConfiguration, "getHttpResponseEventListener" | "getRestTemplate"> & {
     setLoggerLevel: (level: Log4jLevel) => void;
 }>;
 

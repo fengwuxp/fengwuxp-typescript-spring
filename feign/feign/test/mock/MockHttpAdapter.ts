@@ -23,11 +23,11 @@ const sleep = (times) => {
  */
 export default class MockHttpAdapter implements HttpAdapter {
 
-    private resolveHttpResponse: ResolveHttpResponse = new CommonResolveHttpResponse();
+    private readonly resolveHttpResponse: ResolveHttpResponse = new CommonResolveHttpResponse();
 
-    private mockDataSource: Record<string, MockDataSupplier> = {};
+    private readonly mockDataSource: Record<string, MockDataSupplier> = {};
 
-    private baseUrl: string = "";
+    private readonly baseUrl: string = "";
 
     //是否启用参数匹配
     // protected enabledParamsPattern: boolean = false;

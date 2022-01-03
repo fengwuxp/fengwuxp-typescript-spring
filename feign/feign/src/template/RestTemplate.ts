@@ -12,7 +12,7 @@ import {HttpClient} from "../client/HttpClient";
 import {UriTemplateHandler, UriTemplateHandlerInterface} from "./UriTemplateHandler";
 import {defaultUriTemplateFunctionHandler} from "./DefaultUriTemplateHandler";
 import {ResponseErrorHandler, ResponseErrorHandlerInterFace} from "./ResponseErrorHandler";
-import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {converterFunctionInterface} from "../utils/ConverterFunctionInterface";
 import {replacePathVariableValue} from "../helper/ReplaceUriVariableHelper";
 import {HttpRequestContext} from "../client/HttpRequest";
 import {getRequestRetryOptions} from "../context/RequestContextHolder";
@@ -94,7 +94,7 @@ export default class RestTemplate implements RestOperations {
         const {_uriTemplateHandler, _responseErrorHandler, businessResponseExtractor} = this;
 
         //handling path parameters in the request body, if any
-        const requestUrl = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler)
+        const requestUrl = converterFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(_uriTemplateHandler)
             .expand(replacePathVariableValue(url, requestBody), uriVariables);
 
         let httpClient = this.httpClient;
@@ -117,7 +117,7 @@ export default class RestTemplate implements RestOperations {
         } catch (error) {
             //handle error
             if (_responseErrorHandler) {
-                return invokeFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
+                return converterFunctionInterface<ResponseErrorHandler, ResponseErrorHandlerInterFace>(_responseErrorHandler).handleError(
                     {
                         url: requestUrl,
                         method,
@@ -132,7 +132,7 @@ export default class RestTemplate implements RestOperations {
         }
 
         if (responseExtractor) {
-            return invokeFunctionInterface<ResponseExtractor<E>, ResponseExtractorInterface<E>>(responseExtractor).extractData(httpResponse, businessResponseExtractor);
+            return converterFunctionInterface<ResponseExtractor<E>, ResponseExtractorInterface<E>>(responseExtractor).extractData(httpResponse, businessResponseExtractor);
         }
 
         return httpResponse;

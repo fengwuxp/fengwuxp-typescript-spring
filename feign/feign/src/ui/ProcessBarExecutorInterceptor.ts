@@ -7,7 +7,7 @@ import {
     RequestProgressBar,
     RequestProgressBarInterface
 } from "./RequestProgressBar";
-import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {converterFunctionInterface} from "../utils/ConverterFunctionInterface";
 
 /**
  * process bar executor
@@ -114,7 +114,7 @@ export default class ProcessBarExecutorInterceptor<T extends FeignRequestOptions
 
     private showRequestProgressBar = (progressBarOptions: ProgressBarOptions) => {
         const {progressBar} = this;
-        this.closeRequestProgressBarFunction = invokeFunctionInterface<RequestProgressBar, RequestProgressBarInterface>(progressBar).showProgressBar(progressBarOptions);
+        this.closeRequestProgressBarFunction = converterFunctionInterface<RequestProgressBar, RequestProgressBarInterface>(progressBar).showProgressBar(progressBarOptions);
     }
 
     private closeRequestProgressBar = () => {

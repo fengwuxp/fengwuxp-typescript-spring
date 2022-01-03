@@ -1,5 +1,5 @@
 import {FeignHttpConfiguration} from "../../src/configuration/FeignHttpConfiguration";
-import DefaultFeignClientExecutor from "../../src/DefaultFeignClientExecutor";
+import DefaultHttpFeignClientExecutor from "../../src/DefaultHttpFeignClientExecutor";
 import {FeignProxyClient} from "../../src/support/FeignProxyClient";
 import DefaultHttpClient from "../../src/client/DefaultHttpClient";
 import RestTemplate from "../../src/template/RestTemplate";
@@ -66,7 +66,7 @@ export class MockFeignConfiguration implements FeignHttpConfiguration {
 
 
     getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client: T) => {
-        return new DefaultFeignClientExecutor<T>(client);
+        return new DefaultHttpFeignClientExecutor<T>(client);
     };
 
     getHttpAdapter = () => this.mockHttpAdapter;

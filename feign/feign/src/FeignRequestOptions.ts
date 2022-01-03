@@ -176,9 +176,7 @@ export interface FeignRequestOptions extends FeignRequestBaseOptions, FeignReque
 
 }
 
-export interface ClientRequestContext {
 
-}
 
 
 

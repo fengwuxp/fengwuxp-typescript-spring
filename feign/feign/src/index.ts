@@ -10,13 +10,21 @@ export {PostMapping} from "./annotations/mapping/PostMapping";
 export {PatchMapping} from "./annotations/mapping/PatchMapping";
 export {PutMapping} from "./annotations/mapping/PutMapping";
 export {DeleteMapping} from "./annotations/mapping/DeleteMapping";
+export {
+    generateMapping,
+    Mapping,
+    BaseRequestMappingOptions,
+    MappingHeaders,
+    MappingHeaderType,
+    RequestAuthenticationType
+} from "./annotations/mapping/Mapping";
 export {DataObfuscation} from "./annotations/security/DataObfuscation";
 export {Signature} from "./annotations/security/Signature";
 export {FileUpload, AutoFileUploadOptions} from "./annotations/upload/FileUpload";
 export {FeignRetry} from "./annotations/retry/FeignRetry";
 export {Feign} from "./annotations/Feign";
 export {
-    FeignClientType, generateFeignClientAnnotation, FeignClientOptions, FeignConfigurationConstructor
+    generateFeignClientAnnotation, FeignClientOptions, FeignConfigurationConstructor, FeignClientType
 } from "./annotations/FeignClientAnnotationFactory";
 
 export {AbstractHttpClient} from "./client/AbstractHttpClient";
@@ -45,7 +53,6 @@ export {
     ApiPermissionProbeStrategy,
     NEVER_REFRESH_FLAG
 } from "./client/AuthenticationStrategy";
-// export {default as CacheAuthenticationStrategy} from "./client/CacheAuthenticationStrategy"
 
 export {default as NetworkClientHttpRequestInterceptor} from "./network/NetworkClientHttpRequestInterceptor";
 export {default as DefaultNetworkStatusListener} from "./network/DefaultNoneNetworkFailBack";
@@ -116,6 +123,7 @@ export {simpleRequestURLResolver} from "./resolve/url/SimpleRequestURLResolver";
 
 export {ApiSignatureStrategy, SimpleApiSignatureStrategy} from "./signature/ApiSignatureStrategy";
 
+export {BaseFeignClientConfiguration} from "./support/BaseFeignClientConfiguration";
 export {FeignClientMethodConfig} from "./support/FeignClientMethodConfig";
 export {FeignProxyClient} from "./support/FeignProxyClient";
 export {GenerateAnnotationMethodConfig} from "./support/GenerateAnnotationMethodConfig";
@@ -153,7 +161,7 @@ export {matchMediaType, responseIsJson, responseIsFile, responseIsText} from "./
 export {
     supportRequestBody, serializeRequestBody, filterNoneValueAndNewObject, queryStringify
 } from "./utils/SerializeRequestBodyUtil";
-export {invokeFunctionInterface} from "./utils/InvokeFunctionInterface";
+export {converterFunctionInterface} from "./utils/ConverterFunctionInterface";
 
 export {
     ValidatorDescriptor, ClientRequestDataValidator, ValidateInvokeOptions
@@ -162,7 +170,7 @@ export {default as AsyncClientRequestDataValidator} from "./validator/AsyncClien
 export {default as ClientRequestDataValidatorHolder} from "./validator/ClientRequestDataValidatorHolder"
 
 export {DefaultFeignClientBuilder, defaultFeignClientBuilder} from "./DefaultFeignClientBuilder";
-export {default as DefaultFeignClientExecutor} from "./DefaultFeignClientExecutor";
+export {default as DefaultFeignClientExecutor} from "./DefaultHttpFeignClientExecutor";
 export {FeignClient} from "./FeignClient";
 export {FeignClientBuilderFunction, FeignClientBuilderInterface, FeignClientBuilder} from "./FeignClientBuilder";
 export {FeignClientExecutor} from "./FeignClientExecutor";

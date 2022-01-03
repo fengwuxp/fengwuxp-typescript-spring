@@ -2,7 +2,7 @@ import * as log4js from "log4js";
 import {
     defaultUriTemplateFunctionHandler,
     DefaultUriTemplateHandler,
-    invokeFunctionInterface,
+    converterFunctionInterface,
     UriTemplateHandler,
     UriTemplateHandlerInterface
 } from "../../src";
@@ -48,11 +48,11 @@ describe("template test", () => {
     });
 
     test("invoke function Interface ", () => {
-        const expand1 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateHandler).expand("http://a.b.com/member/{id}", {
+        const expand1 = converterFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateHandler).expand("http://a.b.com/member/{id}", {
             "id": 2,
             name: "张三"
         });
-        const expand2 = invokeFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateFunctionHandler).expand("http://a.b.com/member/{id}", {
+        const expand2 = converterFunctionInterface<UriTemplateHandler, UriTemplateHandlerInterface>(defaultUriTemplateFunctionHandler).expand("http://a.b.com/member/{id}", {
             "id": 2,
             name: "张三"
         });

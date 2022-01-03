@@ -1,15 +1,14 @@
 import {
     DeleteMapping,
     Feign,
+    FeignRequestOptions,
     FeignRetry,
+    GetMapping,
     HttpMethod,
-    HttpMediaType,
     PostMapping,
     RequestMapping,
     Signature
 } from "fengwuxp-typescript-feign";
-import {GetMapping} from "../../feign/src/annotations/mapping/GetMapping";
-import {FeignRequestOptions} from "../../feign/src";
 
 
 @Feign({

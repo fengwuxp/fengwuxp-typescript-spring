@@ -1,52 +1,53 @@
 import * as log4js from "log4js";
 import TestFeignClient from "./TestFeignClient";
-import {ClientHttpInterceptorRegistry, FeignClientInterceptorRegistry, feignConfigurationInitializer} from "../src";
+import {ClientHttpInterceptorRegistry, FeignClientInterceptorRegistry, feignHttpConfigurationInitialize} from "../src";
 import {
+    defaultApiModuleName,
     FeignConfigurationRegistry,
     HttpMediaType,
-    NetworkClientHttpRequestInterceptor, NetworkStatus, ProcessBarExecutorInterceptor,
+    ProcessBarExecutorInterceptor,
     RoutingClientHttpRequestInterceptor,
 } from "fengwuxp-typescript-feign";
-import MockHttpAdapter from "../../feign/test/mock/MockHttpAdapter";
-import {ProgressBarOptions} from "../../feign/src/FeignRequestOptions";
-
-
+import MockHttpAdapter from "./MockHttpAdapter";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
 
 describe("test feign boot starter", () => {
 
-    feignConfigurationInitializer({
+    feignHttpConfigurationInitialize({
+
         apiSignatureStrategy: function () {
             return undefined;
         },
+
         defaultProduce: function () {
             return HttpMediaType.FORM_DATA;
         },
+
         httpAdapter: function () {
             return new MockHttpAdapter("http://test.abc.com/api");
         },
+
         registryClientHttpRequestInterceptors: function (interceptorRegistry: ClientHttpInterceptorRegistry) {
             interceptorRegistry.addInterceptor(new RoutingClientHttpRequestInterceptor("http://test.abc.com"));
-
         },
+
         registryFeignClientExecutorInterceptors: function (interceptorRegistry: FeignClientInterceptorRegistry) {
             interceptorRegistry.addInterceptor(new ProcessBarExecutorInterceptor({
-                hideProgressBar: function () {
-                }, showProgressBar: function (p1: ProgressBarOptions) {
+                showProgressBar: () => {
+                    return () => {}
                 }
-
             })).addPathPatterns("/**");
         }
     });
 
-    const defaultFeignConfiguration = FeignConfigurationRegistry.getDefaultFeignConfiguration();
-    logger.debug("{}",defaultFeignConfiguration);
+    const defaultFeignConfiguration = FeignConfigurationRegistry.getFeignConfiguration("http", defaultApiModuleName);
+    logger.debug("{}", defaultFeignConfiguration);
 
     const testFeignClient = new TestFeignClient();
 
-    logger.debug("testFeignClient",testFeignClient);
+    logger.debug("testFeignClient", testFeignClient);
 
     test("test feign boot starter example 1", async () => {
 
@@ -70,7 +71,6 @@ describe("test feign boot starter", () => {
     }, 10 * 1000);
 
     test("test retry", async () => {
-
         const result = await testFeignClient.testQuery({
             id: 1,
             date: new Date(),

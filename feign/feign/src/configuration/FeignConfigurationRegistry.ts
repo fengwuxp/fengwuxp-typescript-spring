@@ -1,13 +1,17 @@
-import {FeignClientBuilder} from "../FeignClientBuilder";
 import memoize from "lodash/memoize";
-import {defaultFeignClientBuilder} from "../DefaultFeignClientBuilder";
 import {FeignClientType, FeignConfigurationConstructor} from "../annotations/FeignClientAnnotationFactory";
 import {BaseFeignClientConfiguration} from "../support/BaseFeignClientConfiguration";
+import {FeignClientExecutorFactory} from "../FeignClientExecutor";
+import DefaultHttpFeignClientExecutor from "../DefaultHttpFeignClientExecutor";
 
 
 // ignore memorization method names
-const ignoreMethodNames = ["getFeignClientExecutor"];
+const ignoreMethodNames = new Set<string>(["getFeignClientExecutor"]);
 
+/**
+ * configuration function wrapper caches
+ * @param configuration
+ */
 const memorizationConfiguration = (configuration: BaseFeignClientConfiguration): BaseFeignClientConfiguration => {
     if (configuration == null) {
         return;
@@ -15,7 +19,7 @@ const memorizationConfiguration = (configuration: BaseFeignClientConfiguration):
     const newConfiguration: any = {};
     for (const key in configuration) {
         const configurationElement = configuration[key];
-        const needMemoize = ignoreMethodNames.indexOf(key) < 0 && typeof configurationElement === "function";
+        const needMemoize = ignoreMethodNames.has(key) && typeof configurationElement === "function";
         if (needMemoize) {
             newConfiguration[key] = memoize(configurationElement, () => configurationElement);
         } else {
@@ -25,27 +29,18 @@ const memorizationConfiguration = (configuration: BaseFeignClientConfiguration):
     return newConfiguration;
 };
 
-const factory = (feignConfigurationConstructor: FeignConfigurationConstructor) => {
-    return memorizationConfiguration(new feignConfigurationConstructor());
+
+
+
+type WaitQueue = {
+    [key: string]: Array<(handle: (val: BaseFeignClientConfiguration) => void) => void>
 };
 
 /**
- * feign configuration factory
- */
-export const configurationFactory = memoize(factory, (feignConfigurationConstructor: FeignConfigurationConstructor) => {
-    if (feignConfigurationConstructor == null) {
-        return 0;
-    }
-    return feignConfigurationConstructor;
-});
-
-
-/**
  * 等待获取配置队列
+ *
  */
-const WAIT_GET_CONFIGURATION_QUEUE: Array<{
-    [key: string]: Array<(handle: (val: BaseFeignClientConfiguration) => void) => void>
-}> = [];
+const WAIT_GET_CONFIGURATION_QUEUE: Record<FeignClientType, WaitQueue> = {};
 
 const getWaitConfigurationQueue = (type: FeignClientType, apiModule: string): Array<Function> => {
     if (WAIT_GET_CONFIGURATION_QUEUE[type] == null) {
@@ -63,10 +58,13 @@ const initWaitConfigurationQueue = (type: FeignClientType, apiModule: string) =>
 
 
 /**
- * @key apiModule
- * @value FeignConfiguration
+ * @key type
+ * @value {
+ *     key: apiModule
+ *     value：FeignConfiguration
+ * }
  */
-const CONFIGURATION_CACHES: Array<Record<string, any>> = [];
+const CONFIGURATION_CACHES: Record<FeignClientType, Record<string, any>> = {};
 
 const getConfigurationCaches = <C extends BaseFeignClientConfiguration>(type: FeignClientType): Record<string, C> => {
     if (CONFIGURATION_CACHES[type] == null) {
@@ -74,10 +72,21 @@ const getConfigurationCaches = <C extends BaseFeignClientConfiguration>(type: Fe
     }
     return CONFIGURATION_CACHES[type];
 }
+
+const notInitFactory = (type) => {
+    return client => {
+        throw new Error(`${type} feign client not init`);
+    }
+}
+
 /**
- * feign builder
+ * feign executor factory
  */
-const FEIGN_CLIENT_BUILDER_CACHES: Array<FeignClientBuilder> = [defaultFeignClientBuilder, defaultFeignClientBuilder];
+const FEIGN_CLIENT_EXECUTOR_FACTORIES: Record<FeignClientType, FeignClientExecutorFactory> = {
+    http: client => new DefaultHttpFeignClientExecutor(client),
+    ws: notInitFactory("ws"),
+    rpc: notInitFactory("rpc")
+};
 
 const registry = {
 
@@ -102,16 +111,16 @@ const registry = {
         return new Promise<C>(resolve => getWaitConfigurationQueue(type, apiModule).push(resolve));
     },
 
-    setFeignClientBuilder(type: FeignClientType, feignClientBuilder: FeignClientBuilder): void {
-        FEIGN_CLIENT_BUILDER_CACHES[type] = feignClientBuilder;
+    registerFeignClientExecutorFactory(type: FeignClientType, factory: FeignClientExecutorFactory): void {
+        FEIGN_CLIENT_EXECUTOR_FACTORIES[type] = factory;
     },
 
-    getFeignClientBuilder(type: FeignClientType): FeignClientBuilder {
-        const builder = FEIGN_CLIENT_BUILDER_CACHES[type];
-        if (builder == null) {
-            throw new Error(`not found type = ${type} client builder`);
+    getFeignClientExecutorFactory(type: FeignClientType): FeignClientExecutorFactory {
+        const factory = FEIGN_CLIENT_EXECUTOR_FACTORIES[type];
+        if (factory == null) {
+            throw new Error(`not found type = ${type} client executor factory`);
         }
-        return builder;
+        return factory;
     }
 };
 /**

@@ -1,13 +1,10 @@
 import {FeignHttpConfigurer} from "./FeignHttpConfigurer";
 import {
-    FeignClientType,
     defaultApiModuleName,
-    DefaultFeignClientExecutor,
     DefaultFeignLog4jFactory,
     DefaultHttpClient,
     FeignConfigurationRegistry,
     FeignHttpConfiguration,
-    FeignProxyClient,
     HttpResponseEventPublisher,
     Log4jLevel,
     RestTemplate,
@@ -28,9 +25,6 @@ const buildConfiguration = (feignConfigurationAdapter: FeignHttpConfigurer) => {
 
         getApiSignatureStrategy = feignConfigurationAdapter.apiSignatureStrategy;
 
-        getFeignClientExecutor = <T extends FeignProxyClient = FeignProxyClient>(client) => {
-            return new DefaultFeignClientExecutor<T>(client);
-        };
 
         getFeignClientExecutorInterceptors = () => {
             const feignClientInterceptorRegistry = new FeignClientInterceptorRegistry();
@@ -88,7 +82,7 @@ const getApiModule = (configurer: FeignHttpConfigurer): string => {
 export const feignHttpConfigurationInitialize = (configurer: FeignHttpConfigurer):
     Readonly<Pick<FeignHttpConfiguration, "getRestTemplate" | "getHttpResponseEventListener"> & { setLoggerLevel: (level: Log4jLevel) => void }> => {
     const feignConfiguration = buildConfiguration(configurer);
-    FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, getApiModule(configurer), feignConfiguration);
+    FeignConfigurationRegistry.setFeignConfiguration("http", getApiModule(configurer), feignConfiguration);
     return {
         getRestTemplate: feignConfiguration.getRestTemplate,
         getHttpResponseEventListener: feignConfiguration.getHttpResponseEventListener,

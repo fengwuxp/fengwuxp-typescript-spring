@@ -12,12 +12,11 @@ import MappedFeignClientExecutorInterceptor from "./interceptor/MappedFeignClien
 import {MappingHeaders, RequestMappingOptions} from "./annotations/mapping/Mapping";
 import {restResponseExtractor} from "./template/RestResponseExtractor";
 import {filterNoneValueAndNewObject, supportRequestBody} from "./utils/SerializeRequestBodyUtil";
-import {HttpResponse} from 'client/HttpResponse';
 import ClientRequestDataValidatorHolder from "./validator/ClientRequestDataValidatorHolder";
 import {setRequestFeignClientMethodConfiguration, setRequestFeignConfiguration} from "./context/RequestContextHolder"
-import {AuthenticationStrategy} from "./client/AuthenticationStrategy";
 import {parse} from "querystring";
 import {FeignHttpConfiguration} from "./configuration/FeignHttpConfiguration";
+import {HttpResponse} from './client/HttpResponse';
 import {SupportSerializableBody} from "./client/HttpRequest";
 import {HttpMethod} from "./constant/http/HttpMethod";
 import {FeignClientMethodConfig} from "./support/FeignClientMethodConfig";
@@ -26,9 +25,9 @@ import Log4jFactory from "./log/DefaultFeignLo4jFactory";
 /**
  * default feign client executor
  */
-export default class DefaultFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
+export default class DefaultHttpFeignClientExecutor<T extends FeignProxyClient = FeignProxyClient> implements FeignClientExecutor<T> {
 
-    private static LOG = Log4jFactory.getLogger(DefaultFeignClientExecutor.name);
+    private static LOG = Log4jFactory.getLogger(DefaultHttpFeignClientExecutor.name);
 
     private readonly apiService: T;
 
@@ -42,9 +41,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     // api signature strategy
     private apiSignatureStrategy: ApiSignatureStrategy;
-
-    // authentication strategy
-    private authenticationStrategy: AuthenticationStrategy;
 
     // rest template
     private restTemplate: RestOperations;
@@ -70,7 +66,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
     invoke = async (methodName: string, ...args): Promise<any> => {
 
         // initialize config
-        await this.initialize(this.apiService);
+        await this.initialize();
 
         const {requestURLResolver, restTemplate, apiService} = this;
 
@@ -80,15 +76,15 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         // validate request params
         await this.validateRequestParams(originalParameter, methodName);
 
-        //requestMapping
+        // requestMapping
         const {requestMapping} = this.apiService.getFeignMethodConfig(methodName);
 
         // resolver request url
         const requestURL = requestURLResolver(apiService, methodName);
         let feignRequestOptions = this.buildFeignRequest(originalParameter, args[1], methodName);
 
-        if (DefaultFeignClientExecutor.LOG.isDebugEnabled()) {
-            DefaultFeignClientExecutor.LOG.debug(`
+        if (DefaultHttpFeignClientExecutor.LOG.isDebugEnabled()) {
+            DefaultHttpFeignClientExecutor.LOG.debug(`
                           requestUrl: ${requestURL}
                           requestParams: ${JSON.stringify(feignRequestOptions.queryParams)}
                           requestHeaders: ${JSON.stringify(feignRequestOptions.headers)}
@@ -109,8 +105,8 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
                 feignRequestOptions.headers,
                 feignRequestOptions);
         } catch (error) {
-            if (DefaultFeignClientExecutor.LOG.isDebugEnabled()) {
-                DefaultFeignClientExecutor.LOG.debug("request error, request url: %O", requestURL, error);
+            if (DefaultHttpFeignClientExecutor.LOG.isDebugEnabled()) {
+                DefaultHttpFeignClientExecutor.LOG.debug("request error, request url: %O", requestURL, error);
             }
             // Non 2xx response
             const result = await this.postHandleError(requestURL, requestMapping, feignRequestOptions, error as any);
@@ -123,13 +119,12 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
 
     /**
      *  init feign client executor
-     * @param apiService
      */
-    private initialize = async (apiService: T) => {
+    private initialize = async () => {
         if (this.initialized) {
             return;
         }
-        this.feignConfiguration = await apiService.feignConfiguration<FeignHttpConfiguration>();
+        this.feignConfiguration = await this.apiService.feignConfiguration<FeignHttpConfiguration>();
         const {
             getRestTemplate,
             getApiSignatureStrategy,
@@ -137,8 +132,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
             getRequestURLResolver,
             getFeignClientExecutorInterceptors,
             getDefaultFeignRequestContextOptions,
-            getDefaultHttpHeaders,
-            getAuthenticationStrategy
+            getDefaultHttpHeaders
         } = this.feignConfiguration;
 
         this.restTemplate = getRestTemplate();
@@ -154,10 +148,6 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         }
         if (getDefaultFeignRequestContextOptions) {
             this.defaultRequestContextOptions = getDefaultFeignRequestContextOptions();
-        }
-
-        if (getAuthenticationStrategy) {
-            this.authenticationStrategy = getAuthenticationStrategy();
         }
 
         if (getDefaultHttpHeaders) {
@@ -264,7 +254,7 @@ export default class DefaultFeignClientExecutor<T extends FeignProxyClient = Fei
         // request data validate
         return ClientRequestDataValidatorHolder.validate(requestParameter, validateSchemaOptions).catch(error => {
             // validate error
-            DefaultFeignClientExecutor.LOG.debug("validate request params failure, request: %O", requestParameter, error);
+            DefaultHttpFeignClientExecutor.LOG.debug("validate request params failure, request: %O", requestParameter, error);
             return Promise.reject(error);
         });
     }

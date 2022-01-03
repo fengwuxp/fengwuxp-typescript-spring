@@ -15,3 +15,5 @@ export interface FeignClientExecutor<T extends FeignClient = FeignProxyClient, R
     invoke: (methodName: string, ...args) => R;
 }
 
+
+export type FeignClientExecutorFactory<T extends FeignClient = FeignProxyClient> = (client: T) => FeignClientExecutor;

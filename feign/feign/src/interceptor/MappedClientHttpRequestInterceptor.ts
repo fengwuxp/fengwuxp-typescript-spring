@@ -4,7 +4,7 @@ import {
     ClientHttpRequestInterceptorInterface
 } from "../client/ClientHttpRequestInterceptor";
 import {HttpMethod} from "../constant/http/HttpMethod";
-import {invokeFunctionInterface} from "../utils/InvokeFunctionInterface";
+import {converterFunctionInterface} from "../utils/ConverterFunctionInterface";
 import {MappedInterceptor} from "./MappedInterceptor";
 
 
@@ -33,7 +33,7 @@ export default class MappedClientHttpRequestInterceptor<T extends HttpRequest = 
 
 
     public intercept = (req: T): Promise<T> => {
-        const clientHttpRequestInterceptorInterface = invokeFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(this.clientInterceptor);
+        const clientHttpRequestInterceptorInterface = converterFunctionInterface<ClientHttpRequestInterceptor<T>, ClientHttpRequestInterceptorInterface<T>>(this.clientInterceptor);
         return clientHttpRequestInterceptorInterface.intercept(req);
     };
 

@@ -39,6 +39,9 @@
     "core-js": "^3.4.1",
     "fengwuxp-library-starter": "^1.0.0",
     "fengwuxp-typescript-feign": "^1.2.0",
+    "jest": "^27.0.0",
+    "ts-jest": "^27.1.2",
+    "tslib": "^2.3.1",
     "typescript": "^4.0.0"
   },
   "dependencies": {}

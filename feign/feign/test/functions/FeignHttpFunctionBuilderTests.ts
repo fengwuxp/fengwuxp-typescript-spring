@@ -2,11 +2,11 @@ import * as log4js from "log4js";
 import MockFeignConfigurationTest from "../MockFeignConfigurationTest";
 import {
     defaultApiModuleName,
-    FeignClientType,
     FeignConfigurationRegistry,
     FeignHttpClientPromiseFunction,
     feignHttpFunctionBuilder
 } from "../../src";
+import {FEIGN_HTTP} from "../../src/annotations/Feign";
 
 const logger = log4js.getLogger();
 logger.level = 'debug';
@@ -18,7 +18,7 @@ describe("test functions feign client builder", () => {
     const httpAdapter = mockFeignConfiguration.getHttpAdapter();
     httpAdapter.setMockData("GET /api/test/v1/user/1", (req) => ({name: "test"}));
 
-    FeignConfigurationRegistry.setFeignConfiguration(FeignClientType.HTTP, defaultApiModuleName, mockFeignConfiguration);
+    FeignConfigurationRegistry.setFeignConfiguration(FEIGN_HTTP, defaultApiModuleName, mockFeignConfiguration);
     const functionBuilder = feignHttpFunctionBuilder({value: "/api/test/v1"});
 
     test("test function build http client", async () => {

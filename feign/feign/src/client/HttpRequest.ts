@@ -45,7 +45,6 @@ export interface HttpRequest extends HttpRequestContext {
      */
     method: HttpMethod | string;
 
-
     /**
      * request headers
      */
