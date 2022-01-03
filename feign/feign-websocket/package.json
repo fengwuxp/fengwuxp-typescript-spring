@@ -1,0 +1,74 @@
+{
+  "name": "feign-webscoket",
+  "version": "1.2.0",
+  "description": "typescript feign",
+  "publishConfig": {
+    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring"
+  },
+  "bugs": {
+    "url": "https://github.com/fengwuxp/fengwuxp-typescript-spring/issues"
+  },
+  "homepage": "https://github.com/fengwuxp/fengwuxp-typescript-spring#readme",
+  "main": "lib/index.js",
+  "module": "es/index.js",
+  "esnext": "esnext/index.js",
+  "typings": "types/index.d.ts",
+  "files": [
+    "lib",
+    "es",
+    "esnext",
+    "types"
+  ],
+  "author": "wuxp",
+  "license": "ISC",
+  "scripts": {
+    "yarn:install": "yarn install",
+    "npm:publish": "npm publish",
+    "tsc:build": "rm -rf ./types & tsc -p ./tsconfig.lib.json --emitDeclarationOnly",
+    "test": "jest --config ./jest.config.js --verbose=true",
+    "rollup:build:esnext": "rm -rf ./esnext & rollup -c ./rollup.esnext.config.js",
+    "rollup:build": "npm run tsc:build && rollup -c && rm -rf ./types-temp",
+    "publish:lib": "npm run rollup:build && npm run rollup:build:esnext && npm run npm:publish"
+  },
+  "keywords": [
+    "fetch",
+    "feign",
+    "typescript"
+  ],
+  "optionalDependencies": {
+    "async-validator": "^3.5.0"
+  },
+  "devDependencies": {
+    "@babel/runtime": "^7.0.0",
+    "@babel/runtime-corejs3": "^7.0.0",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.53",
+    "async-validator": "^3.5.0",
+    "core-js": "^3.4.1",
+    "es5-shim": "^4.5.9",
+    "es6-promise": "^4.1.1",
+    "fengwuxp-library-starter": "^1.0.0",
+    "fengwuxp-rollup-dependency": "^1.0.0",
+    "rollup": "2.37.1",
+    "rollup-plugin-analyzer": "4.0.0",
+    "rollup-plugin-dts": "^2.0.1",
+    "rollup-plugin-filesize": "9.1.0",
+    "rollup-plugin-terser": "7.0.2",
+    "rollup-plugin-typescript2": "^0.29.0",
+    "typescript": "^4.2.0-dev.20210121"
+  },
+  "dependencies": {
+    "@abraham/reflection": "^0.7.0",
+    "@types/lodash": "^4.14.149",
+    "fengwuxp-common-proxy": "^1.0.0",
+    "fengwuxp-common-utils": "^1.0.0",
+    "fengwuxp-typescript-feign": "^1.2.0",
+    "lodash": "^4.17.15",
+    "tslib": "^2.1.0"
+  },
+  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+}
