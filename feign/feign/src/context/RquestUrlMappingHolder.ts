@@ -27,7 +27,7 @@ const routing = (url: string, routeMapping: Record<string, string>) => {
     const serviceId = _url.host
     const serviceUri = routeMapping[serviceId];
     if (serviceUri.startsWith("/")){
-        return normalizeUrl(`${serviceUri}/${_url.pathname}${_url.search}`);
+        return normalizeUrl(`${serviceUri}${_url.pathname}${_url.search}`);
     }
     const routeUrl = new URL(serviceUri);
     _url.host = routeUrl.host;

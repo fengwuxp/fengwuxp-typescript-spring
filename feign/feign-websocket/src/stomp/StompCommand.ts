@@ -2,11 +2,17 @@ export enum StompCommand {
 
     CONNECT = "CONNECT",
 
+    CONNECTED = "CONNECTED",
+
     SEND = 'SEND',
 
     SUBSCRIBE = "SUBSCRIBE",
 
     UNSUBSCRIBE = "UNSUBSCRIBE",
+
+    ACK = "ACK",
+
+    NACK = "NACK",
 
     BEGIN = "BEGIN",
 
@@ -14,11 +20,15 @@ export enum StompCommand {
 
     ABORT = "ABORT",
 
-    ACK = "ACK",
+    DISCONNECT = "DISCONNECT",
 
-    NACK = "NACK",
+    RECEIVE = "RECEIVE",
 
-    DISCONNECT = "DISCONNECT"
+    MESSAGE = "MESSAGE",
+
+    RECEIPT = "RECEIPT",
+
+    ERROR = "ERROR"
 }
 
 

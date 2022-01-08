@@ -6,24 +6,24 @@ export interface WebSocketMessage<T> {
 }
 
 
-export type WebSocketMessageMediaType = string | ArrayBufferLike
+export type WebSocketMessageOriginalType = string | Uint8Array | ArrayBuffer
 
 
 /**
  * 字符串或字节消息
  */
-export class TextByteMessage implements WebSocketMessage<WebSocketMessageMediaType> {
+export class TextByteMessage implements WebSocketMessage<WebSocketMessageOriginalType> {
 
-    private readonly data: WebSocketMessageMediaType;
+    private readonly data: WebSocketMessageOriginalType;
 
     private readonly length: number;
 
-    constructor(data: WebSocketMessageMediaType) {
+    constructor(data: WebSocketMessageOriginalType) {
         this.data = data;
         this.length = this.getDataLength(data);
     }
 
-    private getDataLength = (data: string | ArrayBuffer | Blob | ArrayBufferView) => {
+    private getDataLength = (data: WebSocketMessageOriginalType) => {
         if (data == null) {
             return 0
         }
@@ -33,6 +33,10 @@ export class TextByteMessage implements WebSocketMessage<WebSocketMessageMediaTy
         }
 
         if (data.constructor === ArrayBuffer) {
+            return data.byteLength;
+        }
+
+        if (data.constructor === Uint8Array) {
             return data.byteLength;
         }
 

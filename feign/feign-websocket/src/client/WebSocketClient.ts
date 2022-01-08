@@ -1,11 +1,11 @@
-import {WebSocketMessage} from "../WebSocketMessage";
 import {WebSocketMessageEventConsumer, WebSocketMessageEventSubscriber} from "../event/WebSocketMessageEvent";
 import {WebSocketMethodMapping} from "../annotations/WebSocketMapping";
+import {WebSocketRequest} from "../WebSocketRequest";
 
 
 export interface WebSocketClient {
 
-    send: <T = any>(message: WebSocketMessage<T>) => void;
+    send: <T = any>(request: WebSocketRequest<T>) => void;
 
     subscribe: <M = any>(eventType: string, consumer: WebSocketMessageEventConsumer<M>) => WebSocketMessageEventSubscriber;
 

@@ -1,21 +1,26 @@
 import {MessageDecoderInterface, MessageEncoderInterface} from "./WebSocketMessageCodec";
-import {ObjectMessage, TextByteMessage, WebSocketMessage, WebSocketMessageMediaType} from "../WebSocketMessage";
+import {ObjectMessage, TextByteMessage, WebSocketMessage, WebSocketMessageOriginalType} from "../WebSocketMessage";
+import {WebSocketRequestContext} from "../WebSocketRequest";
 
 
+/**
+ * 解析 json text
+ */
 export default class JsonTextMessageCodec implements MessageDecoderInterface<any>, MessageEncoderInterface<any> {
 
-    decode = (message: WebSocketMessage<WebSocketMessageMediaType>): Promise<WebSocketMessage<any>> | WebSocketMessage<any> => {
+    decode = (message: WebSocketMessage<WebSocketMessageOriginalType>, context: WebSocketRequestContext) => {
         const payload = message.getPayload();
         if (typeof payload === "string") {
-            return new ObjectMessage(JSON.parse(payload), message.getPayloadLength());
+            return [new ObjectMessage(JSON.parse(payload), message.getPayloadLength())];
         }
         // not supported return null
         return null;
     }
 
-    encode = (data: WebSocketMessage<any>): Promise<WebSocketMessage<WebSocketMessageMediaType>> | WebSocketMessage<WebSocketMessageMediaType> => {
-        const text = JSON.stringify(data.getPayload());
-        return new TextByteMessage(text);
+    encode = (message: WebSocketMessage<any>, context: WebSocketRequestContext) => {
+        // TODO 判断是否为 object ?
+        const text = JSON.stringify(message.getPayload());
+        return [new TextByteMessage(text)];
     }
 
 }

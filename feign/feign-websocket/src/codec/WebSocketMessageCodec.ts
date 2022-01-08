@@ -1,17 +1,24 @@
-import {WebSocketMessage, WebSocketMessageMediaType} from "../WebSocketMessage";
+import {WebSocketMessage, WebSocketMessageOriginalType} from "../WebSocketMessage";
+import {WebSocketRequestContext} from "../WebSocketRequest";
 
 
-export type MessageDecoderFunction<T> = (message: WebSocketMessage<WebSocketMessageMediaType>) => Promise<WebSocketMessage<T>> | WebSocketMessage<T>;
+/**
+ * not supported encode or decode return null
+ */
+type CodecResult<T> = Promise<Array<WebSocketMessage<T>> | null> | Array<WebSocketMessage<T>> | null | undefined;
 
-export interface MessageDecoderInterface<T> {
 
-    decode: MessageDecoderFunction<T>
+export type MessageDecoderFunction<T, C = WebSocketRequestContext> = (message: WebSocketMessage<WebSocketMessageOriginalType>, context: C) => CodecResult<T>;
+
+export interface MessageDecoderInterface<T, C = WebSocketRequestContext> {
+
+    decode: MessageDecoderFunction<T, C>
 }
 
 
-export type MessageEncoderFunction<T> = (message: WebSocketMessage<T>) => Promise<WebSocketMessage<WebSocketMessageMediaType>> | WebSocketMessage<WebSocketMessageMediaType>;
+export type MessageEncoderFunction<T, C = WebSocketRequestContext> = (message: WebSocketMessage<T>, context: C) => CodecResult<WebSocketMessageOriginalType>;
 
-export interface MessageEncoderInterface<T> {
+export interface MessageEncoderInterface<T, C = WebSocketRequestContext> {
 
     encode: MessageEncoderFunction<T>
 }

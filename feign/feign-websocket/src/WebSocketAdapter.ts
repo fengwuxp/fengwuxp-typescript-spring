@@ -1,5 +1,5 @@
 import {WebSocketMessageEventConsumer} from "./event/WebSocketMessageEvent";
-import {WebSocketMessageMediaType} from "./WebSocketMessage";
+import {WebSocketMessageOriginalType} from "./WebSocketMessage";
 
 export interface WebSocketLifeCycle {
 
@@ -18,9 +18,9 @@ export interface WebSocketLifeCycle {
  */
 export interface WebSocketAdapter extends WebSocketLifeCycle {
 
-    send: (data: WebSocketMessageMediaType) => void;
+    send: (data: WebSocketMessageOriginalType) => void;
 
-    onMessage: (consumer: WebSocketMessageEventConsumer<WebSocketMessageMediaType>) => void;
+    onMessage: (consumer: WebSocketMessageEventConsumer<WebSocketMessageOriginalType>) => void;
 
 }
 
