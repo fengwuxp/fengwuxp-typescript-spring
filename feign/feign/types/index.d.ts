@@ -2108,7 +2108,7 @@ declare const supportRequestBody: (method: HttpMethod | string) => boolean;
  * @param filterNoneValue  filter none value
  */
 declare const serializeRequestBody: (method: string, body: HttpRequestBody | string, contentType: HttpMediaType, filterNoneValue?: boolean) => string;
-declare const filterNoneValueAndNewObject: (body: Record<string, any>) => {};
+declare const filterNoneValueAndNewObject: (body: Record<string, any> | Array<Record<string, any>>) => {};
 /**
  * assemble the query string
  *

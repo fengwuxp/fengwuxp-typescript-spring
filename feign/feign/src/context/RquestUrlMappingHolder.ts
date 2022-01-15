@@ -9,7 +9,7 @@ const ROUTE_MAPPING: Record<string, string> = {};
 
 /**
  * 根据 {@see ROUTE_MAPPING} 的配置进行url合并
- * @param url             请求的url  格式 @模块名称/uri==>  例如：'@default/api/xxx/test'
+ * @param url             请求的url  格式 lb://{serviceId}/uri==>  例如：'lb://test-app/api/xxx/test'
  * @param routeMapping    路由配置
  */
 const routing = (url: string, routeMapping: Record<string, string>) => {

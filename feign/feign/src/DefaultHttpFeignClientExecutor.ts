@@ -18,7 +18,6 @@ import {parse} from "querystring";
 import {FeignHttpConfiguration} from "./configuration/FeignHttpConfiguration";
 import {HttpResponse} from './client/HttpResponse';
 import {SupportSerializableBody} from "./client/HttpRequest";
-import {HttpMethod} from "./constant/http/HttpMethod";
 import {FeignClientMethodConfig} from "./support/FeignClientMethodConfig";
 import Log4jFactory from "./log/DefaultFeignLo4jFactory";
 
@@ -270,7 +269,7 @@ export default class DefaultHttpFeignClientExecutor<T extends FeignProxyClient =
         };
         const requestSupportRequestBody = supportRequestBody(requestMapping.method);
         if (requestSupportRequestBody) {
-            feignRequest.body = this.resolveRequestBody(requestMapping.method, originalParameter, feignRequest.filterNoneValue);
+            feignRequest.body = this.resolveRequestBody(originalParameter, feignRequest.filterNoneValue);
         } else {
             feignRequest.queryParams = this.resolveQueryPrams(originalParameter, feignRequest.queryParams, requestMapping.params ?? {});
         }
@@ -295,12 +294,17 @@ export default class DefaultHttpFeignClientExecutor<T extends FeignProxyClient =
         return feignRequest;
     }
 
-    private resolveRequestBody = (httpMethod: HttpMethod, originalParameter: any, filterNoneValue: boolean): SupportSerializableBody => {
-        if (supportRequestBody(httpMethod)) {
-            // resolver request body，filter none value in request body or copy value
-            return filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
+    private resolveRequestBody = (originalParameter: any, filterNoneValue: boolean): SupportSerializableBody => {
+        if (originalParameter == null) {
+            return originalParameter;
         }
-        return undefined;
+
+        if (Array.isArray(originalParameter)) {
+            return filterNoneValue === false ? [...originalParameter] : filterNoneValueAndNewObject(originalParameter);
+        }
+
+        // resolver request body，filter none value in request body or copy value
+        return filterNoneValue === false ? {...originalParameter} : filterNoneValueAndNewObject(originalParameter);
     }
 
     private resolveQueryPrams = (queryParams: QueryParamType, optionQueryParams: QueryParamType, requestMappingParams: MappingHeaders | string[]) => {

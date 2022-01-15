@@ -48,7 +48,15 @@ export const serializeRequestBody = (method: string,
     throw new Error(`unsupported content-type: ${contentType}`);
 };
 
-export const filterNoneValueAndNewObject = (body: Record<string, any>) => {
+
+export const filterNoneValueAndNewObject = (body: Record<string, any> | Array<Record<string, any>>) => {
+    if (Array.isArray(body)) {
+        return body.filter(item => item != null).map(filterNoneValue);
+    }
+    return filterNoneValue(body);
+};
+
+const filterNoneValue = (body: Record<string, any>) => {
     const newData = {};
     for (const key in body) {
         const value = body[key];
@@ -59,7 +67,7 @@ export const filterNoneValueAndNewObject = (body: Record<string, any>) => {
         newData[key] = value;
     }
     return newData;
-};
+}
 
 const stringifyPrimitive = function (val) {
     switch (typeof val) {
