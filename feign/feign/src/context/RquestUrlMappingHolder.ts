@@ -26,12 +26,13 @@ const routing = (url: string, routeMapping: Record<string, string>) => {
     // TODO 增加负载均衡支持
     const serviceId = _url.host
     const serviceUri = routeMapping[serviceId];
-    if (serviceUri.startsWith("/")){
+    if (serviceUri.startsWith("/")) {
         return normalizeUrl(`${serviceUri}${_url.pathname}${_url.search}`);
     }
-    const routeUrl = new URL(serviceUri);
-    _url.host = routeUrl.host;
-    _url.pathname = `${routeUrl.pathname}${_url.pathname}`;
+    const routeUri = new URL(serviceUri);
+    _url.protocol = routeUri.protocol;
+    _url.host = routeUri.host;
+    _url.pathname = `${routeUri.pathname}${_url.pathname}`;
     return normalizeUrl(_url.toString());
 };
 
