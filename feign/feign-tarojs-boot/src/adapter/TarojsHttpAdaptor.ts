@@ -31,7 +31,6 @@ export default class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest>
         });
     };
     private buildRequest = (options: TarojsHttpRequest): request.Option<any> => {
-
         const {
             url,
             body,
@@ -43,8 +42,6 @@ export default class TarojsHttpAdaptor implements HttpAdapter<TarojsHttpRequest>
             dataType,
             responseType
         } = options;
-
-
         return {
             //请求方法get post
             method: method as any,

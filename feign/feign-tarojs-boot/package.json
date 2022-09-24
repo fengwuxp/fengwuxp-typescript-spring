@@ -1,6 +1,6 @@
 {
   "name": "feign-boot-tarojs-starter",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "tarojs feign boot starter",
   "main": "./es/index.js",
   "typings": "types/index.d.ts",
@@ -42,7 +42,7 @@
     "core-js": "^3.4.1",
     "feign-boot-stater": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
-    "fengwuxp-typescript-feign": "^1.0.0",
+    "fengwuxp-typescript-feign": "^1.2.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
     "typescript": "^4.4.3"
