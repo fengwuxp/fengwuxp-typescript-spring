@@ -83,7 +83,7 @@ export {
     UNAUTHORIZED_RESPONSE,
     grabUrlPathVariable
 } from "./constant/FeignConstVar";
-export {getRequestFeignClientMethodConfiguration} from "./context/RequestContextHolder";
+export {getRequestFeignClientMethodConfiguration, getRequestFeignConfiguration} from "./context/RequestContextHolder";
 
 export {
     HttpResponseEventPublisher,
