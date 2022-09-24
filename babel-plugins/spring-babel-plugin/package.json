@@ -2,7 +2,7 @@
   "name": "spring-babel-plugin",
   "version": "1.0.0",
   "publishConfig": {
-    "registry": "http://nexus.oaknt.com:18081/repository/oak_npm_hosted/"
+    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
