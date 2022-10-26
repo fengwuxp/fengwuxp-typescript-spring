@@ -1,6 +1,6 @@
 {
   "name": "fengwuxp-tarojs-router",
-  "version": "2.0.0",
+  "version": "2.0.2",
   "description": "declarative tarojs router",
   "publishConfig": {
     "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"

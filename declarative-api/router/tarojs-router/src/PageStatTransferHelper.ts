@@ -21,14 +21,11 @@ export interface ViewRouteState<Q = any, S = any, P = any> {
 
 /**
  * 初始化页面状态
- * @param viewInstance
  */
-export const initViewState = <Q = any, S = any, P = any, T = any>(viewInstance: Taro.Component<any, any>): Promise<ViewRouteState<Q, S, P>> => {
-
+export const initViewState = <Q = any, S = any, P = any, T = any>(): Promise<ViewRouteState<Q, S, P>> => {
     return transferViewState().then((viewState: S) => {
-
         return {
-            viewParams: viewInstance.$router.params as any,
+            viewParams: Taro.getCurrentInstance().router.params as any,
             viewState: viewState == null ? {} as any : viewState
         }
     });

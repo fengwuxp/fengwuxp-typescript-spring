@@ -23,9 +23,8 @@ interface ViewRouteState<Q = any, S = any, P = any> {
 }
 /**
  * 初始化页面状态
- * @param viewInstance
  */
-declare const initViewState: <Q = any, S = any, P = any, T = any>(viewInstance: Taro.Component<any, any>) => Promise<ViewRouteState<Q, S, P>>;
+declare const initViewState: <Q = any, S = any, P = any, T = any>() => Promise<ViewRouteState<Q, S, P>>;
 declare function transferViewState(): Promise<any>;
 /**
  * 设置下一个页面的状态
