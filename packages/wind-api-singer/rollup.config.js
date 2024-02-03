@@ -75,7 +75,7 @@ const getConfig = (isProd) => {
             includePaths({
                 paths: ["./src"]
             }),
-            //压缩代码
+            // 压缩代码
             isProd && terser({
                 output: {
                     comments: false,
@@ -85,8 +85,7 @@ const getConfig = (isProd) => {
                 ie8: false,
                 ecma: 2015,
                 numWorkers: cpuNums
-            }),
-
+            })
         ],
         treeshake: {
             moduleSideEffects: true
