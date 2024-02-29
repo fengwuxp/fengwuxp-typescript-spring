@@ -4,7 +4,7 @@
   "description": "babel dependency management",
   "main": "index.js",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -19,11 +19,9 @@
   },
   "author": "wuxp",
   "license": "ISC",
-  "devDependencies": {},
   "dependencies": {
     "@babel/cli": "^7.0.0",
     "@babel/core": "^7.0.0",
-    "@babel/register": "^7.13.16",
     "@babel/plugin-external-helpers": "^7.0.0",
     "@babel/plugin-proposal-async-generator-functions": "^7.0.0",
     "@babel/plugin-proposal-class-properties": "^7.0.0",
@@ -33,16 +31,18 @@
     "@babel/plugin-syntax-dynamic-import": "^7.0.0",
     "@babel/plugin-syntax-import-meta": "^7.0.0",
     "@babel/plugin-transform-async-to-generator": "^7.0.0",
-    "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/plugin-transform-classes": "^7.0.0",
+    "@babel/plugin-transform-regenerator": "^7.0.0",
     "@babel/plugin-transform-runtime": "^7.0.0",
     "@babel/preset-env": "^7.0.0",
     "@babel/preset-react": "^7.0.0",
     "@babel/preset-typescript": "^7.0.0",
+    "@babel/register": "^7.13.16",
     "@babel/runtime": "^7.0.0",
+    "@babel/runtime-corejs3": "^7.0.0",
     "babel-loader": "^8.2.0",
     "babel-plugin-import": "^1.13.0",
-    "@babel/runtime-corejs3": "^7.0.0",
     "core-js": "^3.4.1"
-  }
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

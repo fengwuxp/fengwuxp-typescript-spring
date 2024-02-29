@@ -1,5 +1,5 @@
 import {HTTP_SCHEMA, LB_SCHEMA} from "../constant/FeignConstVar";
-
+import URL from 'url-parse';
 /**
  * 路由配置
  * @key  模块名称
@@ -27,13 +27,11 @@ const routing = (url: string, routeMapping: Record<string, string>) => {
     const serviceId = _url.host
     const serviceUri = routeMapping[serviceId];
     if (serviceUri.startsWith("/")) {
-        return normalizeUrl(`${serviceUri}${_url.pathname}${_url.search}`);
+        return normalizeUrl(`${serviceUri}${_url.pathname}${_url.query}`);
     }
     const routeUri = new URL(serviceUri);
-    _url.protocol = routeUri.protocol;
-    _url.host = routeUri.host;
-    _url.pathname = `${routeUri.pathname}${_url.pathname}`;
-    return normalizeUrl(_url.toString());
+    const [protocol]=routeUri.protocol.split(":");
+    return normalizeUrl(`${protocol}://${routeUri.host}${routeUri.pathname}${_url.pathname}`);
 };
 
 

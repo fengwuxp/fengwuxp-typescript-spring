@@ -1,9 +1,9 @@
 {
   "name": "feign-webscoket",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "description": "typescript feign",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -47,15 +47,16 @@
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "@types/jest": "^24.9.1",
-    "@types/node": "^12.12.53",
     "@types/lodash": "^4.14.149",
-    "lodash": "^4.17.15",
+    "@types/node": "^12.12.53",
     "core-js": "^3.4.1",
     "es5-shim": "^4.5.9",
     "es6-promise": "^4.1.1",
     "fengwuxp-library-starter": "^1.0.0",
     "fengwuxp-rollup-dependency": "^1.0.0",
     "jasmine": "^4.0.0",
+    "jest": "^25.0.0",
+    "lodash": "^4.17.15",
     "rollup": "2.37.1",
     "rollup-plugin-analyzer": "4.0.0",
     "rollup-plugin-dts": "^2.0.1",
@@ -63,7 +64,6 @@
     "rollup-plugin-terser": "7.0.2",
     "rollup-plugin-typescript2": "^0.29.0",
     "text-encoding": "^0.7.0",
-    "jest": "^25.0.0",
     "ts-jest": "^25.0.0",
     "tslib": "^2.3.1",
     "typescript": "^4.0.0"
@@ -71,7 +71,7 @@
   "dependencies": {
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0",
-    "fengwuxp-typescript-feign": "^1.2.0"
+    "fengwuxp-typescript-feign": "^1.0.0"
   },
-  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

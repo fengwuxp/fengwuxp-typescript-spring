@@ -1,9 +1,9 @@
 {
   "name": "fengwuxp-spring-router",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "description": "spring router",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -25,7 +25,7 @@
   "dependencies": {
     "@types/history": "^4.7.2",
     "@types/node": "^12.0.4",
-    "fengwuxp-spring-context": "^1.0.5",
+    "fengwuxp-spring-context": "^1.0.0",
     "fengwuxp_common_proxy": "^1.0.5",
     "fengwuxp_common_test": "^1.0.5",
     "fengwuxp_common_utils": "^1.0.5",
@@ -38,5 +38,5 @@
     "reflect-metadata": "^0.1.13",
     "tslib": "^1.9.3"
   },
-  "gitHead": "7f9f674005bae0a4f54232ad0b46b9bd8dcd0b78"
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

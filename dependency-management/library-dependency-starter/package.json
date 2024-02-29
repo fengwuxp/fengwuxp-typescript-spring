@@ -4,7 +4,7 @@
   "description": "common library dependency management",
   "main": "index.js",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -19,15 +19,14 @@
   },
   "author": "wuxp",
   "license": "ISC",
-  "devDependencies": {
-  },
   "dependencies": {
     "@types/node": "^12.7.7",
     "chai": "^4.2.0",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.5",
     "fengwuxp-babel-dependency": "^1.0.0",
     "fengwuxp-jest-dependency": "^1.0.0",
-    "fengwuxp-rollup-dependency": "^1.0.0"
-  }
+    "fengwuxp-rollup-dependency": "^1.0.0",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.5"
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

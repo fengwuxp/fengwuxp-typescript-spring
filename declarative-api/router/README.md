@@ -43,7 +43,7 @@
    mockAppRouter.webview({url:1});
    mockAppRouter.index();
 
-    mockAppRouter["home"]();
+   mockAppRouter["home"]();
 
 ```
 - 提供dialog式路由

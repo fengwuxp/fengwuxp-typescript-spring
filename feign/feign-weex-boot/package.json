@@ -1,6 +1,6 @@
 {
   "name": "feign-weex-boot-starter",
-  "version": "1.2.0",
+  "version": "1.0.0",
   "description": "feign weex starter",
   "main": "lib/index.js",
   "module": "es/index.js",
@@ -11,7 +11,7 @@
     "types"
   ],
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -31,18 +31,16 @@
   "author": "wuxp",
   "license": "ISC",
   "devDependencies": {
-    "@types/node": "^12.12.53",
-    "@types/jest": "^24.9.1",
-    "@types/lodash": "^4.14.149",
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
+    "@types/jest": "^24.9.1",
+    "@types/lodash": "^4.14.149",
+    "@types/node": "^12.12.53",
     "core-js": "^3.4.1",
     "feign-boot-stater": "^1.0.10",
-    "fengwuxp-typescript-feign": "^1.0.10"
+    "fengwuxp-library-starter": "^1.0.0",
+    "fengwuxp-typescript-feign": "^1.0.0",
+    "typescript": "^3.7.2"
   },
-  "dependencies": {
-
-  }
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

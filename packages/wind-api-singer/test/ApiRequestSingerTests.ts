@@ -16,7 +16,8 @@ describe("test api sign", () => {
     const queryParams = {
         name: "zhans",
         age: 36,
-        tags: ["tag0", "tag1"]
+        tags: ["tag0", "tag1"],
+        t2: [undefined]
     };
 
     test("test sign queryParams", () => {

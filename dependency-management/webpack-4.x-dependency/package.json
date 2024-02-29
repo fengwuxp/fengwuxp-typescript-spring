@@ -4,7 +4,7 @@
   "description": "webpack 4.x dependency management",
   "main": "index.js",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -19,13 +19,12 @@
   },
   "author": "wuxp",
   "license": "ISC",
-  "devDependencies": {},
   "dependencies": {
     "browserslist": "^4.5.4",
     "clean-webpack-plugin": "^0.1.18",
+    "compression-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^5.1.1",
     "cross-env": "^5.2.0",
-    "compression-webpack-plugin": "^3.0.0",
     "extract-text-webpack-plugin": "^4.0.0-beta.0",
     "file-loader": "^2.0.0",
     "handlebars-loader": "^1.7.1",
@@ -46,5 +45,6 @@
     "webpack-dev-server": "^3.2.1",
     "webpack-merge": "^4.2.1",
     "webpack-uglify-parallel": "^0.1.4"
-  }
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

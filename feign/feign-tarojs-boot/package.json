@@ -1,6 +1,6 @@
 {
   "name": "feign-boot-tarojs-starter",
-  "version": "2.0.1",
+  "version": "1.0.0",
   "description": "tarojs feign boot starter",
   "main": "./es/index.js",
   "typings": "types/index.d.ts",
@@ -10,7 +10,7 @@
     "types"
   ],
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -42,9 +42,10 @@
     "core-js": "^3.4.1",
     "feign-boot-stater": "^1.0.0",
     "fengwuxp-library-starter": "^1.0.0",
-    "fengwuxp-typescript-feign": "^1.2.0",
+    "fengwuxp-typescript-feign": "^1.0.0",
     "rollup-plugin-commonjs": "^10.1.0",
     "rollup-plugin-json": "^4.0.0",
     "typescript": "^4.4.3"
-  }
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

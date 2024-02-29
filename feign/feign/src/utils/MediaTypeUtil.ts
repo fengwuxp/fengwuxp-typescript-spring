@@ -18,12 +18,9 @@ export const matchMediaType = (responseMediaType: HttpMediaType | string, expect
     if (responseMediaType === expectMediaType) {
         return true;
     }
-    // return responseMediaType.replace(UTF_8, "") === expectMediaType.replace(UTF_8, "");
-
     const [t1] = responseMediaType.split(";");
     const [t2] = expectMediaType.split(";");
     return t1 == t2;
-
 };
 
 export const matchesMediaType = (responseMediaType: HttpMediaType | string, expectMediaTypes: Array<HttpMediaType | string>) => {

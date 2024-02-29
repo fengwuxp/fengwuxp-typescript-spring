@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "typescript feign",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -59,9 +59,9 @@
     "es6-promise": "^4.1.1",
     "fast-deep-equal": "^3.1.3",
     "fengwuxp-common-proxy": "^1.0.0",
-    "fengwuxp-common-utils": "^1.0.1",
+    "fengwuxp-common-utils": "^1.0.0",
     "fengwuxp-declarative-command": "^1.0.3",
-    "fengwuxp-spring-core": "^1.0.3",
+    "fengwuxp-spring-core": "^1.0.0",
     "fengwuxp-typescript-feign": "^1.0.0",
     "handlebars": "^4.7.6",
     "lodash": "^4.17.15",
@@ -69,5 +69,5 @@
     "openapi-types": "^7.0.1",
     "zone.js": "^0.11.3"
   },
-  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

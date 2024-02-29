@@ -1,5 +1,5 @@
 // const test = require("ava");
-import axios, {AxiosInstance, AxiosResponse} from 'axios';
+import axios, {AxiosInstance, AxiosRequestConfig, AxiosResponse} from 'axios';
 import {ApplicationLoader, SettingOptions, Klass} from 'loon';
 
 // declare module 'axios' {
@@ -26,6 +26,18 @@ export const helper = {
         KlassApplication = customApplication;
     }
 };
+export const queryPage = (req?: any, options?: AxiosRequestConfig): Promise<AxiosResponse<string>> => {
+    const headers: Record<string, any> = {};
+    headers['Content-Type'] = 'application/json';
+    return axios.request<string>({
+        url: `/order/queryPage`,
+        method: 'post',
+        headers,
+        data: req || {},
+        responseType: 'json',
+        ...(options || {} as AxiosRequestConfig)
+    })
+}
 
 // let nodeServer;
 //

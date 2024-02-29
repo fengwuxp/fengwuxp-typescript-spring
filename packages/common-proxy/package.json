@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "common proxy",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -32,13 +32,14 @@
   },
   "keywords": [],
   "devDependencies": {
-    "@types/node": "^12.12.53",
-    "@types/jest": "^24.9.1",
-    "fengwuxp-library-starter": "^1.0.0",
-    "typescript": "^3.7.2",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.53",
     "core-js": "^3.4.1",
-    "tslib": "^2.0.0"
-  }
+    "fengwuxp-library-starter": "^1.0.0",
+    "tslib": "^2.0.0",
+    "typescript": "^3.7.2"
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

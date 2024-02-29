@@ -1,9 +1,9 @@
 {
   "name": "fengwuxp-spring-react",
-  "version": "1.0.5",
+  "version": "1.0.0",
   "description": "typescript spring context",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -41,27 +41,28 @@
     "fengwuxp-declarative-command": "^1.0.1",
     "fengwuxp-library-starter": "^1.0.0",
     "fengwuxp-routing-core": "^1.0.0",
-    "fengwuxp-spring-context": "^1.0.3",
-    "fengwuxp-spring-core": "^1.0.3"
+    "fengwuxp-spring-context": "^1.0.0",
+    "fengwuxp-spring-core": "^1.0.0"
   },
   "devDependencies": {
-    "@types/node": "^12.12.53",
-    "@types/jest": "^24.9.1",
-    "@types/react": "^16.9.19",
-    "@types/react-dom": "^16.9.5",
     "@babel/preset-env": "^7.8.4",
     "@babel/runtime": "^7.0.0",
     "@babel/runtime-corejs3": "^7.0.0",
     "@babel/template": "^7.0.0",
     "@babel/traverse": "^7.0.0",
     "@babel/types": "^7.0.0",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.53",
+    "@types/react": "^16.9.19",
+    "@types/react-dom": "^16.9.5",
     "babel-plugin-transform-es2015-modules-commonjs": "^6.26.2",
     "core-js": "^3.4.1",
-    "react": "^16.12.0",
-    "react-dom": "^16.12.0",
     "jest": "25.1.0",
     "lodash": "^4.17.15",
+    "react": "^16.12.0",
+    "react-dom": "^16.12.0",
     "ts-jest": "25.2.0",
     "typescript": "^3.7.2"
-  }
+  },
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }

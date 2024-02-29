@@ -1,9 +1,9 @@
 {
   "name": "fengwuxp-common-utils",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "common fetch",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/6076757b1bcc8f5015dfc537/npm/npm-registry/"
+    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
   },
   "repository": {
     "type": "git",
@@ -24,11 +24,11 @@
     "publish:lib": "npm run test &&  npm run build:ts && npm publish"
   },
   "devDependencies": {
-    "@types/lodash": "^4.14.144",
-    "lodash": "^4.17.15",
-    "@types/node": "^12.7.7",
     "@types/jest": "^24.0.18",
+    "@types/lodash": "^4.14.144",
+    "@types/node": "^12.7.7",
     "jest": "^23.6.0",
+    "lodash": "^4.17.15",
     "log4js": "^4.0.2",
     "ts-jest": "^23.10.5",
     "typescript": "^3.6.3"
@@ -37,5 +37,5 @@
     "xregexp": "^4.2.4",
     "xregexp-quotemeta": "^1.0.4"
   },
-  "gitHead": "2564d68bbb97e34c3cc1ca04477852c20d5d19e7"
+  "gitHead": "02618ca02969b87cc659c7aeb27646e7f26c3504"
 }
