@@ -1,8 +1,6 @@
 export {
-    HttpMediaType,
-    matchMediaType,
-    genNonce,
-    getCanonicalizedQueryString,
-    genSignatureText,
-    apiRequestSignature
+    ApiRequestSinger,
+    ApiSecretAccount,
+    ApiRequestSingerOptions
 } from "./ApiRequestSinger";
+export {matchMediaType, genNonce, ApiSignatureRequest, HttpMediaType} from "./ApiSignatureRequest"

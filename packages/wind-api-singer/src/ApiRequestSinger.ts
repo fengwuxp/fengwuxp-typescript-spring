@@ -1,83 +1,5 @@
-import CryptoJS from 'crypto-js';
-import md5 from 'md5';
-
-/**
- * http media type
- */
-export enum HttpMediaType {
-
-    /**
-     * 表单
-     */
-    FORM = "application/x-www-form-urlencoded",
-
-    /**
-     * json
-     */
-    APPLICATION_JSON = "application/json",
-
-    /**
-     * JSON_UTF_8
-     */
-    APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8",
-
-}
-
-export interface SignatureRequest {
-
-    /**
-     * http 请求方法
-     */
-    method: "GET" | "POST" | "PUT" | "PATCH" | "DELETE";
-
-    /**
-     * http 请求 path，不包含查询参数和域名
-     */
-    requestPath: string;
-
-    /**
-     * 32 位字符串
-     */
-    nonce: string;
-
-    /**
-     * 时间戳
-     */
-    timestamp: string;
-
-    /**
-     * 查询参数
-     */
-    queryParams?: Record<string, any>;
-
-    /**
-     * 请求体，根据 content-type 序列化好的字符串
-     */
-    requestBody?: string;
-}
-
-export interface SignatureOptions {
-
-    /**
-     * AK
-     */
-    accessKey: string;
-
-    /**
-     * SK
-     */
-    secretKey: string;
-
-    /**
-     * 签名请求头前缀
-     */
-    headerPrefix?: string;
-
-    /**
-     * 开启调试模式
-     */
-    debug?: boolean;
-}
+import {ApiSigner, HMAC_SHA256} from 'ApiSignatureAlgorithm';
+import {ApiSignatureRequest, genNonce, getSignTextForDigest, getSignTextForSha256WithRsa, getCanonicalizedQueryString} from "./ApiSignatureRequest";
 
 
 /**
@@ -104,38 +26,33 @@ const ACCESS_KEY_HEADER_NAME = "Access-Key";
  */
 const SIGN_HEADER_NAME = "Sign";
 
-const fields = [
-    "method",
-    "requestPath",
-    "nonce",
-    "timestamp",
-];
 
+export interface ApiSecretAccount {
 
-export const matchMediaType = (contentType: HttpMediaType | string, expectMediaType: HttpMediaType | string) => {
-    if (contentType == null || expectMediaType == null) {
-        return false;
-    }
+    /**
+     * AccessKey or AppId
+     * 账号访问唯一标识
+     */
+    accessId: string;
 
-    if (contentType === expectMediaType) {
-        return true;
-    }
-    const [t1] = contentType.split(";");
-    const [t2] = expectMediaType.split(";");
-    return t1 == t2;
-};
+    /**
+     * 签名秘钥
+     */
+    secretKey: string;
+}
 
-/**
- *  生成随机字符串
- */
-export const genNonce = (): string => {
-    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, (c) => {
-        // @ts-ignore
-        return (c === 'x' ? (Math.random() * 16) | 0 : 'r&0x3' | '0x8').toString(16);
-        // @ts-ignore
-    }).replaceAll('-', '');
-};
+export interface ApiRequestSingerOptions {
 
+    /**
+     * 签名请求头前缀
+     */
+    headerPrefix?: string;
+
+    /**
+     * 开启调试模式
+     */
+    debug?: boolean;
+}
 
 const getSignHeaderName = (name: string, headerPrefix?: string) => {
     if (headerPrefix) {
@@ -144,70 +61,57 @@ const getSignHeaderName = (name: string, headerPrefix?: string) => {
     return name;
 }
 
-/**
- * 获取标准化查询字符串 ，key 按照字典序排序
- * @param queryParams
- */
-export const getCanonicalizedQueryString = (queryParams?: Record<string, any>) => {
-    if (queryParams) {
-        return Object.keys(queryParams).sort().map((key) => {
-            const val = queryParams[key];
-            if (val === null || val == undefined) {
-                return null;
-            }
-            if (Array.isArray(val)) {
-                return val.map(value => `${key}=${value}`).join("&")
-            }
-            return `${key}=${val}`;
-        }).filter(value => value != null).join("&");
-    }
-}
 
-export const genSignatureText = (request: SignatureRequest) => {
-    let signText = fields.map(field => {
-        return `${field}=${request[field]}`
-    }).join("&");
-    const queryParams = request.queryParams;
-    if (queryParams && Object.keys(queryParams).length > 0) {
-        signText += `&queryStringMd5=${md5(getCanonicalizedQueryString(queryParams))}`;
-    }
-    if (request.requestBody) {
-        signText += `&requestBodyMd5=${md5(request.requestBody)}`;
-    }
-    return signText;
-}
+export class ApiRequestSinger {
+
+    private readonly secretAccount: ApiSecretAccount;
+
+    private readonly apiSigner: ApiSigner;
+
+    private readonly options: ApiRequestSingerOptions;
 
 
-/**
- * 请求签名
- * @param request
- * @param options
- * @return 请求签名请求头对象
- */
-export const apiRequestSignature = (request: Omit<SignatureRequest, "nonce" | "timestamp">, options: SignatureOptions): Record<string, string> => {
-    const signRequest: SignatureRequest = {
-        ...request,
-        method: request.method.toUpperCase() as any,
-        nonce: genNonce(),
-        timestamp: new Date().getTime().toString(),
+    constructor(secretAccount: ApiSecretAccount, apiSigner: ApiSigner, options: ApiRequestSingerOptions) {
+        this.secretAccount = secretAccount;
+        this.apiSigner = apiSigner;
+        this.options = options;
     }
-    const signatureText = genSignatureText(signRequest);
-    const sha256 = CryptoJS.HmacSHA256(signatureText, options.secretKey);
-    const headerPrefix = options.headerPrefix;
-    const result = {
-        [getSignHeaderName(SIGN_HEADER_NAME, headerPrefix)]: CryptoJS.enc.Base64.stringify(sha256),
-        [getSignHeaderName(NONCE_HEADER_NAME, headerPrefix)]: signRequest.nonce,
-        [getSignHeaderName(TIMESTAMP_HEADER_NAME, headerPrefix)]: signRequest.timestamp,
-        [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: options.accessKey
-    };
 
-    if (options.debug) {
-        // debug 模式支持
-        result['DebugObject'] = {
-            request: signRequest,
-            signatureText,
-            queryString: getCanonicalizedQueryString(request.queryParams)
+    static hmacSha256 = (secretAccount: ApiSecretAccount, options: ApiRequestSingerOptions = {headerPrefix: "Wind"}): ApiRequestSinger => {
+        return new ApiRequestSinger(secretAccount, HMAC_SHA256, options);
+    }
+
+    /**
+     * 签名请求
+     * @param request
+     * @return 签名请求头对象
+     */
+    sign = (request: Omit<ApiSignatureRequest, "nonce" | "timestamp">): Record<string, string> => {
+        const {secretAccount, apiSigner, options} = this;
+        const signRequest: ApiSignatureRequest = {
+            ...request,
+            method: request.method.toUpperCase() as any,
+            nonce: genNonce(),
+            timestamp: new Date().getTime().toString(),
         }
+        const headerPrefix = options.headerPrefix;
+        const result = {
+            [getSignHeaderName(SIGN_HEADER_NAME, headerPrefix)]: apiSigner.sign(signRequest, secretAccount.secretKey),
+            [getSignHeaderName(NONCE_HEADER_NAME, headerPrefix)]: signRequest.nonce,
+            [getSignHeaderName(TIMESTAMP_HEADER_NAME, headerPrefix)]: signRequest.timestamp,
+            [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: secretAccount.accessId
+        };
+
+        if (options.debug) {
+            // debug 模式支持
+            // @ts-ignore
+            result['DebugHeaders'] = {
+                request: signRequest,
+                // TODO 待优化
+                signatureText: apiSigner === HMAC_SHA256 ? getSignTextForDigest(signRequest) : getSignTextForSha256WithRsa(signRequest),
+                queryString: getCanonicalizedQueryString(request.queryParams)
+            }
+        }
+        return result;
     }
-    return result;
 }

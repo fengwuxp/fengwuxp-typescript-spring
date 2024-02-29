@@ -1,3 +1,5 @@
+import { ApiSigner } from 'ApiSignatureAlgorithm';
+
 /**
  * http media type
  */
@@ -15,7 +17,7 @@ declare enum HttpMediaType {
      */
     APPLICATION_JSON_UTF8 = "application/json;charset=UTF-8"
 }
-interface SignatureRequest {
+interface ApiSignatureRequest {
     /**
      * http 请求方法
      */
@@ -41,15 +43,24 @@ interface SignatureRequest {
      */
     requestBody?: string;
 }
-interface SignatureOptions {
+/**
+ *  生成随机字符串
+ */
+declare const genNonce: () => string;
+declare const matchMediaType: (contentType: HttpMediaType | string, expectMediaType: HttpMediaType | string) => boolean;
+
+interface ApiSecretAccount {
     /**
-     * AK
+     * AccessKey or AppId
+     * 账号访问唯一标识
      */
-    accessKey: string;
+    accessId: string;
     /**
-     * SK
+     * 签名秘钥
      */
     secretKey: string;
+}
+interface ApiRequestSingerOptions {
     /**
      * 签名请求头前缀
      */
@@ -59,23 +70,18 @@ interface SignatureOptions {
      */
     debug?: boolean;
 }
-declare const matchMediaType: (contentType: HttpMediaType | string, expectMediaType: HttpMediaType | string) => boolean;
-/**
- *  生成随机字符串
- */
-declare const genNonce: () => string;
-/**
- * 获取标准化查询字符串 ，key 按照字典序排序
- * @param queryParams
- */
-declare const getCanonicalizedQueryString: (queryParams?: Record<string, any>) => string;
-declare const genSignatureText: (request: SignatureRequest) => string;
-/**
- * 请求签名
- * @param request
- * @param options
- * @return 请求签名请求头对象
- */
-declare const apiRequestSignature: (request: Omit<SignatureRequest, "nonce" | "timestamp">, options: SignatureOptions) => Record<string, string>;
+declare class ApiRequestSinger {
+    private readonly secretAccount;
+    private readonly apiSigner;
+    private readonly options;
+    constructor(secretAccount: ApiSecretAccount, apiSigner: ApiSigner, options: ApiRequestSingerOptions);
+    static hmacSha256: (secretAccount: ApiSecretAccount, options?: ApiRequestSingerOptions) => ApiRequestSinger;
+    /**
+     * 签名请求
+     * @param request
+     * @return 签名请求头对象
+     */
+    sign: (request: Omit<ApiSignatureRequest, "nonce" | "timestamp">) => Record<string, string>;
+}
 
-export { HttpMediaType, apiRequestSignature, genNonce, genSignatureText, getCanonicalizedQueryString, matchMediaType };
+export { ApiRequestSinger, ApiRequestSingerOptions, ApiSecretAccount, ApiSignatureRequest, HttpMediaType, genNonce, matchMediaType };
