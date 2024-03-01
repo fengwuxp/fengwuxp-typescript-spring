@@ -41,7 +41,7 @@
     "@types/react-native": "^0.60.22",
     "fengwuxp-library-starter": "^1.0.0",
     "react": "16.9.0",
-    "react-native": "0.61.4",
+    "react-native": "0.69.12",
     "typescript": "^3.7.2",
     "fengwuxp-common-proxy": "^1.0.0",
     "fengwuxp-common-utils": "^1.0.0"
