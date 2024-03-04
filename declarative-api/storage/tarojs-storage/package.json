@@ -3,7 +3,7 @@
   "version": "2.0.0",
   "description": "declarative torojs storage",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",

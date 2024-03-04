@@ -2,7 +2,7 @@
   "name": "spring-babel-plugin",
   "version": "1.0.0",
   "publishConfig": {
-    "registry": "https://packages.aliyun.com/63fd856c360d441ff22c9c8b/npm/npm-registry/"
+    "registry": "https://registry.npmjs.org/"
   },
   "repository": {
     "type": "git",
