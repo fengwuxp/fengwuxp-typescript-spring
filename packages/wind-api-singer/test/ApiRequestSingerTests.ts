@@ -40,21 +40,21 @@ describe("test api sign", () => {
     });
 
     test("test sign empty queryParams", () => {
-        const text = getSignTextForDigest({
-            ...baseRequest,
-            method: "GET",
-            queryParams: {}
-        });
-        expect(text).toEqual("method=GET&requestPath=/api/v1/example/users&nonce=jlj3rn2930d-123210dq&timestamp=123456789");
+        const text = getCanonicalizedQueryString({});
+        expect(text).toEqual(undefined);
     });
 
     test("test sign empty queryParams 2", () => {
-        const text = getSignTextForDigest({
-            ...baseRequest,
-            method: "GET",
-            queryParams: {invalid: undefined}
+        const text = getCanonicalizedQueryString({invalid: undefined});
+        expect(text).toEqual("");
+    });
+
+    test("test sign empty queryParams 3", () => {
+        const text = getCanonicalizedQueryString({
+            name: "zhagns",
+            empty: ""
         });
-        expect(text).toEqual("method=GET&requestPath=/api/v1/example/users&nonce=jlj3rn2930d-123210dq&timestamp=123456789");
+        expect(text).toEqual("empty=&name=zhagns");
     });
 
     test("test sign queryParam and requestBody", () => {
