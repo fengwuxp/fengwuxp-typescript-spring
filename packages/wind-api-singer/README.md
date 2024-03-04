@@ -1,25 +1,34 @@
 
 
-#### 通用的代理工厂实现
+#### Api 签名工具
+- 参见[通过签名方式访问接口](https://www.yuque.com/suiyuerufeng-akjad/wind/zl1ygpq3pitl00qp)
 
-```
-   //仅做代理
-   ProxyFactory.newInstance<T>(target: T,
-                         methodInterceptor: MethodInterceptor,
-                         setPropertyInterceptor?: SetPropertyInterceptor,
-                         scope?: ProxyScope,
-                         customMatch?: CustomMatchType): T => {=>{
-   
-       //对原本的方法增加代理实现
-   
-   })
-   
-   //代理的同时增强这个对象
-   ProxyFactory.newInstanceEnhance<T>(proxyTarget,(method,methodName,args)=>{
-      
-          // 对原本的方法增加代理实现
-      
-   },(holder,method,args)=>{
-      //当调用原本不存在的方法时做处理
-   })
+```typescript
+const API_SIGNER = ApiRequestSinger.hmacSha256(
+    { accessId: 'xxx', secretKey:'xxx' },
+    { headerPrefix: 'xxx', debug: false },
+);
+
+/**
+ * 接口签名
+ * @param method
+ * @param url
+ * @param queryParams
+ * @param requestBody
+ * @param contentType
+ * @returns
+ */
+const signature = (method: any, url: any, queryParams: any, requestBody: any, contentType: any) => {
+    const result = API_SIGNER.sign({
+        method,
+        requestPath: url,
+        queryParams: queryParams,
+        requestBody: serializeSignRequestBody(requestBody, contentType),
+    });
+    return {
+        ...result
+    };
+};
+
+
 ```
