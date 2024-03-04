@@ -83,7 +83,7 @@ export const getCanonicalizedQueryString = (queryParams?: Record<string, any>) =
     const joiner = (key, val) => {
         return isEffectParam(val) ? `${key}=${val}` : null;
     }
-    if (queryParams) {
+    if (queryParams && Object.keys(queryParams).length > 0) {
         return Object.keys(queryParams).sort().map((key) => {
             const val = queryParams[key];
             if (Array.isArray(val)) {
@@ -109,9 +109,9 @@ export const getSignTextForDigest = (request: ApiSignatureRequest) => {
     let result = fields.map(field => {
         return `${field}=${request[field]}`
     }).join("&");
-    const queryParams = request.queryParams;
-    if (queryParams && Object.keys(queryParams).length > 0) {
-        result += `&queryStringMd5=${md5(getCanonicalizedQueryString(queryParams))}`;
+    const queryString = getCanonicalizedQueryString(request.queryParams);
+    if (queryString != null && queryString.trim().length > 0) {
+        result += `&queryStringMd5=${md5(queryString)}`;
     }
     if (request.requestBody) {
         result += `&requestBodyMd5=${md5(request.requestBody)}`;

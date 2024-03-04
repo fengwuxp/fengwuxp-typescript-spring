@@ -39,6 +39,24 @@ describe("test api sign", () => {
         expect(text).toEqual("method=POST&requestPath=/api/v1/example/users&nonce=jlj3rn2930d-123210dq&timestamp=123456789&requestBodyMd5=99914b932bd37a50b983c5e7c90ae93b");
     });
 
+    test("test sign empty queryParams", () => {
+        const text = getSignTextForDigest({
+            ...baseRequest,
+            method: "GET",
+            queryParams: {}
+        });
+        expect(text).toEqual("method=GET&requestPath=/api/v1/example/users&nonce=jlj3rn2930d-123210dq&timestamp=123456789");
+    });
+
+    test("test sign empty queryParams 2", () => {
+        const text = getSignTextForDigest({
+            ...baseRequest,
+            method: "GET",
+            queryParams: {invalid: undefined}
+        });
+        expect(text).toEqual("method=GET&requestPath=/api/v1/example/users&nonce=jlj3rn2930d-123210dq&timestamp=123456789");
+    });
+
     test("test sign queryParam and requestBody", () => {
         const text = getSignTextForDigest({
             ...baseRequest,
