@@ -74,23 +74,24 @@ export const genNonce = (): string => {
  * @param queryParams
  */
 export const getCanonicalizedQueryString = (queryParams?: Record<string, any>) => {
-    const isEffectParam = (param) => {
-        if (param === null || param === undefined) {
-            return false;
-        }
-        return typeof param === "string" ? param.trim().length > 0 : true;
+    const isNoneNullObject = (val) => {
+        return !(val === null || val === undefined);
+
+    }
+    const hasText = (val) => {
+        return isNoneNullObject(val) && typeof val === "string" && val.trim().length > 0 ;
     }
     const joiner = (key, val) => {
-        return isEffectParam(val) ? `${key}=${val}` : null;
+        return isNoneNullObject(val) ? `${key}=${val}` : null;
     }
     if (queryParams && Object.keys(queryParams).length > 0) {
         return Object.keys(queryParams).sort().map((key) => {
             const val = queryParams[key];
             if (Array.isArray(val)) {
-                return val.filter(isEffectParam).map(value => joiner(key, value)).filter(isEffectParam).join("&")
+                return val.filter(isNoneNullObject).map(value => joiner(key, value)).filter(hasText).join("&")
             }
             return joiner(key, val);
-        }).filter(isEffectParam).join("&");
+        }).filter(hasText).join("&");
     }
 }
 
