@@ -59,6 +59,10 @@ interface ApiSecretAccount {
      * 签名秘钥
      */
     secretKey: string;
+    /**
+     * 秘钥版本
+     */
+    secretVersion?: string;
 }
 interface ApiRequestSingerOptions {
     /**

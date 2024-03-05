@@ -1,7 +1,7 @@
 {
-  "name": "wind-api-singer",
+  "name": "wind-api-signature",
   "version": "1.0.0",
-  "description": "wind api singer",
+  "description": "wind api signature",
   "npm": {
     "registry": "https://registry.npmjs.org/"
   },

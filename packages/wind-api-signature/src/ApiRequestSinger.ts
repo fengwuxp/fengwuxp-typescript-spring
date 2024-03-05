@@ -1,5 +1,11 @@
 import {ApiSigner, HMAC_SHA256} from 'ApiSignatureAlgorithm';
-import {ApiSignatureRequest, genNonce, getSignTextForDigest, getSignTextForSha256WithRsa, getCanonicalizedQueryString} from "./ApiSignatureRequest";
+import {
+    ApiSignatureRequest,
+    genNonce,
+    getCanonicalizedQueryString,
+    getSignTextForDigest,
+    getSignTextForSha256WithRsa
+} from "./ApiSignatureRequest";
 
 
 /**
@@ -15,10 +21,17 @@ const NONCE_HEADER_NAME = "Nonce";
 const TIMESTAMP_HEADER_NAME = "Timestamp";
 
 /**
- * 请求头：AK
- * 用于交换 SK
+ * 请求头：访问标识
+ * 用于交换签名秘钥
  */
-const ACCESS_KEY_HEADER_NAME = "Access-Key";
+const ACCESS_KEY_HEADER_NAME = "Access-Id";
+
+/**
+ * 请求头：秘钥版本号
+ * 用于标记使用的秘钥对版本
+ * 非 AK/SK 访问模式需要
+ */
+const SECRET_VERSION_HEADER_NAME = "Secret-Version";
 
 /**
  * 请求头
@@ -39,6 +52,11 @@ export interface ApiSecretAccount {
      * 签名秘钥
      */
     secretKey: string;
+
+    /**
+     * 秘钥版本
+     */
+    secretVersion?: string;
 }
 
 export interface ApiRequestSingerOptions {
@@ -99,7 +117,8 @@ export class ApiRequestSinger {
             [getSignHeaderName(SIGN_HEADER_NAME, headerPrefix)]: apiSigner.sign(signRequest, secretAccount.secretKey),
             [getSignHeaderName(NONCE_HEADER_NAME, headerPrefix)]: signRequest.nonce,
             [getSignHeaderName(TIMESTAMP_HEADER_NAME, headerPrefix)]: signRequest.timestamp,
-            [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: secretAccount.accessId
+            [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: secretAccount.accessId,
+            [getSignHeaderName(SECRET_VERSION_HEADER_NAME, headerPrefix)]: secretAccount.secretVersion
         };
 
         if (options.debug) {
