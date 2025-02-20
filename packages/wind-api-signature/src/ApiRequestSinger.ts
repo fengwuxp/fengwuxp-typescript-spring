@@ -1,11 +1,5 @@
 import {ApiSigner, HMAC_SHA256} from 'ApiSignatureAlgorithm';
-import {
-    ApiSignatureRequest,
-    genNonce,
-    getCanonicalizedQueryString,
-    getSignTextForDigest,
-    getSignTextForSha256WithRsa
-} from "./ApiSignatureRequest";
+import {ApiSignatureRequest, genNonce, getCanonicalizedQueryString, getSignTextForDigest, getSignTextForSha256WithRsa} from "./ApiSignatureRequest";
 
 
 /**
@@ -88,7 +82,6 @@ export class ApiRequestSinger {
 
     private readonly options: ApiRequestSingerOptions;
 
-
     constructor(secretAccount: ApiSecretAccount, apiSigner: ApiSigner, options: ApiRequestSingerOptions) {
         this.secretAccount = secretAccount;
         this.apiSigner = apiSigner;
@@ -107,10 +100,10 @@ export class ApiRequestSinger {
     sign = (request: Omit<ApiSignatureRequest, "nonce" | "timestamp">): Record<string, string> => {
         const {secretAccount, apiSigner, options} = this;
         const signRequest: ApiSignatureRequest = {
-            ...request,
-            method: request.method.toUpperCase() as any,
-            nonce: genNonce(),
             timestamp: new Date().getTime().toString(),
+            nonce: genNonce(),
+            ...request,
+            method: request.method.toUpperCase() as any
         }
         const headerPrefix = options.headerPrefix;
         const result = {

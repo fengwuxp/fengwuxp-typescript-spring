@@ -40,7 +40,7 @@ describe("test swagger api codegen", () => {
         ],
         output: [
             {
-                language: Language.TYPESCRIPT,
+                language: Language.JAVA,
                 output: path.resolve(baseOutputDir, "typescript/src"),
                 clientNameSuffix: "FeignClient",
                 clientProvider: "typescript-feign-sdk",

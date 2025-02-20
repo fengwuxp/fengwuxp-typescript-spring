@@ -1,6 +1,6 @@
 {
   "name": "wind-api-signature",
-  "version": "1.0.0",
+  "version": "1.0.6",
   "description": "wind api signature",
   "npm": {
     "registry": "https://registry.npmjs.org/"

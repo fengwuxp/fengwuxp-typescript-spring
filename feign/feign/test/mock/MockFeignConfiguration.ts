@@ -120,7 +120,10 @@ export class MockFeignConfiguration implements FeignHttpConfiguration {
                 }
 
             }),
-            new RoutingClientHttpRequestInterceptor(this.baseUrl),
+            new RoutingClientHttpRequestInterceptor({
+                'default':'this.baseUrl',
+                'user-vip':"http://user-vip.com/api"
+            }),
             new AuthenticationClientHttpRequestInterceptor({
                 getAuthorization: (req): AuthenticationToken => {
 

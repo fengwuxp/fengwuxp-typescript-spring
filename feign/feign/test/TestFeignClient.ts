@@ -23,7 +23,8 @@ type FindMemberRequest = {
 };
 
 @Feign({
-    value: "/test",
+    // value: "/test",
+    apiModule:"user-vip"
     // url:"http://a.bc.cn/api",
     // configuration: MockFeignConfiguration
 })
