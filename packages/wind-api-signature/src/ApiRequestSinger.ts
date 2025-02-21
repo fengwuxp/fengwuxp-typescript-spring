@@ -97,7 +97,7 @@ export class ApiRequestSinger {
      * @param request
      * @return 签名请求头对象
      */
-    sign = (request: Omit<ApiSignatureRequest, "nonce" | "timestamp">): Record<string, string> => {
+    sign = (request: (Omit<ApiSignatureRequest, "nonce" | "timestamp"> & { nonce?: string; timestamp?: string; })): Record<string, string> => {
         const {secretAccount, apiSigner, options} = this;
         const signRequest: ApiSignatureRequest = {
             timestamp: new Date().getTime().toString(),
