@@ -1,16 +1,17 @@
 import * as os from 'os';
+import * as path from 'path';
 import resolve from '@rollup/plugin-node-resolve';
 import commonjs from '@rollup/plugin-commonjs';
 import babel from '@rollup/plugin-babel';
 import {terser} from 'rollup-plugin-terser';
 import json from '@rollup/plugin-json';
-import typescript from 'rollup-plugin-typescript2';
+import typescript from '@rollup/plugin-typescript';
 import filesize from "rollup-plugin-filesize";
 import includePaths from "rollup-plugin-includepaths";
 import analyze from "rollup-plugin-analyzer";
 import dts from "rollup-plugin-dts";
 
-import pkg from './package.json';
+import pkg from './package.json' assert { type: 'json' };
 import {DEFAULT_EXTENSIONS} from "@babel/core";
 
 const cpuNums = os.cpus().length;
@@ -47,11 +48,9 @@ const getConfig = (isProd) => {
         plugins: [
             typescript({
                 tsconfig: "./tsconfig.lib.json",
-                tsconfigOverride: {
-                    compilerOptions: {
-                        module: "esnext",
-                        declaration: false
-                    }
+                compilerOptions: {
+                    module: "esnext",
+                    declaration: false
                 }
             }),
             json(),
@@ -65,7 +64,6 @@ const getConfig = (isProd) => {
             }),
             babel({
                 exclude: "node_modules/**",
-               // babelHelpers: "runtime",
                 extensions: [...DEFAULT_EXTENSIONS, ".ts", ".tsx"]
             }),
             analyze({

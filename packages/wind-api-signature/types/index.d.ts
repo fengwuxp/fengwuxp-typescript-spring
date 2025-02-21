@@ -91,4 +91,4 @@ declare class ApiRequestSinger {
     })) => Record<string, string>;
 }
 
-export { ApiRequestSinger, ApiRequestSingerOptions, ApiSecretAccount, ApiSignatureRequest, HttpMediaType, genNonce, matchMediaType };
+export { ApiRequestSinger, type ApiRequestSingerOptions, type ApiSecretAccount, type ApiSignatureRequest, HttpMediaType, genNonce, matchMediaType };

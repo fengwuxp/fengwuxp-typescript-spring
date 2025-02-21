@@ -34,7 +34,7 @@
   "dependencies": {
     "@tarojs/components-qa": "^2.0.7",
     "pretty-format": "^25.1.0",
-    "rollup": "^2.18.1",
-    "typescript": "^3.9.5"
+    "rollup": "^4.34.8",
+    "typescript": "^5.7.3"
   }
 }
