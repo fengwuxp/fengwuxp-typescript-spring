@@ -110,10 +110,11 @@ export class ApiRequestSinger {
             [getSignHeaderName(SIGN_HEADER_NAME, headerPrefix)]: apiSigner.sign(signRequest, secretAccount.secretKey),
             [getSignHeaderName(NONCE_HEADER_NAME, headerPrefix)]: signRequest.nonce,
             [getSignHeaderName(TIMESTAMP_HEADER_NAME, headerPrefix)]: signRequest.timestamp,
-            [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: secretAccount.accessId,
-            [getSignHeaderName(SECRET_VERSION_HEADER_NAME, headerPrefix)]: secretAccount.secretVersion
+            [getSignHeaderName(ACCESS_KEY_HEADER_NAME, headerPrefix)]: secretAccount.accessId
         };
-
+        if (secretAccount.secretVersion) {
+            result[getSignHeaderName(SECRET_VERSION_HEADER_NAME, headerPrefix)] = secretAccount.secretVersion
+        }
         if (options.debug) {
             // debug 模式支持
             // @ts-ignore
